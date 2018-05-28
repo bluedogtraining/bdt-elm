@@ -83,6 +83,16 @@ update newValue resettable =
                     Updated originalValue newValue
 
 
+{-| Reset to the original value.
+
+    reset (Original "Josh")         -- Original "Josh"
+    reset (Updated "Josh" "Joshua") -- Original "Josh"
+-}
+reset : Resettable a -> Resettable a
+reset =
+    getOriginalValue >> init
+
+
 {-| Whether a value changed.
 
     isChanged (Original "Josh")         -- False
@@ -125,8 +135,8 @@ getValue resettable =
 
 {-| Get the original value.
 
-    getValue (Original "Josh")         -- "Josh"
-    getValue (Updated "Josh" "Joshua") -- "Josh"
+    getOriginalValue (Original "Josh")         -- "Josh"
+    getOriginalValue (Updated "Josh" "Joshua") -- "Josh"
 -}
 getOriginalValue : Resettable a -> a
 getOriginalValue resettable =
@@ -137,13 +147,3 @@ getOriginalValue resettable =
 
         Updated originalValue _ ->
             originalValue
-
-
-{-| Reset to the original value.
-
-    reset (Original "Josh")         -- Original "Josh"
-    reset (Updated "Josh" "Joshua") -- Original "Josh"
--}
-reset : Resettable a -> Resettable a
-reset =
-    getOriginalValue >> init

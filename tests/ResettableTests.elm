@@ -1,4 +1,4 @@
-module ResettableTests exposing (..)
+module ResettableTests exposing (suite)
 
 import Test exposing (..)
 import Fuzz exposing (Fuzzer)

@@ -3,11 +3,11 @@ module Form.Input.Internal exposing
     , init, initialViewState
     , Msg, update
     , render
-    , reInitialize, reset
-    , setInitialValue ,setValue
+    , reInitialise, reset
+    , setInitialValue, setValue
     , setIsError, setIsLocked
     , setId
-    , getValue, getIsChanged
+    , getIsChanged, getInitialValue, getValue
     , getId
     )
 
@@ -85,7 +85,7 @@ inputField state viewState =
         [ Css.inputField viewState.isLocked viewState.isError
         , class "form-control"
         , disabled viewState.isLocked
-        , value (Resettable.getValue state.value)
+        , value <| Resettable.getValue state.value
         , onInput Input
         ]
         []
@@ -96,10 +96,10 @@ inputField state viewState =
 -- STATE SETTERS --
 
 
-reInitialize : State -> State
-reInitialize state =
+reInitialise : State -> State
+reInitialise state =
 
-    { state | value = Resettable.init (Resettable.getValue state.value) }
+    { state | value = Resettable.init <| Resettable.getValue state.value }
 
 
 reset : State -> State
@@ -144,16 +144,22 @@ setId id viewState =
 -- GETTERS --
 
 
+getIsChanged : State -> Bool
+getIsChanged state =
+
+    Resettable.getIsChanged state.value
+
+
+getInitialValue : State -> String
+getInitialValue state =
+
+    Resettable.getInitialValue state.value
+
+
 getValue : State -> String
 getValue state =
 
     Resettable.getValue state.value
-
-
-getIsChanged : State -> Bool
-getIsChanged state =
-
-    Resettable.isChanged state.value
 
 
 getId : ViewState -> Maybe String

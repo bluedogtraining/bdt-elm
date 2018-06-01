@@ -1,13 +1,12 @@
 module Form.Select exposing
     ( Model, View
     , init
-    , Msg
-    , update
+    , Msg, update
     , view, render
     , reInitialize, reset
     , setDefaultLabel, setToLabel
     , setInitialOption, setSelectedOption, setIsOptionDisabled
-    , setIsClearable, setIsError, setIsLocked
+    , setIsError, setIsLocked, setIsClearable
     , setId
     , getIsOpen, getIsChanged
     , getSelectedOption, getOriginalOption
@@ -19,6 +18,9 @@ import Html.Styled exposing (Html)
 import Tuple
 
 import Form.Select.Internal as Internal
+
+
+-- MODEL --
 
 
 type Model option
@@ -34,13 +36,20 @@ init =
     Internal.init >> Model
 
 
-type alias Msg = Internal.Msg
+-- UPDATE --
+
+
+type alias Msg
+    = Internal.Msg
 
 
 update : Internal.Msg option -> Model option -> (Model option, Cmd (Internal.Msg option))
 update msg (Model state) =
 
     Tuple.mapFirst Model (Internal.update msg state)
+
+
+-- VIEW --
 
 
 view : Model option -> View option
@@ -55,13 +64,13 @@ render (View state viewState) =
     Internal.render state viewState
 
 
--- INTERNAL SETTERS --
+-- STATE SETTERS --
 
 
 reInitialize : Model option -> Model option
-reInitialize model =
+reInitialize (Model state) =
 
-    setInitialOption (getSelectedOption model) model
+    Model <| Internal.reInitialize state
 
 
 reset : Model option -> Model option
@@ -82,8 +91,7 @@ setSelectedOption selectedOption (Model state) =
     Model <| Internal.setSelectedOption selectedOption state
 
 
-
--- VIEW SETTERS --
+-- VIEW STATE SETTERS --
 
 
 setToLabel : (option -> String) -> View option -> View option
@@ -110,16 +118,16 @@ setIsLocked isLocked (View state viewState) =
     View state (Internal.setIsLocked isLocked viewState)
 
 
-setIsClearable : Bool -> View option -> View option
-setIsClearable isClearable (View state viewState) =
-
-    View state (Internal.setIsClearable isClearable viewState)
-
-
 setIsError : Bool -> View option -> View option
 setIsError isError (View state viewState) =
 
     View state (Internal.setIsError isError viewState)
+
+
+setIsClearable : Bool -> View option -> View option
+setIsClearable isClearable (View state viewState) =
+
+    View state (Internal.setIsClearable isClearable viewState)
 
 
 setId : String -> View option -> View option
@@ -152,10 +160,10 @@ getIsChanged (Model state) =
 getIsOpen : Model option -> Bool
 getIsOpen (Model state) =
 
-    state.isOpen
+    Internal.getIsOpen state
 
 
 getId : View option -> Maybe String
 getId (View _ viewState) =
 
-    viewState.id
+    Internal.getId viewState

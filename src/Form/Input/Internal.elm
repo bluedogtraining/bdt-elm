@@ -1,17 +1,22 @@
 module Form.Input.Internal exposing
-    ( State, init
+    ( State, ViewState
+    , init, initialViewState
     , Msg, update
-    , view, render
-    , setValue
-    , reset, reInitialize
+    , render
+    , reInitialize, reset
+    , setInitialValue ,setValue
     , setIsError, setIsLocked
+    , setId
     , getValue, getIsChanged
+    , getId
     )
 
 import Html.Styled exposing (..)
 import Html.Styled.Lazy as Html
 import Html.Styled.Events exposing (..)
+import Html.Styled.Attributes exposing (..)
 
+import VirtualDom
 import Regex exposing (Regex)
 
 import Html.Bdt as Html exposing ((?))
@@ -38,6 +43,7 @@ type alias ViewState =
     { isShown : Bool
     , isLocked : Bool
     , isError : Bool
+    , id : Maybe String
     }
 
 
@@ -46,6 +52,7 @@ initialViewState =
     { isShown = True
     , isLocked = False
     , isError = False
+    , id = Nothing
     }
 
 
@@ -65,29 +72,73 @@ update (Input string) state =
 -- VIEW --
 
 
-view : State -> View
-view state =
+render : State -> ViewState -> Html Msg
+render state viewState =
 
-    View initialViewState state
-
-
-viewIf : Bool -> State -> View
-viewIf isShown state =
-
-    View { initialViewState | isShown = isShown } state
+    Html.lazy2 inputField state viewState
 
 
-render : View -> Html Msg
-render (View viewState state) =
+inputField : State -> ViewState -> VirtualDom.Node Msg
+inputField state viewState =
 
-    s_input viewState.isLocked viewState.isError
-        [ class "form-control"
+    input
+        [ Css.inputField viewState.isLocked viewState.isError
+        , class "form-control"
         , disabled viewState.isLocked
         , value (Resettable.getValue state.value)
         , onInput Input
         ]
         []
         |> Html.viewIf viewState.isShown
+        |> Html.Styled.toUnstyled
+
+
+-- STATE SETTERS --
+
+
+reInitialize : State -> State
+reInitialize state =
+
+    { state | value = Resettable.init (Resettable.getValue state.value) }
+
+
+reset : State -> State
+reset state =
+
+    { state | value = Resettable.reset state.value }
+
+
+setInitialValue : String -> State -> State
+setInitialValue value state =
+
+    { state | value = Resettable.init value }
+
+
+setValue : String -> State -> State
+setValue value state =
+
+    { state | value = Resettable.update value state.value }
+
+
+-- VIEW STATE SETTERS --
+
+
+setIsLocked : Bool -> ViewState -> ViewState
+setIsLocked isLocked viewState =
+
+    { viewState | isLocked = isLocked }
+
+
+setIsError : Bool -> ViewState -> ViewState
+setIsError isError viewState =
+
+    { viewState | isError = isError }
+
+
+setId : String -> ViewState -> ViewState
+setId id viewState =
+
+    { viewState | id = Just id }
 
 
 -- GETTERS --
@@ -105,37 +156,6 @@ getIsChanged state =
     Resettable.isChanged state.value
 
 
--- SETTERS --
-
-
-setValue : String -> State -> State
-setValue value state =
-
-    { state | value = Resettable.init value }
-
-
-reInitialize : State -> State
-reInitialize state =
-
-    { state | value = Resettable.init (Resettable.getValue state.value) }
-
-
-reset : State -> State
-reset state =
-
-    { state | value = Resettable.reset state.value }
-
-
--- VIEW STATE SETTERS --
-
-
-setIsLocked : Bool -> View -> View
-setIsLocked isLocked (View viewState state) =
-
-    View { viewState | isLocked = isLocked } state
-
-
-setIsError : Bool -> View -> View
-setIsError isError (View viewState state) =
-
-    View { viewState | isError = isError } state
+getId : ViewState -> Maybe String
+getId =
+    .id

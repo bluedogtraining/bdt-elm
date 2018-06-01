@@ -3,7 +3,7 @@ module Form.Select.Internal exposing
     , init, initialViewState
     , Msg, update
     , render
-    , reset
+    , reInitialize ,reset
     , setDefaultLabel, setToLabel
     , setInitialOption, setSelectedOption, setIsOptionDisabled
     , setIsClearable, setIsError, setIsLocked
@@ -33,6 +33,9 @@ import Html.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 import Form.Select.Css as Css
+
+
+-- MODEL --
 
 
 type alias State option =
@@ -352,7 +355,19 @@ optionItem state viewState option =
         [ text (viewState.toLabel option) ]
 
 
--- INTERNAL SETTERS --
+-- STATE SETTERS --
+
+
+reInitialize : State option -> State option
+reInitialize state =
+
+    { state | selectedOption = Resettable.init (Resettable.getValue state.selectedOption) }
+
+
+reset : State option -> State option
+reset state =
+
+    { state | selectedOption = Resettable.reset state.selectedOption }
 
 
 setInitialOption : Maybe option -> State option -> State option
@@ -367,13 +382,7 @@ setSelectedOption selectedOption state =
     { state | selectedOption = Resettable.update selectedOption state.selectedOption }
 
 
-reset : State option -> State option
-reset state =
-
-    { state | selectedOption = Resettable.reset state.selectedOption }
-
-
--- VIEW SETTERS --
+-- VIEW STATE SETTERS --
 
 
 setToLabel : (option -> String) -> ViewState option -> ViewState option
@@ -400,16 +409,16 @@ setIsLocked isLocked viewState =
     { viewState | isLocked = isLocked }
 
 
-setIsClearable : Bool -> ViewState option -> ViewState option
-setIsClearable isClearable viewState =
-
-    { viewState | isClearable = isClearable }
-
-
 setIsError : Bool -> ViewState option -> ViewState option
 setIsError isError viewState =
 
     { viewState | isError = isError }
+
+
+setIsClearable : Bool -> ViewState option -> ViewState option
+setIsClearable isClearable viewState =
+
+    { viewState | isClearable = isClearable }
 
 
 setId : String -> ViewState option -> ViewState option

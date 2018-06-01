@@ -4,6 +4,7 @@ module Form.Input exposing
     , view, render
     , reInitialise, reset
     , setInitialValue, setValue
+    , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
     , getIsChanged, getInitialValue, getValue
@@ -22,7 +23,7 @@ module Form.Input exposing
 @docs reInitialise, reset, setInitialValue, setValue
 
 # View Setters
-@docs setIsError, setIsLocked, setId
+@docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
 
 # Getters
 @docs getInitialValue, getValue, getIsChanged, getId
@@ -145,6 +146,22 @@ setValue : String -> Model -> Model
 setValue value (Model state) =
 
     Model <| Internal.setValue value state
+
+
+{-| Set the max length for your input string.
+-}
+setMaxLength : Int -> View -> View
+setMaxLength maxLength (View state viewState) =
+
+    View state (Internal.setMaxLength maxLength viewState)
+
+
+{-| Set a placeholder for your input.
+-}
+setPlaceholder : String -> View -> View
+setPlaceholder placeholder (View state viewState) =
+
+    View state (Internal.setPlaceholder placeholder viewState)
 
 
 {-| Set whether your input is locked (disabled).

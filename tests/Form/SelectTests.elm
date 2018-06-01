@@ -4,7 +4,7 @@ import Test exposing (..)
 import Fuzz exposing (Fuzzer)
 import Expect exposing (Expectation)
 
-import Form.Select
+import Form.Select as Select
 
 
 suite : Test
@@ -16,5 +16,5 @@ suite =
 
 test1 : () -> Expectation
 test1 _ =
-    Form.Select.init []
-        |> Expect.equal (Form.Select.init [])
+    Select.init []
+        |> Expect.equal (Select.init [])

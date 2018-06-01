@@ -5,6 +5,7 @@ module Form.Input.Internal exposing
     , render
     , reInitialise, reset
     , setInitialValue, setValue
+    , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
     , getIsChanged, getInitialValue, getValue
@@ -19,8 +20,8 @@ import Html.Styled.Attributes exposing (..)
 import VirtualDom
 import Regex exposing (Regex)
 
-import Html.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
+import Html.Bdt as Html exposing ((?))
 
 import Form.Input.Css as Css
 
@@ -40,7 +41,8 @@ init =
 
 
 type alias ViewState =
-    { isShown : Bool
+    { maxLength : Maybe Int
+    , placeholder : String
     , isLocked : Bool
     , isError : Bool
     , id : Maybe String
@@ -49,7 +51,8 @@ type alias ViewState =
 
 initialViewState : ViewState
 initialViewState =
-    { isShown = True
+    { maxLength = Nothing
+    , placeholder = ""
     , isLocked = False
     , isError = False
     , id = Nothing
@@ -87,9 +90,10 @@ inputField state viewState =
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input
+        , placeholder viewState.placeholder
+        , Html.maybeAttribute maxlength viewState.maxLength
         ]
         []
-        |> Html.viewIf viewState.isShown
         |> Html.Styled.toUnstyled
 
 
@@ -121,6 +125,22 @@ setValue value state =
 
 
 -- VIEW STATE SETTERS --
+
+
+{-| Set whether your input is in error mode (red border).
+-}
+setMaxLength : Int -> ViewState -> ViewState
+setMaxLength maxLength viewState =
+
+    { viewState | maxLength = Just maxLength }
+
+
+{-| Set whether your input is in error mode (red border).
+-}
+setPlaceholder : String -> ViewState -> ViewState
+setPlaceholder placeholder viewState =
+
+    { viewState | placeholder = placeholder }
 
 
 setIsLocked : Bool -> ViewState -> ViewState

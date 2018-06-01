@@ -74,8 +74,8 @@ init =
     type MyMsg
         = UpdateMySelect Select.Msg
 -}
-type alias Msg
-    = Internal.Msg
+type alias Msg option
+    = Internal.Msg option
 
 
 {-| Use in your update function.

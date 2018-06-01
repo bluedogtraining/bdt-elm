@@ -27,7 +27,7 @@ module Form.Select exposing
 @docs reInitialise, reset, setInitialOption, setSelectedOption, setIsOptionDisabled
 
 # View Setters
-@docs setIsError, setIsLocked, setDefaultLabel, setToLabel, setId
+@docs setIsError, setIsLocked, setIsClearable, setDefaultLabel, setToLabel, setId
 
 # Getters
 @docs getIsChanged, getIsOpen, getInitialOption, getSelectedOption, getId
@@ -42,8 +42,6 @@ import Form.Select.Internal as Internal
 
 
 {-| Add a Select.Model to your model.
-
-    import Form.Select as Select
 
     type Title
         = Mr
@@ -64,8 +62,6 @@ type View option
 
 {-| Add a Select.Model to your model.
 
-    import Form.Select as Select
-
     myInitialModel : MyModel
     myInitialModel =
         { mySelect = Select.init [Mr, Ms, Dr]
@@ -78,8 +74,6 @@ init =
 
 {-| Add a Select.Msg to your Msg.
 
-    import Form.Select as Select
-
     type MyMsg
         = UpdateMySelect Select.Msg
 -}
@@ -88,8 +82,6 @@ type alias Msg
 
 
 {-| Use in your update function.
-
-    import Form.Select as Select
 
     myUpdate : Msg -> Model -> (Model, Cmd Msg)
     myUpdate msg model =
@@ -109,8 +101,6 @@ update msg (Model state) =
 
 {-| Transform an Select.Model into an Select.View, which allows us to pipe View Setters on it.
 
-    import Form.Select as Select
-
     myView : Model -> Html Msg
     myView model =
         div
@@ -125,8 +115,6 @@ view (Model state) =
 
 
 {-| Transforms an Select.View into Html Select.Msg
-
-    import Form.Select as Select
 
     myView : Model -> Html Msg
     myView model =

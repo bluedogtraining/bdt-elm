@@ -39,8 +39,6 @@ import Form.Input.Internal as Internal
 
 {-| Add a Input.Model to your model.
 
-    import Form.Input as Input
-
     type alias MyModel =
         { myInput : Input.Model
         }
@@ -55,8 +53,6 @@ type View
 
 {-| Add a Input.Model to your model.
 
-    import Form.Input as Input
-
     myInitialModel : MyModel
     myInitialModel =
         { myInput = Input.init -- optionally pipe into State Setters
@@ -69,8 +65,6 @@ init =
 
 {-| Add a Input.Msg to your Msg.
 
-    import Form.Input as Input
-
     type MyMsg
         = UpdateMyInput Input.Msg
 -}
@@ -79,8 +73,6 @@ type Msg
 
 
 {-| Use in your update function.
-
-    import Form.Input as Input
 
     myUpdate : Msg -> Model -> (Model, Cmd Msg)
     myUpdate msg model =
@@ -96,8 +88,6 @@ update msg (Model state) =
 
 {-| Transform an Input.Model into an Input.View, which allows us to pipe View Setters on it.
 
-    import Form.Input as Input
-
     myView : Model -> Html Msg
     myView model =
         div
@@ -112,8 +102,6 @@ view (Model state) =
 
 
 {-| Transforms an Input.View into Html Input.Msg
-
-    import Form.Input as Input
 
     myView : Model -> Html Msg
     myView model =

@@ -65,8 +65,8 @@ init =
     type MyMsg
         = UpdateMyInput Input.Msg
 -}
-type Msg
-    = Input String
+type alias Msg
+    = Internal.Msg
 
 
 {-| Use in your update function.

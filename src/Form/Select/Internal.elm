@@ -22,15 +22,14 @@ import Dom
 import VirtualDom
 import Dict
 import Task
-import Http
 
 import List.Extra as List
-import String.Extra as String
 
 import Json.Decode as Decode exposing (Decoder)
 
-import Html.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
+import Html.Bdt as Html exposing ((?))
+import Form.Helpers as Form
 
 import Form.Select.Css as Css
 
@@ -207,7 +206,7 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
 
                     in
                         { state | focusedOption = Just newFocusedOption }
-                            ! [ Task.attempt DomFocus (toHtmlId newFocusedOption |> Dom.focus) ]
+                            ! [ Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus) ]
 
                 Down ->
                     let
@@ -216,7 +215,7 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
 
                     in
                         { state | focusedOption = Just newFocusedOption }
-                            ! [ Task.attempt DomFocus (toHtmlId newFocusedOption |> Dom.focus) ]
+                            ! [ Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus) ]
 
 
 focusOption : List option -> option -> option
@@ -227,7 +226,7 @@ focusOption options option =
             option
 
         False ->
-            Debug.crash ("SELECT ERROR - can't focus" ++ toHtmlId option ++ " it is not a valid option for this select.")
+            Debug.crash ("SELECT ERROR - can't focus" ++ Form.toHtmlId option ++ " it is not a valid option for this select.")
 
 
 focusPreviousOption : List option -> option -> option
@@ -345,7 +344,7 @@ optionItem state viewState option =
 
     div
         [ Css.optionItem (viewState.isOptionDisabled option) (Just option == state.focusedOption)
-        , id (toHtmlId option)
+        , id (Form.toHtmlId option)
         , onFocus (Focus option)
         , onBlur (BlurOption option)
         , onKeyboardInput (KeyboardInput (viewState.isOptionDisabled option))
@@ -456,14 +455,3 @@ getIsOpen =
 getId : ViewState option -> Maybe String
 getId =
     .id
-
-
--- HELPERS --
-
-
-toHtmlId : option -> String
-toHtmlId option =
-    option
-        |> toString
-        |> Http.encodeUri
-        |> String.replace "%" ""

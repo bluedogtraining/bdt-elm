@@ -12,9 +12,6 @@ module Form.Input exposing
 
 {-| This module is useful if you want to add an Input Form element to your app.
 
-# Definition
-@docs Input
-
 # Initialise and update
 @docs Model, init, Msg, update
 

@@ -14,9 +14,6 @@ module Form.Select exposing
 
 {-| This module is useful if you want to add a Select Form element to your app.
 
-# Definition
-@docs Select
-
 # Initialise and update
 @docs Model, init, Msg, update
 

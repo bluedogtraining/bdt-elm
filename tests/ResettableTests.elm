@@ -21,57 +21,57 @@ suite =
 
 tests : Fuzzer a -> List Test
 tests fuzzer =
-    [ fuzz fuzzer "getValue on original value returns the original value." test1
+    [ fuzz fuzzer "getValue on initial value returns the initial value." test1
     , fuzz2 fuzzer fuzzer "getValue on updated value returns the updated value." test2
-    , fuzz fuzzer "getOriginalValue on original value returns the original value." test3
-    , fuzz2 fuzzer fuzzer "getOriginalValue on updated value returns the original value." test4
-    , fuzz2 fuzzer fuzzer "getValue after reset on updated value returns the original value." test5
+    , fuzz fuzzer "getInitialValue on initial value returns the initial value." test3
+    , fuzz2 fuzzer fuzzer "getInitialValue on updated value returns the initial value." test4
+    , fuzz2 fuzzer fuzzer "getValue after reset on updated value returns the initial value." test5
     , fuzz2 fuzzer fuzzer "isChanged on updated value returns true." test6
     ]
 
 
 test1 : a -> Expectation
-test1 originalValue =
-    Resettable.init originalValue
+test1 initialValue =
+    Resettable.init initialValue
         |> Resettable.getValue
-        |> Expect.equal originalValue
+        |> Expect.equal initialValue
 
 
 test2 : a -> a -> Expectation
-test2 originalValue updatedValue =
-    Resettable.init originalValue
+test2 initialValue updatedValue =
+    Resettable.init initialValue
         |> Resettable.update updatedValue
         |> Resettable.getValue
         |> Expect.equal updatedValue
 
 
 test3 : a -> Expectation
-test3 originalValue =
-    Resettable.init originalValue
-        |> Resettable.getOriginalValue
-        |> Expect.equal originalValue
+test3 initialValue =
+    Resettable.init initialValue
+        |> Resettable.getInitialValue
+        |> Expect.equal initialValue
 
 
 test4 : a -> a -> Expectation
-test4 originalValue updatedValue =
-    Resettable.init originalValue
+test4 initialValue updatedValue =
+    Resettable.init initialValue
         |> Resettable.update updatedValue
-        |> Resettable.getOriginalValue
-        |> Expect.equal originalValue
+        |> Resettable.getInitialValue
+        |> Expect.equal initialValue
 
 
 test5 : a -> a -> Expectation
-test5 originalValue updatedValue =
-    Resettable.init originalValue
+test5 initialValue updatedValue =
+    Resettable.init initialValue
         |> Resettable.update updatedValue
         |> Resettable.reset
         |> Resettable.getValue
-        |> Expect.equal originalValue
+        |> Expect.equal initialValue
 
 
 test6 : a -> a -> Expectation
-test6 originalValue updatedValue =
-    Resettable.init originalValue
+test6 initialValue updatedValue =
+    Resettable.init initialValue
         |> Resettable.update updatedValue
-        |> Resettable.isChanged
-        |> Expect.equal (originalValue /= updatedValue)
+        |> Resettable.getIsChanged
+        |> Expect.equal (initialValue /= updatedValue)

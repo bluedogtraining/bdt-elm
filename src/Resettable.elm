@@ -1,7 +1,7 @@
 module Resettable exposing
     ( Resettable
     , init, update, reset
-    , isChanged, getValue, getOriginalValue
+    , getIsChanged, getValue, getInitialValue
     )
 
 
@@ -14,11 +14,11 @@ module Resettable exposing
 @docs init, update, reset
 
 # Getters
-@docs isChanged, getValue, getOriginalValue
+@docs getInitialValue, getValue, getIsChanged
 
 -}
 
-{-| Represent values that may be original or updated. It can be useful if you have a
+{-| Represent values that may be initial or updated. It can be useful if you have a
 a save button that should be disabled if nothing on a form changed.
 
     type alias MyProfileForm =
@@ -33,84 +33,84 @@ a save button that should be disabled if nothing on a form changed.
 
     shouldEnableSaveButton : Form -> Bool
     shouldEnableSaveButton form =
-        Resettable.isChanged form.email || Resettable.isChanged form.password
+        Resettable.getIsChanged form.email || Resettable.getIsChanged form.password
 -}
 type Resettable a
-    = Original a
+    = Initial a
     | Updated a a
 
 
 {-| Initialise a value.
 
-    init "Bob"     -- Original "Bob"
+    init "Bob"     -- Initial "Bob"
 -}
 init : a -> Resettable a
 init =
-    Original
+    Initial
 
 
 {-| Updates a Resettable value.
 
     -- update to new value
-    update "Joshua" (Original "Josh")       -- Updated "Josh" "Joshua"
+    update "Joshua" (Initial "Josh")       -- Updated "Josh" "Joshua"
     update "Bob" (Updated "Josh" "Joshua")  -- Updated "Josh" "Bob"
 
-    -- if the new value is the original value or a changed value is set to it's original value, keep the original value
-    update "Josh" (Original "Josh")         -- Original "Bob"
-    update "Josh" (Updated "Josh" "Joshua") -- Original "Josh"
+    -- if the new value is the initial value or a changed value is set to it's initial value, keep the initial value
+    update "Josh" (Initial "Josh")         -- Initial "Bob"
+    update "Josh" (Updated "Josh" "Joshua") -- Initial "Josh"
 -}
 update : a -> Resettable a -> Resettable a
 update newValue resettable =
 
     case resettable of
-        Original originalValue ->
-            case newValue == originalValue of
+        Initial initialValue ->
+            case newValue == initialValue of
                 True ->
                     resettable
 
                 False ->
-                    Updated originalValue newValue
+                    Updated initialValue newValue
 
-        Updated originalValue currentValue ->
-            case (currentValue == newValue, originalValue == newValue) of
+        Updated initialValue currentValue ->
+            case (currentValue == newValue, initialValue == newValue) of
                 (True, _) ->
                     resettable
 
                 (False, True) ->
-                    Original originalValue
+                    Initial initialValue
 
                 (False, False) ->
-                    Updated originalValue newValue
+                    Updated initialValue newValue
 
 
-{-| Reset to the original value.
+{-| Reset to the initial value.
 
-    reset (Original "Josh")         -- Original "Josh"
-    reset (Updated "Josh" "Joshua") -- Original "Josh"
+    reset (Initial "Josh")         -- Initial "Josh"
+    reset (Updated "Josh" "Joshua") -- Initial "Josh"
 -}
 reset : Resettable a -> Resettable a
 reset =
-    getOriginalValue >> init
+    getInitialValue >> init
 
 
 {-| Whether a value changed.
 
-    isChanged (Original "Josh")         -- False
-    isChanged (Updated "Josh" "Joshua") -- True
+    getIsChanged (Initial "Josh")         -- False
+    getIsChanged (Updated "Josh" "Joshua") -- True
 
     when checking a lot of values, it may be helpful to put them in a list:
 
     -- if they all have the same type:
-    List.any isChanged [ Original "Josh", Updated "Josh" "Joshua" ]   -- True
+    List.any getIsChanged [ Initial "Josh", Updated "Josh" "Joshua" ]   -- True
 
     -- if they have different types
-    List.any ((==) True) [ isChanged (Original "Josh"), isChanged (Original 12) ]   -- False
+    List.any ((==) True) [ getIsChanged (Initial "Josh"), getIsChanged (Initial 12) ]   -- False
 -}
-isChanged : Resettable a -> Bool
-isChanged resettable =
+getIsChanged : Resettable a -> Bool
+getIsChanged resettable =
 
     case resettable of
-        Original _ ->
+        Initial _ ->
             False
 
         Updated _ _ ->
@@ -119,31 +119,31 @@ isChanged resettable =
 
 {-| Get the current value.
 
-    getValue (Original "Josh")         -- "Josh"
+    getValue (Initial "Josh")         -- "Josh"
     getValue (Updated "Josh" "Joshua") -- "Joshua"
 -}
 getValue : Resettable a -> a
 getValue resettable =
 
     case resettable of
-        Original originalValue ->
-            originalValue
+        Initial initialValue ->
+            initialValue
 
         Updated _ updatedValue ->
             updatedValue
 
 
-{-| Get the original value.
+{-| Get the initial value.
 
-    getOriginalValue (Original "Josh")         -- "Josh"
-    getOriginalValue (Updated "Josh" "Joshua") -- "Josh"
+    getInitialValue (Initial "Josh")         -- "Josh"
+    getInitialValue (Updated "Josh" "Joshua") -- "Josh"
 -}
-getOriginalValue : Resettable a -> a
-getOriginalValue resettable =
+getInitialValue : Resettable a -> a
+getInitialValue resettable =
 
     case resettable of
-        Original originalValue ->
-            originalValue
+        Initial initialValue ->
+            initialValue
 
-        Updated originalValue _ ->
-            originalValue
+        Updated initialValue _ ->
+            initialValue

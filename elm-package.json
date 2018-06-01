@@ -7,7 +7,9 @@
         "./src"
     ],
     "exposed-modules": [
-        "Resettable"
+        "Resettable",
+        "Form.Input",
+        "Form.Select"
     ],
     "dependencies": {
         "elm-community/list-extra": "7.1.0 <= v < 8.0.0",

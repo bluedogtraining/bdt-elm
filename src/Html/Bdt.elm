@@ -1,4 +1,4 @@
-module Html.Bdt exposing (viewIf, divIf, (?))
+module Html.Bdt exposing ((?), maybeAttribute, viewIf, divIf)
 
 import Html.Styled exposing (Html, Attribute, text, div)
 import Html.Styled.Attributes exposing (class)
@@ -8,6 +8,17 @@ import Html.Styled.Attributes exposing (class)
 (?) attribute bool =
 
     if bool then attribute else class ""
+
+
+maybeAttribute : (a -> Attribute msg) -> Maybe a -> Attribute msg
+maybeAttribute f maybe =
+
+    case maybe of
+        Nothing ->
+            class ""
+
+        Just a ->
+            f a
 
 
 viewIf : Bool -> Html msg -> Html msg

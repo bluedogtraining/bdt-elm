@@ -3,13 +3,13 @@ module Form.Select.Internal exposing
     , init, initialViewState
     , Msg, update
     , render
-    , reInitialize ,reset
+    , reInitialise, reset
     , setDefaultLabel, setToLabel
     , setInitialOption, setSelectedOption, setIsOptionDisabled
-    , setIsClearable, setIsError, setIsLocked
+    , setIsError, setIsLocked, setIsClearable
     , setId
-    , getIsOpen, getIsChanged
-    , getSelectedOption, getOriginalOption
+    , getIsChanged, getIsOpen
+    , getSelectedOption, getInitialOption
     , getId
     )
 
@@ -358,8 +358,8 @@ optionItem state viewState option =
 -- STATE SETTERS --
 
 
-reInitialize : State option -> State option
-reInitialize state =
+reInitialise : State option -> State option
+reInitialise state =
 
     { state | selectedOption = Resettable.init (Resettable.getValue state.selectedOption) }
 
@@ -430,22 +430,22 @@ setId id viewState =
 -- GETTERS --
 
 
+getIsChanged : State option -> Bool
+getIsChanged state =
+
+    Resettable.getIsChanged state.selectedOption
+
+
+getInitialOption : State option -> Maybe option
+getInitialOption state =
+
+    Resettable.getInitialValue state.selectedOption
+
+
 getSelectedOption : State option -> Maybe option
 getSelectedOption state =
 
     Resettable.getValue state.selectedOption
-
-
-getOriginalOption : State option -> Maybe option
-getOriginalOption state =
-
-    Resettable.getOriginalValue state.selectedOption
-
-
-getIsChanged : State option -> Bool
-getIsChanged state =
-
-    Resettable.isChanged state.selectedOption
 
 
 getIsOpen : State option -> Bool

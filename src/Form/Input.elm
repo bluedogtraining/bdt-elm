@@ -111,7 +111,7 @@ view (Model state) =
     View state Internal.initialViewState
 
 
-{-| Transforms an Input.View into Html Msg
+{-| Transforms an Input.View into Html Input.Msg
 
     import Form.Input as Input
 
@@ -121,6 +121,7 @@ view (Model state) =
             []
             [ Input.view model.myInput
                 |> Input.render
+                |> Html.map UpdateMyInput
             ]
 -}
 render : View -> Html Internal.Msg

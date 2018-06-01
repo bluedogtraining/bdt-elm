@@ -10,11 +10,6 @@ module Form.Input exposing
     , getId
     )
 
-import Html.Styled exposing (Html)
-
-import Form.Input.Internal as Internal
-
-
 {-| This module is useful if you want to add an Input Form element to your app.
 
 # Definition
@@ -36,6 +31,11 @@ import Form.Input.Internal as Internal
 @docs getInitialValue, getValue, getIsChanged, getId
 
 -}
+
+import Html.Styled exposing (Html)
+
+import Form.Input.Internal as Internal
+
 
 {-| Add a Input.Model to your model.
 

@@ -12,13 +12,6 @@ module Form.Select exposing
     , getId
     )
 
-import Html.Styled exposing (Html)
-
-import Tuple
-
-import Form.Select.Internal as Internal
-
-
 {-| This module is useful if you want to add a Select Form element to your app.
 
 # Definition
@@ -40,6 +33,13 @@ import Form.Select.Internal as Internal
 @docs getIsChanged, getIsOpen, getInitialOption, getSelectedOption, getId
 
 -}
+
+import Html.Styled exposing (Html)
+
+import Tuple
+
+import Form.Select.Internal as Internal
+
 
 {-| Add a Select.Model to your model.
 

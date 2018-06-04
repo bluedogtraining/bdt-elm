@@ -7,6 +7,7 @@ module Form.Input.Internal exposing
     , setInitialValue, setValue
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
+    , setTextType, setEmailType, setPasswordType, setTelType, setNumberType
     , setId
     , getIsChanged, getInitialValue, getValue
     , getId
@@ -40,11 +41,20 @@ init =
     }
 
 
+type Type
+    = Text
+    | Email
+    | Password
+    | Tel
+    | Number
+
+
 type alias ViewState =
     { maxLength : Maybe Int
     , placeholder : String
     , isLocked : Bool
     , isError : Bool
+    , inputType : Type
     , id : Maybe String
     }
 
@@ -55,6 +65,7 @@ initialViewState =
     , placeholder = ""
     , isLocked = False
     , isError = False
+    , inputType = Text
     , id = Nothing
     }
 
@@ -92,9 +103,27 @@ inputField state viewState =
         , onInput Input
         , placeholder viewState.placeholder
         , Html.maybeAttribute maxlength viewState.maxLength
+        , type_ (typeToString viewState.inputType)
         ]
         []
         |> Html.Styled.toUnstyled
+
+
+typeToString : Type -> String
+typeToString inputType =
+
+    case inputType of
+
+        Text ->
+            "text"
+        Email ->
+            "email"
+        Password ->
+            "password"
+        Tel ->
+            "tel"
+        Number ->
+            "number"
 
 
 -- STATE SETTERS --
@@ -127,16 +156,12 @@ setValue value state =
 -- VIEW STATE SETTERS --
 
 
-{-| Set whether your input is in error mode (red border).
--}
 setMaxLength : Int -> ViewState -> ViewState
 setMaxLength maxLength viewState =
 
     { viewState | maxLength = Just maxLength }
 
 
-{-| Set whether your input is in error mode (red border).
--}
 setPlaceholder : String -> ViewState -> ViewState
 setPlaceholder placeholder viewState =
 
@@ -159,6 +184,36 @@ setId : String -> ViewState -> ViewState
 setId id viewState =
 
     { viewState | id = Just id }
+
+
+setTextType : ViewState -> ViewState
+setTextType viewState =
+
+    { viewState | inputType = Text }
+
+
+setEmailType : ViewState -> ViewState
+setEmailType viewState =
+
+    { viewState | inputType = Email }
+
+
+setPasswordType : ViewState -> ViewState
+setPasswordType viewState =
+
+    { viewState | inputType = Password }
+
+
+setTelType : ViewState -> ViewState
+setTelType viewState =
+
+    { viewState | inputType = Tel }
+
+
+setNumberType : ViewState -> ViewState
+setNumberType viewState =
+
+    { viewState | inputType = Number }
 
 
 -- GETTERS --

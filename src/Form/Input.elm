@@ -7,6 +7,7 @@ module Form.Input exposing
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
+    , setTextType, setEmailType, setPasswordType, setTelType, setNumberType
     , getIsChanged, getInitialValue, getValue
     , getId
     )
@@ -24,6 +25,9 @@ module Form.Input exposing
 
 # View Setters
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
+
+# Type Setters
+@docs setTextType, setEmailType, setPasswordType, setTelType, setNumberType
 
 # Getters
 @docs getInitialValue, getValue, getIsChanged, getId
@@ -186,6 +190,46 @@ setId : String -> View -> View
 setId id (View state viewState) =
 
     View state (Internal.setId id viewState)
+
+
+{-| Set the type_ of your input to "text"
+-}
+setTextType : View -> View
+setTextType (View state viewState) =
+
+    View state (Internal.setTextType viewState)
+
+
+{-| Set the type_ of your input to "email"
+-}
+setEmailType : View -> View
+setEmailType (View state viewState) =
+
+    View state (Internal.setEmailType viewState)
+
+
+{-| Set the type_ of your input to "password"
+-}
+setPasswordType : View -> View
+setPasswordType (View state viewState) =
+
+    View state (Internal.setPasswordType viewState)
+
+
+{-| Set the type_ of your input to "tel"
+-}
+setTelType : View -> View
+setTelType (View state viewState) =
+
+    View state (Internal.setTelType viewState)
+
+
+{-| Set the type_ of your input to "number"
+-}
+setNumberType : View -> View
+setNumberType (View state viewState) =
+
+    View state (Internal.setNumberType viewState)
 
 
 {-| Whether your input was changed. Useful if you want to disable save buttons unless there were changes etc.

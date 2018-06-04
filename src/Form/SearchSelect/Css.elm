@@ -26,7 +26,7 @@ infoMessageContainer : Attribute msg
 infoMessageContainer =
     css
         [ padding2 (px 5) (px 10)
-        , border (px 1) solid (hex "dddddd")
+        , border3 (px 1) solid (hex "dddddd")
         , backgroundColor (hex "FFFFFF")
         , fontStyle italic
         , textAlign center
@@ -48,7 +48,7 @@ searchResultList =
         , zIndex (int 1)
         , maxHeight (px 200)
         , overflowY scroll
-        , border (px 1) solid (hex "ddd")
+        , border3 (px 1) solid (hex "ddd")
         , borderRightWidth (px 2) -- need 2px on the right because the scrolling thingy eats 1px
         , backgroundColor (hex "FFFFFF")
         , padding (px 0)

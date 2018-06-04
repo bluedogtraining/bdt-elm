@@ -12,7 +12,8 @@ module Form.SearchSelect exposing
     , getId
     )
 
-{-| This module is useful if you want to add a Select Form element to your app.
+{-| This module is useful if you want to add a Select Form element to your app,
+with the options being searchable and coming from the backend.
 
 # Initialise and update
 @docs Model, init, Msg, update
@@ -35,10 +36,12 @@ import Html.Styled exposing (Html)
 
 import Tuple
 
-import Form.Select.Internal as Internal
+import Json.Decode exposing (Decoder)
+
+import Form.SearchSelect.Internal as Internal
 
 
-{-| Add a Select.Model to your model.
+{-| Add a SearchSelect.Model to your model.
 
     type Title
         = Mr
@@ -46,7 +49,7 @@ import Form.Select.Internal as Internal
         | Dr
 
     type alias MyModel =
-        { mySelect : Select.Model Title
+        { mySearchSelect : SearchSelect.Model Title
         }
 -}
 type Model option
@@ -57,22 +60,23 @@ type View option
     = View (Internal.State option) (Internal.ViewState option)
 
 
-{-| Add a Select.Model to your model.
+{-| Add a SearchSelect.Model to your model.
 
     myInitialModel : MyModel
     myInitialModel =
-        { mySelect = Select.init [Mr, Ms, Dr]
+        { mySearchSelect = SearchSelect.init "https://example.com/search" Decode.string
         }
 -}
-init : List option -> Model option
-init =
-    Internal.init >> Model
+init : String -> Decoder option -> Model option
+init searchUrl optionDecoder =
+
+    Model <| Internal.init searchUrl optionDecoder
 
 
-{-| Add a Select.Msg to your Msg.
+{-| Add a SearchSelect.Msg to your Msg.
 
     type MyMsg
-        = UpdateMySelect Select.Msg
+        = UpdateMySearchSelect SearchSelect.Msg
 -}
 type alias Msg
     = Internal.Msg
@@ -83,12 +87,12 @@ type alias Msg
     myUpdate : Msg -> Model -> (Model, Cmd Msg)
     myUpdate msg model =
         case msg of
-            UpdateMySelect selectMsg ->
+            UpdateMySearchSelect selectMsg ->
                 let
                     (newSelect, cmd) =
-                        Select.update selectMsg mode.mySelect
+                        SearchSelect.update selectMsg mode.mySearchSelect
                 in
-                    { model | mySelect = newSelect } ! [ cmd ]
+                    { model | mySearchSelect = newSelect } ! [ cmd ]
 -}
 update : Internal.Msg option -> Model option -> (Model option, Cmd (Internal.Msg option))
 update msg (Model state) =
@@ -96,13 +100,13 @@ update msg (Model state) =
     Tuple.mapFirst Model (Internal.update msg state)
 
 
-{-| Transform an Select.Model into an Select.View, which allows us to pipe View Setters on it.
+{-| Transform an SearchSelect.Model into an SearchSelect.View, which allows us to pipe View Setters on it.
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Select.view model.mySelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
+            [ SearchSelect.view model.mySearchSelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
 -}
 view : Model option -> View option
@@ -111,15 +115,15 @@ view (Model state) =
     View state Internal.initialViewState
 
 
-{-| Transforms an Select.View into Html Select.Msg
+{-| Transforms an SearchSelect.View into Html SearchSelect.Msg
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Select.view model.mySelect
-                |> Select.render
-                |> Html.map UpdateMySelect
+            [ SearchSelect.view model.mySearchSelect
+                |> SearchSelect.render
+                |> Html.map UpdateMySearchSelect
             ]
 -}
 render : View option -> Html (Internal.Msg option)
@@ -128,7 +132,7 @@ render (View state viewState) =
     Internal.render state viewState
 
 
-{-| ReInitialise your Select.Model.
+{-| ReInitialise your SearchSelect.Model.
 -}
 reInitialise : Model option -> Model option
 reInitialise (Model state) =
@@ -136,7 +140,7 @@ reInitialise (Model state) =
     Model <| Internal.reInitialise state
 
 
-{-| Reset your Select.Model.
+{-| Reset your SearchSelect.Model.
 -}
 reset : Model option -> Model option
 reset (Model state) =
@@ -144,7 +148,7 @@ reset (Model state) =
     Model <| Internal.reset state
 
 
-{-| Set the initial option of your Select.Model.
+{-| Set the initial option of your SearchSelect.Model.
 -}
 setInitialOption : Maybe option -> Model option -> Model option
 setInitialOption selectedOption (Model state) =
@@ -152,7 +156,7 @@ setInitialOption selectedOption (Model state) =
     Model <| Internal.setInitialOption selectedOption state
 
 
-{-| Change the option of your Select.Model.
+{-| Change the option of your SearchSelect.Model.
 -}
 setSelectedOption : Maybe option -> Model option -> Model option
 setSelectedOption selectedOption (Model state) =
@@ -168,7 +172,7 @@ setIsOptionDisabled isOptionDisabled (View state viewState) =
     View state (Internal.setIsOptionDisabled isOptionDisabled viewState)
 
 
-{-| Set whether your select is locked (disabled).
+{-| Set whether your search-select is locked (disabled).
 -}
 setIsLocked : Bool -> View option -> View option
 setIsLocked isLocked (View state viewState) =
@@ -176,7 +180,7 @@ setIsLocked isLocked (View state viewState) =
     View state (Internal.setIsLocked isLocked viewState)
 
 
-{-| Set whether your select is in error mode (red border).
+{-| Set whether your search-select is in error mode (red border).
 -}
 setIsError : Bool -> View option -> View option
 setIsError isError (View state viewState) =
@@ -184,7 +188,7 @@ setIsError isError (View state viewState) =
     View state (Internal.setIsError isError viewState)
 
 
-{-| Set whether your select is clearable (x icon).
+{-| Set whether your search-select is clearable (x icon).
 -}
 setIsClearable : Bool -> View option -> View option
 setIsClearable isClearable (View state viewState) =
@@ -208,7 +212,7 @@ setDefaultLabel defaultLabel (View state viewState) =
     View state (Internal.setDefaultLabel defaultLabel viewState)
 
 
-{-| Give your select an id. Can be useful for DOM selectors (focus, WebComponents etc.)
+{-| Give your search-select an id. Can be useful for DOM selectors (focus, WebComponents etc.)
 -}
 setId : String -> View option -> View option
 setId id (View state viewState) =
@@ -216,7 +220,7 @@ setId id (View state viewState) =
     View state (Internal.setId id viewState)
 
 
-{-| Whether your select was changed. Useful if you want to disable save buttons unless there were changes etc.
+{-| Whether your search-select was changed. Useful if you want to disable save buttons unless there were changes etc.
 -}
 getIsChanged : Model option -> Bool
 getIsChanged (Model state) =
@@ -232,7 +236,7 @@ getIsOpen (Model state) =
     Internal.getIsOpen state
 
 
-{-| Get the initial option of your select.
+{-| Get the initial option of your search-select.
 -}
 getInitialOption : Model option -> Maybe option
 getInitialOption (Model state) =
@@ -240,7 +244,7 @@ getInitialOption (Model state) =
     Internal.getInitialOption state
 
 
-{-| Get the current option of your select. This is what you'd use to display the data somewhere outside of your select,
+{-| Get the current option of your search-select. This is what you'd use to display the data somewhere outside of your search-select,
 or to send the data to the backend for example etc.
 -}
 getSelectedOption : Model option -> Maybe option
@@ -249,7 +253,7 @@ getSelectedOption (Model state) =
     Internal.getSelectedOption state
 
 
-{-| Useful if you need the id of the select in your update function, so set focus etc.
+{-| Useful if you need the id of the search select in your update function, to set focus etc.
 -}
 getId : View option -> Maybe String
 getId (View _ viewState) =

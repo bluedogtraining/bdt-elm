@@ -1,7 +1,6 @@
 module Form.InputTests exposing (suite)
 
 import Test exposing (..)
-import Fuzz exposing (Fuzzer)
 import Expect exposing (Expectation)
 
 import Form.Input as Input

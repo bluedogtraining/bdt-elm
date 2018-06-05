@@ -101,7 +101,11 @@ update msg state =
                     { state | isOpen = True } ! []
 
                 Blur ->
-                    { state | isOpen = False, focusedOption = Nothing } ! [ Cmd.none ]
+                    case state.focusedOption of
+                        Nothing ->
+                            { state | isOpen = False, focusedOption = Nothing } ! []
+                        _ ->
+                            state ! []
 
                 Select option ->
                     { state

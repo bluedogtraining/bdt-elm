@@ -21,6 +21,7 @@ optionTextContainer isLocked isError =
         , backgroundColor (if isLocked then rgb 245 245 245 else rgb 255 255 255)
         , borderColor (if isError then Colors.error else hex "dddddd")
         , cursor (if isLocked then notAllowed else pointer)
+        , justifyContent spaceBetween
         ]
 
 

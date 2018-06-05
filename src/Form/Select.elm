@@ -249,7 +249,7 @@ getSelectedOption (Model state) =
     Internal.getSelectedOption state
 
 
-{-| Useful if you need the id of the select in your update function, so set focus etc.
+{-| Useful if you need the id of the select in your update function, to set focus etc.
 -}
 getId : View option -> Maybe String
 getId (View _ viewState) =

@@ -168,7 +168,6 @@ update msg state =
 
 type KeyboardInput
     = Enter
-    | Space
     | Up
     | Down
 

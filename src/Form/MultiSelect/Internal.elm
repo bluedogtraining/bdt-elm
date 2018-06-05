@@ -1,15 +1,15 @@
-module Form.Select.Internal exposing
+module Form.MultiSelect.Internal exposing
     ( State, ViewState
     , init, initialViewState
     , Msg, update
     , render
     , reInitialise, reset
     , setDefaultLabel, setToLabel
-    , setInitialOption, setSelectedOption, setIsOptionDisabled
+    , setInitialOptions, setSelectedOptions, setIsOptionDisabled
     , setIsError, setIsLocked, setIsClearable
     , setId
     , getIsChanged, getIsOpen
-    , getSelectedOption, getInitialOption
+    , getSelectedOptions, getInitialOptions
     , getId
     )
 
@@ -24,6 +24,7 @@ import Dict
 import Task
 
 import List.Extra as List
+import List.Nonempty as Nonempty exposing (Nonempty)
 
 import Json.Decode as Decode exposing (Decoder)
 
@@ -31,7 +32,7 @@ import Resettable exposing (Resettable)
 import Html.Bdt as Html exposing ((?))
 import Form.Helpers as Form
 
-import Form.Select.Css as Css
+import Form.MultiSelect.Css as Css
 
 
 -- MODEL --
@@ -39,17 +40,17 @@ import Form.Select.Css as Css
 
 type alias State option =
     { isOpen : Bool
-    , options : List option
-    , selectedOption : Resettable (Maybe option)
+    , options : Nonempty option
+    , selectedOptions : Resettable (List option)
     , focusedOption : Maybe option
     }
 
 
-init : List option -> State option
+init : Nonempty option -> State option
 init options =
     { isOpen = False
     , options = options
-    , selectedOption = Resettable.init Nothing
+    , selectedOptions = Resettable.init []
     , focusedOption = Nothing
     }
 
@@ -84,6 +85,7 @@ type Msg option
     = Open
     | Blur
     | Select option
+    | Unselect option
     | Clear
     | KeyboardInput Bool KeyboardInput
     | Focus option
@@ -101,17 +103,29 @@ update msg state =
                     { state | isOpen = True } ! []
 
                 Blur ->
-                    { state | isOpen = False, focusedOption = Nothing } ! [ Cmd.none ]
+                    case state.focusedOption of
+                        Nothing ->
+                            { state | isOpen = False } ! []
+
+                        Just _ ->
+                             state ! []
+
+                BlurOption option ->
+                    case Just option == state.focusedOption of
+                        True ->
+                            { state | focusedOption = Nothing, isOpen = False } ! []
+
+                        False ->
+                             state ! []
 
                 Select option ->
-                    { state
-                        | selectedOption = Resettable.update (Just option) state.selectedOption
-                        , isOpen = False
-                        , focusedOption = Nothing
-                    } ! []
+                    { state | selectedOptions = Resettable.update (selectOption state option) state.selectedOptions } ! []
+
+                Unselect option ->
+                    { state | selectedOptions = Resettable.update (unselectOption state.selectedOptions option) state.selectedOptions } ! []
 
                 Clear ->
-                    { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
+                    { state | selectedOptions = Resettable.update [] state.selectedOptions } ! []
 
                 KeyboardInput isOptionDisabled keyboardInput ->
                     handleKeyboardInput state isOptionDisabled keyboardInput
@@ -119,19 +133,44 @@ update msg state =
                 Focus option ->
                     { state | focusedOption = Just (focusOption state.options option) } ! []
 
-                BlurOption option ->
-                    case state.focusedOption == Just option of
-                        True ->
-                            { state | focusedOption = Nothing, isOpen = False } ! []
-
-                        False ->
-                            state ! []
-
-                DomFocus _ ->
+                DomFocus result ->
                     state ! []
 
     in
         newState ! [ cmd ]
+
+
+selectOption : State option -> option -> List option
+selectOption state option =
+
+    case Nonempty.member option state.options of
+        True ->
+            option :: Resettable.getValue state.selectedOptions
+
+        False ->
+            Debug.crash ("MULTISELECT ERROR - can't select " ++ toString option ++ " is not a valid option for this select.")
+
+
+unselectOption : Resettable (List option) -> option -> List option
+unselectOption selectedOptions option =
+
+    case List.member option (Resettable.getValue selectedOptions) of
+        True ->
+            List.filter ((/=) option) (Resettable.getValue selectedOptions)
+
+        False ->
+            Debug.crash ("MULTISELECT ERROR - can't unselect " ++ toString option ++ " it isn't selected")
+
+
+focusOption : Nonempty option -> option -> option
+focusOption options option =
+
+    case Nonempty.member option options of
+        True ->
+            option
+
+        False ->
+            Debug.crash ("MULTISELECT ERROR - can't focus " ++ toString option ++ " it is not a valid option for this select.")
 
 
 type KeyboardInput
@@ -159,6 +198,7 @@ isSelectInputKey msg code =
 
     in
         case Dict.get code dict of
+
             Just selectKeyboardInput ->
                 Decode.succeed (msg selectKeyboardInput)
 
@@ -172,7 +212,7 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
     case state.focusedOption of
 
         Nothing ->
-            { state | focusedOption = List.head state.options } ! []
+            { state | focusedOption = Just (Nonempty.head state.options) } ! []
 
         Just focusedOption ->
             case keyboardInput of
@@ -183,8 +223,7 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
 
                         False ->
                             { state
-                                | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
-                                , isOpen = False
+                                 | selectedOptions = Resettable.update (toggleOption focusedOption state.selectedOptions) state.selectedOptions
                             } ! []
 
                 Space ->
@@ -194,8 +233,7 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
 
                         False ->
                             { state
-                                | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
-                                , isOpen = False
+                                | selectedOptions = Resettable.update (toggleOption focusedOption state.selectedOptions) state.selectedOptions
                             } ! []
 
                 Up ->
@@ -217,35 +255,37 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
                             ! [ Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus) ]
 
 
-focusOption : List option -> option -> option
-focusOption options option =
+toggleOption : option -> Resettable (List option) -> List option
+toggleOption option selectedOptions =
 
-    case List.member option options of
+    case List.member option (Resettable.getValue selectedOptions) of
         True ->
-            option
+            List.filter ((/=) option) (Resettable.getValue selectedOptions)
 
         False ->
-            Debug.crash ("SELECT ERROR - can't focus" ++ Form.toHtmlId option ++ " it is not a valid option for this select.")
+            option :: (Resettable.getValue selectedOptions)
 
 
-focusPreviousOption : List option -> option -> option
+focusPreviousOption : Nonempty option -> option -> option
 focusPreviousOption options option =
 
-    focusNextOption (List.reverse options) option
+    focusNextOption (Nonempty.reverse options) option
 
 
-focusNextOption : List option -> option -> option
+focusNextOption : Nonempty option -> option -> option
 focusNextOption options option =
 
     let
         maybeNextOption =
             options
+                |> Nonempty.toList
                 |> List.dropWhile ((/=) option)
                 |> List.drop 1
                 |> List.head
 
     in
         case maybeNextOption of
+
             Nothing ->
                 option
 
@@ -271,63 +311,63 @@ closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
 closed state viewState =
 
     div
-        [ Css.container ]
+        [ Css.container
+        , class "form-control"
+        , tabindex 0 ? not viewState.isLocked
+        , onFocus Open ? not viewState.isLocked
+        ]
         [ div
-            [ Css.optionTextContainer viewState.isLocked viewState.isError
-            , class "form-control"
-            , id (viewState.id |> Maybe.withDefault "")
-            , disabled viewState.isLocked
-            , tabindex 0 ? not viewState.isLocked
-            , onFocus Open ? not viewState.isLocked
-            , onClick Open ? not viewState.isLocked
-            ]
+            [ Css.optionTextContainer viewState.isLocked viewState.isError ]
             [ div
-                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
-                [ div
-                    [ Css.optionText ]
-                    [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
+                [ Css.optionText
+                , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
                 ]
-            , clearButton state viewState
-            , Html.divIf (not viewState.isLocked)
-                [ class "glyphicons glyphicons-chevron-down" ]
+                [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
+            , div
+                [ class "glyphicons glyphicons-chevron-down" ? not viewState.isLocked ]
                 []
             ]
         ]
-        |> Html.Styled.toUnstyled
+        |> toUnstyled
 
 
 open : State option -> ViewState option -> VirtualDom.Node (Msg option)
 open state viewState =
 
     div
-        [ Css.container ]
+        [ Css.container
+        , class "form-control"
+        , tabindex -1
+        , onBlur Blur
+        , onKeyboardInput <| KeyboardInput False
+        ]
         [ div
-            [ Css.optionTextContainer viewState.isLocked viewState.isError
-            , class "form-control"
-            , id <| Form.toHtmlId viewState.id
-            , onKeyboardInput <| KeyboardInput False
-            , tabindex -1
-            , onBlur Blur
+            [ Css.optionText
+            , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
             ]
-            [ div
-                [ Css.optionText
-                , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
-                ]
-                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
-            ]
+            [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
         , optionList state viewState
         ]
-        |> Html.Styled.toUnstyled
+        |> toUnstyled
 
 
-clearButton : State option -> ViewState option -> Html (Msg option)
-clearButton state viewState =
+optionText : String -> (option -> String) -> Resettable (List option) -> String
+optionText defaultLabel toLabel selectedOptions =
 
-    Html.divIf (viewState.isClearable && Resettable.getValue state.selectedOption /= Nothing)
-        [ class "glyphicons glyphicons-remove"
-        , onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear)
-        ]
-        []
+    case List.isEmpty (Resettable.getValue selectedOptions) of
+        True ->
+            defaultLabel
+
+        False ->
+            toString (List.length (Resettable.getValue selectedOptions))
+                ++ " options selected"
+                ++ String.concat (List.map (toLabelList toLabel) (Resettable.getValue selectedOptions))
+
+
+toLabelList : (option -> String) -> option -> String
+toLabelList toLabel option =
+
+    ", " ++ toLabel option
 
 
 optionList : State option -> ViewState option -> Html (Msg option)
@@ -335,7 +375,7 @@ optionList state viewState =
 
     div
         [ Css.optionList ]
-        (List.map (optionItem state viewState) state.options)
+        (List.map (optionItem state viewState) (Nonempty.toList state.options))
 
 
 optionItem : State option -> ViewState option -> option -> Html (Msg option)
@@ -343,14 +383,35 @@ optionItem state viewState option =
 
     div
         [ Css.optionItem (viewState.isOptionDisabled option) (Just option == state.focusedOption)
-        , id (Form.toHtmlId option)
-        , onFocus (Focus option)
-        , onBlur (BlurOption option)
-        , onKeyboardInput (KeyboardInput (viewState.isOptionDisabled option))
+        , id <| Form.toHtmlId option
+        , handleMouseDown state.selectedOptions option
+        , onFocus <| Focus option
+        , onBlur <| BlurOption option
+        , onKeyboardInput <| KeyboardInput viewState.isLocked
         , tabindex -1
-        , onMouseDown (Select option) ? not (viewState.isOptionDisabled option)
         ]
-        [ text (viewState.toLabel option) ]
+        [ div
+            [ class "glyphicons"
+            , classList
+                [ ("glyphicons-check", List.member option (Resettable.getValue state.selectedOptions))
+                , ("glyphicons-unchecked", List.member option (Resettable.getValue state.selectedOptions) |> not)
+                ]
+            ]
+            []
+        , text (viewState.toLabel option)
+        ]
+
+
+handleMouseDown : Resettable (List option) -> option -> Attribute (Msg option)
+handleMouseDown selectedOptions option =
+
+    -- use onMouseDown over onClick so that it triggers before the onBlur on the input
+    case List.member option (Resettable.getValue selectedOptions) of
+        True ->
+            onWithOptions "mousedown" { stopPropagation = False, preventDefault = True } (Decode.succeed <| Unselect option)
+
+        False ->
+            onWithOptions "mousedown" { stopPropagation = False, preventDefault = True } (Decode.succeed <| Select option)
 
 
 -- STATE SETTERS --
@@ -359,25 +420,25 @@ optionItem state viewState option =
 reInitialise : State option -> State option
 reInitialise state =
 
-    { state | selectedOption = Resettable.init (Resettable.getValue state.selectedOption) }
+    { state | selectedOptions = Resettable.init (Resettable.getValue state.selectedOptions) }
 
 
 reset : State option -> State option
 reset state =
 
-    { state | selectedOption = Resettable.reset state.selectedOption }
+    { state | selectedOptions = Resettable.reset state.selectedOptions }
 
 
-setInitialOption : Maybe option -> State option -> State option
-setInitialOption selectedOption state =
+setInitialOptions : List option -> State option -> State option
+setInitialOptions selectedOptions state =
 
-    { state | selectedOption = Resettable.init selectedOption }
+    { state | selectedOptions = Resettable.init selectedOptions }
 
 
-setSelectedOption : Maybe option -> State option -> State option
-setSelectedOption selectedOption state =
+setSelectedOptions : List option -> State option -> State option
+setSelectedOptions selectedOptions state =
 
-    { state | selectedOption = Resettable.update selectedOption state.selectedOption }
+    { state | selectedOptions = Resettable.update selectedOptions state.selectedOptions }
 
 
 -- VIEW STATE SETTERS --
@@ -431,19 +492,19 @@ setId id viewState =
 getIsChanged : State option -> Bool
 getIsChanged state =
 
-    Resettable.getIsChanged state.selectedOption
+    Resettable.getIsChanged state.selectedOptions
 
 
-getInitialOption : State option -> Maybe option
-getInitialOption state =
+getInitialOptions : State option -> List option
+getInitialOptions state =
 
-    Resettable.getInitialValue state.selectedOption
+    Resettable.getInitialValue state.selectedOptions
 
 
-getSelectedOption : State option -> Maybe option
-getSelectedOption state =
+getSelectedOptions : State option -> List option
+getSelectedOptions state =
 
-    Resettable.getValue state.selectedOption
+    Resettable.getValue state.selectedOptions
 
 
 getIsOpen : State option -> Bool

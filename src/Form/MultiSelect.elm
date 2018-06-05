@@ -1,18 +1,18 @@
-module Form.Select exposing
+module Form.MultiSelect exposing
     ( Model, init
     , Msg, update
     , view, render
     , reInitialise, reset
-    , setInitialOption, setSelectedOption, setIsOptionDisabled
+    , setInitialOptions, setSelectedOptions, setIsOptionDisabled
     , setIsError, setIsLocked, setIsClearable
     , setDefaultLabel, setToLabel
     , setId
     , getIsChanged, getIsOpen
-    , getInitialOption, getSelectedOption
+    , getInitialOptions, getSelectedOptions
     , getId
     )
 
-{-| This module is useful if you want to add a Select Form element to your app.
+{-| This module is useful if you want to add a MultiSelect Form element to your app.
 
 # Initialise and update
 @docs Model, init, Msg, update
@@ -21,13 +21,13 @@ module Form.Select exposing
 @docs view, render
 
 # State Setters
-@docs reInitialise, reset, setInitialOption, setSelectedOption, setIsOptionDisabled
+@docs reInitialise, reset, setInitialOptions, setSelectedOptions, setIsOptionDisabled
 
 # View Setters
 @docs setIsError, setIsLocked, setIsClearable, setDefaultLabel, setToLabel, setId
 
 # Getters
-@docs getIsChanged, getIsOpen, getInitialOption, getSelectedOption, getId
+@docs getIsChanged, getIsOpen, getInitialOptions, getSelectedOptions, getId
 
 -}
 
@@ -35,18 +35,21 @@ import Html.Styled exposing (Html)
 
 import Tuple
 
-import Form.Select.Internal as Internal
+import List.Nonempty exposing (Nonempty)
+
+import Form.MultiSelect.Internal as Internal
 
 
-{-| Add a Select.Model to your model.
+{-| Add a MultiSelect.Model to your model.
 
-    type Title
-        = Mr
-        | Ms
-        | Dr
+    type MusicGenre
+        = Rock
+        | Jazz
+        | Blues
+        | Metal
 
     type alias MyModel =
-        { mySelect : Select.Model Title
+        { myMultiSelect : MultiSelect.Model MusicGenre
         }
 -}
 type Model option
@@ -57,22 +60,22 @@ type View option
     = View (Internal.State option) (Internal.ViewState option)
 
 
-{-| Add a Select.Model to your model.
+{-| Add a MultiSelect.Model to your model.
 
     myInitialModel : MyModel
     myInitialModel =
-        { mySelect = Select.init [Mr, Ms, Dr]
+        { myMultiSelect = MultiSelect.init <| Nonempty Rock [Jazz, Blues, Metal]
         }
 -}
-init : List option -> Model option
+init : Nonempty option -> Model option
 init =
     Internal.init >> Model
 
 
-{-| Add a Select.Msg to your Msg.
+{-| Add a MultiSelect.Msg to your Msg.
 
     type MyMsg
-        = UpdateMySelect Select.Msg
+        = UpdateMyMultiSelect MultiSelect.Msg
 -}
 type alias Msg option
     = Internal.Msg option
@@ -83,12 +86,12 @@ type alias Msg option
     myUpdate : Msg -> Model -> (Model, Cmd Msg)
     myUpdate msg model =
         case msg of
-            UpdateMySelect selectMsg ->
+            UpdateMyMultiSelect selectMsg ->
                 let
                     (newSelect, cmd) =
-                        Select.update selectMsg mode.mySelect
+                        MultiSelect.update selectMsg mode.myMultiSelect
                 in
-                    { model | mySelect = newSelect } ! [ cmd ]
+                    { model | myMultiSelect = newSelect } ! [ cmd ]
 -}
 update : Internal.Msg option -> Model option -> (Model option, Cmd (Internal.Msg option))
 update msg (Model state) =
@@ -96,13 +99,13 @@ update msg (Model state) =
     Tuple.mapFirst Model (Internal.update msg state)
 
 
-{-| Transform an Select.Model into an Select.View, which allows us to pipe View Setters on it.
+{-| Transform an MultiSelect.Model into an MultiSelect.View, which allows us to pipe View Setters on it.
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Select.view model.mySelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
+            [ MultiSelect.view model.myMultiSelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
 -}
 view : Model option -> View option
@@ -111,15 +114,15 @@ view (Model state) =
     View state Internal.initialViewState
 
 
-{-| Transforms an Select.View into Html Select.Msg
+{-| Transforms an MultiSelect.View into Html MultiSelect.Msg
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Select.view model.mySelect
-                |> Select.render
-                |> Html.map UpdateMySelect
+            [ MultiSelect.view model.myMultiSelect
+                |> MultiSelect.render
+                |> Html.map UpdateMyMultiSelect
             ]
 -}
 render : View option -> Html (Internal.Msg option)
@@ -128,7 +131,7 @@ render (View state viewState) =
     Internal.render state viewState
 
 
-{-| ReInitialise your Select.Model.
+{-| ReInitialise your MultiSelect.Model.
 -}
 reInitialise : Model option -> Model option
 reInitialise (Model state) =
@@ -136,7 +139,7 @@ reInitialise (Model state) =
     Model <| Internal.reInitialise state
 
 
-{-| Reset your Select.Model.
+{-| Reset your MultiSelect.Model.
 -}
 reset : Model option -> Model option
 reset (Model state) =
@@ -144,20 +147,20 @@ reset (Model state) =
     Model <| Internal.reset state
 
 
-{-| Set the initial option of your Select.Model.
+{-| Set the initial option of your MultiSelect.Model.
 -}
-setInitialOption : Maybe option -> Model option -> Model option
-setInitialOption selectedOption (Model state) =
+setInitialOptions : List option -> Model option -> Model option
+setInitialOptions selectedOptions (Model state) =
 
-    Model <| Internal.setInitialOption selectedOption state
+    Model <| Internal.setInitialOptions selectedOptions state
 
 
-{-| Change the option of your Select.Model.
+{-| Change the option of your MultiSelect.Model.
 -}
-setSelectedOption : Maybe option -> Model option -> Model option
-setSelectedOption selectedOption (Model state) =
+setSelectedOptions : List option -> Model option -> Model option
+setSelectedOptions selectedOptions (Model state) =
 
-    Model <| Internal.setSelectedOption selectedOption state
+    Model <| Internal.setSelectedOptions selectedOptions state
 
 
 {-| This function allows you to disable specific options.
@@ -168,20 +171,20 @@ setIsOptionDisabled isOptionDisabled (View state viewState) =
     View state (Internal.setIsOptionDisabled isOptionDisabled viewState)
 
 
-{-| Set whether your select is in error mode (red border).
--}
-setIsError : Bool -> View option -> View option
-setIsError isError (View state viewState) =
-
-    View state (Internal.setIsError isError viewState)
-
-
 {-| Set whether your select is locked (disabled).
 -}
 setIsLocked : Bool -> View option -> View option
 setIsLocked isLocked (View state viewState) =
 
     View state (Internal.setIsLocked isLocked viewState)
+
+
+{-| Set whether your select is in error mode (red border).
+-}
+setIsError : Bool -> View option -> View option
+setIsError isError (View state viewState) =
+
+    View state (Internal.setIsError isError viewState)
 
 
 {-| Set whether your select is clearable (x icon).
@@ -234,19 +237,19 @@ getIsOpen (Model state) =
 
 {-| Get the initial option of your select.
 -}
-getInitialOption : Model option -> Maybe option
-getInitialOption (Model state) =
+getInitialOptions : Model option -> List option
+getInitialOptions (Model state) =
 
-    Internal.getInitialOption state
+    Internal.getInitialOptions state
 
 
 {-| Get the current option of your select. This is what you'd use to display the data somewhere outside of your select,
 or to send the data to the backend for example etc.
 -}
-getSelectedOption : Model option -> Maybe option
-getSelectedOption (Model state) =
+getSelectedOptions : Model option -> List option
+getSelectedOptions (Model state) =
 
-    Internal.getSelectedOption state
+    Internal.getSelectedOptions state
 
 
 {-| Useful if you need the id of the select in your update function, to set focus etc.

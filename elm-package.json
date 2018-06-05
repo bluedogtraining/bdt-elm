@@ -1,5 +1,5 @@
 {
-    "version": "4.0.0",
+    "version": "4.1.1",
     "summary": "Elm modules commonly used at BDT",
     "repository": "https://github.com/bluedogtraining/bdt-elm.git",
     "license": "BSD3",
@@ -9,7 +9,9 @@
     "exposed-modules": [
         "Resettable",
         "Form.Input",
-        "Form.Select"
+        "Form.Select",
+        "Form.IntInput",
+        "Form.FloatInput"
     ],
     "dependencies": {
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",

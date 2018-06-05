@@ -1,13 +1,12 @@
-module Form.Input.Internal exposing
+module Form.FloatInput.Internal exposing
     ( State, ViewState
     , init, initialViewState
     , Msg, update
     , render
     , reInitialise, reset
-    , setInitialValue, setValue
+    , setInitialValue, setValue, setDecimal
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
-    , setTextType, setEmailType, setPasswordType, setTelType, setNumberType
     , setId
     , getIsChanged, getInitialValue, getValue
     , getId
@@ -18,35 +17,27 @@ import Html.Styled.Lazy as Html
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 
+import Html.Bdt as Html exposing ((?))
+
 import VirtualDom
 import Regex exposing (Regex)
 
 import Resettable exposing (Resettable)
-import Html.Bdt as Html exposing ((?))
 
 import Form.Input.Css as Css
 
 
--- MODEL --
-
-
 type alias State =
     { value : Resettable String
+    , decimal : Int
     }
 
 
 init : State
 init =
     { value = Resettable.init ""
+    , decimal = 0
     }
-
-
-type Type
-    = Text
-    | Email
-    | Password
-    | Tel
-    | Number
 
 
 type alias ViewState =
@@ -54,7 +45,6 @@ type alias ViewState =
     , placeholder : String
     , isLocked : Bool
     , isError : Bool
-    , inputType : Type
     , id : Maybe String
     }
 
@@ -65,7 +55,6 @@ initialViewState =
     , placeholder = ""
     , isLocked = False
     , isError = False
-    , inputType = Text
     , id = Nothing
     }
 
@@ -80,7 +69,13 @@ type Msg
 update : Msg -> State -> State
 update (Input string) state =
 
-    { state | value = Resettable.update string state.value }
+    case Regex.contains (Regex.regex ("^[-]?[0-9]*([.][0-9]{0," ++ toString state.decimal ++ "})?$")) string of
+
+        True ->
+            { state | value = Resettable.update string state.value }
+
+        False ->
+            state
 
 
 -- VIEW --
@@ -103,27 +98,9 @@ inputField state viewState =
         , onInput Input
         , placeholder viewState.placeholder
         , Html.maybeAttribute maxlength viewState.maxLength
-        , type_ (typeToString viewState.inputType)
         ]
         []
         |> Html.Styled.toUnstyled
-
-
-typeToString : Type -> String
-typeToString inputType =
-
-    case inputType of
-
-        Text ->
-            "text"
-        Email ->
-            "email"
-        Password ->
-            "password"
-        Tel ->
-            "tel"
-        Number ->
-            "number"
 
 
 -- STATE SETTERS --
@@ -141,16 +118,22 @@ reset state =
     { state | value = Resettable.reset state.value }
 
 
-setInitialValue : String -> State -> State
+setInitialValue : Float -> State -> State
 setInitialValue value state =
 
-    { state | value = Resettable.init value }
+    { state | value = Resettable.init (toString value) }
 
 
-setValue : String -> State -> State
+setValue : Float -> State -> State
 setValue value state =
 
-    { state | value = Resettable.update value state.value }
+    { state | value = Resettable.update (toString value) state.value }
+
+
+setDecimal : Int -> State -> State
+setDecimal decimal state =
+
+    { state | decimal = decimal }
 
 
 -- VIEW STATE SETTERS --
@@ -186,36 +169,6 @@ setId id viewState =
     { viewState | id = Just id }
 
 
-setTextType : ViewState -> ViewState
-setTextType viewState =
-
-    { viewState | inputType = Text }
-
-
-setEmailType : ViewState -> ViewState
-setEmailType viewState =
-
-    { viewState | inputType = Email }
-
-
-setPasswordType : ViewState -> ViewState
-setPasswordType viewState =
-
-    { viewState | inputType = Password }
-
-
-setTelType : ViewState -> ViewState
-setTelType viewState =
-
-    { viewState | inputType = Tel }
-
-
-setNumberType : ViewState -> ViewState
-setNumberType viewState =
-
-    { viewState | inputType = Number }
-
-
 -- GETTERS --
 
 
@@ -225,16 +178,35 @@ getIsChanged state =
     Resettable.getIsChanged state.value
 
 
-getInitialValue : State -> String
-getInitialValue state =
+getInitialValue : State -> Maybe Float
+getInitialValue =
 
-    Resettable.getInitialValue state.value
+    .value >> Resettable.getInitialValue >> stringToMaybeInt
 
 
-getValue : State -> String
-getValue state =
+getValue : State -> Maybe Float
+getValue =
 
-    Resettable.getValue state.value
+    .value >> Resettable.getValue >> stringToMaybeInt
+
+
+stringToMaybeInt : String -> Maybe Float
+stringToMaybeInt string =
+
+    case string of
+
+        "" ->
+            Nothing
+
+        value ->
+            -- Don't use withDefault or mapError here, Debug.crash STILL gets called even if successful (compiler bug)
+            case String.toFloat value of
+
+                Err _ ->
+                    Debug.crash "Failed to parse FloatInput String to Float"
+
+                Ok int ->
+                    Just int
 
 
 getId : ViewState -> Maybe String

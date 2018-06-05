@@ -1,4 +1,4 @@
-module Form.Input exposing
+module Form.IntInput exposing
     ( Model, init
     , Msg, update
     , view, render
@@ -7,12 +7,12 @@ module Form.Input exposing
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
-    , setTextType, setEmailType, setPasswordType, setTelType, setNumberType
     , getIsChanged, getInitialValue, getValue
     , getId
     )
 
-{-| This module is useful if you want to add an Input Form element to your app.
+
+{-| This module is useful if you want to add an Integer based Input element to your app.
 
 # Initialise and update
 @docs Model, init, Msg, update
@@ -26,9 +26,6 @@ module Form.Input exposing
 # View Setters
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
 
-# Type Setters
-@docs setTextType, setEmailType, setPasswordType, setTelType, setNumberType
-
 # Getters
 @docs getInitialValue, getValue, getIsChanged, getId
 
@@ -36,7 +33,7 @@ module Form.Input exposing
 
 import Html.Styled exposing (Html)
 
-import Form.Input.Internal as Internal
+import Form.IntInput.Internal as Internal
 
 
 {-| Add a Input.Model to your model.
@@ -138,7 +135,7 @@ reset (Model state) =
 
 {-| Set the initial value of your Input.Model.
 -}
-setInitialValue : String -> Model -> Model
+setInitialValue : Int -> Model -> Model
 setInitialValue value (Model state) =
 
     Model <| Internal.setInitialValue value state
@@ -146,7 +143,7 @@ setInitialValue value (Model state) =
 
 {-| Change the value of your Input.Model.
 -}
-setValue : String -> Model -> Model
+setValue : Int -> Model -> Model
 setValue value (Model state) =
 
     Model <| Internal.setValue value state
@@ -192,46 +189,6 @@ setId id (View state viewState) =
     View state (Internal.setId id viewState)
 
 
-{-| Set the type_ of your input to "text"
--}
-setTextType : View -> View
-setTextType (View state viewState) =
-
-    View state (Internal.setTextType viewState)
-
-
-{-| Set the type_ of your input to "email"
--}
-setEmailType : View -> View
-setEmailType (View state viewState) =
-
-    View state (Internal.setEmailType viewState)
-
-
-{-| Set the type_ of your input to "password"
--}
-setPasswordType : View -> View
-setPasswordType (View state viewState) =
-
-    View state (Internal.setPasswordType viewState)
-
-
-{-| Set the type_ of your input to "tel"
--}
-setTelType : View -> View
-setTelType (View state viewState) =
-
-    View state (Internal.setTelType viewState)
-
-
-{-| Set the type_ of your input to "number"
--}
-setNumberType : View -> View
-setNumberType (View state viewState) =
-
-    View state (Internal.setNumberType viewState)
-
-
 {-| Whether your input was changed. Useful if you want to disable save buttons unless there were changes etc.
 -}
 getIsChanged : Model -> Bool
@@ -242,7 +199,7 @@ getIsChanged (Model state) =
 
 {-| Get the initial value of your input.
 -}
-getInitialValue : Model -> String
+getInitialValue : Model -> Maybe Int
 getInitialValue (Model state) =
 
     Internal.getInitialValue state
@@ -251,7 +208,7 @@ getInitialValue (Model state) =
 {-| Get the current value of your input. This is what you'd use to display the data somewhere outside of your input,
 or to send the data to the backend for example etc.
 -}
-getValue : Model -> String
+getValue : Model -> Maybe Int
 getValue (Model state) =
 
     Internal.getValue state

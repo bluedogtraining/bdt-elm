@@ -1,18 +1,18 @@
-module Form.Input exposing
+module Form.FloatInput exposing
     ( Model, init
     , Msg, update
     , view, render
     , reInitialise, reset
-    , setInitialValue, setValue
+    , setInitialValue, setValue, setDecimal
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
-    , setTextType, setEmailType, setPasswordType, setTelType, setNumberType
     , getIsChanged, getInitialValue, getValue
     , getId
     )
 
-{-| This module is useful if you want to add an Input Form element to your app.
+
+{-| This module is useful if you want to add an Integer based Input element to your app.
 
 # Initialise and update
 @docs Model, init, Msg, update
@@ -21,13 +21,10 @@ module Form.Input exposing
 @docs view, render
 
 # State Setters
-@docs reInitialise, reset, setInitialValue, setValue
+@docs reInitialise, reset, setInitialValue, setValue, setDecimal
 
 # View Setters
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
-
-# Type Setters
-@docs setTextType, setEmailType, setPasswordType, setTelType, setNumberType
 
 # Getters
 @docs getInitialValue, getValue, getIsChanged, getId
@@ -36,7 +33,7 @@ module Form.Input exposing
 
 import Html.Styled exposing (Html)
 
-import Form.Input.Internal as Internal
+import Form.FloatInput.Internal as Internal
 
 
 {-| Add a Input.Model to your model.
@@ -120,7 +117,7 @@ render (View state viewState) =
     Internal.render state viewState
 
 
-{-| ReInitialise your Input.Model.
+{-| ReInitialise your FloatInput.Model.
 -}
 reInitialise : Model -> Model
 reInitialise (Model state) =
@@ -128,7 +125,7 @@ reInitialise (Model state) =
     Model <| Internal.reInitialise state
 
 
-{-| Reset your Input.Model.
+{-| Reset your FloatInput.Model.
 -}
 reset : Model -> Model
 reset (Model state) =
@@ -136,20 +133,28 @@ reset (Model state) =
     Model <| Internal.reset state
 
 
-{-| Set the initial value of your Input.Model.
+{-| Set the initial value of your FloatInput.Model.
 -}
-setInitialValue : String -> Model -> Model
+setInitialValue : Float -> Model -> Model
 setInitialValue value (Model state) =
 
     Model <| Internal.setInitialValue value state
 
 
-{-| Change the value of your Input.Model.
+{-| Change the value of your FloatInput.Model.
 -}
-setValue : String -> Model -> Model
+setValue : Float -> Model -> Model
 setValue value (Model state) =
 
     Model <| Internal.setValue value state
+
+
+{-| Change the number of decimal places of your FloatInput.Model.
+-}
+setDecimal : Int -> Model -> Model
+setDecimal decimal (Model state) =
+
+    Model <| Internal.setDecimal decimal state
 
 
 {-| Set the max length for your input string.
@@ -192,46 +197,6 @@ setId id (View state viewState) =
     View state (Internal.setId id viewState)
 
 
-{-| Set the type_ of your input to "text"
--}
-setTextType : View -> View
-setTextType (View state viewState) =
-
-    View state (Internal.setTextType viewState)
-
-
-{-| Set the type_ of your input to "email"
--}
-setEmailType : View -> View
-setEmailType (View state viewState) =
-
-    View state (Internal.setEmailType viewState)
-
-
-{-| Set the type_ of your input to "password"
--}
-setPasswordType : View -> View
-setPasswordType (View state viewState) =
-
-    View state (Internal.setPasswordType viewState)
-
-
-{-| Set the type_ of your input to "tel"
--}
-setTelType : View -> View
-setTelType (View state viewState) =
-
-    View state (Internal.setTelType viewState)
-
-
-{-| Set the type_ of your input to "number"
--}
-setNumberType : View -> View
-setNumberType (View state viewState) =
-
-    View state (Internal.setNumberType viewState)
-
-
 {-| Whether your input was changed. Useful if you want to disable save buttons unless there were changes etc.
 -}
 getIsChanged : Model -> Bool
@@ -242,7 +207,7 @@ getIsChanged (Model state) =
 
 {-| Get the initial value of your input.
 -}
-getInitialValue : Model -> String
+getInitialValue : Model -> Maybe Float
 getInitialValue (Model state) =
 
     Internal.getInitialValue state
@@ -251,7 +216,7 @@ getInitialValue (Model state) =
 {-| Get the current value of your input. This is what you'd use to display the data somewhere outside of your input,
 or to send the data to the backend for example etc.
 -}
-getValue : Model -> String
+getValue : Model -> Maybe Float
 getValue (Model state) =
 
     Internal.getValue state

@@ -9,7 +9,8 @@
     "exposed-modules": [
         "Resettable",
         "Form.Input",
-        "Form.Select"
+        "Form.Select",
+        "Form.IntInput"
     ],
     "dependencies": {
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",

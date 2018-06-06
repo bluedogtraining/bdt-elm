@@ -8,6 +8,10 @@ import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.DatePicker as DatePicker
 
+import Msg exposing (Msg (..))
+
+import Styles as Css
+
 
 main : Program Never Model Msg
 main =
@@ -35,10 +39,6 @@ initialModel =
     }
 
 
-type Msg
-    = InputMsg Input.Msg
-
-
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
 
@@ -50,7 +50,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div
-        []
+        [ Css.content ]
         [ h1
             []
             [ text "Form Elements" ]
@@ -60,4 +60,7 @@ view model =
         , Input.view model.input
             |> Input.render
             |> Html.map InputMsg
+        , div
+            []
+            [ text <| "Value: " ++ Input.getValue model.input ]
         ]

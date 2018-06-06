@@ -26644,33 +26644,28 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect$setId = F2(
 			A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$setId, id, _p37._1));
 	});
 
-var _bluedogtraining$bdt_elm$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		return A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			_elm_lang$core$Native_Utils.update(
-				model,
-				{
-					input: A2(_bluedogtraining$bdt_elm$Form_Input$update, _p0._0, model.input)
-				}),
-			{ctor: '[]'});
-	});
-var _bluedogtraining$bdt_elm$Main$initialModel = {input: _bluedogtraining$bdt_elm$Form_Input$init};
-var _bluedogtraining$bdt_elm$Main$init = A2(
-	_elm_lang$core$Platform_Cmd_ops['!'],
-	_bluedogtraining$bdt_elm$Main$initialModel,
-	{ctor: '[]'});
-var _bluedogtraining$bdt_elm$Main$Model = function (a) {
-	return {input: a};
-};
-var _bluedogtraining$bdt_elm$Main$InputMsg = function (a) {
+var _bluedogtraining$bdt_elm$Msg$InputMsg = function (a) {
 	return {ctor: 'InputMsg', _0: a};
 };
+
+var _bluedogtraining$bdt_elm$Styles$content = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Css$padding2,
+			_rtfeldman$elm_css$Css$px(40),
+			_rtfeldman$elm_css$Css$px(200)),
+		_1: {ctor: '[]'}
+	});
+
 var _bluedogtraining$bdt_elm$Main$view = function (model) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Styles$content,
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A2(
@@ -26695,14 +26690,46 @@ var _bluedogtraining$bdt_elm$Main$view = function (model) {
 					ctor: '::',
 					_0: A2(
 						_rtfeldman$elm_css$Html_Styled$map,
-						_bluedogtraining$bdt_elm$Main$InputMsg,
+						_bluedogtraining$bdt_elm$Msg$InputMsg,
 						_bluedogtraining$bdt_elm$Form_Input$render(
 							_bluedogtraining$bdt_elm$Form_Input$view(model.input))),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Html_Styled$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Html_Styled$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'Value: ',
+										_bluedogtraining$bdt_elm$Form_Input$getValue(model.input))),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
 };
+var _bluedogtraining$bdt_elm$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{
+					input: A2(_bluedogtraining$bdt_elm$Form_Input$update, _p0._0, model.input)
+				}),
+			{ctor: '[]'});
+	});
+var _bluedogtraining$bdt_elm$Main$initialModel = {input: _bluedogtraining$bdt_elm$Form_Input$init};
+var _bluedogtraining$bdt_elm$Main$init = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	_bluedogtraining$bdt_elm$Main$initialModel,
+	{ctor: '[]'});
 var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 	{
 		init: _bluedogtraining$bdt_elm$Main$init,
@@ -26710,6 +26737,9 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 		view: _bluedogtraining$bdt_elm$Main$view,
 		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 	})();
+var _bluedogtraining$bdt_elm$Main$Model = function (a) {
+	return {input: a};
+};
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

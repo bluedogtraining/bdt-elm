@@ -43,13 +43,8 @@ import Form.SearchSelect.Internal as Internal
 
 {-| Add a SearchSelect.Model to your model.
 
-    type Title
-        = Mr
-        | Ms
-        | Dr
-
     type alias MyModel =
-        { mySearchSelect : SearchSelect.Model Title
+        { mySearchSelect : SearchSelect.Model String
         }
 -}
 type Model option
@@ -60,13 +55,13 @@ type View option
     = View (Internal.State option) (Internal.ViewState option)
 
 
-{-| Add a SearchSelect.Model to your model.
+{-| Init a SearchSelect.Model in your model.
 
-    myInitialModel : MyModel
-    myInitialModel =
-        { mySearchSelect = SearchSelect.init "https://example.com/search" Decode.string
-        }
--}
+      myInitialModel : MyModel
+      myInitialModel =
+          { mySearchSelect = SearchSelect.init "https://example.com/search" Decode.string
+          }
+  -}
 init : String -> Decoder option -> Model option
 init searchUrl optionDecoder =
 
@@ -78,8 +73,7 @@ init searchUrl optionDecoder =
     type MyMsg
         = UpdateMySearchSelect SearchSelect.Msg
 -}
-type alias Msg
-    = Internal.Msg
+type alias Msg = Internal.Msg
 
 
 {-| Use in your update function.

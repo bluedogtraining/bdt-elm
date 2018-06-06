@@ -13,6 +13,25 @@ module Form.DatePicker exposing
     , getId
     )
 
+{-| This module is useful if you want to add a DatePicker Form element to your app.
+
+# Initialise and update
+@docs Model, init, Msg, update
+
+# View and render
+@docs view, render
+
+# State Setters
+@docs reInitialise, reset, setInitialDate, setSelectedDate
+
+# View Setters
+@docs setMinDate, setMaxDate, setIncludeTime, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setToLabel, setId
+
+# Getters
+@docs getIsChanged, getIsOpen, getInitialDate, getSelectedDate, getId
+
+-}
+
 import Html.Styled exposing (Html)
 
 import Tuple
@@ -21,6 +40,12 @@ import Date exposing (Date)
 import Form.DatePicker.Internal as Internal
 
 
+{-| Add a DatePicker.Model to your model.
+
+    type alias MyModel =
+        { myDatePicker : DatePicker.Model
+        }
+-}
 type Model
     = Model Internal.State
 
@@ -29,6 +54,13 @@ type View
     = View Internal.State Internal.ViewState
 
 
+{-| Init a DatePicker.Model in your model.
+
+    myInitialModel : MyModel
+    myInitialModel =
+        { myDatePicker = DatePicker.init
+        }
+-}
 init : Model
 init =
     Model Internal.init
@@ -39,8 +71,7 @@ init =
     type MyMsg
         = UpdateMyDatePicker DatePicker.Msg
 -}
-type alias Msg
-    = Internal.Msg
+type alias Msg = Internal.Msg
 
 
 {-| Use in your update function.
@@ -48,12 +79,12 @@ type alias Msg
     myUpdate : Msg -> Model -> (Model, Cmd Msg)
     myUpdate msg model =
         case msg of
-            UpdateMySelect selectMsg ->
+            UpdateMyDatePicker datePickerMsg ->
                 let
-                    (newSelect, cmd) =
-                        Select.update selectMsg mode.mySelect
+                    (newDatePicker, cmd) =
+                        DatePicker.update datePickerMsg mode.myDatePicker
                 in
-                    { model | mySelect = newSelect } ! [ cmd ]
+                    { model | myDatePicker = newDatePicker } ! [ cmd ]
 -}
 update : Internal.Msg -> Model -> (Model, Cmd Internal.Msg)
 update msg (Model state) =
@@ -61,13 +92,13 @@ update msg (Model state) =
     Tuple.mapFirst Model (Internal.update msg state)
 
 
-{-| Transform an Select.Model into an Select.View, which allows us to pipe View Setters on it.
+{-| Transform an DatePicker.Model into an DatePicker.View, which allows us to pipe View Setters on it.
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Select.view model.mySelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
+            [ DatePicker.view model.myDatePicker -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
 -}
 view : Model -> View
@@ -76,15 +107,15 @@ view (Model state) =
     View state Internal.initialViewState
 
 
-{-| Transforms an Select.View into Html Select.Msg
+{-| Transforms an DatePicker.View into Html DatePicker.Msg
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Select.view model.mySelect
-                |> Select.render
-                |> Html.map UpdateMySelect
+            [ DatePicker.view model.myDatePicker
+                |> DatePicker.render
+                |> Html.map UpdateMyDatePicker
             ]
 -}
 render : View -> Html Internal.Msg
@@ -93,7 +124,7 @@ render (View state viewState) =
     Internal.render state viewState
 
 
-{-| ReInitialise your Select.Model.
+{-| ReInitialise your DatePicker.Model.
 -}
 reInitialise : Model -> Model
 reInitialise (Model state) =
@@ -101,7 +132,7 @@ reInitialise (Model state) =
     Model <| Internal.reInitialise state
 
 
-{-| Reset your Select.Model.
+{-| Reset your DatePicker.Model.
 -}
 reset : Model -> Model
 reset (Model state) =
@@ -109,7 +140,7 @@ reset (Model state) =
     Model <| Internal.reset state
 
 
-{-| Set the initial Date of your Select.Model.
+{-| Set the initial Date of your DatePicker.Model.
 -}
 setInitialDate : Maybe Date -> Model -> Model
 setInitialDate selectedDate (Model state) =
@@ -117,7 +148,7 @@ setInitialDate selectedDate (Model state) =
     Model <| Internal.setInitialDate selectedDate state
 
 
-{-| Change the Date of your Select.Model.
+{-| Change the Date of your DatePicker.Model.
 -}
 setSelectedDate : Maybe Date -> Model -> Model
 setSelectedDate selectedDate (Model state) =
@@ -149,7 +180,7 @@ setIncludeTime includeTime (View state viewState) =
     View state (Internal.setIncludeTime includeTime viewState)
 
 
-{-| Set whether your select is in error mode (red border).
+{-| Set whether your datePicker is in error mode (red border).
 -}
 setIsError : Bool -> View -> View
 setIsError isError (View state viewState) =
@@ -157,7 +188,7 @@ setIsError isError (View state viewState) =
     View state (Internal.setIsError isError viewState)
 
 
-{-| Set whether your select is locked (disabled).
+{-| Set whether your datePicker is locked (disabled).
 -}
 setIsLocked : Bool -> View -> View
 setIsLocked isLocked (View state viewState) =
@@ -165,7 +196,7 @@ setIsLocked isLocked (View state viewState) =
     View state (Internal.setIsLocked isLocked viewState)
 
 
-{-| Set whether your select is clearable (x icon).
+{-| Set whether your datePicker is clearable (x icon).
 -}
 setIsClearable : Bool -> View -> View
 setIsClearable isClearable (View state viewState) =
@@ -197,7 +228,7 @@ setToLabel toLabel (View state viewState) =
     View state (Internal.setToLabel toLabel viewState)
 
 
-{-| Give your select an id. Can be useful for DOM selectors (focus, WebComponents etc.)
+{-| Give your datePicker an id. Can be useful for DOM selectors (focus, WebComponents etc.)
 -}
 setId : String -> View -> View
 setId id (View state viewState) =
@@ -205,7 +236,7 @@ setId id (View state viewState) =
     View state (Internal.setId id viewState)
 
 
-{-| Whether your select was changed. Useful if you want to disable save buttons unless there were changes etc.
+{-| Whether your datePicker was changed. Useful if you want to disable save buttons unless there were changes etc.
 -}
 getIsChanged : Model -> Bool
 getIsChanged (Model state) =
@@ -213,7 +244,7 @@ getIsChanged (Model state) =
     Internal.getIsChanged state
 
 
-{-| Whether this select is currently open.
+{-| Whether this datePicker is currently open.
 -}
 getIsOpen : Model -> Bool
 getIsOpen (Model state) =
@@ -221,7 +252,7 @@ getIsOpen (Model state) =
     Internal.getIsOpen state
 
 
-{-| Get the initial Date of your select.
+{-| Get the initial Date of your datePicker.
 -}
 getInitialDate : Model -> Maybe Date
 getInitialDate (Model state) =
@@ -229,7 +260,7 @@ getInitialDate (Model state) =
     Internal.getInitialDate state
 
 
-{-| Get the current Date of your select. This is what you'd use to display the data somewhere outside of your select,
+{-| Get the current Date of your datePicker. This is what you'd use to display the data somewhere outside of your datePicker,
 or to send the data to the backend for example etc.
 -}
 getSelectedDate : Model -> Maybe Date
@@ -238,7 +269,7 @@ getSelectedDate (Model state) =
     Internal.getSelectedDate state
 
 
-{-| Useful if you need the id of the select in your update function, to set focus etc.
+{-| Useful if you need the id of the datePicker in your update function, to set focus etc.
 -}
 getId : View -> Maybe String
 getId (View _ viewState) =

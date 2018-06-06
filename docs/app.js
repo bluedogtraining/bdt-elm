@@ -26644,9 +26644,180 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect$setId = F2(
 			A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$setId, id, _p37._1));
 	});
 
+var _bluedogtraining$bdt_elm$MusicGenre$Pop = {ctor: 'Pop'};
+var _bluedogtraining$bdt_elm$MusicGenre$Jazz = {ctor: 'Jazz'};
+var _bluedogtraining$bdt_elm$MusicGenre$Blues = {ctor: 'Blues'};
+var _bluedogtraining$bdt_elm$MusicGenre$Metal = {ctor: 'Metal'};
+var _bluedogtraining$bdt_elm$MusicGenre$Rock = {ctor: 'Rock'};
+var _bluedogtraining$bdt_elm$MusicGenre$asList = {
+	ctor: '::',
+	_0: _bluedogtraining$bdt_elm$MusicGenre$Rock,
+	_1: {
+		ctor: '::',
+		_0: _bluedogtraining$bdt_elm$MusicGenre$Metal,
+		_1: {
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$MusicGenre$Blues,
+			_1: {
+				ctor: '::',
+				_0: _bluedogtraining$bdt_elm$MusicGenre$Jazz,
+				_1: {
+					ctor: '::',
+					_0: _bluedogtraining$bdt_elm$MusicGenre$Pop,
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
+var _bluedogtraining$bdt_elm$MusicGenre$asNonempty = A2(
+	_mgold$elm_nonempty_list$List_Nonempty$replaceTail,
+	A2(_elm_lang$core$List$drop, 1, _bluedogtraining$bdt_elm$MusicGenre$asList),
+	_mgold$elm_nonempty_list$List_Nonempty$fromElement(_bluedogtraining$bdt_elm$MusicGenre$Rock));
+
+var _bluedogtraining$bdt_elm$StarWars$Character = F3(
+	function (a, b, c) {
+		return {name: a, hairColor: b, gender: c};
+	});
+var _bluedogtraining$bdt_elm$StarWars$characterDecoder = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'gender',
+	_elm_lang$core$Json_Decode$string,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'hairColor',
+		_elm_lang$core$Json_Decode$string,
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'name',
+			_elm_lang$core$Json_Decode$string,
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_bluedogtraining$bdt_elm$StarWars$Character))));
+
+var _bluedogtraining$bdt_elm$Msg$DatePickerMsg = function (a) {
+	return {ctor: 'DatePickerMsg', _0: a};
+};
+var _bluedogtraining$bdt_elm$Msg$SearchSelectMsg = function (a) {
+	return {ctor: 'SearchSelectMsg', _0: a};
+};
+var _bluedogtraining$bdt_elm$Msg$MultiSelectMsg = function (a) {
+	return {ctor: 'MultiSelectMsg', _0: a};
+};
+var _bluedogtraining$bdt_elm$Msg$SelectMsg = function (a) {
+	return {ctor: 'SelectMsg', _0: a};
+};
+var _bluedogtraining$bdt_elm$Msg$FloatInputMsg = function (a) {
+	return {ctor: 'FloatInputMsg', _0: a};
+};
+var _bluedogtraining$bdt_elm$Msg$IntInputMsg = function (a) {
+	return {ctor: 'IntInputMsg', _0: a};
+};
 var _bluedogtraining$bdt_elm$Msg$InputMsg = function (a) {
 	return {ctor: 'InputMsg', _0: a};
 };
+
+var _bluedogtraining$bdt_elm$Model$initialModel = {
+	input: _bluedogtraining$bdt_elm$Form_Input$init,
+	intInput: _bluedogtraining$bdt_elm$Form_IntInput$init,
+	floatInput: _bluedogtraining$bdt_elm$Form_FloatInput$init,
+	select: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList),
+	multiSelect: _bluedogtraining$bdt_elm$Form_MultiSelect$init(_bluedogtraining$bdt_elm$MusicGenre$asNonempty),
+	searchSelect: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://swapi.co/people/1', _bluedogtraining$bdt_elm$StarWars$characterDecoder),
+	datePicker: _bluedogtraining$bdt_elm$Form_DatePicker$init
+};
+var _bluedogtraining$bdt_elm$Model$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {input: a, intInput: b, floatInput: c, select: d, multiSelect: e, searchSelect: f, datePicker: g};
+	});
+
+var _bluedogtraining$bdt_elm$Update$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'InputMsg':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							input: A2(_bluedogtraining$bdt_elm$Form_Input$update, _p0._0, model.input)
+						}),
+					{ctor: '[]'});
+			case 'IntInputMsg':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							intInput: A2(_bluedogtraining$bdt_elm$Form_IntInput$update, _p0._0, model.intInput)
+						}),
+					{ctor: '[]'});
+			case 'FloatInputMsg':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							floatInput: A2(_bluedogtraining$bdt_elm$Form_FloatInput$update, _p0._0, model.floatInput)
+						}),
+					{ctor: '[]'});
+			case 'SelectMsg':
+				var _p1 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p0._0, model.select);
+				var newSelect = _p1._0;
+				var cmd = _p1._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{select: newSelect}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$SelectMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+			case 'MultiSelectMsg':
+				var _p2 = A2(_bluedogtraining$bdt_elm$Form_MultiSelect$update, _p0._0, model.multiSelect);
+				var newMultiSelect = _p2._0;
+				var cmd = _p2._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{multiSelect: newMultiSelect}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$MultiSelectMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+			case 'SearchSelectMsg':
+				var _p3 = A2(_bluedogtraining$bdt_elm$Form_SearchSelect$update, _p0._0, model.searchSelect);
+				var newSearchSelect = _p3._0;
+				var cmd = _p3._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{searchSelect: newSearchSelect}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$SearchSelectMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+			default:
+				var _p4 = A2(_bluedogtraining$bdt_elm$Form_DatePicker$update, _p0._0, model.datePicker);
+				var newDatePicker = _p4._0;
+				var cmd = _p4._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{datePicker: newDatePicker}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$DatePickerMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+		}
+	});
 
 var _bluedogtraining$bdt_elm$Styles$content = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
@@ -26658,7 +26829,7 @@ var _bluedogtraining$bdt_elm$Styles$content = _rtfeldman$elm_css$Html_Styled_Att
 		_1: {ctor: '[]'}
 	});
 
-var _bluedogtraining$bdt_elm$Main$view = function (model) {
+var _bluedogtraining$bdt_elm$View$view = function (model) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
 		{
@@ -26707,39 +26878,233 @@ var _bluedogtraining$bdt_elm$Main$view = function (model) {
 										_bluedogtraining$bdt_elm$Form_Input$getValue(model.input))),
 								_1: {ctor: '[]'}
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Html_Styled$h2,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled$text('Int Input'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_rtfeldman$elm_css$Html_Styled$map,
+									_bluedogtraining$bdt_elm$Msg$IntInputMsg,
+									_bluedogtraining$bdt_elm$Form_IntInput$render(
+										_bluedogtraining$bdt_elm$Form_IntInput$view(model.intInput))),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_rtfeldman$elm_css$Html_Styled$div,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Html_Styled$text(
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													'Value: ',
+													_elm_lang$core$Basics$toString(
+														_bluedogtraining$bdt_elm$Form_IntInput$getValue(model.intInput)))),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_rtfeldman$elm_css$Html_Styled$h2,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled$text('Float Input'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_rtfeldman$elm_css$Html_Styled$map,
+												_bluedogtraining$bdt_elm$Msg$FloatInputMsg,
+												_bluedogtraining$bdt_elm$Form_FloatInput$render(
+													_bluedogtraining$bdt_elm$Form_FloatInput$view(model.floatInput))),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_rtfeldman$elm_css$Html_Styled$div,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Html_Styled$text(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																'Value: ',
+																_elm_lang$core$Basics$toString(
+																	_bluedogtraining$bdt_elm$Form_FloatInput$getValue(model.floatInput)))),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_rtfeldman$elm_css$Html_Styled$h2,
+														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Html_Styled$text('Select'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_rtfeldman$elm_css$Html_Styled$map,
+															_bluedogtraining$bdt_elm$Msg$SelectMsg,
+															_bluedogtraining$bdt_elm$Form_Select$render(
+																_bluedogtraining$bdt_elm$Form_Select$view(model.select))),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_rtfeldman$elm_css$Html_Styled$div,
+																{ctor: '[]'},
+																{
+																	ctor: '::',
+																	_0: _rtfeldman$elm_css$Html_Styled$text(
+																		A2(
+																			_elm_lang$core$Basics_ops['++'],
+																			'Value: ',
+																			_elm_lang$core$Basics$toString(
+																				_bluedogtraining$bdt_elm$Form_Select$getSelectedOption(model.select)))),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_rtfeldman$elm_css$Html_Styled$h2,
+																	{ctor: '[]'},
+																	{
+																		ctor: '::',
+																		_0: _rtfeldman$elm_css$Html_Styled$text('Multi Select'),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_rtfeldman$elm_css$Html_Styled$map,
+																		_bluedogtraining$bdt_elm$Msg$MultiSelectMsg,
+																		_bluedogtraining$bdt_elm$Form_MultiSelect$render(
+																			_bluedogtraining$bdt_elm$Form_MultiSelect$view(model.multiSelect))),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_rtfeldman$elm_css$Html_Styled$div,
+																			{ctor: '[]'},
+																			{
+																				ctor: '::',
+																				_0: _rtfeldman$elm_css$Html_Styled$text(
+																					A2(
+																						_elm_lang$core$Basics_ops['++'],
+																						'Value: ',
+																						_elm_lang$core$Basics$toString(
+																							_bluedogtraining$bdt_elm$Form_MultiSelect$getSelectedOptions(model.multiSelect)))),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(
+																				_rtfeldman$elm_css$Html_Styled$h2,
+																				{ctor: '[]'},
+																				{
+																					ctor: '::',
+																					_0: _rtfeldman$elm_css$Html_Styled$text('Search Select'),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_rtfeldman$elm_css$Html_Styled$map,
+																					_bluedogtraining$bdt_elm$Msg$SearchSelectMsg,
+																					_bluedogtraining$bdt_elm$Form_SearchSelect$render(
+																						_bluedogtraining$bdt_elm$Form_SearchSelect$view(model.searchSelect))),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(
+																						_rtfeldman$elm_css$Html_Styled$div,
+																						{ctor: '[]'},
+																						{
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Html_Styled$text(
+																								A2(
+																									_elm_lang$core$Basics_ops['++'],
+																									'Value: ',
+																									_elm_lang$core$Basics$toString(
+																										_bluedogtraining$bdt_elm$Form_SearchSelect$getSelectedOption(model.searchSelect)))),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(
+																							_rtfeldman$elm_css$Html_Styled$h2,
+																							{ctor: '[]'},
+																							{
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Html_Styled$text('Date Picker'),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(
+																								_rtfeldman$elm_css$Html_Styled$map,
+																								_bluedogtraining$bdt_elm$Msg$DatePickerMsg,
+																								_bluedogtraining$bdt_elm$Form_DatePicker$render(
+																									_bluedogtraining$bdt_elm$Form_DatePicker$view(model.datePicker))),
+																							_1: {
+																								ctor: '::',
+																								_0: A2(
+																									_rtfeldman$elm_css$Html_Styled$div,
+																									{ctor: '[]'},
+																									{
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Html_Styled$text(
+																											A2(
+																												_elm_lang$core$Basics_ops['++'],
+																												'Value: ',
+																												_elm_lang$core$Basics$toString(
+																													_bluedogtraining$bdt_elm$Form_DatePicker$getSelectedDate(model.datePicker)))),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 		});
 };
-var _bluedogtraining$bdt_elm$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		return A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			_elm_lang$core$Native_Utils.update(
-				model,
-				{
-					input: A2(_bluedogtraining$bdt_elm$Form_Input$update, _p0._0, model.input)
-				}),
-			{ctor: '[]'});
-	});
-var _bluedogtraining$bdt_elm$Main$initialModel = {input: _bluedogtraining$bdt_elm$Form_Input$init};
-var _bluedogtraining$bdt_elm$Main$init = A2(
-	_elm_lang$core$Platform_Cmd_ops['!'],
-	_bluedogtraining$bdt_elm$Main$initialModel,
-	{ctor: '[]'});
+
 var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 	{
-		init: _bluedogtraining$bdt_elm$Main$init,
-		update: _bluedogtraining$bdt_elm$Main$update,
-		view: _bluedogtraining$bdt_elm$Main$view,
+		init: A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			_bluedogtraining$bdt_elm$Model$initialModel,
+			{ctor: '[]'}),
+		update: _bluedogtraining$bdt_elm$Update$update,
+		view: _bluedogtraining$bdt_elm$View$view,
 		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 	})();
-var _bluedogtraining$bdt_elm$Main$Model = function (a) {
-	return {input: a};
-};
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

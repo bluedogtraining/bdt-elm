@@ -9,58 +9,16 @@ import Form.SearchSelect as SearchSelect
 import Form.DatePicker as DatePicker
 
 import Msg exposing (Msg (..))
-
-import Styles as Css
+import Model exposing (Model, initialModel)
+import Update exposing (update)
+import View exposing (view)
 
 
 main : Program Never Model Msg
 main =
     program
-        { init = init
+        { init = initialModel ! []
         , update = update
         , view = view
         , subscriptions = always Sub.none
         }
-
-
-init : (Model, Cmd Msg)
-init =
-    initialModel ! []
-
-
-type alias Model =
-    { input : Input.Model
-    }
-
-
-initialModel : Model
-initialModel =
-    { input = Input.init
-    }
-
-
-update : Msg -> Model -> (Model, Cmd Msg)
-update msg model =
-
-    case msg of
-        InputMsg inputMsg ->
-            { model | input = Input.update inputMsg model.input } ! []
-
-
-view : Model -> Html Msg
-view model =
-    div
-        [ Css.content ]
-        [ h1
-            []
-            [ text "Form Elements" ]
-        , h2
-            []
-            [ text "Input" ]
-        , Input.view model.input
-            |> Input.render
-            |> Html.map InputMsg
-        , div
-            []
-            [ text <| "Value: " ++ Input.getValue model.input ]
-        ]

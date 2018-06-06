@@ -70,8 +70,8 @@ init =
     type MyMsg
         = UpdateMyInput Input.Msg
 -}
-type alias Msg
-    = Internal.Msg
+type alias Msg =
+    Internal.Msg
 
 
 {-| Use in your update function.

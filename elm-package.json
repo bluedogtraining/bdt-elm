@@ -4,7 +4,8 @@
     "repository": "https://github.com/bluedogtraining/bdt-elm.git",
     "license": "BSD3",
     "source-directories": [
-        "./src"
+        "./src",
+        "./gh-pages"
     ],
     "exposed-modules": [
         "Resettable",

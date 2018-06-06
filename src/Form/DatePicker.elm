@@ -4,8 +4,8 @@ module Form.DatePicker exposing
     , view, render
     , reInitialise, reset
     , setInitialDate, setSelectedDate
-    , setMinDate, setMaxDate, setIncludeTime
-    , setIsError, setIsLocked, setIsClearable, setIsInput
+    , setMinDate, setMaxDate, setIncludeTime, setIsInput
+    , setIsError, setIsLocked, setIsClearable
     , setDefaultLabel, setToLabel
     , setId
     , getIsChanged, getIsOpen
@@ -25,7 +25,7 @@ module Form.DatePicker exposing
 @docs reInitialise, reset, setInitialDate, setSelectedDate
 
 # View Setters
-@docs setMinDate, setMaxDate, setIncludeTime, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setToLabel, setId
+@docs setMinDate, setMaxDate, setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setToLabel, setId
 
 # Getters
 @docs getIsChanged, getIsOpen, getInitialDate, getSelectedDate, getId
@@ -180,6 +180,14 @@ setIncludeTime includeTime (View state viewState) =
     View state (Internal.setIncludeTime includeTime viewState)
 
 
+{-| Set whether your date picker is displayed as an input.
+-}
+setIsInput : Bool -> View -> View
+setIsInput isInput (View state viewState) =
+
+    View state (Internal.setIsInput isInput viewState)
+
+
 {-| Set whether your datePicker is in error mode (red border).
 -}
 setIsError : Bool -> View -> View
@@ -202,14 +210,6 @@ setIsClearable : Bool -> View -> View
 setIsClearable isClearable (View state viewState) =
 
     View state (Internal.setIsClearable isClearable viewState)
-
-
-{-| Set whether your date picker is displayed as an input.
--}
-setIsInput : Bool -> View -> View
-setIsInput isInput (View state viewState) =
-
-    View state (Internal.setIsInput isInput viewState)
 
 
 {-| Set the default label, for example (-- NOTHING SELECTED --).

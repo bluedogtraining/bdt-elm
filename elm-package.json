@@ -1,5 +1,5 @@
 {
-    "version": "4.1.1",
+    "version": "4.2.0",
     "summary": "Elm modules commonly used at BDT",
     "repository": "https://github.com/bluedogtraining/bdt-elm.git",
     "license": "BSD3",

@@ -3,14 +3,13 @@ module Html.Bdt exposing ((?), maybeAttribute, viewIf, divIf)
 import Html.Styled exposing (Html, Attribute, text, div)
 import Html.Styled.Attributes exposing (class)
 
+import InfixPrecedence
+
 
 (?) : Attribute msg -> Bool -> Attribute msg
 (?) attribute bool =
 
     if bool then attribute else class ""
-
-
-infix 0 ?
 
 
 maybeAttribute : (a -> Attribute msg) -> Maybe a -> Attribute msg

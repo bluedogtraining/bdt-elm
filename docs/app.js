@@ -22835,10 +22835,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchRequest = F3(
 			_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Response,
 			A2(
 				_elm_lang$http$Http$get,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					searchUrl,
-					A2(_elm_lang$core$Basics_ops['++'], '/', input)),
+				A2(_elm_lang$core$Basics_ops['++'], searchUrl, input),
 				_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchResponseDecoder(optionDecoder)));
 	});
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$update = F2(
@@ -23210,15 +23207,11 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$open = F2(
 														_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$UpdateSearchInput(viewState.inputMinimum)),
 													_1: {
 														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onBlur(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Blur),
+														_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
 														_1: {
 															ctor: '::',
-															_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$value(state.input),
-																_1: {ctor: '[]'}
-															}
+															_0: _elm_lang$html$Html_Attributes$value(state.input),
+															_1: {ctor: '[]'}
 														}
 													}
 												}
@@ -29151,7 +29144,7 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 	floatInput: _bluedogtraining$bdt_elm$Form_FloatInput$init,
 	select: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList),
 	multiSelect: _bluedogtraining$bdt_elm$Form_MultiSelect$init(_bluedogtraining$bdt_elm$MusicGenre$asNonempty),
-	searchSelect: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://swapi.co/people/1', _bluedogtraining$bdt_elm$StarWars$characterDecoder),
+	searchSelect: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://swapi.co/api/people/?search=', _bluedogtraining$bdt_elm$StarWars$characterDecoder),
 	datePicker: _bluedogtraining$bdt_elm$Form_DatePicker$init
 };
 var _bluedogtraining$bdt_elm$Model$Model = F7(

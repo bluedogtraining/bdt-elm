@@ -248,7 +248,7 @@ focusNextOption options option =
 searchRequest : String -> String -> Decoder option -> Cmd (Msg option)
 searchRequest searchUrl input optionDecoder =
     searchResponseDecoder optionDecoder
-        |> Http.get (searchUrl ++ "/" ++ input)
+        |> Http.get (searchUrl ++ input)
         |> Http.send Response
 
 
@@ -311,7 +311,7 @@ open state viewState =
             , tabindex -1
             , disabled viewState.isLocked
             , onInput <| UpdateSearchInput viewState.inputMinimum
-            , onBlur Blur
+--            , onBlur Blur
             , onKeyboardInput KeyboardInput
             , value state.input
             ]

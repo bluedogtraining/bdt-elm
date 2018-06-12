@@ -30,6 +30,6 @@ initialModel =
     , floatInput = FloatInput.init
     , select = Select.init MusicGenre.asList
     , multiSelect = MultiSelect.init MusicGenre.asNonempty
-    , searchSelect = SearchSelect.init "https://swapi.co/people/1" StarWars.characterDecoder
+    , searchSelect = SearchSelect.init "https://swapi.co/api/people/?search=" StarWars.characterDecoder
     , datePicker = DatePicker.init
     }

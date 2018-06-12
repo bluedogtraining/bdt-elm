@@ -31,7 +31,7 @@ module Form.FloatInput exposing
 
 -}
 
-import Html.Styled exposing (Html)
+import Html exposing (Html)
 
 import Form.FloatInput.Internal as Internal
 

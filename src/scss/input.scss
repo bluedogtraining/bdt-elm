@@ -1,0 +1,26 @@
+.input, &.input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 6px 8px;
+    line-height: 1.4;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+
+    &.error {
+        &:not(.locked) {
+            border-color: #d9534f;
+        }
+    }
+
+    &.locked {
+        background-color: #dddddd;
+        cursor: not-allowed;
+    }
+
+    &:focus {
+        outline: 0px;
+        border-color: #67b8ed;
+    }
+}

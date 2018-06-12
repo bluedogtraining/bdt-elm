@@ -1,0 +1,169 @@
+&.datepicker-container {
+    flex-grow: 1;
+    position: relative; // make the container relative, so that the absolutely positioned calendar moves with scrolling
+    font-size: 1em;
+    color: #666666;
+
+    .input {
+        cursor: pointer;
+    }
+
+    .date {
+        flex-grow: 1;
+    }
+
+    .calendar {
+        border: 1px solid #dddddd;
+        padding: 15px;
+        width: 320px;
+        top: 33px;
+        position: absolute;
+        z-index: 100;
+        background-color: #ffffff;
+
+        .navigation {
+            display: flex;
+
+            .date {
+                flex-grow: 1;
+                font-size: 1em;
+                color: #444444;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .year-arrows {
+                display: flex;
+
+                div:nth-child(2) {
+                    margin-left: -14px;
+                }
+            }
+
+            .month-arrows, .year-arrows {
+                cursor: pointer;
+
+                &:hover {
+                    color: #6bb9f0;
+                }
+
+                &.disabled {
+                    cursor: not-allowed;
+                    color: #dddddd;
+                }
+            }
+        }
+
+        .week-day-list {
+            border: 1px dashed #dddddd;
+            border-width: 1px 0px;
+            margin: 10px 0px;
+            padding: 5px 0px;
+            display: flex;
+        }
+
+        .week-day-item {
+            flex: 1;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 8pt;
+            color: #999999;
+            text-align: center;
+        }
+
+        .calendar-day-list {
+
+            .calendar-day-row {
+                display: flex;
+
+                .calendar-day-item {
+                    display: flex;
+                    flex: 1;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 8px;
+                    margin: 3px;
+                    border-radius: 2px;
+                    background-color: #fbfbfb;
+                    color: #dddddd;
+                    cursor: not-allowed;
+
+                    &.selectable {
+                        background-color: #f3f3f3;
+                        color: #666666;
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: #6bb9f0;
+                            color: #ffffff;
+                        }
+
+                        &.selected {
+                            background-color: #6bb9f0;
+                            color: #ffffff;
+                        }
+
+                        &.selected-time-date {
+                            background-color: #4b77be;
+                            color: #ffffff;
+                        }
+                    }
+                }
+            }
+        }
+
+        .timepicker-container {
+            border: 1px solid #dddddd;
+            border-width: 1px 0;
+            margin: 10px -15px 10px -15px; // remove parent padding, so that we can stretch all the way to the borders
+            display: flex;
+            padding: 0px 10px;
+
+            .select-container {
+                display: flex;
+                align-items: center;
+                margin: 3px 5px;
+
+                .select {
+                    width: 62px;
+                }
+            }
+
+            .colon {
+                display: flex;
+                align-items: center;
+            }
+
+            .apply-button-container {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .apply-button {
+                    padding: 8px 15px;
+                    border-radius: 2px;
+                    cursor: not-allowed;
+                    color: #cccccc;
+                    background-color: #ffffff;
+
+                    &.active {
+                        cursor: pointer;
+                        color: #ffffff;
+                        background-color: #2ecc71;
+                    }
+                }
+            }
+        }
+
+        .clear-button {
+            flex-grow: 1;
+            text-align: center;
+            margin: -10px -15px -15px -15px; // remove parent padding, so that we can stretch all the way to the borders
+            padding: 15px 15px;
+            cursor: pointer;
+            color: #666666;
+        }
+    }
+}

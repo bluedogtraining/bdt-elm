@@ -13,18 +13,13 @@ module Form.Input.Internal exposing
     , getId
     )
 
-import Html.Styled exposing (..)
-import Html.Styled.Lazy as Html
-import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes exposing (..)
+import Html exposing (..)
+import Html.Lazy exposing (..)
+import Html.Events exposing (..)
+import Html.Attributes exposing (..)
 
-import VirtualDom
-import Regex exposing (Regex)
-
-import Resettable exposing (Resettable)
 import Html.Bdt as Html exposing ((?))
-
-import Form.Input.Css as Css
+import Resettable exposing (Resettable)
 
 
 -- MODEL --
@@ -89,39 +84,42 @@ update (Input string) state =
 render : State -> ViewState -> Html Msg
 render state viewState =
 
-    Html.lazy2 inputField state viewState
+    lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> VirtualDom.Node Msg
+inputField : State -> ViewState -> Html Msg
 inputField state viewState =
 
     input
-        [ Css.inputField viewState.isLocked viewState.isError
-        , class "form-control"
+        [ class "bdt-elm input"
+        , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input
         , placeholder viewState.placeholder
         , Html.maybeAttribute maxlength viewState.maxLength
+        , Html.maybeAttribute id viewState.id
         , type_ (typeToString viewState.inputType)
         ]
         []
-        |> Html.Styled.toUnstyled
 
 
 typeToString : Type -> String
 typeToString inputType =
 
     case inputType of
-
         Text ->
             "text"
+
         Email ->
             "email"
+
         Password ->
             "password"
+
         Tel ->
             "tel"
+
         Number ->
             "number"
 

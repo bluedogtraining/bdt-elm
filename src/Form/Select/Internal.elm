@@ -13,13 +13,12 @@ module Form.Select.Internal exposing
     , getId
     )
 
-import Html.Styled exposing (..)
-import Html.Styled.Lazy as Html
-import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes as Attributes exposing (..)
+import Html exposing (..)
+import Html.Lazy exposing (..)
+import Html.Events exposing (..)
+import Html.Attributes as Attributes exposing (..)
 
 import Dom
-import VirtualDom
 import Dict
 import Task
 
@@ -27,11 +26,9 @@ import List.Extra as List
 
 import Json.Decode as Decode exposing (Decoder)
 
-import Resettable exposing (Resettable)
-import Html.Bdt as Html exposing ((?))
 import Form.Helpers as Form
-
-import Form.Select.Css as Css
+import Html.Bdt as Html exposing ((?))
+import Resettable exposing (Resettable)
 
 
 -- MODEL --
@@ -241,20 +238,11 @@ focusPreviousOption options option =
 focusNextOption : List option -> option -> option
 focusNextOption options option =
 
-    let
-        maybeNextOption =
-            options
-                |> List.dropWhile ((/=) option)
-                |> List.drop 1
-                |> List.head
-
-    in
-        case maybeNextOption of
-            Nothing ->
-                option
-
-            Just nextOption ->
-                nextOption
+    options
+        |> List.dropWhile ((/=) option)
+        |> List.drop 1
+        |> List.head
+        |> Maybe.withDefault option
 
 
 -- VIEW --
@@ -265,80 +253,77 @@ render state viewState =
 
     case state.isOpen of
         False ->
-            Html.lazy2 closed state viewState
+            lazy2 closed state viewState
 
         True ->
-            Html.lazy2 open state viewState
+            lazy2 open state viewState
 
 
-closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
+closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
 
     div
-        [ Css.container ]
+        [ class "bdt-elm select-container" ]
         [ div
-            [ Css.optionTextContainer viewState.isLocked viewState.isError
-            , class "form-control"
-            , id (viewState.id |> Maybe.withDefault "")
+            [ class "input"
+            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            , Html.maybeAttribute id viewState.id
             , disabled viewState.isLocked
             , tabindex 0 ? not viewState.isLocked
             , onFocus Open ? not viewState.isLocked
             , onClick Open ? not viewState.isLocked
             ]
             [ div
-                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
-                [ div
-                    [ Css.optionText ]
-                    [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
+                [ class "option-label"
+                , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
                 ]
+                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             , clearButton state viewState
             , Html.divIf (not viewState.isLocked)
-                [ class "glyphicons glyphicons-chevron-down" ]
-                []
+                [ class "material-icons" ]
+                [ text "expand_more" ]
             ]
         ]
-        |> Html.Styled.toUnstyled
 
 
-open : State option -> ViewState option -> VirtualDom.Node (Msg option)
+open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
 
     div
-        [ Css.container ]
+        [ class "bdt-elm select-container" ]
         [ div
-            [ Css.optionTextContainer viewState.isLocked viewState.isError
-            , class "form-control"
-            , id <| Form.toHtmlId viewState.id
+            [ class "input"
+            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            , Html.maybeAttribute id viewState.id
             , onKeyboardInput <| KeyboardInput False
             , tabindex -1
-            , onBlur Blur
+--            , onBlur Blur
             ]
             [ div
-                [ Css.optionText
+                [ class "option-label"
                 , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
                 ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             ]
         , optionList state viewState
         ]
-        |> Html.Styled.toUnstyled
 
 
 clearButton : State option -> ViewState option -> Html (Msg option)
 clearButton state viewState =
 
     Html.divIf (viewState.isClearable && Resettable.getValue state.selectedOption /= Nothing)
-        [ class "glyphicons glyphicons-remove"
+        [ class "material-icons"
         , onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear)
         ]
-        []
+        [ text "clear" ]
 
 
 optionList : State option -> ViewState option -> Html (Msg option)
 optionList state viewState =
 
     div
-        [ Css.optionList ]
+        [ class "option-list" ]
         (List.map (optionItem state viewState) state.options)
 
 
@@ -346,11 +331,12 @@ optionItem : State option -> ViewState option -> option -> Html (Msg option)
 optionItem state viewState option =
 
     div
-        [ Css.optionItem (viewState.isOptionDisabled option) (Just option == state.focusedOption)
-        , id (Form.toHtmlId option)
-        , onFocus (Focus option)
-        , onBlur (BlurOption option)
-        , onKeyboardInput (KeyboardInput (viewState.isOptionDisabled option))
+        [ class "option-item"
+        , classList [("disabled", viewState.isOptionDisabled option), ("focus", state.focusedOption == Just option)]
+        , id <| Form.toHtmlId option
+        , onFocus <| Focus option
+        , onBlur <| BlurOption option
+        , onKeyboardInput <| KeyboardInput (viewState.isOptionDisabled option)
         , tabindex -1
         , onMouseDown (Select option) ? not (viewState.isOptionDisabled option)
         ]

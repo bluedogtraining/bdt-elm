@@ -13,13 +13,12 @@ module Form.SearchSelect.Internal exposing
     , getId
     )
 
-import Html.Styled exposing (..)
-import Html.Styled.Lazy as Html
-import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes as Attributes exposing (..)
+import Html exposing (..)
+import Html.Lazy exposing (..)
+import Html.Events exposing (..)
+import Html.Attributes as Attributes exposing (..)
 
 import Dom
-import VirtualDom
 import Dict
 import Task
 import Http
@@ -29,11 +28,9 @@ import List.Extra as List
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
 
-import Resettable exposing (Resettable)
-import Html.Bdt as Html exposing ((?))
 import Form.Helpers as Form
-
-import Form.SearchSelect.Css as Css
+import Html.Bdt as Html exposing ((?))
+import Resettable exposing (Resettable)
 
 
 -- MODEL --
@@ -112,23 +109,14 @@ update msg state =
         (newState, cmd) =
             case msg of
                 Open ->
-                    { state | isOpen = True } ! [ Cmd.none ]
+                    { state | isOpen = True } ! []
 
                 Blur ->
-                    { state | isOpen = False, input = "", focusedOption = Nothing } ! [ Cmd.none ]
+                    { state | isOpen = False, input = "", focusedOption = Nothing } ! []
 
                 UpdateSearchInput inputMinimum value ->
-                    let
-                        cmd =
-                            case shouldSearch inputMinimum value of
-                                True ->
-                                    searchRequest state.searchUrl value state.optionDecoder
-
-                                False ->
-                                    Cmd.none
-
-                    in
-                        { state | input = value, isSearching = shouldSearch inputMinimum value } ! [ cmd ]
+                    { state | input = value, isSearching = shouldSearch inputMinimum value }
+                        ! [ if shouldSearch inputMinimum value then searchRequest state.searchUrl value state.optionDecoder else Cmd.none ]
 
                 Response result ->
                     case result of
@@ -139,13 +127,13 @@ update msg state =
                             { state | isSearching = False, options = searchResponse.options, focusedOption = Nothing } ! []
 
                 Clear ->
-                    { state | selectedOption = Resettable.update Nothing state.selectedOption } ! [ Cmd.none ]
+                    { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
 
                 SelectOption selectedOption ->
                     { state
                         | input = ""
                         , selectedOption = Resettable.update (Just selectedOption) state.selectedOption
-                    } ! [ Cmd.none ]
+                    } ! []
 
                 KeyboardInput keyboardInput ->
                     handleKeyboardInput state keyboardInput
@@ -252,20 +240,11 @@ focusPreviousOption options option =
 focusNextOption : List option -> option -> option
 focusNextOption options option =
 
-    let
-        maybeNextOption =
-            options
-                |> List.dropWhile ((/=) option)
-                |> List.drop 1
-                |> List.head
-
-    in
-        case maybeNextOption of
-            Nothing ->
-                option
-
-            Just nextOption ->
-                nextOption
+    options
+        |> List.dropWhile ((/=) option)
+        |> List.drop 1
+        |> List.head
+        |> Maybe.withDefault option
 
 
 -- SEARCH REQUEST --
@@ -297,55 +276,53 @@ render state viewState =
 
     case state.isOpen of
         False ->
-            Html.lazy2 closed state viewState
+            lazy2 closed state viewState
 
         True ->
-            Html.lazy2 open state viewState
+            lazy2 open state viewState
 
 
-closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
+closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
 
     div
-        [ Css.container ]
-        [ div
-            [ Css.input viewState.isLocked viewState.isError
-            , class "form-control"
-            , id (viewState.id |> Maybe.withDefault "")
+        [ class "bdt-elm select-container" ]
+        [ input
+            [ class "input"
+            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            , Html.maybeAttribute id viewState.id
             , type_ "text"
             , disabled viewState.isLocked
             , tabindex 0 ? not viewState.isLocked
             , onFocus Open ? not viewState.isLocked
             , onClick Open ? not viewState.isLocked
-            , value (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")
+            , value state.input
             ]
             []
         ]
-        |> Html.Styled.toUnstyled
 
 
-open : State option -> ViewState option -> VirtualDom.Node (Msg option)
+open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
 
     div
-        [ Css.container ]
-        [ div
-            [ Css.input viewState.isLocked viewState.isError
-            , class "form-control"
-            , id (viewState.id |> Maybe.withDefault "")
+        [ class "bdt-elm select-container" ]
+        [ input
+            [ class "input"
+            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            , Html.maybeAttribute id viewState.id
             , type_ "text"
             , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")
             , tabindex -1
             , disabled viewState.isLocked
-            , onInput (UpdateSearchInput viewState.inputMinimum)
+            , onInput <| UpdateSearchInput viewState.inputMinimum
             , onBlur Blur
             , onKeyboardInput KeyboardInput
-            , value (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")
+            , value state.input
             ]
             []
         , searchResults state viewState
         ]
-        |> Html.Styled.toUnstyled
 
 
 searchResults : State option -> ViewState option -> Html (Msg option)
@@ -393,7 +370,7 @@ infoMessageContainer : String -> Html (Msg option)
 infoMessageContainer message =
 
     div
-        [ Css.infoMessageContainer ]
+        [ class "info-message" ]
         [ text message ]
 
 
@@ -401,7 +378,7 @@ searchResultList : State option -> ViewState option -> Html (Msg option)
 searchResultList state viewState =
 
     div
-        [ Css.searchResultList ]
+        [ class "search-result-list" ]
         (List.map (searchResultItem state.focusedOption viewState.toLabel) state.options)
 
 
@@ -409,9 +386,10 @@ searchResultItem : Maybe option -> (option -> String) -> option -> Html (Msg opt
 searchResultItem focusedOption toLabel option =
 
     div
-        -- use onMouseDown over onClick so that it triggers before the onBlur on the input
-        [ Css.searchResultItem (Just option == focusedOption)
+        [ class "search-result-item"
+        , classList [("hovered", Just option == focusedOption)]
         , id (Form.toHtmlId option)
+        -- use onMouseDown over onClick so that it triggers before the onBlur on the input
         , onMouseDown (SelectOption option)
         , onFocus (Focus option)
         , onBlur (BlurOption option)

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-elm-live --output=./docs/app.js ./gh-pages/Main.elm
+elm-live --output=./docs/app.js ./gh-pages/Main.elm --debug

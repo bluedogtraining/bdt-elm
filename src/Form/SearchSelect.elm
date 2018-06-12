@@ -32,7 +32,7 @@ with the options being searchable and coming from the backend.
 
 -}
 
-import Html.Styled exposing (Html)
+import Html exposing (Html)
 
 import Tuple
 

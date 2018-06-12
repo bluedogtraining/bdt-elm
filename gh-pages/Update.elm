@@ -49,7 +49,6 @@ update msg model =
             in
                 { model | searchSelect = newSearchSelect } ! [ Cmd.map SearchSelectMsg cmd ]
 
-
         DatePickerMsg datePickerMsg ->
             let
                 (newDatePicker, cmd) =

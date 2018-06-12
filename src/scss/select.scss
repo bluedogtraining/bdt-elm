@@ -1,0 +1,48 @@
+&.select-container {
+    position: relative;
+    cursor: pointer;
+
+    .option-label {
+        flex: 1;
+        white-space: noWrap;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .option-list {
+        position: absolute;
+        top: 33px;
+        left: 0px;
+        right: 0px;
+        z-index: 10;
+        max-height: 200px;
+        overflow-Y: scroll;
+        border: 1px solid #dddddd;
+        border-right-width: 2px; // need 2px on the right because the scrolling thingy eats 1px
+        background-color: #ffffff;
+        padding: 0px;
+    }
+
+    .option-item {
+        padding: 5px 10px;
+        margin: 0px;
+        display: flex;
+        align-items: center;
+
+        &.disabled {
+            background-color: #eceeef;
+        }
+
+        &:hover {
+            &:not(.disabled) {
+                background-color: #f6f6f6;
+            }
+        }
+
+        &.focus {
+            background-color: #eceeef;
+            outline: none;
+        }
+    }
+}

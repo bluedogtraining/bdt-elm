@@ -1,7 +1,7 @@
 module Html.Bdt exposing ((?), maybeAttribute, viewIf, divIf)
 
-import Html.Styled exposing (Html, Attribute, text, div)
-import Html.Styled.Attributes exposing (class)
+import Html exposing (Html, Attribute, text, div)
+import Html.Attributes exposing (class)
 
 import InfixPrecedence
 

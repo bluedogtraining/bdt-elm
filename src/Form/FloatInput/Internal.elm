@@ -12,24 +12,23 @@ module Form.FloatInput.Internal exposing
     , getId
     )
 
-import Html.Styled exposing (..)
-import Html.Styled.Lazy as Html
-import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes exposing (..)
+import Html exposing (..)
+import Html.Lazy exposing (..)
+import Html.Events exposing (..)
+import Html.Attributes exposing (..)
 
-import Html.Bdt as Html exposing ((?))
-
-import VirtualDom
 import Regex exposing (Regex)
 
+import Html.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
-
-import Form.Input.Css as Css
 
 
 type alias State =
     { value : Resettable String
     , decimal : Int
+    -- Add bypassLazy so that we can use lazy in render (so that external changes don't re-render),
+    -- but still update the DOM to update the value on the input (to remove the letter).
+    , bypassLazy : Int
     }
 
 
@@ -37,6 +36,7 @@ init : State
 init =
     { value = Resettable.init ""
     , decimal = 0
+    , bypassLazy = 0
     }
 
 
@@ -75,7 +75,7 @@ update (Input string) state =
             { state | value = Resettable.update string state.value }
 
         False ->
-            state
+            { state | bypassLazy = state.bypassLazy + 1 }
 
 
 -- VIEW --
@@ -84,23 +84,23 @@ update (Input string) state =
 render : State -> ViewState -> Html Msg
 render state viewState =
 
-    Html.lazy2 inputField state viewState
+    lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> VirtualDom.Node Msg
+inputField : State -> ViewState -> Html Msg
 inputField state viewState =
 
     input
-        [ Css.inputField viewState.isLocked viewState.isError
-        , class "form-control"
+        [ class "bdt-elm input"
+        , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input
         , placeholder viewState.placeholder
         , Html.maybeAttribute maxlength viewState.maxLength
+        , Html.maybeAttribute id viewState.id
         ]
         []
-        |> Html.Styled.toUnstyled
 
 
 -- STATE SETTERS --

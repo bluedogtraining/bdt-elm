@@ -2,6 +2,9 @@ module View exposing (view)
 
 import Html.Styled as Html exposing (..)
 
+import Date
+import Time
+
 import Form.Input as Input
 import Form.IntInput as IntInput
 import Form.FloatInput as FloatInput
@@ -28,6 +31,7 @@ view model =
             [ text "Input" ]
         , Input.view model.input
             |> Input.render
+            |> fromUnstyled
             |> Html.map InputMsg
         , div
             []
@@ -37,6 +41,7 @@ view model =
             [ text "Int Input" ]
         , IntInput.view model.intInput
             |> IntInput.render
+            |> fromUnstyled
             |> Html.map IntInputMsg
         , div
             []
@@ -46,6 +51,7 @@ view model =
             [ text "Float Input" ]
         , FloatInput.view model.floatInput
             |> FloatInput.render
+            |> fromUnstyled
             |> Html.map FloatInputMsg
         , div
             []
@@ -55,6 +61,7 @@ view model =
             [ text "Select" ]
         , Select.view model.select
             |> Select.render
+            |> fromUnstyled
             |> Html.map SelectMsg
         , div
             []
@@ -64,6 +71,7 @@ view model =
             [ text "Multi Select" ]
         , MultiSelect.view model.multiSelect
             |> MultiSelect.render
+            |> fromUnstyled
             |> Html.map MultiSelectMsg
         , div
             []
@@ -73,6 +81,7 @@ view model =
             [ text "Search Select" ]
         , SearchSelect.view model.searchSelect
             |> SearchSelect.render
+            |> fromUnstyled
             |> Html.map SearchSelectMsg
         , div
             []
@@ -81,7 +90,12 @@ view model =
             []
             [ text "Date Picker" ]
         , DatePicker.view model.datePicker
+            |> DatePicker.setIsClearable True
+            |> DatePicker.setIncludeTime True
+            |> DatePicker.setMinDate (Just <| Date.fromTime <| Time.second * 1506760131)
+            |> DatePicker.setMaxDate (Just <| Date.fromTime <| Time.second * 1549770131)
             |> DatePicker.render
+            |> fromUnstyled
             |> Html.map DatePickerMsg
         , div
             []

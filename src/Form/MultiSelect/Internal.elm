@@ -13,13 +13,12 @@ module Form.MultiSelect.Internal exposing
     , getId
     )
 
-import Html.Styled exposing (..)
-import Html.Styled.Lazy as Html
-import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes as Attributes exposing (..)
+import Html exposing (..)
+import Html.Lazy exposing (..)
+import Html.Events exposing (..)
+import Html.Attributes as Attributes exposing (..)
 
 import Dom
-import VirtualDom
 import Dict
 import Task
 
@@ -28,11 +27,9 @@ import List.Nonempty as Nonempty exposing (Nonempty)
 
 import Json.Decode as Decode exposing (Decoder)
 
-import Resettable exposing (Resettable)
-import Html.Bdt as Html exposing ((?))
 import Form.Helpers as Form
-
-import Form.MultiSelect.Css as Css
+import Html.Bdt as Html exposing ((?))
+import Resettable exposing (Resettable)
 
 
 -- MODEL --
@@ -275,22 +272,12 @@ focusPreviousOption options option =
 focusNextOption : Nonempty option -> option -> option
 focusNextOption options option =
 
-    let
-        maybeNextOption =
-            options
-                |> Nonempty.toList
-                |> List.dropWhile ((/=) option)
-                |> List.drop 1
-                |> List.head
-
-    in
-        case maybeNextOption of
-
-            Nothing ->
-                option
-
-            Just nextOption ->
-                nextOption
+    options
+        |> Nonempty.toList
+        |> List.dropWhile ((/=) option)
+        |> List.drop 1
+        |> List.head
+        |> Maybe.withDefault option
 
 
 -- VIEW --
@@ -301,54 +288,64 @@ render state viewState =
 
     case state.isOpen of
         False ->
-            Html.lazy2 closed state viewState
+            lazy2 closed state viewState
 
         True ->
-            Html.lazy2 open state viewState
+            lazy2 open state viewState
 
 
-closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
+closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
 
     div
-        [ Css.container
-        , class "form-control"
-        , tabindex 0 ? not viewState.isLocked
-        , onFocus Open ? not viewState.isLocked
+        [ class "bdt-elm select-container"
+        , tabindex -1
         ]
         [ div
-            [ Css.optionTextContainer viewState.isLocked viewState.isError ]
+            [ class "input option-label-container"
+            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            , tabindex 0 ? not viewState.isLocked
+            , onFocus Open ? not viewState.isLocked
+            ]
             [ div
-                [ Css.optionText
+                [ class "option-label"
                 , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
                 ]
                 [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
-            , div
-                [ class "glyphicons glyphicons-chevron-down" ? not viewState.isLocked ]
-                []
+            , clearButton state viewState
+            , Html.divIf (not viewState.isLocked)
+                [ class "material-icons" ]
+                [ text "expand_more" ]
             ]
         ]
-        |> toUnstyled
 
 
-open : State option -> ViewState option -> VirtualDom.Node (Msg option)
+open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
 
     div
-        [ Css.container
-        , class "form-control"
-        , tabindex -1
-        , onBlur Blur
-        , onKeyboardInput <| KeyboardInput False
+        [ class "bdt-elm select-container"
         ]
         [ div
-            [ Css.optionText
+            [ class "input option-label"
+            , tabindex -1
+            , onBlur Blur
+            , onKeyboardInput <| KeyboardInput False
             , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
             ]
             [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
         , optionList state viewState
         ]
-        |> toUnstyled
+
+
+clearButton : State option -> ViewState option -> Html (Msg option)
+clearButton state viewState =
+
+    Html.divIf (viewState.isClearable && List.isEmpty (Resettable.getValue state.selectedOptions))
+        [ class "material-icons"
+        , onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear)
+        ]
+        [ text "clear" ]
 
 
 optionText : String -> (option -> String) -> Resettable (List option) -> String
@@ -360,21 +357,15 @@ optionText defaultLabel toLabel selectedOptions =
 
         False ->
             toString (List.length (Resettable.getValue selectedOptions))
-                ++ " options selected"
-                ++ String.concat (List.map (toLabelList toLabel) (Resettable.getValue selectedOptions))
-
-
-toLabelList : (option -> String) -> option -> String
-toLabelList toLabel option =
-
-    ", " ++ toLabel option
+                ++ " options selected: "
+                ++ String.join ", " (List.map toLabel (Resettable.getValue selectedOptions))
 
 
 optionList : State option -> ViewState option -> Html (Msg option)
 optionList state viewState =
 
     div
-        [ Css.optionList ]
+        [ class "option-list" ]
         (List.map (optionItem state viewState) (Nonempty.toList state.options))
 
 
@@ -382,7 +373,8 @@ optionItem : State option -> ViewState option -> option -> Html (Msg option)
 optionItem state viewState option =
 
     div
-        [ Css.optionItem (viewState.isOptionDisabled option) (Just option == state.focusedOption)
+        [ class "option-item"
+        , classList [("disabled", viewState.isOptionDisabled option), ("focus", state.focusedOption == Just option)]
         , id <| Form.toHtmlId option
         , handleMouseDown state.selectedOptions option
         , onFocus <| Focus option
@@ -391,13 +383,8 @@ optionItem state viewState option =
         , tabindex -1
         ]
         [ div
-            [ class "glyphicons"
-            , classList
-                [ ("glyphicons-check", List.member option (Resettable.getValue state.selectedOptions))
-                , ("glyphicons-unchecked", List.member option (Resettable.getValue state.selectedOptions) |> not)
-                ]
-            ]
-            []
+            [ class "material-icons" ]
+            [ text (if List.member option (Resettable.getValue state.selectedOptions) then "check_box" else "check_box_outline_blank") ]
         , text (viewState.toLabel option)
         ]
 

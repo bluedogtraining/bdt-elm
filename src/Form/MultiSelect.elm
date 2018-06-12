@@ -31,7 +31,7 @@ module Form.MultiSelect exposing
 
 -}
 
-import Html.Styled exposing (Html)
+import Html exposing (Html)
 
 import Tuple
 

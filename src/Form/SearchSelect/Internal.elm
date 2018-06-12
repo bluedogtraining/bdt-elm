@@ -105,53 +105,48 @@ type Msg option
 update : Msg option -> State option -> (State option, Cmd (Msg option))
 update msg state =
 
-    let
-        (newState, cmd) =
-            case msg of
-                Open ->
-                    { state | isOpen = True } ! []
+    case msg of
+        Open ->
+            { state | isOpen = True } ! []
 
-                Blur ->
-                    { state | isOpen = False, input = "", focusedOption = Nothing } ! []
+        Blur ->
+            { state | isOpen = False, input = "", focusedOption = Nothing } ! []
 
-                UpdateSearchInput inputMinimum value ->
-                    { state | input = value, isSearching = shouldSearch inputMinimum value }
-                        ! [ if shouldSearch inputMinimum value then searchRequest state.searchUrl value state.optionDecoder else Cmd.none ]
+        UpdateSearchInput inputMinimum value ->
+            { state | input = value, isSearching = shouldSearch inputMinimum value }
+                ! [ if shouldSearch inputMinimum value then searchRequest state.searchUrl value state.optionDecoder else Cmd.none ]
 
-                Response result ->
-                    case result of
-                        Err error ->
-                            { state | isSearching = False } ! []
+        Response result ->
+            case result of
+                Err error ->
+                    { state | isSearching = False } ! []
 
-                        Ok searchResponse ->
-                            { state | isSearching = False, options = searchResponse.options, focusedOption = Nothing } ! []
+                Ok searchResponse ->
+                    { state | isSearching = False, options = searchResponse.options, focusedOption = Nothing } ! []
 
-                Clear ->
-                    { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
+        Clear ->
+            { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
 
-                SelectOption selectedOption ->
-                    { state
-                        | input = ""
-                        , selectedOption = Resettable.update (Just selectedOption) state.selectedOption
-                    } ! []
+        SelectOption selectedOption ->
+            { state
+                | input = ""
+                , selectedOption = Resettable.update (Just selectedOption) state.selectedOption
+            } ! []
 
-                KeyboardInput keyboardInput ->
-                    handleKeyboardInput state keyboardInput
+        KeyboardInput keyboardInput ->
+            handleKeyboardInput state keyboardInput
 
-                Focus option ->
-                    { state | focusedOption = Just (focusOption state.options option) } ! []
+        Focus option ->
+            { state | focusedOption = Just (focusOption state.options option) } ! []
 
-                BlurOption option ->
-                    if Just option == state.focusedOption then
-                        { state | focusedOption = Nothing, isOpen = False } ! []
-                    else
-                        state ! []
+        BlurOption option ->
+            if Just option == state.focusedOption then
+                { state | focusedOption = Nothing, isOpen = False } ! []
+            else
+                state ! []
 
-                DomFocus _ ->
-                    state ! []
-
-    in
-        newState ! []
+        DomFocus _ ->
+            state ! []
 
 
 type KeyboardInput

@@ -178,75 +178,70 @@ type TimeMsg
 update : Msg -> State -> (State, Cmd Msg)
 update msg state =
 
-    let
-        (newState, cmd) =
-            case msg of
-                Open minDate maxDate includeTime ->
-                    { state
-                        | isOpen = True
-                        , navigationDate = Resettable.getValue state.selectedDate
-                        , time = initialTime state.selectedDate
-                    } ! [ openCmd (Resettable.getValue state.selectedDate) minDate maxDate includeTime ]
+    case msg of
+        Open minDate maxDate includeTime ->
+            { state
+                | isOpen = True
+                , navigationDate = Resettable.getValue state.selectedDate
+                , time = initialTime state.selectedDate
+            } ! [ openCmd (Resettable.getValue state.selectedDate) minDate maxDate includeTime ]
 
-                Blur ->
-                    case Helpers.isTimeFocused state.time of
-                        True ->
-                            state ! []
+        Blur ->
+            case Helpers.isTimeFocused state.time of
+                True ->
+                    state ! []
 
-                        False ->
-                            { state | isOpen = False, navigationDate = Nothing } ! []
+                False ->
+                    { state | isOpen = False, navigationDate = Nothing } ! []
 
-                InitWithCurrentDate minDate maxDate date ->
-                    { state | navigationDate = initNavigationDate minDate maxDate date } ! []
+        InitWithCurrentDate minDate maxDate date ->
+            { state | navigationDate = initNavigationDate minDate maxDate date } ! []
 
-                PreviousYear minDate ->
-                    { state | navigationDate = Maybe.map (Helpers.previousYear >> Helpers.maybeClamp minDate state.navigationDate) state.navigationDate } ! []
+        PreviousYear minDate ->
+            { state | navigationDate = Maybe.map (Helpers.previousYear >> Helpers.maybeClamp minDate state.navigationDate) state.navigationDate } ! []
 
-                PreviousMonth ->
-                    { state | navigationDate = Maybe.map Helpers.previousMonth state.navigationDate } ! []
+        PreviousMonth ->
+            { state | navigationDate = Maybe.map Helpers.previousMonth state.navigationDate } ! []
 
-                NextYear maxDate ->
-                    { state | navigationDate = Maybe.map (Helpers.nextYear >> Helpers.maybeClamp state.navigationDate maxDate) state.navigationDate } ! []
+        NextYear maxDate ->
+            { state | navigationDate = Maybe.map (Helpers.nextYear >> Helpers.maybeClamp state.navigationDate maxDate) state.navigationDate } ! []
 
-                NextMonth ->
-                    { state | navigationDate = Maybe.map Helpers.nextMonth state.navigationDate } ! []
+        NextMonth ->
+            { state | navigationDate = Maybe.map Helpers.nextMonth state.navigationDate } ! []
 
-                SelectDay date includeTime ->
+        SelectDay date includeTime ->
 
-                    case includeTime of
-                        False ->
-                            { state | selectedDate = Resettable.update (Just date) state.selectedDate, isOpen = False } ! []
+            case includeTime of
+                False ->
+                    { state | selectedDate = Resettable.update (Just date) state.selectedDate, isOpen = False } ! []
 
-                        True ->
-                            let
-                                time =
-                                    state.time
-
-                            in
-                                { state | time = { time | selectedDate = Just date } } ! []
-
-                Apply ->
-                    { state | selectedDate = Resettable.update (apply state) state.selectedDate, isOpen = False } ! []
-
-                Clear ->
-                    { state | selectedDate = Resettable.update Nothing state.selectedDate, isOpen = False } ! []
-
-                TimeMsg timeMsg ->
+                True ->
                     let
-                        (newTime, cmd) =
-                            updateTime timeMsg state.time
+                        time =
+                            state.time
 
                     in
-                        { state | time = newTime } ! [cmd]
+                        { state | time = { time | selectedDate = Just date } } ! []
 
-                NoOp ->
-                    state ! []
+        Apply ->
+            { state | selectedDate = Resettable.update (apply state) state.selectedDate, isOpen = False } ! []
 
-                DomFocus _ ->
-                    state ! []
+        Clear ->
+            { state | selectedDate = Resettable.update Nothing state.selectedDate, isOpen = False } ! []
 
-    in
-        newState ! [ cmd ]
+        TimeMsg timeMsg ->
+            let
+                (newTime, cmd) =
+                    updateTime timeMsg state.time
+
+            in
+                { state | time = newTime } ! [cmd]
+
+        NoOp ->
+            state ! []
+
+        DomFocus _ ->
+            state ! []
 
 
 openCmd : Maybe Date -> Maybe Date -> Maybe Date -> Bool -> Cmd Msg

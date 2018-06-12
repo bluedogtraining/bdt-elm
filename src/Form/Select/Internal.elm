@@ -91,48 +91,43 @@ type Msg option
 update : Msg option -> State option -> (State option, Cmd (Msg option))
 update msg state =
 
-    let
-        (newState, cmd) =
-            case msg of
-                Open ->
-                    { state | isOpen = True } ! []
+    case msg of
+        Open ->
+            { state | isOpen = True } ! []
 
-                Blur ->
-                    case state.focusedOption of
-                        Nothing ->
-                            { state | isOpen = False, focusedOption = Nothing } ! []
-                        _ ->
-                            state ! []
-
-                Select option ->
-                    { state
-                        | selectedOption = Resettable.update (Just option) state.selectedOption
-                        , isOpen = False
-                        , focusedOption = Nothing
-                    } ! []
-
-                Clear ->
-                    { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
-
-                KeyboardInput isOptionDisabled keyboardInput ->
-                    handleKeyboardInput state isOptionDisabled keyboardInput
-
-                Focus option ->
-                    { state | focusedOption = Just (focusOption state.options option) } ! []
-
-                BlurOption option ->
-                    case state.focusedOption == Just option of
-                        True ->
-                            { state | focusedOption = Nothing, isOpen = False } ! []
-
-                        False ->
-                            state ! []
-
-                DomFocus _ ->
+        Blur ->
+            case state.focusedOption of
+                Nothing ->
+                    { state | isOpen = False, focusedOption = Nothing } ! []
+                _ ->
                     state ! []
 
-    in
-        newState ! [ cmd ]
+        Select option ->
+            { state
+                | selectedOption = Resettable.update (Just option) state.selectedOption
+                , isOpen = False
+                , focusedOption = Nothing
+            } ! []
+
+        Clear ->
+            { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
+
+        KeyboardInput isOptionDisabled keyboardInput ->
+            handleKeyboardInput state isOptionDisabled keyboardInput
+
+        Focus option ->
+            { state | focusedOption = Just (focusOption state.options option) } ! []
+
+        BlurOption option ->
+            case state.focusedOption == Just option of
+                True ->
+                    { state | focusedOption = Nothing, isOpen = False } ! []
+
+                False ->
+                    state ! []
+
+        DomFocus _ ->
+            state ! []
 
 
 type KeyboardInput

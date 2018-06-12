@@ -16782,8 +16782,8 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$focusOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.Select.Internal',
 				{
-					start: {line: 224, column: 5},
-					end: {line: 229, column: 127}
+					start: {line: 219, column: 5},
+					end: {line: 224, column: 127}
 				},
 				_p0)(
 				A2(
@@ -16922,100 +16922,88 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$handleKeyboardInput = F3(
 	});
 var _bluedogtraining$bdt_elm$Form_Select_Internal$update = F2(
 	function (msg, state) {
-		var _p7 = function () {
-			var _p8 = msg;
-			switch (_p8.ctor) {
-				case 'Open':
+		var _p7 = msg;
+		switch (_p7.ctor) {
+			case 'Open':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{isOpen: true}),
+					{ctor: '[]'});
+			case 'Blur':
+				var _p8 = state.focusedOption;
+				if (_p8.ctor === 'Nothing') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							state,
-							{isOpen: true}),
+							{isOpen: false, focusedOption: _elm_lang$core$Maybe$Nothing}),
 						{ctor: '[]'});
-				case 'Blur':
-					var _p9 = state.focusedOption;
-					if (_p9.ctor === 'Nothing') {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{isOpen: false, focusedOption: _elm_lang$core$Maybe$Nothing}),
-							{ctor: '[]'});
-					} else {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							state,
-							{ctor: '[]'});
-					}
-				case 'Select':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								selectedOption: A2(
-									_bluedogtraining$bdt_elm$Resettable$update,
-									_elm_lang$core$Maybe$Just(_p8._0),
-									state.selectedOption),
-								isOpen: false,
-								focusedOption: _elm_lang$core$Maybe$Nothing
-							}),
-						{ctor: '[]'});
-				case 'Clear':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								selectedOption: A2(_bluedogtraining$bdt_elm$Resettable$update, _elm_lang$core$Maybe$Nothing, state.selectedOption)
-							}),
-						{ctor: '[]'});
-				case 'KeyboardInput':
-					return A3(_bluedogtraining$bdt_elm$Form_Select_Internal$handleKeyboardInput, state, _p8._0, _p8._1);
-				case 'Focus':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								focusedOption: _elm_lang$core$Maybe$Just(
-									A2(_bluedogtraining$bdt_elm$Form_Select_Internal$focusOption, state.options, _p8._0))
-							}),
-						{ctor: '[]'});
-				case 'BlurOption':
-					var _p10 = _elm_lang$core$Native_Utils.eq(
-						state.focusedOption,
-						_elm_lang$core$Maybe$Just(_p8._0));
-					if (_p10 === true) {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{focusedOption: _elm_lang$core$Maybe$Nothing, isOpen: false}),
-							{ctor: '[]'});
-					} else {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							state,
-							{ctor: '[]'});
-					}
-				default:
+				} else {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						state,
 						{ctor: '[]'});
-			}
-		}();
-		var newState = _p7._0;
-		var cmd = _p7._1;
-		return A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			newState,
-			{
-				ctor: '::',
-				_0: cmd,
-				_1: {ctor: '[]'}
-			});
+				}
+			case 'Select':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							selectedOption: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								_elm_lang$core$Maybe$Just(_p7._0),
+								state.selectedOption),
+							isOpen: false,
+							focusedOption: _elm_lang$core$Maybe$Nothing
+						}),
+					{ctor: '[]'});
+			case 'Clear':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							selectedOption: A2(_bluedogtraining$bdt_elm$Resettable$update, _elm_lang$core$Maybe$Nothing, state.selectedOption)
+						}),
+					{ctor: '[]'});
+			case 'KeyboardInput':
+				return A3(_bluedogtraining$bdt_elm$Form_Select_Internal$handleKeyboardInput, state, _p7._0, _p7._1);
+			case 'Focus':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							focusedOption: _elm_lang$core$Maybe$Just(
+								A2(_bluedogtraining$bdt_elm$Form_Select_Internal$focusOption, state.options, _p7._0))
+						}),
+					{ctor: '[]'});
+			case 'BlurOption':
+				var _p9 = _elm_lang$core$Native_Utils.eq(
+					state.focusedOption,
+					_elm_lang$core$Maybe$Just(_p7._0));
+				if (_p9 === true) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							state,
+							{focusedOption: _elm_lang$core$Maybe$Nothing, isOpen: false}),
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						state,
+						{ctor: '[]'});
+				}
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					state,
+					{ctor: '[]'});
+		}
 	});
 var _bluedogtraining$bdt_elm$Form_Select_Internal$BlurOption = function (a) {
 	return {ctor: 'BlurOption', _0: a};
@@ -17200,10 +17188,10 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$isSelectInputKey = F2(
 					}
 				}
 			});
-		var _p11 = A2(_elm_lang$core$Dict$get, code, dict);
-		if (_p11.ctor === 'Just') {
+		var _p10 = A2(_elm_lang$core$Dict$get, code, dict);
+		if (_p10.ctor === 'Just') {
 			return _elm_lang$core$Json_Decode$succeed(
-				msg(_p11._0));
+				msg(_p10._0));
 		} else {
 			return _elm_lang$core$Json_Decode$fail('Not a select input key');
 		}
@@ -17395,8 +17383,8 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$open = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_Select_Internal$render = F2(
 	function (state, viewState) {
-		var _p12 = state.isOpen;
-		if (_p12 === false) {
+		var _p11 = state.isOpen;
+		if (_p11 === false) {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_Select_Internal$closed, state, viewState);
 		} else {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_Select_Internal$open, state, viewState);
@@ -19008,139 +18996,110 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 	function (msg, state) {
-		var _p25 = function () {
-			var _p26 = msg;
-			switch (_p26.ctor) {
-				case 'Open':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								isOpen: true,
-								navigationDate: _bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate),
-								time: _bluedogtraining$bdt_elm$Form_DatePicker_Internal$initialTime(state.selectedDate)
-							}),
+		var _p25 = msg;
+		switch (_p25.ctor) {
+			case 'Open':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
 						{
-							ctor: '::',
-							_0: A4(
-								_bluedogtraining$bdt_elm$Form_DatePicker_Internal$openCmd,
-								_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate),
-								_p26._0,
-								_p26._1,
-								_p26._2),
-							_1: {ctor: '[]'}
-						});
-				case 'Blur':
-					var _p27 = _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$isTimeFocused(state.time);
-					if (_p27 === true) {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							state,
-							{ctor: '[]'});
-					} else {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{isOpen: false, navigationDate: _elm_lang$core$Maybe$Nothing}),
-							{ctor: '[]'});
-					}
-				case 'InitWithCurrentDate':
+							isOpen: true,
+							navigationDate: _bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate),
+							time: _bluedogtraining$bdt_elm$Form_DatePicker_Internal$initialTime(state.selectedDate)
+						}),
+					{
+						ctor: '::',
+						_0: A4(
+							_bluedogtraining$bdt_elm$Form_DatePicker_Internal$openCmd,
+							_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate),
+							_p25._0,
+							_p25._1,
+							_p25._2),
+						_1: {ctor: '[]'}
+					});
+			case 'Blur':
+				var _p26 = _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$isTimeFocused(state.time);
+				if (_p26 === true) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						state,
+						{ctor: '[]'});
+				} else {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							state,
-							{
-								navigationDate: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$initNavigationDate, _p26._0, _p26._1, _p26._2)
-							}),
+							{isOpen: false, navigationDate: _elm_lang$core$Maybe$Nothing}),
 						{ctor: '[]'});
-				case 'PreviousYear':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								navigationDate: A2(
-									_elm_lang$core$Maybe$map,
-									function (_p28) {
-										return A3(
-											_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$maybeClamp,
-											_p26._0,
-											state.navigationDate,
-											_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$previousYear(_p28));
-									},
-									state.navigationDate)
-							}),
-						{ctor: '[]'});
-				case 'PreviousMonth':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								navigationDate: A2(_elm_lang$core$Maybe$map, _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$previousMonth, state.navigationDate)
-							}),
-						{ctor: '[]'});
-				case 'NextYear':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								navigationDate: A2(
-									_elm_lang$core$Maybe$map,
-									function (_p29) {
-										return A3(
-											_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$maybeClamp,
-											state.navigationDate,
-											_p26._0,
-											_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$nextYear(_p29));
-									},
-									state.navigationDate)
-							}),
-						{ctor: '[]'});
-				case 'NextMonth':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								navigationDate: A2(_elm_lang$core$Maybe$map, _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$nextMonth, state.navigationDate)
-							}),
-						{ctor: '[]'});
-				case 'SelectDay':
-					var _p31 = _p26._0;
-					var _p30 = _p26._1;
-					if (_p30 === false) {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{
-									selectedDate: A2(
-										_bluedogtraining$bdt_elm$Resettable$update,
-										_elm_lang$core$Maybe$Just(_p31),
-										state.selectedDate),
-									isOpen: false
-								}),
-							{ctor: '[]'});
-					} else {
-						var time = state.time;
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{
-									time: _elm_lang$core$Native_Utils.update(
-										time,
-										{
-											selectedDate: _elm_lang$core$Maybe$Just(_p31)
-										})
-								}),
-							{ctor: '[]'});
-					}
-				case 'Apply':
+				}
+			case 'InitWithCurrentDate':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							navigationDate: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$initNavigationDate, _p25._0, _p25._1, _p25._2)
+						}),
+					{ctor: '[]'});
+			case 'PreviousYear':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							navigationDate: A2(
+								_elm_lang$core$Maybe$map,
+								function (_p27) {
+									return A3(
+										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$maybeClamp,
+										_p25._0,
+										state.navigationDate,
+										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$previousYear(_p27));
+								},
+								state.navigationDate)
+						}),
+					{ctor: '[]'});
+			case 'PreviousMonth':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							navigationDate: A2(_elm_lang$core$Maybe$map, _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$previousMonth, state.navigationDate)
+						}),
+					{ctor: '[]'});
+			case 'NextYear':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							navigationDate: A2(
+								_elm_lang$core$Maybe$map,
+								function (_p28) {
+									return A3(
+										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$maybeClamp,
+										state.navigationDate,
+										_p25._0,
+										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$nextYear(_p28));
+								},
+								state.navigationDate)
+						}),
+					{ctor: '[]'});
+			case 'NextMonth':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							navigationDate: A2(_elm_lang$core$Maybe$map, _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$nextMonth, state.navigationDate)
+						}),
+					{ctor: '[]'});
+			case 'SelectDay':
+				var _p30 = _p25._0;
+				var _p29 = _p25._1;
+				if (_p29 === false) {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -19148,57 +19107,74 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 							{
 								selectedDate: A2(
 									_bluedogtraining$bdt_elm$Resettable$update,
-									_bluedogtraining$bdt_elm$Form_DatePicker_Internal$apply(state),
+									_elm_lang$core$Maybe$Just(_p30),
 									state.selectedDate),
 								isOpen: false
 							}),
 						{ctor: '[]'});
-				case 'Clear':
+				} else {
+					var time = state.time;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							state,
 							{
-								selectedDate: A2(_bluedogtraining$bdt_elm$Resettable$update, _elm_lang$core$Maybe$Nothing, state.selectedDate),
-								isOpen: false
+								time: _elm_lang$core$Native_Utils.update(
+									time,
+									{
+										selectedDate: _elm_lang$core$Maybe$Just(_p30)
+									})
 							}),
 						{ctor: '[]'});
-				case 'TimeMsg':
-					var _p32 = A2(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime, _p26._0, state.time);
-					var newTime = _p32._0;
-					var cmd = _p32._1;
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{time: newTime}),
+				}
+			case 'Apply':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
 						{
-							ctor: '::',
-							_0: cmd,
-							_1: {ctor: '[]'}
-						});
-				case 'NoOp':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
+							selectedDate: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								_bluedogtraining$bdt_elm$Form_DatePicker_Internal$apply(state),
+								state.selectedDate),
+							isOpen: false
+						}),
+					{ctor: '[]'});
+			case 'Clear':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
 						state,
-						{ctor: '[]'});
-				default:
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
+						{
+							selectedDate: A2(_bluedogtraining$bdt_elm$Resettable$update, _elm_lang$core$Maybe$Nothing, state.selectedDate),
+							isOpen: false
+						}),
+					{ctor: '[]'});
+			case 'TimeMsg':
+				var _p31 = A2(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime, _p25._0, state.time);
+				var newTime = _p31._0;
+				var cmd = _p31._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
 						state,
-						{ctor: '[]'});
-			}
-		}();
-		var newState = _p25._0;
-		var cmd = _p25._1;
-		return A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			newState,
-			{
-				ctor: '::',
-				_0: cmd,
-				_1: {ctor: '[]'}
-			});
+						{time: newTime}),
+					{
+						ctor: '::',
+						_0: cmd,
+						_1: {ctor: '[]'}
+					});
+			case 'NoOp':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					state,
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					state,
+					{ctor: '[]'});
+		}
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$OpenTimeSelect = function (a) {
 	return {ctor: 'OpenTimeSelect', _0: a};
@@ -19247,9 +19223,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$map,
-									function (_p33) {
+									function (_p32) {
 										return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-											_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateHours(_p33));
+											_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateHours(_p32));
 									},
 									_bluedogtraining$bdt_elm$Form_Select$render(
 										A2(
@@ -19317,9 +19293,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 										ctor: '::',
 										_0: A2(
 											_elm_lang$html$Html$map,
-											function (_p34) {
+											function (_p33) {
 												return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-													_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateMinutes(_p34));
+													_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateMinutes(_p33));
 											},
 											_bluedogtraining$bdt_elm$Form_Select$render(
 												A2(
@@ -19387,9 +19363,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 												ctor: '::',
 												_0: A2(
 													_elm_lang$html$Html$map,
-													function (_p35) {
+													function (_p34) {
 														return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-															_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateSeconds(_p35));
+															_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateSeconds(_p34));
 													},
 													_bluedogtraining$bdt_elm$Form_Select$render(
 														A2(
@@ -19464,11 +19440,11 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePickerContainer = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendar = F2(
 	function (state, viewState) {
-		var _p36 = state.navigationDate;
-		if (_p36.ctor === 'Nothing') {
+		var _p35 = state.navigationDate;
+		if (_p35.ctor === 'Nothing') {
 			return _elm_lang$html$Html$text('');
 		} else {
-			var _p37 = _p36._0;
+			var _p36 = _p35._0;
 			return A2(
 				_elm_lang$html$Html$div,
 				{
@@ -19485,7 +19461,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendar = F2(
 				},
 				{
 					ctor: '::',
-					_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarNavigation, state, viewState, _p37),
+					_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarNavigation, state, viewState, _p36),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -19534,7 +19510,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendar = F2(
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarDays, state, viewState, _p37),
+									_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarDays, state, viewState, _p36),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
@@ -19642,8 +19618,8 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$open = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$render = F2(
 	function (state, viewState) {
-		var _p38 = state.isOpen;
-		if (_p38 === false) {
+		var _p37 = state.isOpen;
+		if (_p37 === false) {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_DatePicker_Internal$closed, state, viewState);
 		} else {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_DatePicker_Internal$open, state, viewState);
@@ -21770,8 +21746,8 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$focusOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.MultiSelect.Internal',
 				{
-					start: {line: 165, column: 5},
-					end: {line: 170, column: 128}
+					start: {line: 160, column: 5},
+					end: {line: 165, column: 128}
 				},
 				_p2)(
 				A2(
@@ -21801,8 +21777,8 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$unselectOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.MultiSelect.Internal',
 				{
-					start: {line: 154, column: 5},
-					end: {line: 159, column: 107}
+					start: {line: 149, column: 5},
+					end: {line: 154, column: 107}
 				},
 				_p4)(
 				A2(
@@ -21827,8 +21803,8 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$selectOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.MultiSelect.Internal',
 				{
-					start: {line: 143, column: 5},
-					end: {line: 148, column: 126}
+					start: {line: 138, column: 5},
+					end: {line: 143, column: 126}
 				},
 				_p6)(
 				A2(
@@ -21967,113 +21943,101 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$handleKeyboardInput = F3(
 	});
 var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$update = F2(
 	function (msg, state) {
-		var _p13 = function () {
-			var _p14 = msg;
-			switch (_p14.ctor) {
-				case 'Open':
+		var _p13 = msg;
+		switch (_p13.ctor) {
+			case 'Open':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{isOpen: true}),
+					{ctor: '[]'});
+			case 'Blur':
+				var _p14 = state.focusedOption;
+				if (_p14.ctor === 'Nothing') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							state,
-							{isOpen: true}),
+							{isOpen: false}),
 						{ctor: '[]'});
-				case 'Blur':
-					var _p15 = state.focusedOption;
-					if (_p15.ctor === 'Nothing') {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{isOpen: false}),
-							{ctor: '[]'});
-					} else {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							state,
-							{ctor: '[]'});
-					}
-				case 'BlurOption':
-					var _p16 = _elm_lang$core$Native_Utils.eq(
-						_elm_lang$core$Maybe$Just(_p14._0),
-						state.focusedOption);
-					if (_p16 === true) {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{focusedOption: _elm_lang$core$Maybe$Nothing, isOpen: false}),
-							{ctor: '[]'});
-					} else {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							state,
-							{ctor: '[]'});
-					}
-				case 'Select':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								selectedOptions: A2(
-									_bluedogtraining$bdt_elm$Resettable$update,
-									A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$selectOption, state, _p14._0),
-									state.selectedOptions)
-							}),
-						{ctor: '[]'});
-				case 'Unselect':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								selectedOptions: A2(
-									_bluedogtraining$bdt_elm$Resettable$update,
-									A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$unselectOption, state.selectedOptions, _p14._0),
-									state.selectedOptions)
-							}),
-						{ctor: '[]'});
-				case 'Clear':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								selectedOptions: A2(
-									_bluedogtraining$bdt_elm$Resettable$update,
-									{ctor: '[]'},
-									state.selectedOptions)
-							}),
-						{ctor: '[]'});
-				case 'KeyboardInput':
-					return A3(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$handleKeyboardInput, state, _p14._0, _p14._1);
-				case 'Focus':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								focusedOption: _elm_lang$core$Maybe$Just(
-									A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$focusOption, state.options, _p14._0))
-							}),
-						{ctor: '[]'});
-				default:
+				} else {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						state,
 						{ctor: '[]'});
-			}
-		}();
-		var newState = _p13._0;
-		var cmd = _p13._1;
-		return A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			newState,
-			{
-				ctor: '::',
-				_0: cmd,
-				_1: {ctor: '[]'}
-			});
+				}
+			case 'BlurOption':
+				var _p15 = _elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$Maybe$Just(_p13._0),
+					state.focusedOption);
+				if (_p15 === true) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							state,
+							{focusedOption: _elm_lang$core$Maybe$Nothing, isOpen: false}),
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						state,
+						{ctor: '[]'});
+				}
+			case 'Select':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							selectedOptions: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$selectOption, state, _p13._0),
+								state.selectedOptions)
+						}),
+					{ctor: '[]'});
+			case 'Unselect':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							selectedOptions: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$unselectOption, state.selectedOptions, _p13._0),
+								state.selectedOptions)
+						}),
+					{ctor: '[]'});
+			case 'Clear':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							selectedOptions: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								{ctor: '[]'},
+								state.selectedOptions)
+						}),
+					{ctor: '[]'});
+			case 'KeyboardInput':
+				return A3(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$handleKeyboardInput, state, _p13._0, _p13._1);
+			case 'Focus':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							focusedOption: _elm_lang$core$Maybe$Just(
+								A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$focusOption, state.options, _p13._0))
+						}),
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					state,
+					{ctor: '[]'});
+		}
 	});
 var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$BlurOption = function (a) {
 	return {ctor: 'BlurOption', _0: a};
@@ -22119,11 +22083,11 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$Select = function (a) {
 };
 var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$handleMouseDown = F2(
 	function (selectedOptions, option) {
-		var _p17 = A2(
+		var _p16 = A2(
 			_elm_lang$core$List$member,
 			option,
 			_bluedogtraining$bdt_elm$Resettable$getValue(selectedOptions));
-		if (_p17 === true) {
+		if (_p16 === true) {
 			return A3(
 				_elm_lang$html$Html_Events$onWithOptions,
 				'mousedown',
@@ -22259,10 +22223,10 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$isSelectInputKey = F2(
 					}
 				}
 			});
-		var _p18 = A2(_elm_lang$core$Dict$get, code, dict);
-		if (_p18.ctor === 'Just') {
+		var _p17 = A2(_elm_lang$core$Dict$get, code, dict);
+		if (_p17.ctor === 'Just') {
 			return _elm_lang$core$Json_Decode$succeed(
-				msg(_p18._0));
+				msg(_p17._0));
 		} else {
 			return _elm_lang$core$Json_Decode$fail('Not a select input key');
 		}
@@ -22428,8 +22392,8 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$open = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$render = F2(
 	function (state, viewState) {
-		var _p19 = state.isOpen;
-		if (_p19 === false) {
+		var _p18 = state.isOpen;
+		if (_p18 === false) {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$closed, state, viewState);
 		} else {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$open, state, viewState);
@@ -22723,8 +22687,8 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$focusOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.SearchSelect.Internal',
 				{
-					start: {line: 226, column: 5},
-					end: {line: 231, column: 132}
+					start: {line: 221, column: 5},
+					end: {line: 226, column: 132}
 				},
 				_p1)(
 				A2(
@@ -22879,115 +22843,107 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchRequest = F3(
 	});
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$update = F2(
 	function (msg, state) {
-		var _p6 = function () {
-			var _p7 = msg;
-			switch (_p7.ctor) {
-				case 'Open':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{isOpen: true}),
-						{ctor: '[]'});
-				case 'Blur':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{isOpen: false, input: '', focusedOption: _elm_lang$core$Maybe$Nothing}),
-						{ctor: '[]'});
-				case 'UpdateSearchInput':
-					var _p9 = _p7._1;
-					var _p8 = _p7._0;
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								input: _p9,
-								isSearching: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$shouldSearch, _p8, _p9)
-							}),
+		var _p6 = msg;
+		switch (_p6.ctor) {
+			case 'Open':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{isOpen: true}),
+					{ctor: '[]'});
+			case 'Blur':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{isOpen: false, input: '', focusedOption: _elm_lang$core$Maybe$Nothing}),
+					{ctor: '[]'});
+			case 'UpdateSearchInput':
+				var _p8 = _p6._1;
+				var _p7 = _p6._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
 						{
-							ctor: '::',
-							_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$shouldSearch, _p8, _p9) ? A3(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchRequest, state.searchUrl, _p9, state.optionDecoder) : _elm_lang$core$Platform_Cmd$none,
-							_1: {ctor: '[]'}
-						});
-				case 'Response':
-					var _p10 = _p7._0;
-					if (_p10.ctor === 'Err') {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{isSearching: false}),
-							{ctor: '[]'});
-					} else {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{isSearching: false, options: _p10._0.options, focusedOption: _elm_lang$core$Maybe$Nothing}),
-							{ctor: '[]'});
-					}
-				case 'Clear':
+							input: _p8,
+							isSearching: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$shouldSearch, _p7, _p8)
+						}),
+					{
+						ctor: '::',
+						_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$shouldSearch, _p7, _p8) ? A3(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchRequest, state.searchUrl, _p8, state.optionDecoder) : _elm_lang$core$Platform_Cmd$none,
+						_1: {ctor: '[]'}
+					});
+			case 'Response':
+				var _p9 = _p6._0;
+				if (_p9.ctor === 'Err') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							state,
-							{
-								selectedOption: A2(_bluedogtraining$bdt_elm$Resettable$update, _elm_lang$core$Maybe$Nothing, state.selectedOption)
-							}),
+							{isSearching: false}),
 						{ctor: '[]'});
-				case 'SelectOption':
+				} else {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							state,
-							{
-								input: '',
-								selectedOption: A2(
-									_bluedogtraining$bdt_elm$Resettable$update,
-									_elm_lang$core$Maybe$Just(_p7._0),
-									state.selectedOption)
-							}),
+							{isSearching: false, options: _p9._0.options, focusedOption: _elm_lang$core$Maybe$Nothing}),
 						{ctor: '[]'});
-				case 'KeyboardInput':
-					return A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$handleKeyboardInput, state, _p7._0);
-				case 'Focus':
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{
-								focusedOption: _elm_lang$core$Maybe$Just(
-									A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$focusOption, state.options, _p7._0))
-							}),
-						{ctor: '[]'});
-				case 'BlurOption':
-					return _elm_lang$core$Native_Utils.eq(
-						_elm_lang$core$Maybe$Just(_p7._0),
-						state.focusedOption) ? A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							state,
-							{focusedOption: _elm_lang$core$Maybe$Nothing, isOpen: false}),
-						{ctor: '[]'}) : A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
+				}
+			case 'Clear':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
 						state,
-						{ctor: '[]'});
-				default:
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
+						{
+							selectedOption: A2(_bluedogtraining$bdt_elm$Resettable$update, _elm_lang$core$Maybe$Nothing, state.selectedOption)
+						}),
+					{ctor: '[]'});
+			case 'SelectOption':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
 						state,
-						{ctor: '[]'});
-			}
-		}();
-		var newState = _p6._0;
-		var cmd = _p6._1;
-		return A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			newState,
-			{ctor: '[]'});
+						{
+							input: '',
+							selectedOption: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								_elm_lang$core$Maybe$Just(_p6._0),
+								state.selectedOption)
+						}),
+					{ctor: '[]'});
+			case 'KeyboardInput':
+				return A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$handleKeyboardInput, state, _p6._0);
+			case 'Focus':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{
+							focusedOption: _elm_lang$core$Maybe$Just(
+								A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$focusOption, state.options, _p6._0))
+						}),
+					{ctor: '[]'});
+			case 'BlurOption':
+				return _elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$Maybe$Just(_p6._0),
+					state.focusedOption) ? A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						state,
+						{focusedOption: _elm_lang$core$Maybe$Nothing, isOpen: false}),
+					{ctor: '[]'}) : A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					state,
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					state,
+					{ctor: '[]'});
+		}
 	});
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$UpdateSearchInput = F2(
 	function (a, b) {
@@ -23086,10 +23042,10 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$isSelectInputKey = F2(
 					}
 				}
 			});
-		var _p11 = A2(_elm_lang$core$Dict$get, code, dict);
-		if (_p11.ctor === 'Just') {
+		var _p10 = A2(_elm_lang$core$Dict$get, code, dict);
+		if (_p10.ctor === 'Just') {
 			return _elm_lang$core$Json_Decode$succeed(
-				msg(_p11._0));
+				msg(_p10._0));
 		} else {
 			return _elm_lang$core$Json_Decode$fail('Not a search-select input key');
 		}
@@ -23180,17 +23136,17 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$InputMinimum = function 
 };
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchResults = F2(
 	function (state, viewState) {
-		var _p12 = A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$shouldSearch, viewState.inputMinimum, state.input);
-		if (_p12 === false) {
+		var _p11 = A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$shouldSearch, viewState.inputMinimum, state.input);
+		if (_p11 === false) {
 			return _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$infoMessage(
 				_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$InputMinimum(viewState.inputMinimum));
 		} else {
-			var _p13 = state.isSearching;
-			if (_p13 === true) {
+			var _p12 = state.isSearching;
+			if (_p12 === true) {
 				return _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$infoMessage(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Searching);
 			} else {
-				var _p14 = _elm_lang$core$List$isEmpty(state.options);
-				if (_p14 === true) {
+				var _p13 = _elm_lang$core$List$isEmpty(state.options);
+				if (_p13 === true) {
 					return _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$infoMessage(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$NoResults);
 				} else {
 					return A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchResultList, state, viewState);
@@ -23283,8 +23239,8 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$open = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$render = F2(
 	function (state, viewState) {
-		var _p15 = state.isOpen;
-		if (_p15 === false) {
+		var _p14 = state.isOpen;
+		if (_p14 === false) {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$closed, state, viewState);
 		} else {
 			return A3(_elm_lang$html$Html_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$open, state, viewState);

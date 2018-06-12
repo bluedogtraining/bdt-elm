@@ -7,6 +7,7 @@ import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.DatePicker as DatePicker
+import Form.TextArea as TextArea
 
 import MusicGenre exposing (MusicGenre)
 import StarWars exposing (Character)
@@ -20,3 +21,4 @@ type Msg
     | MultiSelectMsg (MultiSelect.Msg MusicGenre)
     | SearchSelectMsg (SearchSelect.Msg Character)
     | DatePickerMsg DatePicker.Msg
+    | TextAreaMsg TextArea.Msg

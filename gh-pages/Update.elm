@@ -7,6 +7,7 @@ import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.DatePicker as DatePicker
+import Form.TextArea as TextArea
 
 import Msg exposing (Msg (..))
 import Model exposing (Model)
@@ -56,3 +57,6 @@ update msg model =
 
             in
                 { model | datePicker = newDatePicker } ! [ Cmd.map DatePickerMsg cmd ]
+
+        TextAreaMsg textAreaMsg ->
+            { model | textArea = TextArea.update textAreaMsg model.textArea } ! []

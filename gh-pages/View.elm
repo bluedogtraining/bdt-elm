@@ -12,6 +12,7 @@ import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.DatePicker as DatePicker
+import Form.TextArea as TextArea
 
 import Msg exposing (Msg (..))
 import Model exposing (Model)
@@ -100,4 +101,14 @@ view model =
         , div
             []
             [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker) ]
+        , h2
+            []
+            [ text "TextArea" ]
+        , TextArea.view model.textArea
+            |> TextArea.render
+            |> fromUnstyled
+            |> Html.map TextAreaMsg
+        , div
+            []
+            [ text <| "Value: " ++ TextArea.getValue model.textArea ]
         ]

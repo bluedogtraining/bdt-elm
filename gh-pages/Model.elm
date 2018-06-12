@@ -7,6 +7,7 @@ import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.DatePicker as DatePicker
+import Form.TextArea as TextArea
 
 import MusicGenre exposing (MusicGenre)
 import StarWars exposing (Character)
@@ -20,6 +21,7 @@ type alias Model =
     , multiSelect : MultiSelect.Model MusicGenre
     , searchSelect : SearchSelect.Model Character
     , datePicker : DatePicker.Model
+    , textArea : TextArea.Model
     }
 
 
@@ -32,4 +34,5 @@ initialModel =
     , multiSelect = MultiSelect.init MusicGenre.asNonempty
     , searchSelect = SearchSelect.init "https://swapi.co/api/people/?search=" StarWars.characterDecoder
     , datePicker = DatePicker.init
+    , textArea = TextArea.init
     }

@@ -1,4 +1,4 @@
-module Form.IntInput.Internal exposing
+module Form.TextArea.Internal exposing
     ( State, ViewState
     , init, initialViewState
     , Msg, update
@@ -17,25 +17,30 @@ import Html.Lazy exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 
-import Regex exposing (Regex)
-
 import Html.Bdt as Html
 import Resettable exposing (Resettable)
 
 
+-- MODEL --
+
+
 type alias State =
     { value : Resettable String
-    -- Add bypassLazy so that we can use lazy in render (so that external changes don't re-render),
-    -- but still update the DOM to update the value on the input (to remove the letter).
-    , bypassLazy : Int
     }
 
 
 init : State
 init =
     { value = Resettable.init ""
-    , bypassLazy = 0
     }
+
+
+type Type
+    = Text
+    | Email
+    | Password
+    | Tel
+    | Number
 
 
 type alias ViewState =
@@ -67,13 +72,7 @@ type Msg
 update : Msg -> State -> State
 update (Input string) state =
 
-    case Regex.contains (Regex.regex "^[-]?[0-9]*$") string of
-
-        True ->
-            { state | value = Resettable.update string state.value }
-
-        False ->
-            { state | bypassLazy = state.bypassLazy + 1 }
+    { state | value = Resettable.update string state.value }
 
 
 -- VIEW --
@@ -87,7 +86,8 @@ render state viewState =
 
 inputField : State -> ViewState -> Html Msg
 inputField state viewState =
-    input
+
+    textarea
         [ class "bdt-elm input"
         , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
         , disabled viewState.isLocked
@@ -115,16 +115,16 @@ reset state =
     { state | value = Resettable.reset state.value }
 
 
-setInitialValue : Int -> State -> State
+setInitialValue : String -> State -> State
 setInitialValue value state =
 
-    { state | value = Resettable.init (toString value) }
+    { state | value = Resettable.init value }
 
 
-setValue : Int -> State -> State
+setValue : String -> State -> State
 setValue value state =
 
-    { state | value = Resettable.update (toString value) state.value }
+    { state | value = Resettable.update value state.value }
 
 
 -- VIEW STATE SETTERS --
@@ -169,35 +169,16 @@ getIsChanged state =
     Resettable.getIsChanged state.value
 
 
-getInitialValue : State -> Maybe Int
-getInitialValue =
+getInitialValue : State -> String
+getInitialValue state =
 
-    .value >> Resettable.getInitialValue >> stringToMaybeInt
-
-
-getValue : State -> Maybe Int
-getValue =
-
-    .value >> Resettable.getValue >> stringToMaybeInt
+    Resettable.getInitialValue state.value
 
 
-stringToMaybeInt : String -> Maybe Int
-stringToMaybeInt string =
+getValue : State -> String
+getValue state =
 
-    case string of
-
-        "" ->
-            Nothing
-
-        value ->
-            -- Don't use withDefault or mapError here, Debug.crash STILL gets called even if successful (compiler bug)
-            case String.toInt value of
-
-                Err _ ->
-                    Debug.crash "Failed to parse IntInput String to Int"
-
-                Ok int ->
-                    Just int
+    Resettable.getValue state.value
 
 
 getId : ViewState -> Maybe String

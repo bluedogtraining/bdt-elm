@@ -11,7 +11,6 @@ module Form.IntInput exposing
     , getId
     )
 
-
 {-| This module is useful if you want to add an Integer based Input element to your app.
 
 # Initialise and update

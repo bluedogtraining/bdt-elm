@@ -1,9 +1,9 @@
-module Form.FloatInput exposing
+module Form.TextArea exposing
     ( Model, init
     , Msg, update
     , view, render
     , reInitialise, reset
-    , setInitialValue, setValue, setDecimal
+    , setInitialValue, setValue
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
@@ -11,7 +11,7 @@ module Form.FloatInput exposing
     , getId
     )
 
-{-| This module is useful if you want to add an Integer based Input element to your app.
+{-| This module is useful if you want to add an TextArea Form element to your app.
 
 # Initialise and update
 @docs Model, init, Msg, update
@@ -20,7 +20,7 @@ module Form.FloatInput exposing
 @docs view, render
 
 # State Setters
-@docs reInitialise, reset, setInitialValue, setValue, setDecimal
+@docs reInitialise, reset, setInitialValue, setValue
 
 # View Setters
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
@@ -32,13 +32,13 @@ module Form.FloatInput exposing
 
 import Html exposing (Html)
 
-import Form.FloatInput.Internal as Internal
+import Form.TextArea.Internal as Internal
 
 
-{-| Add a Input.Model to your model.
+{-| Add a TextArea.Model to your model.
 
     type alias MyModel =
-        { myInput : Input.Model
+        { myTextArea : TextArea.Model
         }
 -}
 type Model
@@ -49,11 +49,11 @@ type View
     = View Internal.State Internal.ViewState
 
 
-{-| Add a Input.Model to your model.
+{-| Add a TextArea.Model to your model.
 
     myInitialModel : MyModel
     myInitialModel =
-        { myInput = Input.init -- optionally pipe into State Setters
+        { myTextArea = TextArea.init -- optionally pipe into State Setters
         }
 -}
 init : Model
@@ -61,10 +61,10 @@ init =
     Model Internal.init
 
 
-{-| Add a Input.Msg to your Msg.
+{-| Add a TextArea.Msg to your Msg.
 
     type MyMsg
-        = UpdateMyInput Input.Msg
+        = UpdateMyTextArea TextArea.Msg
 -}
 type alias Msg =
     Internal.Msg
@@ -75,8 +75,8 @@ type alias Msg =
     myUpdate : Msg -> Model -> (Model, Cmd Msg)
     myUpdate msg model =
         case msg of
-            UpdateMyInput inputMsg ->
-                { model | myInput = Input.update inputMsg mode.myInput } ! []
+            UpdateMyTextArea inputMsg ->
+                { model | myTextArea = TextArea.update inputMsg mode.myTextArea } ! []
 -}
 update : Internal.Msg -> Model -> Model
 update msg (Model state) =
@@ -84,13 +84,13 @@ update msg (Model state) =
     Model (Internal.update msg state)
 
 
-{-| Transform an Input.Model into an Input.View, which allows us to pipe View Setters on it.
+{-| Transform an TextArea.Model into an TextArea.View, which allows us to pipe View Setters on it.
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Input.view model.myInput -- pipe view setters here, for example |> setIsLocked 'your logic here'
+            [ TextArea.view model.myTextArea -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
 -}
 view : Model -> View
@@ -99,15 +99,15 @@ view (Model state) =
     View state Internal.initialViewState
 
 
-{-| Transforms an Input.View into Html Input.Msg
+{-| Transforms an TextArea.View into Html TextArea.Msg
 
     myView : Model -> Html Msg
     myView model =
         div
             []
-            [ Input.view model.myInput
-                |> Input.render
-                |> Html.map UpdateMyInput
+            [ TextArea.view model.myTextArea
+                |> TextArea.render
+                |> Html.map UpdateMyTextArea
             ]
 -}
 render : View -> Html Internal.Msg
@@ -116,7 +116,7 @@ render (View state viewState) =
     Internal.render state viewState
 
 
-{-| ReInitialise your FloatInput.Model.
+{-| ReInitialise your TextArea.Model.
 -}
 reInitialise : Model -> Model
 reInitialise (Model state) =
@@ -124,7 +124,7 @@ reInitialise (Model state) =
     Model <| Internal.reInitialise state
 
 
-{-| Reset your FloatInput.Model.
+{-| Reset your TextArea.Model.
 -}
 reset : Model -> Model
 reset (Model state) =
@@ -132,28 +132,20 @@ reset (Model state) =
     Model <| Internal.reset state
 
 
-{-| Set the initial value of your FloatInput.Model.
+{-| Set the initial value of your TextArea.Model.
 -}
-setInitialValue : Float -> Model -> Model
+setInitialValue : String -> Model -> Model
 setInitialValue value (Model state) =
 
     Model <| Internal.setInitialValue value state
 
 
-{-| Change the value of your FloatInput.Model.
+{-| Change the value of your TextArea.Model.
 -}
-setValue : Float -> Model -> Model
+setValue : String -> Model -> Model
 setValue value (Model state) =
 
     Model <| Internal.setValue value state
-
-
-{-| Change the number of decimal places of your FloatInput.Model.
--}
-setDecimal : Int -> Model -> Model
-setDecimal decimal (Model state) =
-
-    Model <| Internal.setDecimal decimal state
 
 
 {-| Set the max length for your input string.
@@ -206,7 +198,7 @@ getIsChanged (Model state) =
 
 {-| Get the initial value of your input.
 -}
-getInitialValue : Model -> Maybe Float
+getInitialValue : Model -> String
 getInitialValue (Model state) =
 
     Internal.getInitialValue state
@@ -215,7 +207,7 @@ getInitialValue (Model state) =
 {-| Get the current value of your input. This is what you'd use to display the data somewhere outside of your input,
 or to send the data to the backend for example etc.
 -}
-getValue : Model -> Maybe Float
+getValue : Model -> String
 getValue (Model state) =
 
     Internal.getValue state

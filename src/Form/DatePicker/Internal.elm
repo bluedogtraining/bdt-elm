@@ -388,7 +388,7 @@ open state viewState =
             , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
             , tabindex 0
             , id "FORM_DATEPICKER"
---            , onBlur Blur
+            , onBlur Blur
             ]
             [ div
                 [ class "date" ]

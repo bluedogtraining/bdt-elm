@@ -297,7 +297,7 @@ open state viewState =
             , Html.maybeAttribute id viewState.id
             , onKeyboardInput <| KeyboardInput False
             , tabindex -1
---            , onBlur Blur
+            , onBlur Blur
             ]
             [ div
                 [ class "option-label"

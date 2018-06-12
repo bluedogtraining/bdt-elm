@@ -17342,7 +17342,11 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$open = F2(
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$tabindex(-1),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onBlur(_bluedogtraining$bdt_elm$Form_Select_Internal$Blur),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}
@@ -19581,7 +19585,11 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$open = F2(
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$id('FORM_DATEPICKER'),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onBlur(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Blur),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						}

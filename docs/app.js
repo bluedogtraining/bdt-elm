@@ -16566,6 +16566,9 @@ var _bluedogtraining$bdt_elm$Form_Helpers$toHtmlId = function (option) {
 			_elm_lang$core$Basics$toString(option)));
 };
 
+var _bluedogtraining$bdt_elm$InfixPrecedence$InfixPrecedence = function (a) {
+	return {ctor: 'InfixPrecedence', _0: a};
+};
 
 var _bluedogtraining$bdt_elm$Html_Bdt$viewIf = F2(
 	function (show, view) {

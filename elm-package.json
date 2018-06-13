@@ -1,5 +1,5 @@
 {
-    "version": "6.0.1",
+    "version": "6.1.0",
     "summary": "Elm modules commonly used at BDT",
     "repository": "https://github.com/bluedogtraining/bdt-elm.git",
     "license": "BSD3",
@@ -16,7 +16,8 @@
         "Form.MultiSelect",
         "Form.SearchSelect",
         "Form.DatePicker",
-        "Form.TextArea"
+        "Form.TextArea",
+        "InfixPrecedence"
     ],
     "dependencies": {
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",

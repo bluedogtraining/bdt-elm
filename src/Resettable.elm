@@ -4,7 +4,6 @@ module Resettable exposing
     , getIsChanged, getValue, getInitialValue
     )
 
-
 {-| This module is useful if you want to track changes to a value.
 
 # Definition

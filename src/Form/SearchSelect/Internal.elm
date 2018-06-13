@@ -311,7 +311,7 @@ open state viewState =
             , tabindex -1
             , disabled viewState.isLocked
             , onInput <| UpdateSearchInput viewState.inputMinimum
---            , onBlur Blur
+            , onBlur Blur
             , onKeyboardInput KeyboardInput
             , value state.input
             ]

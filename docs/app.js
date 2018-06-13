@@ -23207,11 +23207,15 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$open = F2(
 														_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$UpdateSearchInput(viewState.inputMinimum)),
 													_1: {
 														ctor: '::',
-														_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
+														_0: _elm_lang$html$Html_Events$onBlur(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Blur),
 														_1: {
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$value(state.input),
-															_1: {ctor: '[]'}
+															_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$value(state.input),
+																_1: {ctor: '[]'}
+															}
 														}
 													}
 												}

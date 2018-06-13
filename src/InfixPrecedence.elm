@@ -2,6 +2,11 @@ module InfixPrecedence exposing (InfixPrecedence)
 
 {-| This module is useful to allow multiple modules to declare their own (?) infix function.
 
+It's sole purpose is to set `infix 0 ?`.
+
+So if you have multiple (?) functions, simply import this module from each of them
+(as the same infix precedence can't be set more than once).
+
 # Definition
 @docs InfixPrecedence
 

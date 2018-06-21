@@ -34,5 +34,5 @@ initialModel =
     , multiSelect = MultiSelect.init MusicGenre.asNonempty
     , searchSelect = SearchSelect.init "https://swapi.co/api/people/?search=" StarWars.characterDecoder
     , datePicker = DatePicker.init
-    , textArea = TextArea.init
+    , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [("[]", "☐")]
     }

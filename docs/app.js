@@ -23420,6 +23420,18 @@ var _bluedogtraining$bdt_elm$Form_TextArea_Internal$setMaxLength = F2(
 				maxLength: _elm_lang$core$Maybe$Just(maxLength)
 			});
 	});
+var _bluedogtraining$bdt_elm$Form_TextArea_Internal$setReplacements = F2(
+	function (replacements, state) {
+		return _elm_lang$core$Native_Utils.update(
+			state,
+			{replacements: replacements});
+	});
+var _bluedogtraining$bdt_elm$Form_TextArea_Internal$setSubstituteTabs = F2(
+	function (substituteTabs, state) {
+		return _elm_lang$core$Native_Utils.update(
+			state,
+			{substituteTabs: substituteTabs});
+	});
 var _bluedogtraining$bdt_elm$Form_TextArea_Internal$setValue = F2(
 	function (value, state) {
 		return _elm_lang$core$Native_Utils.update(
@@ -23451,31 +23463,37 @@ var _bluedogtraining$bdt_elm$Form_TextArea_Internal$reInitialise = function (sta
 				_bluedogtraining$bdt_elm$Resettable$getValue(state.value))
 		});
 };
-var _bluedogtraining$bdt_elm$Form_TextArea_Internal$update = F2(
-	function (_p0, state) {
+var _bluedogtraining$bdt_elm$Form_TextArea_Internal$replace = F2(
+	function (_p0, acc) {
 		var _p1 = _p0;
+		return A3(_elm_community$string_extra$String_Extra$replace, _p1._0, _p1._1, acc);
+	});
+var _bluedogtraining$bdt_elm$Form_TextArea_Internal$update = F2(
+	function (_p2, state) {
+		var _p3 = _p2;
 		return _elm_lang$core$Native_Utils.update(
 			state,
 			{
-				value: A2(_bluedogtraining$bdt_elm$Resettable$update, _p1._0, state.value)
+				value: A2(
+					_bluedogtraining$bdt_elm$Resettable$update,
+					A3(_elm_lang$core$List$foldl, _bluedogtraining$bdt_elm$Form_TextArea_Internal$replace, _p3._0, state.replacements),
+					state.value)
 			});
 	});
 var _bluedogtraining$bdt_elm$Form_TextArea_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: '', isLocked: false, isError: false, id: _elm_lang$core$Maybe$Nothing};
 var _bluedogtraining$bdt_elm$Form_TextArea_Internal$init = {
-	value: _bluedogtraining$bdt_elm$Resettable$init('')
+	value: _bluedogtraining$bdt_elm$Resettable$init(''),
+	substituteTabs: false,
+	replacements: {ctor: '[]'}
 };
-var _bluedogtraining$bdt_elm$Form_TextArea_Internal$State = function (a) {
-	return {value: a};
-};
+var _bluedogtraining$bdt_elm$Form_TextArea_Internal$State = F3(
+	function (a, b, c) {
+		return {value: a, substituteTabs: b, replacements: c};
+	});
 var _bluedogtraining$bdt_elm$Form_TextArea_Internal$ViewState = F5(
 	function (a, b, c, d, e) {
 		return {maxLength: a, placeholder: b, isLocked: c, isError: d, id: e};
 	});
-var _bluedogtraining$bdt_elm$Form_TextArea_Internal$Number = {ctor: 'Number'};
-var _bluedogtraining$bdt_elm$Form_TextArea_Internal$Tel = {ctor: 'Tel'};
-var _bluedogtraining$bdt_elm$Form_TextArea_Internal$Password = {ctor: 'Password'};
-var _bluedogtraining$bdt_elm$Form_TextArea_Internal$Email = {ctor: 'Email'};
-var _bluedogtraining$bdt_elm$Form_TextArea_Internal$Text = {ctor: 'Text'};
 var _bluedogtraining$bdt_elm$Form_TextArea_Internal$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
@@ -23517,7 +23535,14 @@ var _bluedogtraining$bdt_elm$Form_TextArea_Internal$inputField = F2(
 										_1: {
 											ctor: '::',
 											_0: A2(_bluedogtraining$bdt_elm$Html_Bdt$maybeAttribute, _elm_lang$html$Html_Attributes$id, viewState.id),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_bluedogtraining$bdt_elm$Html_Bdt_ops['?'],
+													A2(_elm_lang$html$Html_Attributes$attribute, 'onkeydown', 'if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+\'\t\'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}'),
+													state.substituteTabs),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
@@ -23585,53 +23610,65 @@ var _bluedogtraining$bdt_elm$Form_TextArea$setValue = F2(
 		return _bluedogtraining$bdt_elm$Form_TextArea$Model(
 			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setValue, value, _p19._0));
 	});
+var _bluedogtraining$bdt_elm$Form_TextArea$setSubstituteTabs = F2(
+	function (bool, _p20) {
+		var _p21 = _p20;
+		return _bluedogtraining$bdt_elm$Form_TextArea$Model(
+			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setSubstituteTabs, bool, _p21._0));
+	});
+var _bluedogtraining$bdt_elm$Form_TextArea$setReplacements = F2(
+	function (replacements, _p22) {
+		var _p23 = _p22;
+		return _bluedogtraining$bdt_elm$Form_TextArea$Model(
+			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setReplacements, replacements, _p23._0));
+	});
 var _bluedogtraining$bdt_elm$Form_TextArea$View = F2(
 	function (a, b) {
 		return {ctor: 'View', _0: a, _1: b};
 	});
-var _bluedogtraining$bdt_elm$Form_TextArea$view = function (_p20) {
-	var _p21 = _p20;
-	return A2(_bluedogtraining$bdt_elm$Form_TextArea$View, _p21._0, _bluedogtraining$bdt_elm$Form_TextArea_Internal$initialViewState);
+var _bluedogtraining$bdt_elm$Form_TextArea$view = function (_p24) {
+	var _p25 = _p24;
+	return A2(_bluedogtraining$bdt_elm$Form_TextArea$View, _p25._0, _bluedogtraining$bdt_elm$Form_TextArea_Internal$initialViewState);
 };
 var _bluedogtraining$bdt_elm$Form_TextArea$setMaxLength = F2(
-	function (maxLength, _p22) {
-		var _p23 = _p22;
-		return A2(
-			_bluedogtraining$bdt_elm$Form_TextArea$View,
-			_p23._0,
-			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setMaxLength, maxLength, _p23._1));
-	});
-var _bluedogtraining$bdt_elm$Form_TextArea$setPlaceholder = F2(
-	function (placeholder, _p24) {
-		var _p25 = _p24;
-		return A2(
-			_bluedogtraining$bdt_elm$Form_TextArea$View,
-			_p25._0,
-			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setPlaceholder, placeholder, _p25._1));
-	});
-var _bluedogtraining$bdt_elm$Form_TextArea$setIsLocked = F2(
-	function (isLocked, _p26) {
+	function (maxLength, _p26) {
 		var _p27 = _p26;
 		return A2(
 			_bluedogtraining$bdt_elm$Form_TextArea$View,
 			_p27._0,
-			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setIsLocked, isLocked, _p27._1));
+			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setMaxLength, maxLength, _p27._1));
 	});
-var _bluedogtraining$bdt_elm$Form_TextArea$setIsError = F2(
-	function (isError, _p28) {
+var _bluedogtraining$bdt_elm$Form_TextArea$setPlaceholder = F2(
+	function (placeholder, _p28) {
 		var _p29 = _p28;
 		return A2(
 			_bluedogtraining$bdt_elm$Form_TextArea$View,
 			_p29._0,
-			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setIsError, isError, _p29._1));
+			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setPlaceholder, placeholder, _p29._1));
 	});
-var _bluedogtraining$bdt_elm$Form_TextArea$setId = F2(
-	function (id, _p30) {
+var _bluedogtraining$bdt_elm$Form_TextArea$setIsLocked = F2(
+	function (isLocked, _p30) {
 		var _p31 = _p30;
 		return A2(
 			_bluedogtraining$bdt_elm$Form_TextArea$View,
 			_p31._0,
-			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setId, id, _p31._1));
+			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setIsLocked, isLocked, _p31._1));
+	});
+var _bluedogtraining$bdt_elm$Form_TextArea$setIsError = F2(
+	function (isError, _p32) {
+		var _p33 = _p32;
+		return A2(
+			_bluedogtraining$bdt_elm$Form_TextArea$View,
+			_p33._0,
+			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setIsError, isError, _p33._1));
+	});
+var _bluedogtraining$bdt_elm$Form_TextArea$setId = F2(
+	function (id, _p34) {
+		var _p35 = _p34;
+		return A2(
+			_bluedogtraining$bdt_elm$Form_TextArea$View,
+			_p35._0,
+			A2(_bluedogtraining$bdt_elm$Form_TextArea_Internal$setId, id, _p35._1));
 	});
 
 var _elm_lang$core$Color$fmod = F2(
@@ -29416,7 +29453,14 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 	multiSelect: _bluedogtraining$bdt_elm$Form_MultiSelect$init(_bluedogtraining$bdt_elm$MusicGenre$asNonempty),
 	searchSelect: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://swapi.co/api/people/?search=', _bluedogtraining$bdt_elm$StarWars$characterDecoder),
 	datePicker: _bluedogtraining$bdt_elm$Form_DatePicker$init,
-	textArea: _bluedogtraining$bdt_elm$Form_TextArea$init
+	textArea: A2(
+		_bluedogtraining$bdt_elm$Form_TextArea$setReplacements,
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: '[]', _1: '☐'},
+			_1: {ctor: '[]'}
+		},
+		A2(_bluedogtraining$bdt_elm$Form_TextArea$setSubstituteTabs, true, _bluedogtraining$bdt_elm$Form_TextArea$init))
 };
 var _bluedogtraining$bdt_elm$Model$Model = F8(
 	function (a, b, c, d, e, f, g, h) {

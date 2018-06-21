@@ -4,6 +4,7 @@ module Form.TextArea exposing
     , view, render
     , reInitialise, reset
     , setInitialValue, setValue
+    , setSubstituteTabs, setReplacements
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
@@ -20,7 +21,7 @@ module Form.TextArea exposing
 @docs view, render
 
 # State Setters
-@docs reInitialise, reset, setInitialValue, setValue
+@docs reInitialise, reset, setInitialValue, setValue, setSubstituteTabs, setReplacements
 
 # View Setters
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
@@ -146,6 +147,22 @@ setValue : String -> Model -> Model
 setValue value (Model state) =
 
     Model <| Internal.setValue value state
+
+
+{-| Set whether the `tab` should insert spaces instead of tabbing out of the field.
+-}
+setSubstituteTabs : Bool -> Model -> Model
+setSubstituteTabs bool (Model state) =
+
+    Model (Internal.setSubstituteTabs bool state)
+
+
+{-| Set a ist of string that should be replaced.
+-}
+setReplacements : List (String, String) -> Model -> Model
+setReplacements replacements (Model state) =
+
+    Model (Internal.setReplacements replacements state)
 
 
 {-| Set the max length for your input string.

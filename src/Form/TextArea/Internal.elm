@@ -5,6 +5,7 @@ module Form.TextArea.Internal exposing
     , render
     , reInitialise, reset
     , setInitialValue, setValue
+    , setSubstituteTabs, setReplacements
     , setPlaceholder, setMaxLength
     , setIsError, setIsLocked
     , setId
@@ -17,7 +18,9 @@ import Html.Lazy exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 
-import Html.Bdt as Html
+import String.Extra as String
+
+import Html.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 
@@ -26,21 +29,17 @@ import Resettable exposing (Resettable)
 
 type alias State =
     { value : Resettable String
+    , substituteTabs : Bool
+    , replacements : List (String, String)
     }
 
 
 init : State
 init =
     { value = Resettable.init ""
+    , substituteTabs = False
+    , replacements = []
     }
-
-
-type Type
-    = Text
-    | Email
-    | Password
-    | Tel
-    | Number
 
 
 type alias ViewState =
@@ -72,7 +71,13 @@ type Msg
 update : Msg -> State -> State
 update (Input string) state =
 
-    { state | value = Resettable.update string state.value }
+    { state | value = Resettable.update (List.foldl replace string state.replacements) state.value }
+
+
+replace : (String, String) -> String -> String
+replace (search, replacement) acc =
+
+    String.replace search replacement acc
 
 
 -- VIEW --
@@ -96,6 +101,8 @@ inputField state viewState =
         , placeholder viewState.placeholder
         , Html.maybeAttribute maxlength viewState.maxLength
         , Html.maybeAttribute id viewState.id
+        -- Hack it in js, as elm currently has no notion of cursor position. Best we could do is add spaces at the end of the textarea, not where the cursor is.
+        , attribute "onkeydown" "if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" ? state.substituteTabs
         ]
         []
 
@@ -125,6 +132,18 @@ setValue : String -> State -> State
 setValue value state =
 
     { state | value = Resettable.update value state.value }
+
+
+setSubstituteTabs : Bool -> State -> State
+setSubstituteTabs substituteTabs state =
+
+    { state | substituteTabs = substituteTabs }
+
+
+setReplacements : List (String, String) -> State -> State
+setReplacements replacements state =
+
+    { state | replacements = replacements }
 
 
 -- VIEW STATE SETTERS --

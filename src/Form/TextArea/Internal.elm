@@ -18,6 +18,8 @@ import Html.Lazy exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 
+import Json.Decode as Decode exposing (Decoder)
+
 import String.Extra as String
 
 import Html.Bdt as Html exposing ((?))
@@ -66,12 +68,18 @@ initialViewState =
 
 type Msg
     = Input String
+    | Tab String
 
 
 update : Msg -> State -> State
-update (Input string) state =
+update msg state =
 
-    { state | value = Resettable.update (List.foldl replace string state.replacements) state.value }
+    case msg of
+        Input string ->
+            { state | value = Resettable.update (List.foldl replace string state.replacements) state.value }
+
+        Tab string ->
+            { state | value = Resettable.update string state.value }
 
 
 replace : (String, String) -> String -> String
@@ -103,8 +111,21 @@ inputField state viewState =
         , Html.maybeAttribute id viewState.id
         -- Hack it in js, as elm currently has no notion of cursor position. Best we could do is add spaces at the end of the textarea, not where the cursor is.
         , attribute "onkeydown" "if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" ? state.substituteTabs
+        -- Since we use the above js hack, our model doesn't get updated the conventional way. We need to grab the new value after the tab was pressed, and update our state accordingly.
+        , on "keyup" (Decode.andThen shouldUpdateTab keyCode) ? state.substituteTabs
         ]
         []
+
+
+shouldUpdateTab : Int -> Decoder Msg
+shouldUpdateTab keyCode =
+
+    case keyCode of
+        9 ->
+            Decode.andThen (Decode.succeed << Tab) targetValue
+
+        _ ->
+            Decode.fail "Not Tab"
 
 
 -- STATE SETTERS --

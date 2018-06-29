@@ -31,7 +31,7 @@ module Form.TextArea exposing
 
 -}
 
-import Html exposing (Html)
+import Html.Styled exposing (Html)
 
 import Form.TextArea.Internal as Internal
 

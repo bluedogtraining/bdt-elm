@@ -13,16 +13,18 @@ module Form.TextArea.Internal exposing
     , getId
     )
 
-import Html exposing (..)
-import Html.Lazy exposing (..)
-import Html.Events exposing (..)
-import Html.Attributes exposing (..)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Lazy exposing (..)
+import Html.Styled.Events exposing (..)
+import Html.Styled.Attributes exposing (..)
+
+import VirtualDom
 
 import Json.Decode as Decode exposing (Decoder)
 
 import String.Extra as String
 
-import Html.Bdt as Html exposing ((?))
+import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 
@@ -97,7 +99,7 @@ render state viewState =
     lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> Html Msg
+inputField : State -> ViewState -> VirtualDom.Node Msg
 inputField state viewState =
 
     textarea
@@ -115,6 +117,7 @@ inputField state viewState =
         , on "keyup" (Decode.andThen shouldUpdateTab keyCode) ? state.substituteTabs
         ]
         []
+        |> Html.toUnstyled
 
 
 shouldUpdateTab : Int -> Decoder Msg

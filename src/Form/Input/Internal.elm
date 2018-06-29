@@ -13,12 +13,14 @@ module Form.Input.Internal exposing
     , getId
     )
 
-import Html exposing (..)
-import Html.Lazy exposing (..)
-import Html.Events exposing (..)
-import Html.Attributes exposing (..)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Lazy exposing (..)
+import Html.Styled.Events exposing (..)
+import Html.Styled.Attributes exposing (..)
 
-import Html.Bdt as Html
+import VirtualDom
+
+import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
 
@@ -87,7 +89,7 @@ render state viewState =
     lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> Html Msg
+inputField : State -> ViewState -> VirtualDom.Node Msg
 inputField state viewState =
 
     input
@@ -102,6 +104,7 @@ inputField state viewState =
         , type_ (typeToString viewState.inputType)
         ]
         []
+        |> Html.toUnstyled
 
 
 typeToString : Type -> String

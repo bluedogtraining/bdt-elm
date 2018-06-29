@@ -30,7 +30,7 @@ module Form.IntInput exposing
 
 -}
 
-import Html exposing (Html)
+import Html.Styled exposing (Html)
 
 import Form.IntInput.Internal as Internal
 

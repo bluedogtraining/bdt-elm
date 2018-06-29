@@ -13,10 +13,12 @@ module Form.MultiSelect.Internal exposing
     , getId
     )
 
-import Html exposing (..)
-import Html.Lazy exposing (..)
-import Html.Events exposing (..)
-import Html.Attributes as Attributes exposing (..)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Lazy exposing (..)
+import Html.Styled.Events exposing (..)
+import Html.Styled.Attributes as Attributes exposing (..)
+
+import VirtualDom
 
 import Dom
 import Dict
@@ -28,7 +30,7 @@ import List.Nonempty as Nonempty exposing (Nonempty)
 import Json.Decode as Decode exposing (Decoder)
 
 import Form.Helpers as Form
-import Html.Bdt as Html exposing ((?))
+import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 
@@ -289,7 +291,7 @@ render state viewState =
             lazy2 open state viewState
 
 
-closed : State option -> ViewState option -> Html (Msg option)
+closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
 closed state viewState =
 
     div
@@ -313,9 +315,10 @@ closed state viewState =
                 [ text "expand_more" ]
             ]
         ]
+        |> Html.toUnstyled
 
 
-open : State option -> ViewState option -> Html (Msg option)
+open : State option -> ViewState option -> VirtualDom.Node (Msg option)
 open state viewState =
 
     div
@@ -331,6 +334,7 @@ open state viewState =
             [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
         , optionList state viewState
         ]
+        |> Html.toUnstyled
 
 
 clearButton : State option -> ViewState option -> Html (Msg option)

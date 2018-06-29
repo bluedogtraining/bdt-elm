@@ -14,10 +14,12 @@ module Form.DatePicker.Internal exposing
     , getId
     )
 
-import Html as Html exposing (..)
-import Html.Lazy exposing (..)
-import Html.Events exposing (..)
-import Html.Attributes as Attributes exposing (..)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Lazy exposing (..)
+import Html.Styled.Events exposing (..)
+import Html.Styled.Attributes as Attributes exposing (..)
+
+import VirtualDom
 
 import Dom
 import Dict
@@ -31,7 +33,7 @@ import List.Extra as List
 import Json.Decode as Decode exposing (Decoder)
 
 import Form.Helpers as Form
-import Html.Bdt as Html exposing ((?))
+import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 import Form.Select as Select
@@ -351,7 +353,7 @@ render state viewState =
             lazy2 open state viewState
 
 
-closed : State -> ViewState -> Html Msg
+closed : State -> ViewState -> VirtualDom.Node Msg
 closed state viewState =
 
    div
@@ -371,9 +373,10 @@ closed state viewState =
                 [ text <| if viewState.isInput then "calendar_today" else "" ]
             ]
         ]
+        |> Html.toUnstyled
 
 
-open : State -> ViewState -> Html Msg
+open : State -> ViewState -> VirtualDom.Node Msg
 open state viewState =
 
    div
@@ -394,6 +397,7 @@ open state viewState =
             ]
         , calendar state viewState
         ]
+        |> Html.toUnstyled
 
 
 calendar : State -> ViewState -> Html Msg

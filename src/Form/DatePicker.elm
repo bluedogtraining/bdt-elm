@@ -32,7 +32,7 @@ module Form.DatePicker exposing
 
 -}
 
-import Html exposing (Html)
+import Html.Styled exposing (Html)
 
 import Tuple
 import Date exposing (Date)

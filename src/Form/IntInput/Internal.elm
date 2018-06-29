@@ -12,14 +12,16 @@ module Form.IntInput.Internal exposing
     , getId
     )
 
-import Html exposing (..)
-import Html.Lazy exposing (..)
-import Html.Events exposing (..)
-import Html.Attributes exposing (..)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Lazy exposing (..)
+import Html.Styled.Events exposing (..)
+import Html.Styled.Attributes exposing (..)
+
+import VirtualDom
 
 import Regex exposing (Regex)
 
-import Html.Bdt as Html
+import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
 
@@ -85,7 +87,7 @@ render state viewState =
     lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> Html Msg
+inputField : State -> ViewState -> VirtualDom.Node Msg
 inputField state viewState =
     input
         [ class "bdt-elm input"
@@ -98,6 +100,7 @@ inputField state viewState =
         , Html.maybeAttribute id viewState.id
         ]
         []
+        |> Html.toUnstyled
 
 
 -- STATE SETTERS --

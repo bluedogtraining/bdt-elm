@@ -13,10 +13,12 @@ module Form.SearchSelect.Internal exposing
     , getId
     )
 
-import Html exposing (..)
-import Html.Lazy exposing (..)
-import Html.Events exposing (..)
-import Html.Attributes as Attributes exposing (..)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Lazy exposing (..)
+import Html.Styled.Events exposing (..)
+import Html.Styled.Attributes exposing (..)
+
+import VirtualDom
 
 import Dom
 import Dict
@@ -29,7 +31,7 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
 
 import Form.Helpers as Form
-import Html.Bdt as Html exposing ((?))
+import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 
@@ -277,7 +279,7 @@ render state viewState =
             lazy2 open state viewState
 
 
-closed : State option -> ViewState option -> Html (Msg option)
+closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
 closed state viewState =
 
     div
@@ -295,9 +297,10 @@ closed state viewState =
             ]
             []
         ]
+        |> Html.toUnstyled
 
 
-open : State option -> ViewState option -> Html (Msg option)
+open : State option -> ViewState option -> VirtualDom.Node (Msg option)
 open state viewState =
 
     div
@@ -318,6 +321,7 @@ open state viewState =
             []
         , searchResults state viewState
         ]
+        |> Html.toUnstyled
 
 
 searchResults : State option -> ViewState option -> Html (Msg option)

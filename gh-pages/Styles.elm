@@ -7,7 +7,7 @@ import Html.Styled.Attributes exposing (css)
 import Msg exposing (Msg)
 
 
-content : Attribute Msg
-content =
+background : Attribute Msg
+background =
     css
-        [ padding2 (px 40) (px 200) ]
+        []

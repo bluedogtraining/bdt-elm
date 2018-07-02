@@ -20,3 +20,4 @@ type InfixPrecedence
 
 
 infix 0 ?
+infix 0 ~

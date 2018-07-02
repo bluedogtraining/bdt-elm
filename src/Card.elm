@@ -1,10 +1,15 @@
-module Card exposing (view, header, body, footer, block, render)
+module Card exposing (view, header, body, footer, block, blockSizes, render)
 
 import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (..)
 
 import Html.Styled.Bdt as Html
 
 import Button exposing (Button)
+
+import Card.Css as Css
+
+import Grid.Size exposing (..)
 
 
 type Config msg
@@ -56,23 +61,29 @@ type CardBlock msg
 
 
 type alias CardBlockConfig msg =
-    { cols : Int
-    , content : List (Html msg)
+    { defaultCols : Cols
+    , sizes : List (Size, Cols)
+    , children : List (Html msg)
     }
 
 
-block : Int -> List (Html msg) -> CardBlock msg
+block : Cols -> List (Html msg) -> CardBlock msg
 block cols children =
-    CardBlock <| CardBlockConfig cols children
+    CardBlock <| CardBlockConfig cols [] children
+
+
+blockSizes : Cols -> List (Size, Cols) -> List (Html msg) -> CardBlock msg
+blockSizes cols sizes children =
+    CardBlock <| CardBlockConfig cols sizes children
 
 
 render : Config msg -> Html msg
 render (Config viewConfig) =
 
     div
-        []
-        [ Html.divIf (viewConfig.headerTitle /= "" && List.isEmpty viewConfig.headerButtons)
-            []
+        [ Css.card ]
+        [ Html.divIf (viewConfig.headerTitle /= "" || not (List.isEmpty viewConfig.headerButtons))
+            [ Css.header ]
             [ span
                 []
                 [ text viewConfig.headerTitle ]
@@ -80,6 +91,9 @@ render (Config viewConfig) =
                 []
                 (List.map renderHeaderButton viewConfig.headerButtons)
             ]
+        , Html.divIf (not <| List.isEmpty viewConfig.cardBlocks)
+            [ Css.body ]
+            (List.map renderCardBlock viewConfig.cardBlocks)
         ]
 
 
@@ -89,3 +103,12 @@ renderHeaderButton button =
     div
         []
         []
+
+
+renderCardBlock : CardBlock msg -> Html msg
+renderCardBlock (CardBlock cardBlockConfig) =
+
+    div
+        [ Css.block cardBlockConfig.defaultCols cardBlockConfig.sizes
+        ]
+        cardBlockConfig.children

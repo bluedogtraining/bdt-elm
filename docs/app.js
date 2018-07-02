@@ -18545,24 +18545,845 @@ var _bluedogtraining$bdt_elm$Button$viewIf = function (isShown) {
 			{isShown: isShown}));
 };
 
+var _rtfeldman$elm_css$Css_Media$unparameterizedFeature = function (key) {
+	return {feature: key, value: _elm_lang$core$Maybe$Nothing};
+};
+var _rtfeldman$elm_css$Css_Media$feature = F2(
+	function (key, _p0) {
+		var _p1 = _p0;
+		return {
+			feature: key,
+			value: _elm_lang$core$Maybe$Just(_p1.value)
+		};
+	});
+var _rtfeldman$elm_css$Css_Media$scripting = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'scripting', value);
+};
+var _rtfeldman$elm_css$Css_Media$enabled = {value: 'enabled', scriptingSupport: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$initialOnly = {value: 'initial-only', scriptingSupport: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$anyHover = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'any-hover', value);
+};
+var _rtfeldman$elm_css$Css_Media$hover = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'hover', value);
+};
+var _rtfeldman$elm_css$Css_Media$canHover = {value: 'hover', hoverCapability: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$anyPointer = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'any-pointer', value);
+};
+var _rtfeldman$elm_css$Css_Media$pointer = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'pointer', value);
+};
+var _rtfeldman$elm_css$Css_Media$coarse = {value: 'coarse', pointerDevice: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$fine = {value: 'fine', pointerDevice: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$colorGamut = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'color-gamut', value);
+};
+var _rtfeldman$elm_css$Css_Media$rec2020 = {value: 'rec2020', colorGamut: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$p3 = {value: 'p3', colorGamut: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$srgb = {value: 'srgb', colorGamut: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$maxColorIndex = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'max-color-index', value);
+};
+var _rtfeldman$elm_css$Css_Media$minColorIndex = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'min-color-index', value);
+};
+var _rtfeldman$elm_css$Css_Media$colorIndex = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'color-index', value);
+};
+var _rtfeldman$elm_css$Css_Media$maxMonochrome = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'max-monochrome', value);
+};
+var _rtfeldman$elm_css$Css_Media$minMonochrome = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'min-monochrome', value);
+};
+var _rtfeldman$elm_css$Css_Media$monochrome = _rtfeldman$elm_css$Css_Media$unparameterizedFeature('monochrome');
+var _rtfeldman$elm_css$Css_Media$maxColor = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'max-color', value);
+};
+var _rtfeldman$elm_css$Css_Media$color = _rtfeldman$elm_css$Css_Media$unparameterizedFeature('color');
+var _rtfeldman$elm_css$Css_Media$minColor = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'min-color', value);
+};
+var _rtfeldman$elm_css$Css_Media$bits = function (value) {
+	return {
+		value: _elm_lang$core$Basics$toString(value),
+		bits: _rtfeldman$elm_css$Css_Structure$Compatible
+	};
+};
+var _rtfeldman$elm_css$Css_Media$overflowInline = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'overflow-inline', value);
+};
+var _rtfeldman$elm_css$Css_Media$overflowBlock = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'overflow-block', value);
+};
+var _rtfeldman$elm_css$Css_Media$optionalPaged = {value: 'optional-paged', blockAxisOverflow: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$paged = {value: 'paged', blockAxisOverflow: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$update = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'update', value);
+};
+var _rtfeldman$elm_css$Css_Media$fast = {value: 'fast', updateFrequency: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$slow = {value: 'slow', updateFrequency: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$grid = _rtfeldman$elm_css$Css_Media$unparameterizedFeature('grid');
+var _rtfeldman$elm_css$Css_Media$scan = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'scan', value);
+};
+var _rtfeldman$elm_css$Css_Media$interlace = {value: 'interlace', scanningProcess: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$progressive = {value: 'progressive', scanningProcess: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$maxResolution = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'max-resolution', value);
+};
+var _rtfeldman$elm_css$Css_Media$resolution = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'resolution', value);
+};
+var _rtfeldman$elm_css$Css_Media$minResolution = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'min-resolution', value);
+};
+var _rtfeldman$elm_css$Css_Media$dppx = function (value) {
+	return {
+		value: A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(value),
+			'dppx'),
+		resolution: _rtfeldman$elm_css$Css_Structure$Compatible
+	};
+};
+var _rtfeldman$elm_css$Css_Media$dpcm = function (value) {
+	return {
+		value: A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(value),
+			'dpcm'),
+		resolution: _rtfeldman$elm_css$Css_Structure$Compatible
+	};
+};
+var _rtfeldman$elm_css$Css_Media$dpi = function (value) {
+	return {
+		value: A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(value),
+			'dpi'),
+		resolution: _rtfeldman$elm_css$Css_Structure$Compatible
+	};
+};
+var _rtfeldman$elm_css$Css_Media$orientation = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'orientation', value);
+};
+var _rtfeldman$elm_css$Css_Media$portrait = {value: 'portrait', orientation: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$landscape = {value: 'landscape', orientation: _rtfeldman$elm_css$Css_Structure$Compatible};
+var _rtfeldman$elm_css$Css_Media$maxAspectRatio = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'max-aspect-ratio', value);
+};
+var _rtfeldman$elm_css$Css_Media$aspectRatio = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'aspect-ratio', value);
+};
+var _rtfeldman$elm_css$Css_Media$minAspectRatio = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'min-aspect-ratio', value);
+};
+var _rtfeldman$elm_css$Css_Media$ratio = F2(
+	function (numerator, denominator) {
+		return {
+			value: A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(numerator),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'/',
+					_elm_lang$core$Basics$toString(denominator))),
+			ratio: _rtfeldman$elm_css$Css_Structure$Compatible
+		};
+	});
+var _rtfeldman$elm_css$Css_Media$maxHeight = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'max-height', value);
+};
+var _rtfeldman$elm_css$Css_Media$height = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'height', value);
+};
+var _rtfeldman$elm_css$Css_Media$minHeight = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'min-height', value);
+};
+var _rtfeldman$elm_css$Css_Media$maxWidth = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'max-width', value);
+};
+var _rtfeldman$elm_css$Css_Media$width = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'width', value);
+};
+var _rtfeldman$elm_css$Css_Media$minWidth = function (value) {
+	return A2(_rtfeldman$elm_css$Css_Media$feature, 'min-width', value);
+};
+var _rtfeldman$elm_css$Css_Media$speech = _rtfeldman$elm_css$Css_Structure$Speech;
+var _rtfeldman$elm_css$Css_Media$screen = _rtfeldman$elm_css$Css_Structure$Screen;
+var _rtfeldman$elm_css$Css_Media$print = _rtfeldman$elm_css$Css_Structure$Print;
+var _rtfeldman$elm_css$Css_Media$connectWith = F2(
+	function (connect, queries) {
+		var _p2 = queries;
+		if (_p2.ctor === '[]') {
+			return _elm_lang$core$Maybe$Nothing;
+		} else {
+			var _p4 = _p2._0;
+			var _p3 = A2(_rtfeldman$elm_css$Css_Media$connectWith, connect, _p2._1);
+			if (_p3.ctor === 'Nothing') {
+				return _elm_lang$core$Maybe$Just(_p4);
+			} else {
+				return _elm_lang$core$Maybe$Just(
+					A2(connect, _p4, _p3._0));
+			}
+		}
+	});
+var _rtfeldman$elm_css$Css_Media$not = _rtfeldman$elm_css$Css_Structure$NotQuery;
+var _rtfeldman$elm_css$Css_Media$only = _rtfeldman$elm_css$Css_Structure$OnlyQuery;
+var _rtfeldman$elm_css$Css_Media$all = _rtfeldman$elm_css$Css_Structure$AllQuery;
+var _rtfeldman$elm_css$Css_Media$withMediaQuery = function (queries) {
+	return _rtfeldman$elm_css$Css_Preprocess$WithMedia(
+		A2(_elm_lang$core$List$map, _rtfeldman$elm_css$Css_Structure$CustomQuery, queries));
+};
+var _rtfeldman$elm_css$Css_Media$withMedia = function (queries) {
+	return _rtfeldman$elm_css$Css_Preprocess$WithMedia(queries);
+};
+var _rtfeldman$elm_css$Css_Media$Ratio = F2(
+	function (a, b) {
+		return {value: a, ratio: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Landscape = F2(
+	function (a, b) {
+		return {value: a, orientation: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Portrait = F2(
+	function (a, b) {
+		return {value: a, orientation: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Resolution = F2(
+	function (a, b) {
+		return {value: a, resolution: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Progressive = F2(
+	function (a, b) {
+		return {value: a, scanningProcess: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Interlace = F2(
+	function (a, b) {
+		return {value: a, scanningProcess: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Slow = F2(
+	function (a, b) {
+		return {value: a, updateFrequency: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Fast = F2(
+	function (a, b) {
+		return {value: a, updateFrequency: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Paged = F2(
+	function (a, b) {
+		return {value: a, blockAxisOverflow: b};
+	});
+var _rtfeldman$elm_css$Css_Media$OptionalPaged = F2(
+	function (a, b) {
+		return {value: a, blockAxisOverflow: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Bits = F2(
+	function (a, b) {
+		return {value: a, bits: b};
+	});
+var _rtfeldman$elm_css$Css_Media$SRGB = F2(
+	function (a, b) {
+		return {value: a, colorGamut: b};
+	});
+var _rtfeldman$elm_css$Css_Media$P3 = F2(
+	function (a, b) {
+		return {value: a, colorGamut: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Rec2020 = F2(
+	function (a, b) {
+		return {value: a, colorGamut: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Fine = F2(
+	function (a, b) {
+		return {value: a, pointerDevice: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Coarse = F2(
+	function (a, b) {
+		return {value: a, pointerDevice: b};
+	});
+var _rtfeldman$elm_css$Css_Media$CanHover = F2(
+	function (a, b) {
+		return {value: a, hoverCapability: b};
+	});
+var _rtfeldman$elm_css$Css_Media$InitialOnly = F2(
+	function (a, b) {
+		return {value: a, scriptingSupport: b};
+	});
+var _rtfeldman$elm_css$Css_Media$Enabled = F2(
+	function (a, b) {
+		return {value: a, scriptingSupport: b};
+	});
+
+var _matthewsj$elm_ordering$Ordering$greaterThanBy = F3(
+	function (ordering, x, y) {
+		var _p0 = A2(ordering, x, y);
+		if (_p0.ctor === 'GT') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var _matthewsj$elm_ordering$Ordering$lessThanBy = F3(
+	function (ordering, x, y) {
+		var _p1 = A2(ordering, x, y);
+		if (_p1.ctor === 'LT') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var _matthewsj$elm_ordering$Ordering$isOrdered = F2(
+	function (ordering, items) {
+		isOrdered:
+		while (true) {
+			var _p2 = items;
+			if ((_p2.ctor === '::') && (_p2._1.ctor === '::')) {
+				var _p4 = _p2._1;
+				var _p3 = A2(ordering, _p2._0, _p2._1._0);
+				switch (_p3.ctor) {
+					case 'LT':
+						var _v4 = ordering,
+							_v5 = _p4;
+						ordering = _v4;
+						items = _v5;
+						continue isOrdered;
+					case 'EQ':
+						var _v6 = ordering,
+							_v7 = _p4;
+						ordering = _v6;
+						items = _v7;
+						continue isOrdered;
+					default:
+						return false;
+				}
+			} else {
+				return true;
+			}
+		}
+	});
+var _matthewsj$elm_ordering$Ordering$reverse = F3(
+	function (ordering, x, y) {
+		var _p5 = A2(ordering, x, y);
+		switch (_p5.ctor) {
+			case 'LT':
+				return _elm_lang$core$Basics$GT;
+			case 'EQ':
+				return _elm_lang$core$Basics$EQ;
+			default:
+				return _elm_lang$core$Basics$LT;
+		}
+	});
+var _matthewsj$elm_ordering$Ordering$noConflicts = _elm_lang$core$Basics$EQ;
+var _matthewsj$elm_ordering$Ordering$ifStillTiedThen = F2(
+	function (tiebreaker, mainOrder) {
+		var _p6 = mainOrder;
+		if (_p6.ctor === 'EQ') {
+			return tiebreaker;
+		} else {
+			return mainOrder;
+		}
+	});
+var _matthewsj$elm_ordering$Ordering$breakTiesWith = F4(
+	function (tiebreaker, mainOrdering, x, y) {
+		var _p7 = A2(mainOrdering, x, y);
+		switch (_p7.ctor) {
+			case 'LT':
+				return _elm_lang$core$Basics$LT;
+			case 'GT':
+				return _elm_lang$core$Basics$GT;
+			default:
+				return A2(tiebreaker, x, y);
+		}
+	});
+var _matthewsj$elm_ordering$Ordering$byFieldWith = F4(
+	function (compareField, extractField, x, y) {
+		return A2(
+			compareField,
+			extractField(x),
+			extractField(y));
+	});
+var _matthewsj$elm_ordering$Ordering$explicit = F3(
+	function (items, x, y) {
+		var scanForY = function (items) {
+			scanForY:
+			while (true) {
+				var _p8 = items;
+				if (_p8.ctor === '::') {
+					if (_elm_lang$core$Native_Utils.eq(_p8._0, y)) {
+						return _elm_lang$core$Basics$LT;
+					} else {
+						var _v12 = _p8._1;
+						items = _v12;
+						continue scanForY;
+					}
+				} else {
+					return _elm_lang$core$Basics$GT;
+				}
+			}
+		};
+		var scanForX = function (items) {
+			scanForX:
+			while (true) {
+				var _p9 = items;
+				if (_p9.ctor === '::') {
+					if (_elm_lang$core$Native_Utils.eq(_p9._0, x)) {
+						return _elm_lang$core$Basics$GT;
+					} else {
+						var _v14 = _p9._1;
+						items = _v14;
+						continue scanForX;
+					}
+				} else {
+					return _elm_lang$core$Basics$LT;
+				}
+			}
+		};
+		var scanForEither = function (items) {
+			scanForEither:
+			while (true) {
+				var _p10 = items;
+				if (_p10.ctor === '::') {
+					var _p12 = _p10._1;
+					var _p11 = _p10._0;
+					if (_elm_lang$core$Native_Utils.eq(_p11, x)) {
+						return scanForY(_p12);
+					} else {
+						if (_elm_lang$core$Native_Utils.eq(_p11, y)) {
+							return scanForX(_p12);
+						} else {
+							var _v16 = _p12;
+							items = _v16;
+							continue scanForEither;
+						}
+					}
+				} else {
+					return _elm_lang$core$Basics$EQ;
+				}
+			}
+		};
+		return _elm_lang$core$Native_Utils.eq(x, y) ? _elm_lang$core$Basics$EQ : scanForEither(items);
+	});
+var _matthewsj$elm_ordering$Ordering$fromLessThan = F3(
+	function (lt, x, y) {
+		return A2(lt, x, y) ? _elm_lang$core$Basics$LT : (A2(lt, y, x) ? _elm_lang$core$Basics$GT : _elm_lang$core$Basics$EQ);
+	});
+var _matthewsj$elm_ordering$Ordering$natural = _elm_lang$core$Basics$compare;
+var _matthewsj$elm_ordering$Ordering$byField = _matthewsj$elm_ordering$Ordering$byFieldWith(_matthewsj$elm_ordering$Ordering$natural);
+var _matthewsj$elm_ordering$Ordering$byToString = _matthewsj$elm_ordering$Ordering$byField(_elm_lang$core$Basics$toString);
+var _matthewsj$elm_ordering$Ordering$byRank = F2(
+	function (rank, withinRankOrdering) {
+		return A2(
+			_matthewsj$elm_ordering$Ordering$breakTiesWith,
+			withinRankOrdering,
+			_matthewsj$elm_ordering$Ordering$byField(rank));
+	});
+
+var _bluedogtraining$bdt_elm$Grid_Size$containerWidth = function (size) {
+	var _p0 = size;
+	switch (_p0.ctor) {
+		case 'Xs':
+			return 540;
+		case 'Sm':
+			return 720;
+		case 'Md':
+			return 960;
+		case 'Lg':
+			return 1140;
+		default:
+			return 1540;
+	}
+};
+var _bluedogtraining$bdt_elm$Grid_Size$breakpointWidth = function (size) {
+	var _p1 = size;
+	switch (_p1.ctor) {
+		case 'Xs':
+			return 576;
+		case 'Sm':
+			return 768;
+		case 'Md':
+			return 992;
+		case 'Lg':
+			return 1200;
+		default:
+			return 1600;
+	}
+};
+var _bluedogtraining$bdt_elm$Grid_Size$colsToFloat = function (cols) {
+	var _p2 = cols;
+	switch (_p2.ctor) {
+		case 'One':
+			return 1;
+		case 'Two':
+			return 2;
+		case 'Three':
+			return 3;
+		case 'Four':
+			return 4;
+		case 'Five':
+			return 5;
+		case 'Six':
+			return 6;
+		case 'Seven':
+			return 7;
+		case 'Eight':
+			return 8;
+		case 'Nine':
+			return 9;
+		case 'Ten':
+			return 10;
+		case 'Eleven':
+			return 11;
+		default:
+			return 12;
+	}
+};
+var _bluedogtraining$bdt_elm$Grid_Size$Xl = {ctor: 'Xl'};
+var _bluedogtraining$bdt_elm$Grid_Size$Lg = {ctor: 'Lg'};
+var _bluedogtraining$bdt_elm$Grid_Size$Md = {ctor: 'Md'};
+var _bluedogtraining$bdt_elm$Grid_Size$Sm = {ctor: 'Sm'};
+var _bluedogtraining$bdt_elm$Grid_Size$Xs = {ctor: 'Xs'};
+var _bluedogtraining$bdt_elm$Grid_Size$asList = {
+	ctor: '::',
+	_0: _bluedogtraining$bdt_elm$Grid_Size$Xs,
+	_1: {
+		ctor: '::',
+		_0: _bluedogtraining$bdt_elm$Grid_Size$Sm,
+		_1: {
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Grid_Size$Md,
+			_1: {
+				ctor: '::',
+				_0: _bluedogtraining$bdt_elm$Grid_Size$Lg,
+				_1: {
+					ctor: '::',
+					_0: _bluedogtraining$bdt_elm$Grid_Size$Xl,
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
+var _bluedogtraining$bdt_elm$Grid_Size$orderBySize = function (sizes) {
+	return A2(
+		_elm_lang$core$List$sortWith,
+		A2(
+			_matthewsj$elm_ordering$Ordering$byFieldWith,
+			_matthewsj$elm_ordering$Ordering$explicit(
+				_elm_lang$core$List$reverse(_bluedogtraining$bdt_elm$Grid_Size$asList)),
+			_elm_lang$core$Tuple$first),
+		sizes);
+};
+var _bluedogtraining$bdt_elm$Grid_Size$Twelve = {ctor: 'Twelve'};
+var _bluedogtraining$bdt_elm$Grid_Size$Eleven = {ctor: 'Eleven'};
+var _bluedogtraining$bdt_elm$Grid_Size$Ten = {ctor: 'Ten'};
+var _bluedogtraining$bdt_elm$Grid_Size$Nine = {ctor: 'Nine'};
+var _bluedogtraining$bdt_elm$Grid_Size$Eight = {ctor: 'Eight'};
+var _bluedogtraining$bdt_elm$Grid_Size$Seven = {ctor: 'Seven'};
+var _bluedogtraining$bdt_elm$Grid_Size$Six = {ctor: 'Six'};
+var _bluedogtraining$bdt_elm$Grid_Size$Five = {ctor: 'Five'};
+var _bluedogtraining$bdt_elm$Grid_Size$Four = {ctor: 'Four'};
+var _bluedogtraining$bdt_elm$Grid_Size$Three = {ctor: 'Three'};
+var _bluedogtraining$bdt_elm$Grid_Size$Two = {ctor: 'Two'};
+var _bluedogtraining$bdt_elm$Grid_Size$One = {ctor: 'One'};
+
+var _bluedogtraining$bdt_elm$Grid_Css$colSize = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1._1;
+	return A2(
+		_rtfeldman$elm_css$Css_Media$withMedia,
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css_Media$all(
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css_Media$minWidth(
+						_rtfeldman$elm_css$Css$px(
+							_bluedogtraining$bdt_elm$Grid_Size$breakpointWidth(_p1._0))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$flexBasis(
+				_rtfeldman$elm_css$Css$pct(
+					(100 / 12) * _bluedogtraining$bdt_elm$Grid_Size$colsToFloat(_p2))),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$maxWidth(
+					_rtfeldman$elm_css$Css$pct(
+						(100 / 12) * _bluedogtraining$bdt_elm$Grid_Size$colsToFloat(_p2))),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Grid_Css$defaultColSize = function (cols) {
+	return A2(
+		_rtfeldman$elm_css$Css_Media$withMedia,
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css_Media$all(
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$flexBasis(
+				_rtfeldman$elm_css$Css$pct(
+					(100 / 12) * _bluedogtraining$bdt_elm$Grid_Size$colsToFloat(cols))),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$maxWidth(
+					_rtfeldman$elm_css$Css$pct(
+						(100 / 12) * _bluedogtraining$bdt_elm$Grid_Size$colsToFloat(cols))),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Grid_Css$col = F2(
+	function (cols, sizes) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$List$map,
+					_bluedogtraining$bdt_elm$Grid_Css$colSize,
+					_bluedogtraining$bdt_elm$Grid_Size$orderBySize(sizes)),
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$flexGrow(
+						_rtfeldman$elm_css$Css$num(1)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$paddingLeft(
+							_rtfeldman$elm_css$Css$px(15)),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$paddingRight(
+								_rtfeldman$elm_css$Css$px(15)),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+								_1: {
+									ctor: '::',
+									_0: _bluedogtraining$bdt_elm$Grid_Css$defaultColSize(cols),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}));
+	});
+var _bluedogtraining$bdt_elm$Grid_Css$row = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$flexWrap(_rtfeldman$elm_css$Css$wrap),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$marginLeft(
+					_rtfeldman$elm_css$Css$px(-15)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$marginRight(
+						_rtfeldman$elm_css$Css$px(-15)),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Grid_Css$containerWidth = function (size) {
+	return A2(
+		_rtfeldman$elm_css$Css_Media$withMedia,
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css_Media$all(
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css_Media$minWidth(
+						_rtfeldman$elm_css$Css$px(
+							_bluedogtraining$bdt_elm$Grid_Size$breakpointWidth(size))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$width(
+				_rtfeldman$elm_css$Css$px(
+					_bluedogtraining$bdt_elm$Grid_Size$containerWidth(size))),
+			_1: {ctor: '[]'}
+		});
+};
+var _bluedogtraining$bdt_elm$Grid_Css$container = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	A2(
+		_elm_lang$core$Basics_ops['++'],
+		A2(
+			_elm_lang$core$List$map,
+			_bluedogtraining$bdt_elm$Grid_Css$containerWidth,
+			_elm_lang$core$List$reverse(_bluedogtraining$bdt_elm$Grid_Size$asList)),
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$maxWidth(
+				_rtfeldman$elm_css$Css$pct(100)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$paddingLeft(
+					_rtfeldman$elm_css$Css$px(15)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$paddingRight(
+						_rtfeldman$elm_css$Css$px(15)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$marginLeft(_rtfeldman$elm_css$Css$auto),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$marginRight(_rtfeldman$elm_css$Css$auto),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$fontFamilies(
+										{
+											ctor: '::',
+											_0: 'Arial',
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
+		}));
+
+var _bluedogtraining$bdt_elm$Card_Css$block = F2(
+	function (cols, sizes) {
+		return A2(_bluedogtraining$bdt_elm$Grid_Css$col, cols, sizes);
+	});
+var _bluedogtraining$bdt_elm$Card_Css$body = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$flexWrap(_rtfeldman$elm_css$Css$wrap),
+			_1: {ctor: '[]'}
+		}
+	});
+var _bluedogtraining$bdt_elm$Card_Css$headerTitle = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$flexGrow(
+				_rtfeldman$elm_css$Css$int(1)),
+			_1: {ctor: '[]'}
+		}
+	});
+var _bluedogtraining$bdt_elm$Card_Css$header = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Css$padding2,
+				_rtfeldman$elm_css$Css$px(8),
+				_rtfeldman$elm_css$Css$px(16)),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_rtfeldman$elm_css$Css$borderBottom3,
+					_rtfeldman$elm_css$Css$px(1),
+					_rtfeldman$elm_css$Css$solid,
+					_rtfeldman$elm_css$Css$hex('ededed')),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Card_Css$card = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$backgroundColor(
+			_rtfeldman$elm_css$Css$hex('ffffff')),
+		_1: {
+			ctor: '::',
+			_0: A3(
+				_rtfeldman$elm_css$Css$border3,
+				_rtfeldman$elm_css$Css$px(1),
+				_rtfeldman$elm_css$Css$solid,
+				_rtfeldman$elm_css$Css$hex('dfdfdf')),
+			_1: {
+				ctor: '::',
+				_0: A4(
+					_rtfeldman$elm_css$Css$boxShadow4,
+					_rtfeldman$elm_css$Css$px(0),
+					_rtfeldman$elm_css$Css$px(1),
+					_rtfeldman$elm_css$Css$px(3),
+					A4(_rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.12)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$borderRadius(
+						_rtfeldman$elm_css$Css$px(2)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$color(
+							_rtfeldman$elm_css$Css$hex('4f4f4f')),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	});
+
+var _bluedogtraining$bdt_elm$Card$renderCardBlock = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1._0;
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: A2(_bluedogtraining$bdt_elm$Card_Css$block, _p2.defaultCols, _p2.sizes),
+			_1: {ctor: '[]'}
+		},
+		_p2.children);
+};
 var _bluedogtraining$bdt_elm$Card$renderHeaderButton = function (button) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
 		{ctor: '[]'},
 		{ctor: '[]'});
 };
-var _bluedogtraining$bdt_elm$Card$render = function (_p0) {
-	var _p1 = _p0;
-	var _p2 = _p1._0;
+var _bluedogtraining$bdt_elm$Card$render = function (_p3) {
+	var _p4 = _p3;
+	var _p5 = _p4._0;
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Card_Css$card,
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A3(
 				_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
-				(!_elm_lang$core$Native_Utils.eq(_p2.headerTitle, '')) && _elm_lang$core$List$isEmpty(_p2.headerButtons),
-				{ctor: '[]'},
+				(!_elm_lang$core$Native_Utils.eq(_p5.headerTitle, '')) || (!_elm_lang$core$List$isEmpty(_p5.headerButtons)),
+				{
+					ctor: '::',
+					_0: _bluedogtraining$bdt_elm$Card_Css$header,
+					_1: {ctor: '[]'}
+				},
 				{
 					ctor: '::',
 					_0: A2(
@@ -18570,7 +19391,7 @@ var _bluedogtraining$bdt_elm$Card$render = function (_p0) {
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled$text(_p2.headerTitle),
+							_0: _rtfeldman$elm_css$Html_Styled$text(_p5.headerTitle),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -18578,11 +19399,23 @@ var _bluedogtraining$bdt_elm$Card$render = function (_p0) {
 						_0: A2(
 							_rtfeldman$elm_css$Html_Styled$div,
 							{ctor: '[]'},
-							A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Card$renderHeaderButton, _p2.headerButtons)),
+							A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Card$renderHeaderButton, _p5.headerButtons)),
 						_1: {ctor: '[]'}
 					}
 				}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+					!_elm_lang$core$List$isEmpty(_p5.cardBlocks),
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Card_Css$body,
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Card$renderCardBlock, _p5.cardBlocks)),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _bluedogtraining$bdt_elm$Card$initialViewConfig = {
@@ -18595,36 +19428,36 @@ var _bluedogtraining$bdt_elm$Card$ViewConfig = F4(
 	function (a, b, c, d) {
 		return {headerTitle: a, headerButtons: b, cardBlocks: c, footerButtons: d};
 	});
-var _bluedogtraining$bdt_elm$Card$CardBlockConfig = F2(
-	function (a, b) {
-		return {cols: a, content: b};
+var _bluedogtraining$bdt_elm$Card$CardBlockConfig = F3(
+	function (a, b, c) {
+		return {defaultCols: a, sizes: b, children: c};
 	});
 var _bluedogtraining$bdt_elm$Card$Config = function (a) {
 	return {ctor: 'Config', _0: a};
 };
 var _bluedogtraining$bdt_elm$Card$view = _bluedogtraining$bdt_elm$Card$Config(_bluedogtraining$bdt_elm$Card$initialViewConfig);
 var _bluedogtraining$bdt_elm$Card$header = F3(
-	function (title, buttons, _p3) {
-		var _p4 = _p3;
+	function (title, buttons, _p6) {
+		var _p7 = _p6;
 		return _bluedogtraining$bdt_elm$Card$Config(
 			_elm_lang$core$Native_Utils.update(
-				_p4._0,
+				_p7._0,
 				{headerTitle: title, headerButtons: buttons}));
 	});
 var _bluedogtraining$bdt_elm$Card$body = F2(
-	function (cardBlocks, _p5) {
-		var _p6 = _p5;
+	function (cardBlocks, _p8) {
+		var _p9 = _p8;
 		return _bluedogtraining$bdt_elm$Card$Config(
 			_elm_lang$core$Native_Utils.update(
-				_p6._0,
+				_p9._0,
 				{cardBlocks: cardBlocks}));
 	});
 var _bluedogtraining$bdt_elm$Card$footer = F2(
-	function (buttons, _p7) {
-		var _p8 = _p7;
+	function (buttons, _p10) {
+		var _p11 = _p10;
 		return _bluedogtraining$bdt_elm$Card$Config(
 			_elm_lang$core$Native_Utils.update(
-				_p8._0,
+				_p11._0,
 				{footerButtons: buttons}));
 	});
 var _bluedogtraining$bdt_elm$Card$CardBlock = function (a) {
@@ -18633,7 +19466,16 @@ var _bluedogtraining$bdt_elm$Card$CardBlock = function (a) {
 var _bluedogtraining$bdt_elm$Card$block = F2(
 	function (cols, children) {
 		return _bluedogtraining$bdt_elm$Card$CardBlock(
-			A2(_bluedogtraining$bdt_elm$Card$CardBlockConfig, cols, children));
+			A3(
+				_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+				cols,
+				{ctor: '[]'},
+				children));
+	});
+var _bluedogtraining$bdt_elm$Card$blockSizes = F3(
+	function (cols, sizes, children) {
+		return _bluedogtraining$bdt_elm$Card$CardBlock(
+			A3(_bluedogtraining$bdt_elm$Card$CardBlockConfig, cols, sizes, children));
 	});
 
 //import Result //
@@ -22195,6 +23037,9 @@ var _elm_community$string_extra$String_Extra$isBlank = function (string) {
 		_elm_lang$core$Regex$contains,
 		_elm_lang$core$Regex$regex('^\\s*$'),
 		string);
+};
+var _elm_community$string_extra$String_Extra$nonBlank = function (string) {
+	return _elm_community$string_extra$String_Extra$isBlank(string) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(string);
 };
 var _elm_community$string_extra$String_Extra$clean = function (string) {
 	return _elm_lang$core$String$trim(
@@ -25937,6 +26782,73 @@ var _bluedogtraining$bdt_elm$Form_FloatInput$setId = F2(
 			A2(_bluedogtraining$bdt_elm$Form_FloatInput_Internal$setId, id, _p33._1));
 	});
 
+var _bluedogtraining$bdt_elm$Form_Input_Css$input = F2(
+	function (isError, isLocked) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_rtfeldman$elm_css$Css$border3,
+						_rtfeldman$elm_css$Css$px(1),
+						_rtfeldman$elm_css$Css$solid,
+						_rtfeldman$elm_css$Css$hex(
+							(isError && (!isLocked)) ? 'd9534f' : 'cccccc')),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$width(
+							_rtfeldman$elm_css$Css$pct(100)),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_rtfeldman$elm_css$Css$padding2,
+								_rtfeldman$elm_css$Css$px(6),
+								_rtfeldman$elm_css$Css$px(8)),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$color(
+									_rtfeldman$elm_css$Css$hex('555555')),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$backgroundColor(
+										_rtfeldman$elm_css$Css$hex(
+											isLocked ? 'dddddd' : 'ffffff')),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$marginTop(
+											_rtfeldman$elm_css$Css$px(4)),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$marginBottom(
+												_rtfeldman$elm_css$Css$px(4)),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$focus(
+													{
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$borderColor(
+															_rtfeldman$elm_css$Css$hex('67b8ed')),
+														_1: {
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css$outlineWidth(
+																_rtfeldman$elm_css$Css$px(0)),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+
 var _bluedogtraining$bdt_elm$Form_Input_Internal$getId = function (_) {
 	return _.id;
 };
@@ -26089,44 +27001,31 @@ var _bluedogtraining$bdt_elm$Form_Input_Internal$inputField = F2(
 				_rtfeldman$elm_css$Html_Styled$input,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('bdt-elm input'),
+					_0: A2(_bluedogtraining$bdt_elm$Form_Input_Css$input, viewState.isError, viewState.isLocked),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'locked', _1: viewState.isLocked},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'error', _1: viewState.isError},
-									_1: {ctor: '[]'}
-								}
-							}),
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(
+								_bluedogtraining$bdt_elm$Resettable$getValue(state.value)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(
-									_bluedogtraining$bdt_elm$Resettable$getValue(state.value)),
+								_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_Input_Internal$Input),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_Input_Internal$Input),
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
+										_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
 										_1: {
 											ctor: '::',
-											_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
+											_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
 											_1: {
 												ctor: '::',
-												_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
-												_1: {
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Html_Styled_Attributes$type_(
-														_bluedogtraining$bdt_elm$Form_Input_Internal$typeToString(viewState.inputType)),
-													_1: {ctor: '[]'}
-												}
+												_0: _rtfeldman$elm_css$Html_Styled_Attributes$type_(
+													_bluedogtraining$bdt_elm$Form_Input_Internal$typeToString(viewState.inputType)),
+												_1: {ctor: '[]'}
 											}
 										}
 									}
@@ -26278,6 +27177,11 @@ var _bluedogtraining$bdt_elm$Form_Input$setNumberType = function (_p40) {
 		_bluedogtraining$bdt_elm$Form_Input_Internal$setNumberType(_p41._1));
 };
 
+var _bluedogtraining$bdt_elm$Form_IntInput_Css$input = F2(
+	function (isError, isLocked) {
+		return A2(_bluedogtraining$bdt_elm$Form_Input_Css$input, isError, isLocked);
+	});
+
 var _bluedogtraining$bdt_elm$Form_IntInput_Internal$getId = function (_) {
 	return _.id;
 };
@@ -26291,8 +27195,8 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$stringToMaybeInt = function 
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.IntInput.Internal',
 				{
-					start: {line: 197, column: 13},
-					end: {line: 203, column: 29}
+					start: {line: 199, column: 13},
+					end: {line: 205, column: 29}
 				},
 				_p1)('Failed to parse IntInput String to Int');
 		} else {
@@ -26429,40 +27333,27 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$inputField = F2(
 				_rtfeldman$elm_css$Html_Styled$input,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('bdt-elm input'),
+					_0: A2(_bluedogtraining$bdt_elm$Form_IntInput_Css$input, viewState.isError, viewState.isLocked),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'locked', _1: viewState.isLocked},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'error', _1: viewState.isError},
-									_1: {ctor: '[]'}
-								}
-							}),
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(
+								_bluedogtraining$bdt_elm$Resettable$getValue(state.value)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(
-									_bluedogtraining$bdt_elm$Resettable$getValue(state.value)),
+								_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_IntInput_Internal$Input),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_IntInput_Internal$Input),
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
+										_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
 										_1: {
 											ctor: '::',
-											_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
-											_1: {
-												ctor: '::',
-												_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
-												_1: {ctor: '[]'}
-											}
+											_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
+											_1: {ctor: '[]'}
 										}
 									}
 								}
@@ -29557,47 +30448,49 @@ var _bluedogtraining$bdt_elm$Form_TextArea$setId = F2(
 
 var _bluedogtraining$bdt_elm$Grid$renderCol = function (_p0) {
 	var _p1 = _p0;
+	var _p2 = _p1._0;
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
 		{
 			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class(
-				A2(
-					_elm_lang$core$String$join,
-					'-',
-					{
-						ctor: '::',
-						_0: 'col',
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$core$Basics$toString(_p1._0),
-							_1: {ctor: '[]'}
-						}
-					})),
+			_0: A2(_bluedogtraining$bdt_elm$Grid_Css$col, _p2.defaultCols, _p2.sizes),
 			_1: {ctor: '[]'}
 		},
-		_p1._1);
+		_p2.children);
 };
 var _bluedogtraining$bdt_elm$Grid$row = function (cols) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
 		{
 			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('row'),
+			_0: _bluedogtraining$bdt_elm$Grid_Css$row,
 			_1: {ctor: '[]'}
 		},
 		A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Grid$renderCol, cols));
 };
+var _bluedogtraining$bdt_elm$Grid$ColConfig = F3(
+	function (a, b, c) {
+		return {defaultCols: a, sizes: b, children: c};
+	});
 var _bluedogtraining$bdt_elm$Grid$Row = function (a) {
 	return {ctor: 'Row', _0: a};
 };
-var _bluedogtraining$bdt_elm$Grid$Col = F2(
-	function (a, b) {
-		return {ctor: 'Col', _0: a, _1: b};
-	});
+var _bluedogtraining$bdt_elm$Grid$Col = function (a) {
+	return {ctor: 'Col', _0: a};
+};
 var _bluedogtraining$bdt_elm$Grid$col = F2(
-	function ($int, children) {
-		return A2(_bluedogtraining$bdt_elm$Grid$Col, $int, children);
+	function (cols, children) {
+		return _bluedogtraining$bdt_elm$Grid$Col(
+			A3(
+				_bluedogtraining$bdt_elm$Grid$ColConfig,
+				cols,
+				{ctor: '[]'},
+				children));
+	});
+var _bluedogtraining$bdt_elm$Grid$colSizes = F3(
+	function (cols, sizes, children) {
+		return _bluedogtraining$bdt_elm$Grid$Col(
+			A3(_bluedogtraining$bdt_elm$Grid$ColConfig, cols, sizes, children));
 	});
 
 var _bluedogtraining$bdt_elm$MusicGenre$Pop = {ctor: 'Pop'};
@@ -29795,60 +30688,15 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 		}
 	});
 
+var _bluedogtraining$bdt_elm$Tuple_Bdt_ops = _bluedogtraining$bdt_elm$Tuple_Bdt_ops || {};
+_bluedogtraining$bdt_elm$Tuple_Bdt_ops['~'] = F2(
+	function (a, b) {
+		return {ctor: '_Tuple2', _0: a, _1: b};
+	});
+
 var _bluedogtraining$bdt_elm$Styles$background = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{ctor: '[]'});
 
-var _bluedogtraining$bdt_elm$View$test = function (model) {
-	return _bluedogtraining$bdt_elm$Grid$row(
-		{
-			ctor: '::',
-			_0: A2(
-				_bluedogtraining$bdt_elm$Grid$col,
-				6,
-				{
-					ctor: '::',
-					_0: _bluedogtraining$bdt_elm$Card$render(
-						A2(
-							_bluedogtraining$bdt_elm$Card$footer,
-							{ctor: '[]'},
-							A2(
-								_bluedogtraining$bdt_elm$Card$body,
-								{
-									ctor: '::',
-									_0: A2(
-										_bluedogtraining$bdt_elm$Card$block,
-										6,
-										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_bluedogtraining$bdt_elm$Card$block,
-											6,
-											{ctor: '[]'}),
-										_1: {ctor: '[]'}
-									}
-								},
-								A3(
-									_bluedogtraining$bdt_elm$Card$header,
-									'Title',
-									{ctor: '[]'},
-									_bluedogtraining$bdt_elm$Card$view)))),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_bluedogtraining$bdt_elm$Grid$col,
-					6,
-					{
-						ctor: '::',
-						_0: _bluedogtraining$bdt_elm$Card$render(_bluedogtraining$bdt_elm$Card$view),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
 var _bluedogtraining$bdt_elm$View$view = function (model) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
@@ -29863,7 +30711,7 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 				_rtfeldman$elm_css$Html_Styled$div,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('container'),
+					_0: _bluedogtraining$bdt_elm$Grid_Css$container,
 					_1: {ctor: '[]'}
 				},
 				{
@@ -29878,333 +30726,160 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: _bluedogtraining$bdt_elm$View$test(model),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_rtfeldman$elm_css$Html_Styled$div,
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('row'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_rtfeldman$elm_css$Html_Styled$div,
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('col-6'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: A2(
-												_rtfeldman$elm_css$Html_Styled$h2,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Html_Styled$text('Input'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_rtfeldman$elm_css$Html_Styled$map,
-													_bluedogtraining$bdt_elm$Msg$InputMsg,
-													_bluedogtraining$bdt_elm$Form_Input$render(
-														_bluedogtraining$bdt_elm$Form_Input$view(model.input))),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_rtfeldman$elm_css$Html_Styled$div,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Html_Styled$text(
-																A2(
-																	_elm_lang$core$Basics_ops['++'],
-																	'Value: ',
-																	_bluedogtraining$bdt_elm$Form_Input$getValue(model.input))),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												}
-											}
-										}),
-									_1: {
+						_0: _bluedogtraining$bdt_elm$Grid$row(
+							{
+								ctor: '::',
+								_0: A3(
+									_bluedogtraining$bdt_elm$Grid$colSizes,
+									_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+									{
 										ctor: '::',
-										_0: A2(
-											_rtfeldman$elm_css$Html_Styled$div,
-											{
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('col-6'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_rtfeldman$elm_css$Html_Styled$h2,
-													{ctor: '[]'},
+										_0: A2(_bluedogtraining$bdt_elm$Tuple_Bdt_ops['~'], _bluedogtraining$bdt_elm$Grid_Size$Lg, _bluedogtraining$bdt_elm$Grid_Size$Six),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _bluedogtraining$bdt_elm$Card$render(
+											A2(
+												_bluedogtraining$bdt_elm$Card$footer,
+												{ctor: '[]'},
+												A2(
+													_bluedogtraining$bdt_elm$Card$body,
 													{
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Html_Styled$text('Int Input'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_rtfeldman$elm_css$Html_Styled$map,
-														_bluedogtraining$bdt_elm$Msg$IntInputMsg,
-														_bluedogtraining$bdt_elm$Form_IntInput$render(
-															_bluedogtraining$bdt_elm$Form_IntInput$view(model.intInput))),
-													_1: {
-														ctor: '::',
-														_0: A2(
-															_rtfeldman$elm_css$Html_Styled$div,
-															{ctor: '[]'},
+														_0: A3(
+															_bluedogtraining$bdt_elm$Card$blockSizes,
+															_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 															{
 																ctor: '::',
-																_0: _rtfeldman$elm_css$Html_Styled$text(
-																	A2(
-																		_elm_lang$core$Basics_ops['++'],
-																		'Value: ',
-																		_elm_lang$core$Basics$toString(
-																			_bluedogtraining$bdt_elm$Form_IntInput$getValue(model.intInput)))),
+																_0: A2(_bluedogtraining$bdt_elm$Tuple_Bdt_ops['~'], _bluedogtraining$bdt_elm$Grid_Size$Md, _bluedogtraining$bdt_elm$Grid_Size$Six),
 																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_rtfeldman$elm_css$Html_Styled$h2,
-																{ctor: '[]'},
-																{
-																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Html_Styled$text('Float Input'),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {
+															},
+															{
 																ctor: '::',
 																_0: A2(
-																	_rtfeldman$elm_css$Html_Styled$map,
-																	_bluedogtraining$bdt_elm$Msg$FloatInputMsg,
-																	_bluedogtraining$bdt_elm$Form_FloatInput$render(
-																		_bluedogtraining$bdt_elm$Form_FloatInput$view(model.floatInput))),
+																	_rtfeldman$elm_css$Html_Styled$label,
+																	{ctor: '[]'},
+																	{
+																		ctor: '::',
+																		_0: _rtfeldman$elm_css$Html_Styled$text('Simple text Input'),
+																		_1: {ctor: '[]'}
+																	}),
 																_1: {
 																	ctor: '::',
 																	_0: A2(
-																		_rtfeldman$elm_css$Html_Styled$div,
+																		_rtfeldman$elm_css$Html_Styled$map,
+																		_bluedogtraining$bdt_elm$Msg$InputMsg,
+																		_bluedogtraining$bdt_elm$Form_Input$render(
+																			_bluedogtraining$bdt_elm$Form_Input$view(model.input))),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_rtfeldman$elm_css$Html_Styled$div,
+																			{ctor: '[]'},
+																			{
+																				ctor: '::',
+																				_0: _rtfeldman$elm_css$Html_Styled$text(
+																					A2(
+																						_elm_lang$core$Basics_ops['++'],
+																						'Value: ',
+																						_bluedogtraining$bdt_elm$Form_Input$getValue(model.input))),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A3(
+																_bluedogtraining$bdt_elm$Card$blockSizes,
+																_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																{
+																	ctor: '::',
+																	_0: A2(_bluedogtraining$bdt_elm$Tuple_Bdt_ops['~'], _bluedogtraining$bdt_elm$Grid_Size$Md, _bluedogtraining$bdt_elm$Grid_Size$Six),
+																	_1: {ctor: '[]'}
+																},
+																{
+																	ctor: '::',
+																	_0: A2(
+																		_rtfeldman$elm_css$Html_Styled$label,
 																		{ctor: '[]'},
 																		{
 																			ctor: '::',
-																			_0: _rtfeldman$elm_css$Html_Styled$text(
-																				A2(
-																					_elm_lang$core$Basics_ops['++'],
-																					'Value: ',
-																					_elm_lang$core$Basics$toString(
-																						_bluedogtraining$bdt_elm$Form_FloatInput$getValue(model.floatInput)))),
+																			_0: _rtfeldman$elm_css$Html_Styled$text('Int Input, accepting only ints!'),
 																			_1: {ctor: '[]'}
 																		}),
 																	_1: {
 																		ctor: '::',
 																		_0: A2(
-																			_rtfeldman$elm_css$Html_Styled$h2,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Html_Styled$text('Select'),
-																				_1: {ctor: '[]'}
-																			}),
+																			_rtfeldman$elm_css$Html_Styled$map,
+																			_bluedogtraining$bdt_elm$Msg$IntInputMsg,
+																			_bluedogtraining$bdt_elm$Form_IntInput$render(
+																				_bluedogtraining$bdt_elm$Form_IntInput$view(model.intInput))),
 																		_1: {
 																			ctor: '::',
 																			_0: A2(
-																				_rtfeldman$elm_css$Html_Styled$map,
-																				_bluedogtraining$bdt_elm$Msg$SelectMsg,
-																				_bluedogtraining$bdt_elm$Form_Select$render(
-																					_bluedogtraining$bdt_elm$Form_Select$view(model.select))),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_rtfeldman$elm_css$Html_Styled$div,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled$text(
-																							A2(
-																								_elm_lang$core$Basics_ops['++'],
-																								'Value: ',
-																								_elm_lang$core$Basics$toString(
-																									_bluedogtraining$bdt_elm$Form_Select$getSelectedOption(model.select)))),
-																						_1: {ctor: '[]'}
-																					}),
-																				_1: {
+																				_rtfeldman$elm_css$Html_Styled$div,
+																				{ctor: '[]'},
+																				{
 																					ctor: '::',
-																					_0: A2(
-																						_rtfeldman$elm_css$Html_Styled$h2,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: _rtfeldman$elm_css$Html_Styled$text('Multi Select'),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: A2(
-																							_rtfeldman$elm_css$Html_Styled$map,
-																							_bluedogtraining$bdt_elm$Msg$MultiSelectMsg,
-																							_bluedogtraining$bdt_elm$Form_MultiSelect$render(
-																								_bluedogtraining$bdt_elm$Form_MultiSelect$view(model.multiSelect))),
-																						_1: {
-																							ctor: '::',
-																							_0: A2(
-																								_rtfeldman$elm_css$Html_Styled$div,
-																								{ctor: '[]'},
-																								{
-																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Html_Styled$text(
-																										A2(
-																											_elm_lang$core$Basics_ops['++'],
-																											'Value: ',
-																											_elm_lang$core$Basics$toString(
-																												_bluedogtraining$bdt_elm$Form_MultiSelect$getSelectedOptions(model.multiSelect)))),
-																									_1: {ctor: '[]'}
-																								}),
-																							_1: {
-																								ctor: '::',
-																								_0: A2(
-																									_rtfeldman$elm_css$Html_Styled$h2,
-																									{ctor: '[]'},
-																									{
-																										ctor: '::',
-																										_0: _rtfeldman$elm_css$Html_Styled$text('Search Select'),
-																										_1: {ctor: '[]'}
-																									}),
-																								_1: {
-																									ctor: '::',
-																									_0: A2(
-																										_rtfeldman$elm_css$Html_Styled$map,
-																										_bluedogtraining$bdt_elm$Msg$SearchSelectMsg,
-																										_bluedogtraining$bdt_elm$Form_SearchSelect$render(
-																											_bluedogtraining$bdt_elm$Form_SearchSelect$view(model.searchSelect))),
-																									_1: {
-																										ctor: '::',
-																										_0: A2(
-																											_rtfeldman$elm_css$Html_Styled$div,
-																											{ctor: '[]'},
-																											{
-																												ctor: '::',
-																												_0: _rtfeldman$elm_css$Html_Styled$text(
-																													A2(
-																														_elm_lang$core$Basics_ops['++'],
-																														'Value: ',
-																														_elm_lang$core$Basics$toString(
-																															_bluedogtraining$bdt_elm$Form_SearchSelect$getSelectedOption(model.searchSelect)))),
-																												_1: {ctor: '[]'}
-																											}),
-																										_1: {
-																											ctor: '::',
-																											_0: A2(
-																												_rtfeldman$elm_css$Html_Styled$h2,
-																												{ctor: '[]'},
-																												{
-																													ctor: '::',
-																													_0: _rtfeldman$elm_css$Html_Styled$text('Date Picker'),
-																													_1: {ctor: '[]'}
-																												}),
-																											_1: {
-																												ctor: '::',
-																												_0: A2(
-																													_rtfeldman$elm_css$Html_Styled$map,
-																													_bluedogtraining$bdt_elm$Msg$DatePickerMsg,
-																													_bluedogtraining$bdt_elm$Form_DatePicker$render(
-																														A2(
-																															_bluedogtraining$bdt_elm$Form_DatePicker$setMaxDate,
-																															_elm_lang$core$Maybe$Just(
-																																_elm_lang$core$Date$fromTime(_elm_lang$core$Time$second * 1549770131)),
-																															A2(
-																																_bluedogtraining$bdt_elm$Form_DatePicker$setMinDate,
-																																_elm_lang$core$Maybe$Just(
-																																	_elm_lang$core$Date$fromTime(_elm_lang$core$Time$second * 1506760131)),
-																																A2(
-																																	_bluedogtraining$bdt_elm$Form_DatePicker$setIncludeTime,
-																																	true,
-																																	A2(
-																																		_bluedogtraining$bdt_elm$Form_DatePicker$setIsClearable,
-																																		true,
-																																		_bluedogtraining$bdt_elm$Form_DatePicker$view(model.datePicker))))))),
-																												_1: {
-																													ctor: '::',
-																													_0: A2(
-																														_rtfeldman$elm_css$Html_Styled$div,
-																														{ctor: '[]'},
-																														{
-																															ctor: '::',
-																															_0: _rtfeldman$elm_css$Html_Styled$text(
-																																A2(
-																																	_elm_lang$core$Basics_ops['++'],
-																																	'Value: ',
-																																	_elm_lang$core$Basics$toString(
-																																		_bluedogtraining$bdt_elm$Form_DatePicker$getSelectedDate(model.datePicker)))),
-																															_1: {ctor: '[]'}
-																														}),
-																													_1: {
-																														ctor: '::',
-																														_0: A2(
-																															_rtfeldman$elm_css$Html_Styled$h2,
-																															{ctor: '[]'},
-																															{
-																																ctor: '::',
-																																_0: _rtfeldman$elm_css$Html_Styled$text('TextArea'),
-																																_1: {ctor: '[]'}
-																															}),
-																														_1: {
-																															ctor: '::',
-																															_0: A2(
-																																_rtfeldman$elm_css$Html_Styled$map,
-																																_bluedogtraining$bdt_elm$Msg$TextAreaMsg,
-																																_bluedogtraining$bdt_elm$Form_TextArea$render(
-																																	_bluedogtraining$bdt_elm$Form_TextArea$view(model.textArea))),
-																															_1: {
-																																ctor: '::',
-																																_0: A2(
-																																	_rtfeldman$elm_css$Html_Styled$div,
-																																	{ctor: '[]'},
-																																	{
-																																		ctor: '::',
-																																		_0: _rtfeldman$elm_css$Html_Styled$text(
-																																			A2(
-																																				_elm_lang$core$Basics_ops['++'],
-																																				'Value: ',
-																																				_bluedogtraining$bdt_elm$Form_TextArea$getValue(model.textArea))),
-																																		_1: {ctor: '[]'}
-																																	}),
-																																_1: {ctor: '[]'}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
+																					_0: _rtfeldman$elm_css$Html_Styled$text(
+																						A2(
+																							_elm_lang$core$Basics_ops['++'],
+																							'Value: ',
+																							_elm_lang$core$Basics$toString(
+																								_bluedogtraining$bdt_elm$Form_IntInput$getValue(model.intInput)))),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {ctor: '[]'}
 																		}
 																	}
-																}
-															}
+																}),
+															_1: {ctor: '[]'}
 														}
-													}
-												}
-											}),
+													},
+													A3(
+														_bluedogtraining$bdt_elm$Card$header,
+														'Example Inputs',
+														{ctor: '[]'},
+														_bluedogtraining$bdt_elm$Card$view)))),
 										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {ctor: '[]'}
-						}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A3(
+										_bluedogtraining$bdt_elm$Grid$colSizes,
+										_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+										{
+											ctor: '::',
+											_0: A2(_bluedogtraining$bdt_elm$Tuple_Bdt_ops['~'], _bluedogtraining$bdt_elm$Grid_Size$Lg, _bluedogtraining$bdt_elm$Grid_Size$Six),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _bluedogtraining$bdt_elm$Card$render(
+												A2(
+													_bluedogtraining$bdt_elm$Card$body,
+													{
+														ctor: '::',
+														_0: A2(
+															_bluedogtraining$bdt_elm$Card$block,
+															_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+															{
+																ctor: '::',
+																_0: _rtfeldman$elm_css$Html_Styled$text('Hi'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													},
+													_bluedogtraining$bdt_elm$Card$view)),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
 					}
 				}),
 			_1: {ctor: '[]'}

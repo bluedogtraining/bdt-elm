@@ -23,6 +23,8 @@ import VirtualDom
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
+import Form.Input.Css as Css
+
 
 -- MODEL --
 
@@ -93,8 +95,7 @@ inputField : State -> ViewState -> VirtualDom.Node Msg
 inputField state viewState =
 
     input
-        [ class "bdt-elm input"
-        , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+        [ Css.input viewState.isError viewState.isLocked
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input

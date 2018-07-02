@@ -24,6 +24,8 @@ import Regex exposing (Regex)
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
+import Form.IntInput.Css as Css
+
 
 type alias State =
     { value : Resettable String
@@ -89,9 +91,9 @@ render state viewState =
 
 inputField : State -> ViewState -> VirtualDom.Node Msg
 inputField state viewState =
+
     input
-        [ class "bdt-elm input"
-        , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+        [ Css.input viewState.isError viewState.isLocked
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input

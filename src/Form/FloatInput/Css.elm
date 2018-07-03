@@ -1,4 +1,4 @@
-module Form.Input.Css exposing (..)
+module Form.FloatInput.Css exposing (..)
 
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes exposing (css)

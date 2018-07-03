@@ -1,11 +1,12 @@
 module Card.Css exposing (..)
 
 import Css exposing (..)
+import Css.Media as Media
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes exposing (css)
 
 import Grid.Css
-import Grid.Size exposing (..)
+import Grid.Size as Size exposing (..)
 
 
 card : Attribute msg
@@ -23,7 +24,7 @@ header : Attribute msg
 header =
     css
         [ displayFlex
-        , padding2 (px 8) (px 16)
+        , padding2 (px 12) (px 16)
         , borderBottom3 (px 1) solid (hex "ededed")
         ]
 
@@ -46,4 +47,11 @@ body =
 
 block : Cols -> List (Size, Cols) -> Attribute msg
 block cols sizes =
-    Grid.Css.col cols sizes
+    css <|
+        List.map Grid.Css.colSize (Size.orderBySize sizes)
+        ++
+        [ flexGrow <| num 1
+        , padding <| px 15
+        , boxSizing borderBox
+        , Grid.Css.defaultColSize cols
+        ]

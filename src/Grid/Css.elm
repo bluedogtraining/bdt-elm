@@ -52,6 +52,7 @@ col cols sizes =
         , defaultColSize cols
         ]
 
+
 defaultColSize : Cols -> Style
 defaultColSize cols =
 

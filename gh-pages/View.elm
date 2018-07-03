@@ -43,7 +43,7 @@ view model =
                     [ Card.view
                         |> Card.header "Example Inputs" []
                         |> Card.body
-                            [ Card.blockSizes Twelve [ Md ~ Six ]
+                            [ Card.block Twelve
                                 [ label
                                     []
                                     [ text "Simple text Input" ]
@@ -54,7 +54,7 @@ view model =
                                     []
                                     [ text <| "Value: " ++ Input.getValue model.input ]
                                 ]
-                            , Card.blockSizes Twelve [ Md ~ Six ]
+                            , Card.block Twelve
                                 [ label
                                     []
                                     [ text "Int Input, accepting only ints!" ]
@@ -65,16 +65,61 @@ view model =
                                     []
                                     [ text <| "Value: " ++ toString (IntInput.getValue model.intInput) ]
                                 ]
+                            , Card.block Twelve
+                                [ label
+                                    []
+                                    [ text "Float Input, accepting only floats!" ]
+                                , FloatInput.view model.floatInput
+                                    |> FloatInput.render
+                                    |> Html.map FloatInputMsg
+                                , div
+                                    []
+                                    [ text <| "Value: " ++ toString (FloatInput.getValue model.floatInput) ]
+                                ]
                             ]
                         |> Card.footer []
                         |> Card.render
                     ]
                 , Grid.colSizes Twelve [ Lg ~ Six ]
                     [ Card.view
+                        |> Card.header "Example Selects" []
                         |> Card.body
                             [ Card.block Twelve
-                                [ text "Hi" ]
+                                [ label
+                                    []
+                                    [ text "Simple Select" ]
+                                , Select.view model.select
+                                    |> Select.setIsClearable True
+                                    |> Select.render
+                                    |> Html.map SelectMsg
+                                , div
+                                    []
+                                    [ text <| "Value: " ++ toString (Select.getSelectedOption model.select) ]
+                                ]
+                            , Card.block Twelve
+                                [ label
+                                    []
+                                    [ text "Multi Select" ]
+                                , MultiSelect.view model.multiSelect
+                                    |> MultiSelect.render
+                                    |> Html.map MultiSelectMsg
+                                , div
+                                    []
+                                    [ text <| "Value: " ++ toString (MultiSelect.getSelectedOptions model.multiSelect) ]
+                                ]
+                            , Card.block Twelve
+                                [ label
+                                    []
+                                    [ text "Search Select" ]
+                                , SearchSelect.view model.searchSelect
+                                    |> SearchSelect.render
+                                    |> Html.map SearchSelectMsg
+                                , div
+                                    []
+                                    [ text <| "Value: " ++ toString (SearchSelect.getSelectedOption model.searchSelect) ]
+                                ]
                             ]
+                        |> Card.footer []
                         |> Card.render
                     ]
                 ]

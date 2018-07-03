@@ -32,6 +32,10 @@ import Form.Helpers as Form
 import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
+import Icon
+
+import Form.Select.Css as Css
+
 
 -- MODEL --
 
@@ -101,6 +105,7 @@ update msg state =
             case state.focusedOption of
                 Nothing ->
                     { state | isOpen = False, focusedOption = Nothing } ! []
+
                 _ ->
                     state ! []
 
@@ -260,10 +265,9 @@ closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
 closed state viewState =
 
     div
-        [ class "bdt-elm select-container" ]
+        []
         [ div
-            [ class "input"
-            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            [ Css.input viewState.isError viewState.isLocked
             , Html.maybeAttribute id viewState.id
             , disabled viewState.isLocked
             , tabindex 0 ? not viewState.isLocked
@@ -271,14 +275,12 @@ closed state viewState =
             , onClick Open ? not viewState.isLocked
             ]
             [ div
-                [ class "option-label"
-                , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+                , Css.title
                 ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             , clearButton state viewState
-            , Html.divIf (not viewState.isLocked)
-                [ class "material-icons" ]
-                [ text "expand_more" ]
+            , Icon.expand_more
             ]
         ]
         |> Html.toUnstyled
@@ -288,19 +290,16 @@ open : State option -> ViewState option -> VirtualDom.Node (Msg option)
 open state viewState =
 
     div
-        [ class "bdt-elm select-container" ]
+        [ Css.container ]
         [ div
-            [ class "input"
-            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            [ Css.input viewState.isError viewState.isLocked
             , Html.maybeAttribute id viewState.id
             , onKeyboardInput <| KeyboardInput False
             , tabindex -1
             , onBlur Blur
             ]
             [ div
-                [ class "option-label"
-                , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
-                ]
+                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             ]
         , optionList state viewState
@@ -312,17 +311,15 @@ clearButton : State option -> ViewState option -> Html (Msg option)
 clearButton state viewState =
 
     Html.divIf (viewState.isClearable && Resettable.getValue state.selectedOption /= Nothing)
-        [ class "material-icons"
-        , onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear)
-        ]
-        [ text "clear" ]
+        [ onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear) ]
+        [ Icon.clear ]
 
 
 optionList : State option -> ViewState option -> Html (Msg option)
 optionList state viewState =
 
     div
-        [ class "option-list" ]
+        [ Css.optionList ]
         (List.map (optionItem state viewState) state.options)
 
 
@@ -330,8 +327,7 @@ optionItem : State option -> ViewState option -> option -> Html (Msg option)
 optionItem state viewState option =
 
     div
-        [ class "option-item"
-        , classList [("disabled", viewState.isOptionDisabled option), ("focus", state.focusedOption == Just option)]
+        [ Css.optionItem (viewState.isOptionDisabled option) (state.focusedOption == Just option)
         , id <| Form.toHtmlId option
         , onFocus <| Focus option
         , onBlur <| BlurOption option

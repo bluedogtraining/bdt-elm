@@ -19510,6 +19510,112 @@ _bluedogtraining$bdt_elm$Css_Bdt_ops['?'] = F2(
 			{ctor: '[]'});
 	});
 
+var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
+	function (isDisabled, isFocused) {
+		return {
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Css$padding2,
+				_rtfeldman$elm_css$Css$px(5),
+				_rtfeldman$elm_css$Css$px(10)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$margin(
+					_rtfeldman$elm_css$Css$px(0)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$displayFlex,
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
+								_rtfeldman$elm_css$Css$backgroundColor(
+									_rtfeldman$elm_css$Css$hex('eceeef')),
+								isDisabled || isFocused),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$outlineWidth(
+										_rtfeldman$elm_css$Css$px(0)),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$hover(
+											{
+												ctor: '::',
+												_0: A2(
+													_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
+													_rtfeldman$elm_css$Css$backgroundColor(
+														_rtfeldman$elm_css$Css$hex('f6f6f6')),
+													!isDisabled),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		};
+	});
+var _bluedogtraining$bdt_elm$Form_Css$selectOptionList = {
+	ctor: '::',
+	_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+	_1: {
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$top(
+			_rtfeldman$elm_css$Css$px(33)),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$left(
+				_rtfeldman$elm_css$Css$px(0)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$right(
+					_rtfeldman$elm_css$Css$px(0)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$zIndex(
+						_rtfeldman$elm_css$Css$int(10)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$maxHeight(
+							_rtfeldman$elm_css$Css$px(200)),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$scroll),
+							_1: {
+								ctor: '::',
+								_0: A3(
+									_rtfeldman$elm_css$Css$border3,
+									_rtfeldman$elm_css$Css$px(1),
+									_rtfeldman$elm_css$Css$solid,
+									_rtfeldman$elm_css$Css$hex('dddddd')),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$padding(
+										_rtfeldman$elm_css$Css$px(0)),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$backgroundColor(
+											_rtfeldman$elm_css$Css$hex('ffffff')),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
 var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 	function (isError, isLocked) {
 		return {
@@ -24112,111 +24218,9 @@ var _bluedogtraining$bdt_elm$Icon$clear = A2(_bluedogtraining$bdt_elm$Icon$icon,
 var _bluedogtraining$bdt_elm$Form_Select_Css$optionItem = F2(
 	function (isDisabled, isFocused) {
 		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
-			{
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Css$padding2,
-					_rtfeldman$elm_css$Css$px(5),
-					_rtfeldman$elm_css$Css$px(10)),
-				_1: {
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$margin(
-						_rtfeldman$elm_css$Css$px(0)),
-					_1: {
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$displayFlex,
-						_1: {
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
-									_rtfeldman$elm_css$Css$backgroundColor(
-										_rtfeldman$elm_css$Css$hex('eceeef')),
-									isDisabled || isFocused),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$outlineWidth(
-											_rtfeldman$elm_css$Css$px(0)),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$hover(
-												{
-													ctor: '::',
-													_0: A2(
-														_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
-														_rtfeldman$elm_css$Css$backgroundColor(
-															_rtfeldman$elm_css$Css$hex('f6f6f6')),
-														!isDisabled),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			});
+			A2(_bluedogtraining$bdt_elm$Form_Css$selectOptionItem, isDisabled, isFocused));
 	});
-var _bluedogtraining$bdt_elm$Form_Select_Css$optionList = _rtfeldman$elm_css$Html_Styled_Attributes$css(
-	{
-		ctor: '::',
-		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
-		_1: {
-			ctor: '::',
-			_0: _rtfeldman$elm_css$Css$top(
-				_rtfeldman$elm_css$Css$px(33)),
-			_1: {
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Css$left(
-					_rtfeldman$elm_css$Css$px(0)),
-				_1: {
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$right(
-						_rtfeldman$elm_css$Css$px(0)),
-					_1: {
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$zIndex(
-							_rtfeldman$elm_css$Css$int(10)),
-						_1: {
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$maxHeight(
-								_rtfeldman$elm_css$Css$px(200)),
-							_1: {
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$scroll),
-								_1: {
-									ctor: '::',
-									_0: A3(
-										_rtfeldman$elm_css$Css$border3,
-										_rtfeldman$elm_css$Css$px(1),
-										_rtfeldman$elm_css$Css$solid,
-										_rtfeldman$elm_css$Css$hex('dddddd')),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$padding(
-											_rtfeldman$elm_css$Css$px(0)),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$backgroundColor(
-												_rtfeldman$elm_css$Css$hex('ffffff')),
-											_1: {ctor: '[]'}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	});
+var _bluedogtraining$bdt_elm$Form_Select_Css$optionList = _rtfeldman$elm_css$Html_Styled_Attributes$css(_bluedogtraining$bdt_elm$Form_Css$selectOptionList);
 var _bluedogtraining$bdt_elm$Form_Select_Css$title = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
 		ctor: '::',

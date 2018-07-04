@@ -356,7 +356,7 @@ optionText defaultLabel toLabel selectedOptions =
 
         False ->
             toString (List.length (Resettable.getValue selectedOptions))
-                ++ " options selected: "
+                ++ " option" ++ (if List.length (Resettable.getValue selectedOptions) > 1 then "s" else "") ++ " selected: "
                 ++ String.join ", " (List.map toLabel (Resettable.getValue selectedOptions))
 
 

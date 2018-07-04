@@ -10,7 +10,7 @@ import Form.DatePicker as DatePicker
 import Form.TextArea as TextArea
 
 import MusicGenre exposing (MusicGenre)
-import StarWars exposing (Character)
+import Countries exposing (Country)
 
 
 type alias Model =
@@ -19,7 +19,7 @@ type alias Model =
     , floatInput : FloatInput.Model
     , select : Select.Model MusicGenre
     , multiSelect : MultiSelect.Model MusicGenre
-    , searchSelect : SearchSelect.Model Character
+    , searchSelect : SearchSelect.Model Country
     , datePicker : DatePicker.Model
     , textArea : TextArea.Model
     }
@@ -32,7 +32,7 @@ initialModel =
     , floatInput = FloatInput.init
     , select = Select.init MusicGenre.asList
     , multiSelect = MultiSelect.init MusicGenre.asNonempty
-    , searchSelect = SearchSelect.init "https://swapi.co/api/people/?search=" StarWars.characterDecoder
+    , searchSelect = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Countries.countryDecoder
     , datePicker = DatePicker.init
     , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [("[]", "☐")]
     }

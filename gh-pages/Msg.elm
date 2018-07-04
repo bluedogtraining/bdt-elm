@@ -10,7 +10,7 @@ import Form.DatePicker as DatePicker
 import Form.TextArea as TextArea
 
 import MusicGenre exposing (MusicGenre)
-import StarWars exposing (Character)
+import Countries exposing (Country)
 
 
 type Msg
@@ -19,6 +19,6 @@ type Msg
     | FloatInputMsg FloatInput.Msg
     | SelectMsg (Select.Msg MusicGenre)
     | MultiSelectMsg (MultiSelect.Msg MusicGenre)
-    | SearchSelectMsg (SearchSelect.Msg Character)
+    | SearchSelectMsg (SearchSelect.Msg Country)
     | DatePickerMsg DatePicker.Msg
     | TextAreaMsg TextArea.Msg

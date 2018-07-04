@@ -34,6 +34,8 @@ import Form.Helpers as Form
 import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
+import Form.SearchSelect.Css as Css
+
 
 -- MODEL --
 
@@ -95,7 +97,7 @@ type Msg option
     = Open
     | Blur
     | UpdateSearchInput Int String
-    | Response (Result Http.Error (SearchResponse option))
+    | Response (Result Http.Error (List option))
     | SelectOption option
     | Clear
     | KeyboardInput KeyboardInput
@@ -123,8 +125,8 @@ update msg state =
                 Err error ->
                     { state | isSearching = False } ! []
 
-                Ok searchResponse ->
-                    { state | isSearching = False, options = searchResponse.options, focusedOption = Nothing } ! []
+                Ok options ->
+                    { state | isSearching = False, options = options, focusedOption = Nothing } ! []
 
         Clear ->
             { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
@@ -142,10 +144,9 @@ update msg state =
             { state | focusedOption = Just (focusOption state.options option) } ! []
 
         BlurOption option ->
-            if Just option == state.focusedOption then
-                { state | focusedOption = Nothing, isOpen = False } ! []
-            else
-                state ! []
+            if Just option == state.focusedOption
+            then { state | focusedOption = Nothing, isOpen = False } ! []
+            else state ! []
 
         DomFocus _ ->
             state ! []
@@ -197,6 +198,7 @@ handleKeyboardInput state keyboardInput =
                     { state
                         | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
                         , isOpen = False
+                        , input = ""
                     } ! []
 
                 Up ->
@@ -254,15 +256,9 @@ searchRequest searchUrl input optionDecoder =
         |> Http.send Response
 
 
-type alias SearchResponse option =
-    { options : List option
-    }
-
-
-searchResponseDecoder : Decoder option -> Decoder (SearchResponse option)
+searchResponseDecoder : Decoder option -> Decoder (List option)
 searchResponseDecoder optionDecoder =
-    Decode.decode SearchResponse
-        |> Decode.required "options" (Decode.list optionDecoder)
+    Decode.list optionDecoder
 
 
 -- VIEW --
@@ -283,17 +279,16 @@ closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
 closed state viewState =
 
     div
-        [ class "bdt-elm select-container" ]
+        [ Css.container ]
         [ input
-            [ class "input"
-            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            [ Css.input viewState.isLocked viewState.isError
             , Html.maybeAttribute id viewState.id
             , type_ "text"
             , disabled viewState.isLocked
             , tabindex 0 ? not viewState.isLocked
             , onFocus Open ? not viewState.isLocked
             , onClick Open ? not viewState.isLocked
-            , value state.input
+            , value (state.selectedOption |> Resettable.getValue |> Maybe.map viewState.toLabel |> Maybe.withDefault "" )
             ]
             []
         ]
@@ -304,10 +299,9 @@ open : State option -> ViewState option -> VirtualDom.Node (Msg option)
 open state viewState =
 
     div
-        [ class "bdt-elm select-container" ]
+        [ Css.container ]
         [ input
-            [ class "input"
-            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            [ Css.input viewState.isLocked viewState.isError
             , Html.maybeAttribute id viewState.id
             , type_ "text"
             , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")
@@ -369,7 +363,7 @@ infoMessageContainer : String -> Html (Msg option)
 infoMessageContainer message =
 
     div
-        [ class "info-message" ]
+        [ Css.infoMessage ]
         [ text message ]
 
 
@@ -377,7 +371,7 @@ searchResultList : State option -> ViewState option -> Html (Msg option)
 searchResultList state viewState =
 
     div
-        [ class "search-result-list" ]
+        [ Css.optionList ]
         (List.map (searchResultItem state.focusedOption viewState.toLabel) state.options)
 
 
@@ -385,8 +379,7 @@ searchResultItem : Maybe option -> (option -> String) -> option -> Html (Msg opt
 searchResultItem focusedOption toLabel option =
 
     div
-        [ class "search-result-item"
-        , classList [("hovered", Just option == focusedOption)]
+        [ Css.optionItem (Just option == focusedOption)
         , id (Form.toHtmlId option)
         -- use onMouseDown over onClick so that it triggers before the onBlur on the input
         , onMouseDown (SelectOption option)

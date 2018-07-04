@@ -19503,6 +19503,32 @@ var _bluedogtraining$bdt_elm$Card$blockSizes = F3(
 			A3(_bluedogtraining$bdt_elm$Card$CardBlockConfig, cols, sizes, children));
 	});
 
+var _bluedogtraining$bdt_elm$Countries$Country = F5(
+	function (a, b, c, d, e) {
+		return {name: a, altSpellings: b, capital: c, region: d, population: e};
+	});
+var _bluedogtraining$bdt_elm$Countries$countryDecoder = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'population',
+	_elm_lang$core$Json_Decode$int,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'region',
+		_elm_lang$core$Json_Decode$string,
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'capital',
+			_elm_lang$core$Json_Decode$string,
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+				'altSpellings',
+				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
+				A3(
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+					'name',
+					_elm_lang$core$Json_Decode$string,
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_bluedogtraining$bdt_elm$Countries$Country))))));
+
 var _bluedogtraining$bdt_elm$Css_Bdt_ops = _bluedogtraining$bdt_elm$Css_Bdt_ops || {};
 _bluedogtraining$bdt_elm$Css_Bdt_ops['?'] = F2(
 	function (style, bool) {
@@ -29326,14 +29352,23 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$optionText = F3(
 						_bluedogtraining$bdt_elm$Resettable$getValue(selectedOptions))),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					' options selected: ',
+					' option',
 					A2(
-						_elm_lang$core$String$join,
-						', ',
+						_elm_lang$core$Basics_ops['++'],
+						(_elm_lang$core$Native_Utils.cmp(
+							_elm_lang$core$List$length(
+								_bluedogtraining$bdt_elm$Resettable$getValue(selectedOptions)),
+							1) > 0) ? 's' : '',
 						A2(
-							_elm_lang$core$List$map,
-							toLabel,
-							_bluedogtraining$bdt_elm$Resettable$getValue(selectedOptions)))));
+							_elm_lang$core$Basics_ops['++'],
+							' selected: ',
+							A2(
+								_elm_lang$core$String$join,
+								', ',
+								A2(
+									_elm_lang$core$List$map,
+									toLabel,
+									_bluedogtraining$bdt_elm$Resettable$getValue(selectedOptions)))))));
 		}
 	});
 var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$focusNextOption = F2(
@@ -30133,6 +30168,97 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect$setId = F2(
 			A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$setId, id, _p38._1));
 	});
 
+var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$infoMessage = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: A3(
+			_rtfeldman$elm_css$Css$border3,
+			_rtfeldman$elm_css$Css$px(1),
+			_rtfeldman$elm_css$Css$solid,
+			_rtfeldman$elm_css$Css$hex('dddddd')),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Css$padding2,
+				_rtfeldman$elm_css$Css$px(8),
+				_rtfeldman$elm_css$Css$px(16)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$displayFlex,
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$top(
+									_rtfeldman$elm_css$Css$px(37)),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$left(
+										_rtfeldman$elm_css$Css$px(0)),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$right(
+											_rtfeldman$elm_css$Css$px(0)),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$zIndex(
+												_rtfeldman$elm_css$Css$int(10)),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$backgroundColor(
+													_rtfeldman$elm_css$Css$hex('ffffff')),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$optionItem = function (isFocused) {
+	return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+		A2(_bluedogtraining$bdt_elm$Form_Css$selectOptionItem, false, isFocused));
+};
+var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$optionList = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	A2(
+		_elm_lang$core$Basics_ops['++'],
+		_bluedogtraining$bdt_elm$Form_Css$selectOptionList,
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$top(
+				_rtfeldman$elm_css$Css$px(37)),
+			_1: {ctor: '[]'}
+		}));
+var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$title = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$flexGrow(
+			_rtfeldman$elm_css$Css$int(1)),
+		_1: {ctor: '[]'}
+	});
+var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$input = F2(
+	function (isError, isLocked) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			A2(_bluedogtraining$bdt_elm$Form_Css$input, isError, isLocked));
+	});
+var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$container = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
+		_1: {ctor: '[]'}
+	});
+
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$shouldSearch = F2(
 	function (inputMinimum, input) {
 		return _elm_lang$core$Native_Utils.cmp(
@@ -30234,7 +30360,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$infoMessageContainer = f
 		_rtfeldman$elm_css$Html_Styled$div,
 		{
 			ctor: '::',
-			_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('info-message'),
+			_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Css$infoMessage,
 			_1: {ctor: '[]'}
 		},
 		{
@@ -30260,6 +30386,9 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$infoMessage = function (
 		default:
 			return _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$infoMessageContainer('no results');
 	}
+};
+var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchResponseDecoder = function (optionDecoder) {
+	return _elm_lang$core$Json_Decode$list(optionDecoder);
 };
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$focusNextOption = F2(
 	function (options, option) {
@@ -30294,8 +30423,8 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$focusOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.SearchSelect.Internal',
 				{
-					start: {line: 223, column: 5},
-					end: {line: 228, column: 132}
+					start: {line: 225, column: 5},
+					end: {line: 230, column: 132}
 				},
 				_p1)(
 				A2(
@@ -30338,16 +30467,6 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$ViewState = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {inputMinimum: a, isLocked: b, isClearable: c, isError: d, isOptionDisabled: e, toLabel: f, defaultLabel: g, id: h};
 	});
-var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$SearchResponse = function (a) {
-	return {options: a};
-};
-var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchResponseDecoder = function (optionDecoder) {
-	return A3(
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'options',
-		_elm_lang$core$Json_Decode$list(optionDecoder),
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$SearchResponse));
-};
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$DomFocus = function (a) {
 	return {ctor: 'DomFocus', _0: a};
 };
@@ -30377,7 +30496,8 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$handleKeyboardInput = F2
 									_bluedogtraining$bdt_elm$Resettable$update,
 									_elm_lang$core$Maybe$Just(_p5),
 									state.selectedOption),
-								isOpen: false
+								isOpen: false,
+								input: ''
 							}),
 						{ctor: '[]'});
 				case 'Up':
@@ -30493,7 +30613,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$update = F2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							state,
-							{isSearching: false, options: _p9._0.options, focusedOption: _elm_lang$core$Maybe$Nothing}),
+							{isSearching: false, options: _p9._0, focusedOption: _elm_lang$core$Maybe$Nothing}),
 						{ctor: '[]'});
 				}
 			case 'Clear':
@@ -30562,7 +30682,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$closed = F2(
 				_rtfeldman$elm_css$Html_Styled$div,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('bdt-elm select-container'),
+					_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Css$container,
 					_1: {ctor: '[]'}
 				},
 				{
@@ -30571,51 +30691,45 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$closed = F2(
 						_rtfeldman$elm_css$Html_Styled$input,
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('input'),
+							_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Css$input, viewState.isLocked, viewState.isError),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-									{
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'locked', _1: viewState.isLocked},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'error', _1: viewState.isError},
-											_1: {ctor: '[]'}
-										}
-									}),
+								_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
 								_1: {
 									ctor: '::',
-									_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$type_('text'),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$type_('text'),
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
+											_0: A2(
+												_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+												_rtfeldman$elm_css$Html_Styled_Attributes$tabindex(0),
+												!viewState.isLocked),
 											_1: {
 												ctor: '::',
 												_0: A2(
 													_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-													_rtfeldman$elm_css$Html_Styled_Attributes$tabindex(0),
+													_rtfeldman$elm_css$Html_Styled_Events$onFocus(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Open),
 													!viewState.isLocked),
 												_1: {
 													ctor: '::',
 													_0: A2(
 														_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-														_rtfeldman$elm_css$Html_Styled_Events$onFocus(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Open),
+														_rtfeldman$elm_css$Html_Styled_Events$onClick(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Open),
 														!viewState.isLocked),
 													_1: {
 														ctor: '::',
-														_0: A2(
-															_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-															_rtfeldman$elm_css$Html_Styled_Events$onClick(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Open),
-															!viewState.isLocked),
-														_1: {
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(state.input),
-															_1: {ctor: '[]'}
-														}
+														_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(
+															A2(
+																_elm_lang$core$Maybe$withDefault,
+																'',
+																A2(
+																	_elm_lang$core$Maybe$map,
+																	viewState.toLabel,
+																	_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedOption)))),
+														_1: {ctor: '[]'}
 													}
 												}
 											}
@@ -30671,42 +30785,30 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchResultItem = F3(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('search-result-item'),
+				_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Css$optionItem(
+					_elm_lang$core$Native_Utils.eq(
+						_elm_lang$core$Maybe$Just(option),
+						focusedOption)),
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-						{
-							ctor: '::',
-							_0: {
-								ctor: '_Tuple2',
-								_0: 'hovered',
-								_1: _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Maybe$Just(option),
-									focusedOption)
-							},
-							_1: {ctor: '[]'}
-						}),
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$id(
+						_bluedogtraining$bdt_elm$Form_Helpers$toHtmlId(option)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$id(
-							_bluedogtraining$bdt_elm$Form_Helpers$toHtmlId(option)),
+						_0: _rtfeldman$elm_css$Html_Styled_Events$onMouseDown(
+							_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$SelectOption(option)),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Events$onMouseDown(
-								_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$SelectOption(option)),
+							_0: _rtfeldman$elm_css$Html_Styled_Events$onFocus(
+								_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Focus(option)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Events$onFocus(
-									_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Focus(option)),
+								_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(
+									_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$BlurOption(option)),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(
-										_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$BlurOption(option)),
-									_1: {
-										ctor: '::',
-										_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
-										_1: {ctor: '[]'}
-									}
+									_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
+									_1: {ctor: '[]'}
 								}
 							}
 						}
@@ -30726,7 +30828,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$searchResultList = F2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('search-result-list'),
+				_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Css$optionList,
 				_1: {ctor: '[]'}
 			},
 			A2(
@@ -30766,7 +30868,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$open = F2(
 				_rtfeldman$elm_css$Html_Styled$div,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('bdt-elm select-container'),
+					_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Css$container,
 					_1: {ctor: '[]'}
 				},
 				{
@@ -30775,56 +30877,43 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$open = F2(
 						_rtfeldman$elm_css$Html_Styled$input,
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('input'),
+							_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Css$input, viewState.isLocked, viewState.isError),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-									{
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'locked', _1: viewState.isLocked},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'error', _1: viewState.isError},
-											_1: {ctor: '[]'}
-										}
-									}),
+								_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
 								_1: {
 									ctor: '::',
-									_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$type_('text'),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$type_('text'),
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(
+											A2(
+												_elm_lang$core$Maybe$withDefault,
+												'',
+												A2(
+													_elm_lang$core$Maybe$map,
+													viewState.toLabel,
+													_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedOption)))),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(
-												A2(
-													_elm_lang$core$Maybe$withDefault,
-													'',
-													A2(
-														_elm_lang$core$Maybe$map,
-														viewState.toLabel,
-														_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedOption)))),
+											_0: _rtfeldman$elm_css$Html_Styled_Attributes$tabindex(-1),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled_Attributes$tabindex(-1),
+												_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
 												_1: {
 													ctor: '::',
-													_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
+													_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(
+														_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$UpdateSearchInput(viewState.inputMinimum)),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(
-															_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$UpdateSearchInput(viewState.inputMinimum)),
+														_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Blur),
 														_1: {
 															ctor: '::',
-															_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$Blur),
+															_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
 															_1: {
 																ctor: '::',
-																_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$onKeyboardInput(_bluedogtraining$bdt_elm$Form_SearchSelect_Internal$KeyboardInput),
-																_1: {
-																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(state.input),
-																	_1: {ctor: '[]'}
-																}
+																_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(state.input),
+																_1: {ctor: '[]'}
 															}
 														}
 													}
@@ -31391,24 +31480,6 @@ var _bluedogtraining$bdt_elm$MusicGenre$asNonempty = A2(
 	A2(_elm_lang$core$List$drop, 1, _bluedogtraining$bdt_elm$MusicGenre$asList),
 	_mgold$elm_nonempty_list$List_Nonempty$fromElement(_bluedogtraining$bdt_elm$MusicGenre$Rock));
 
-var _bluedogtraining$bdt_elm$StarWars$Character = F3(
-	function (a, b, c) {
-		return {name: a, hairColor: b, gender: c};
-	});
-var _bluedogtraining$bdt_elm$StarWars$characterDecoder = A3(
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-	'gender',
-	_elm_lang$core$Json_Decode$string,
-	A3(
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'hairColor',
-		_elm_lang$core$Json_Decode$string,
-		A3(
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-			'name',
-			_elm_lang$core$Json_Decode$string,
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_bluedogtraining$bdt_elm$StarWars$Character))));
-
 var _bluedogtraining$bdt_elm$Msg$TextAreaMsg = function (a) {
 	return {ctor: 'TextAreaMsg', _0: a};
 };
@@ -31440,7 +31511,7 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 	floatInput: _bluedogtraining$bdt_elm$Form_FloatInput$init,
 	select: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList),
 	multiSelect: _bluedogtraining$bdt_elm$Form_MultiSelect$init(_bluedogtraining$bdt_elm$MusicGenre$asNonempty),
-	searchSelect: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://swapi.co/api/people/?search=', _bluedogtraining$bdt_elm$StarWars$characterDecoder),
+	searchSelect: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://restcountries.eu/rest/v2/name/', _bluedogtraining$bdt_elm$Countries$countryDecoder),
 	datePicker: _bluedogtraining$bdt_elm$Form_DatePicker$init,
 	textArea: A2(
 		_bluedogtraining$bdt_elm$Form_TextArea$setReplacements,
@@ -31869,7 +31940,21 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																					_rtfeldman$elm_css$Html_Styled$map,
 																					_bluedogtraining$bdt_elm$Msg$SearchSelectMsg,
 																					_bluedogtraining$bdt_elm$Form_SearchSelect$render(
-																						_bluedogtraining$bdt_elm$Form_SearchSelect$view(model.searchSelect))),
+																						A2(
+																							_bluedogtraining$bdt_elm$Form_SearchSelect$setToLabel,
+																							function (option) {
+																								return A2(
+																									_elm_lang$core$Basics_ops['++'],
+																									option.name,
+																									A2(
+																										_elm_lang$core$Basics_ops['++'],
+																										' (',
+																										A2(
+																											_elm_lang$core$Basics_ops['++'],
+																											A2(_elm_lang$core$String$join, ', ', option.altSpellings),
+																											')')));
+																							},
+																							_bluedogtraining$bdt_elm$Form_SearchSelect$view(model.searchSelect)))),
 																				_1: {
 																					ctor: '::',
 																					_0: A2(
@@ -31924,7 +32009,7 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _bluedogtraining$bdt_elm$Main$main !== 'undefined') {
-    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (Form.SearchSelect.Internal.SearchResponse option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"TextAreaMsg":["Form.TextArea.Msg"],"InputMsg":["Form.Input.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg StarWars.Character"],"DatePickerMsg":["Form.DatePicker.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"StarWars.Character":{"args":[],"type":"{ name : String, hairColor : String, gender : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.SearchSelect.Internal.SearchResponse":{"args":["option"],"type":"{ options : List option }"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"TextAreaMsg":["Form.TextArea.Msg"],"InputMsg":["Form.Input.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

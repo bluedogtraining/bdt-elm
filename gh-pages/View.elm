@@ -112,6 +112,7 @@ view model =
                                     []
                                     [ text "Search Select" ]
                                 , SearchSelect.view model.searchSelect
+                                    |> SearchSelect.setToLabel (\option -> option.name ++ " (" ++ String.join ", " option.altSpellings ++ ")")
                                     |> SearchSelect.render
                                     |> Html.map SearchSelectMsg
                                 , div

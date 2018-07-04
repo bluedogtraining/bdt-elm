@@ -23,6 +23,7 @@ import VirtualDom
 import Dom
 import Dict
 import Task
+import Color
 
 import List.Extra as List
 import List.Nonempty as Nonempty exposing (Nonempty)
@@ -32,6 +33,11 @@ import Json.Decode as Decode exposing (Decoder)
 import Form.Helpers as Form
 import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
+
+import Icon
+import Icon.Internal as Icon
+
+import Form.MultiSelect.Css as Css
 
 
 -- MODEL --
@@ -295,24 +301,21 @@ closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
 closed state viewState =
 
     div
-        [ class "bdt-elm select-container"
+        [ Css.container
         , tabindex -1
         ]
         [ div
-            [ class "input option-label-container"
-            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            [ Css.input viewState.isError viewState.isLocked
             , tabindex 0 ? not viewState.isLocked
             , onFocus Open ? not viewState.isLocked
             ]
             [ div
-                [ class "option-label"
+                [ Css.title
                 , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
                 ]
                 [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
             , clearButton state viewState
-            , Html.divIf (not viewState.isLocked)
-                [ class "material-icons" ]
-                [ text "expand_more" ]
+            , Html.divIf (not viewState.isLocked) [] [ Icon.render Icon.ExpandMore 16 Color.black ]
             ]
         ]
         |> Html.toUnstyled
@@ -322,10 +325,9 @@ open : State option -> ViewState option -> VirtualDom.Node (Msg option)
 open state viewState =
 
     div
-        [ class "bdt-elm select-container"
-        ]
+        [ Css.container ]
         [ div
-            [ class "input option-label"
+            [ Css.input viewState.isError viewState.isLocked
             , tabindex -1
             , onBlur Blur
             , onKeyboardInput <| KeyboardInput False
@@ -341,10 +343,8 @@ clearButton : State option -> ViewState option -> Html (Msg option)
 clearButton state viewState =
 
     Html.divIf (viewState.isClearable && List.isEmpty (Resettable.getValue state.selectedOptions))
-        [ class "material-icons"
-        , onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear)
-        ]
-        [ text "clear" ]
+        [ onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear) ]
+        [ Icon.render Icon.Clear 12 Color.black ]
 
 
 optionText : String -> (option -> String) -> Resettable (List option) -> String
@@ -364,7 +364,7 @@ optionList : State option -> ViewState option -> Html (Msg option)
 optionList state viewState =
 
     div
-        [ class "option-list" ]
+        [ Css.optionList ]
         (List.map (optionItem state viewState) (Nonempty.toList state.options))
 
 
@@ -372,8 +372,7 @@ optionItem : State option -> ViewState option -> option -> Html (Msg option)
 optionItem state viewState option =
 
     div
-        [ class "option-item"
-        , classList [("disabled", viewState.isOptionDisabled option), ("focus", state.focusedOption == Just option)]
+        [ Css.optionItem (viewState.isOptionDisabled option) (state.focusedOption == Just option)
         , id <| Form.toHtmlId option
         , handleMouseDown state.selectedOptions option
         , onFocus <| Focus option
@@ -382,8 +381,12 @@ optionItem state viewState option =
         , tabindex -1
         ]
         [ div
-            [ class "material-icons" ]
-            [ text (if List.member option (Resettable.getValue state.selectedOptions) then "check_box" else "check_box_outline_blank") ]
+            [ Css.checkBox ]
+            [
+                if List.member option (Resettable.getValue state.selectedOptions)
+                then Icon.render Icon.CheckBoxChecked 14 Color.black
+                else Icon.render Icon.CheckBoxUnchecked 14 Color.black
+            ]
         , text (viewState.toLabel option)
         ]
 

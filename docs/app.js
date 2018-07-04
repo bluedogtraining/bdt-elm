@@ -23568,6 +23568,11 @@ var _bluedogtraining$bdt_elm$Resettable$update = F2(
 		}
 	});
 
+var _bluedogtraining$bdt_elm$Icon$CheckBoxUnchecked = {ctor: 'CheckBoxUnchecked'};
+var _bluedogtraining$bdt_elm$Icon$CheckBoxChecked = {ctor: 'CheckBoxChecked'};
+var _bluedogtraining$bdt_elm$Icon$Clear = {ctor: 'Clear'};
+var _bluedogtraining$bdt_elm$Icon$ExpandMore = {ctor: 'ExpandMore'};
+
 var _elm_lang$html$Html$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
 var _elm_lang$html$Html$program = _elm_lang$virtual_dom$VirtualDom$program;
 var _elm_lang$html$Html$beginnerProgram = function (_p0) {
@@ -24161,8 +24166,105 @@ var _elm_community$elm_material_icons$Material_Icons_Content$add_circle = _elm_c
 var _elm_community$elm_material_icons$Material_Icons_Content$add_box = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z');
 var _elm_community$elm_material_icons$Material_Icons_Content$add = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z');
 
-var _bluedogtraining$bdt_elm$Icon$icon = F2(
-	function (size, materialIcon) {
+var _elm_community$elm_material_icons$Material_Icons_Toggle$star_half = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M22 9.74l-7.19-.62L12 2.5 9.19 9.13 2 9.74l5.46 4.73-1.64 7.03L12 17.77l6.18 3.73-1.63-7.03L22 9.74zM12 15.9V6.6l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.9z');
+var _elm_community$elm_material_icons$Material_Icons_Toggle$star_border = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z');
+var _elm_community$elm_material_icons$Material_Icons_Toggle$star = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z');
+var _elm_community$elm_material_icons$Material_Icons_Toggle$radio_button_unchecked = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z');
+var _elm_community$elm_material_icons$Material_Icons_Toggle$radio_button_checked = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z');
+var _elm_community$elm_material_icons$Material_Icons_Toggle$indeterminate_check_box = F2(
+	function (color, size) {
+		var stringColor = _elm_community$elm_material_icons$Material_Icons_Internal$toRgbaString(color);
+		var stringSize = _elm_lang$core$Basics$toString(size);
+		return A2(
+			_elm_lang$svg$Svg$svg,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$width(stringSize),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$height(stringSize),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 24 24'),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$defs,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$path,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$id('a'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$d('M0 0h24v24H0z'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_elm_lang$virtual_dom$VirtualDom$node,
+						'clipPath',
+						{
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$id('b'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$svg$Svg$use,
+								{
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$xlinkHref('#a'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$overflow('visible'),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$path,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$d('M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$clipPath('url(#b)'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$fill(stringColor),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _elm_community$elm_material_icons$Material_Icons_Toggle$check_box_outline_blank = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z');
+var _elm_community$elm_material_icons$Material_Icons_Toggle$check_box = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z');
+
+var _bluedogtraining$bdt_elm$Icon_Internal$renderIcon = F3(
+	function (size, color, materialIcon) {
 		return A2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
@@ -24206,14 +24308,26 @@ var _bluedogtraining$bdt_elm$Icon$icon = F2(
 						},
 						{
 							ctor: '::',
-							_0: A2(materialIcon, _elm_lang$core$Color$black, size),
+							_0: A2(materialIcon, color, size),
 							_1: {ctor: '[]'}
 						})),
 				_1: {ctor: '[]'}
 			});
 	});
-var _bluedogtraining$bdt_elm$Icon$expand_more = A2(_bluedogtraining$bdt_elm$Icon$icon, 16, _elm_community$elm_material_icons$Material_Icons_Navigation$expand_more);
-var _bluedogtraining$bdt_elm$Icon$clear = A2(_bluedogtraining$bdt_elm$Icon$icon, 12, _elm_community$elm_material_icons$Material_Icons_Content$clear);
+var _bluedogtraining$bdt_elm$Icon_Internal$render = F3(
+	function (icon, size, color) {
+		var _p0 = icon;
+		switch (_p0.ctor) {
+			case 'ExpandMore':
+				return A3(_bluedogtraining$bdt_elm$Icon_Internal$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Navigation$expand_more);
+			case 'Clear':
+				return A3(_bluedogtraining$bdt_elm$Icon_Internal$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Content$clear);
+			case 'CheckBoxChecked':
+				return A3(_bluedogtraining$bdt_elm$Icon_Internal$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Toggle$check_box);
+			default:
+				return A3(_bluedogtraining$bdt_elm$Icon_Internal$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Toggle$check_box_outline_blank);
+		}
+	});
 
 var _bluedogtraining$bdt_elm$Form_Select_Css$optionItem = F2(
 	function (isDisabled, isFocused) {
@@ -24363,8 +24477,8 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$focusOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.Select.Internal',
 				{
-					start: {line: 226, column: 5},
-					end: {line: 231, column: 127}
+					start: {line: 228, column: 5},
+					end: {line: 233, column: 127}
 				},
 				_p0)(
 				A2(
@@ -24615,7 +24729,7 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$clearButton = F2(
 			},
 			{
 				ctor: '::',
-				_0: _bluedogtraining$bdt_elm$Icon$clear,
+				_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$Clear, 12, _elm_lang$core$Color$black),
 				_1: {ctor: '[]'}
 			});
 	});
@@ -24705,7 +24819,7 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$closed = F2(
 								_0: A2(_bluedogtraining$bdt_elm$Form_Select_Internal$clearButton, state, viewState),
 								_1: {
 									ctor: '::',
-									_0: _bluedogtraining$bdt_elm$Icon$expand_more,
+									_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ExpandMore, 16, _elm_lang$core$Color$black),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -29076,6 +29190,38 @@ var _mgold$elm_nonempty_list$List_Nonempty$unzip = function (_p97) {
 	};
 };
 
+var _bluedogtraining$bdt_elm$Form_MultiSelect_Css$checkBox = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$marginRight(
+			_rtfeldman$elm_css$Css$px(6)),
+		_1: {ctor: '[]'}
+	});
+var _bluedogtraining$bdt_elm$Form_MultiSelect_Css$optionItem = F2(
+	function (isDisabled, isFocused) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			A2(_bluedogtraining$bdt_elm$Form_Css$selectOptionItem, isDisabled, isFocused));
+	});
+var _bluedogtraining$bdt_elm$Form_MultiSelect_Css$optionList = _rtfeldman$elm_css$Html_Styled_Attributes$css(_bluedogtraining$bdt_elm$Form_Css$selectOptionList);
+var _bluedogtraining$bdt_elm$Form_MultiSelect_Css$title = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$flexGrow(
+			_rtfeldman$elm_css$Css$int(1)),
+		_1: {ctor: '[]'}
+	});
+var _bluedogtraining$bdt_elm$Form_MultiSelect_Css$input = F2(
+	function (isError, isLocked) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			A2(_bluedogtraining$bdt_elm$Form_Css$select, isError, isLocked));
+	});
+var _bluedogtraining$bdt_elm$Form_MultiSelect_Css$container = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
+		_1: {ctor: '[]'}
+	});
+
 var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$getId = function (_) {
 	return _.id;
 };
@@ -29245,8 +29391,8 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$focusOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.MultiSelect.Internal',
 				{
-					start: {line: 162, column: 5},
-					end: {line: 167, column: 128}
+					start: {line: 168, column: 5},
+					end: {line: 173, column: 128}
 				},
 				_p2)(
 				A2(
@@ -29276,8 +29422,8 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$unselectOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.MultiSelect.Internal',
 				{
-					start: {line: 151, column: 5},
-					end: {line: 156, column: 107}
+					start: {line: 157, column: 5},
+					end: {line: 162, column: 107}
 				},
 				_p4)(
 				A2(
@@ -29302,8 +29448,8 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$selectOption = F2(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Form.MultiSelect.Internal',
 				{
-					start: {line: 140, column: 5},
-					end: {line: 145, column: 126}
+					start: {line: 146, column: 5},
+					end: {line: 151, column: 126}
 				},
 				_p6)(
 				A2(
@@ -29557,20 +29703,16 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$clearButton = F2(
 				_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedOptions)),
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
-				_1: {
-					ctor: '::',
-					_0: A3(
-						_rtfeldman$elm_css$Html_Styled_Events$onWithOptions,
-						'mousedown',
-						{preventDefault: true, stopPropagation: true},
-						_elm_lang$core$Json_Decode$succeed(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$Clear)),
-					_1: {ctor: '[]'}
-				}
+				_0: A3(
+					_rtfeldman$elm_css$Html_Styled_Events$onWithOptions,
+					'mousedown',
+					{preventDefault: true, stopPropagation: true},
+					_elm_lang$core$Json_Decode$succeed(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$Clear)),
+				_1: {ctor: '[]'}
 			},
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('clear'),
+				_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$Clear, 12, _elm_lang$core$Color$black),
 				_1: {ctor: '[]'}
 			});
 	});
@@ -29611,7 +29753,7 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$closed = F2(
 				_rtfeldman$elm_css$Html_Styled$div,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('bdt-elm select-container'),
+					_0: _bluedogtraining$bdt_elm$Form_MultiSelect_Css$container,
 					_1: {
 						ctor: '::',
 						_0: _rtfeldman$elm_css$Html_Styled_Attributes$tabindex(-1),
@@ -29624,33 +29766,20 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$closed = F2(
 						_rtfeldman$elm_css$Html_Styled$div,
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('input option-label-container'),
+							_0: A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Css$input, viewState.isError, viewState.isLocked),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-									{
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'locked', _1: viewState.isLocked},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'error', _1: viewState.isError},
-											_1: {ctor: '[]'}
-										}
-									}),
+								_0: A2(
+									_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+									_rtfeldman$elm_css$Html_Styled_Attributes$tabindex(0),
+									!viewState.isLocked),
 								_1: {
 									ctor: '::',
 									_0: A2(
 										_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-										_rtfeldman$elm_css$Html_Styled_Attributes$tabindex(0),
+										_rtfeldman$elm_css$Html_Styled_Events$onFocus(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$Open),
 										!viewState.isLocked),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-											_rtfeldman$elm_css$Html_Styled_Events$onFocus(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$Open),
-											!viewState.isLocked),
-										_1: {ctor: '[]'}
-									}
+									_1: {ctor: '[]'}
 								}
 							}
 						},
@@ -29660,7 +29789,7 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$closed = F2(
 								_rtfeldman$elm_css$Html_Styled$div,
 								{
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('option-label'),
+									_0: _bluedogtraining$bdt_elm$Form_MultiSelect_Css$title,
 									_1: {
 										ctor: '::',
 										_0: _rtfeldman$elm_css$Html_Styled_Attributes$title(
@@ -29682,14 +29811,10 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$closed = F2(
 									_0: A3(
 										_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
 										!viewState.isLocked,
+										{ctor: '[]'},
 										{
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled$text('expand_more'),
+											_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ExpandMore, 16, _elm_lang$core$Color$black),
 											_1: {ctor: '[]'}
 										}),
 									_1: {ctor: '[]'}
@@ -29747,53 +29872,35 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$optionItem = F3(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('option-item'),
+				_0: A2(
+					_bluedogtraining$bdt_elm$Form_MultiSelect_Css$optionItem,
+					viewState.isOptionDisabled(option),
+					_elm_lang$core$Native_Utils.eq(
+						state.focusedOption,
+						_elm_lang$core$Maybe$Just(option))),
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-						{
-							ctor: '::',
-							_0: {
-								ctor: '_Tuple2',
-								_0: 'disabled',
-								_1: viewState.isOptionDisabled(option)
-							},
-							_1: {
-								ctor: '::',
-								_0: {
-									ctor: '_Tuple2',
-									_0: 'focus',
-									_1: _elm_lang$core$Native_Utils.eq(
-										state.focusedOption,
-										_elm_lang$core$Maybe$Just(option))
-								},
-								_1: {ctor: '[]'}
-							}
-						}),
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$id(
+						_bluedogtraining$bdt_elm$Form_Helpers$toHtmlId(option)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$id(
-							_bluedogtraining$bdt_elm$Form_Helpers$toHtmlId(option)),
+						_0: A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$handleMouseDown, state.selectedOptions, option),
 						_1: {
 							ctor: '::',
-							_0: A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$handleMouseDown, state.selectedOptions, option),
+							_0: _rtfeldman$elm_css$Html_Styled_Events$onFocus(
+								_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$Focus(option)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Events$onFocus(
-									_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$Focus(option)),
+								_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(
+									_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$BlurOption(option)),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(
-										_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$BlurOption(option)),
+									_0: _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$onKeyboardInput(
+										_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$KeyboardInput(viewState.isLocked)),
 									_1: {
 										ctor: '::',
-										_0: _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$onKeyboardInput(
-											_bluedogtraining$bdt_elm$Form_MultiSelect_Internal$KeyboardInput(viewState.isLocked)),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$tabindex(-1),
-											_1: {ctor: '[]'}
-										}
+										_0: _rtfeldman$elm_css$Html_Styled_Attributes$tabindex(-1),
+										_1: {ctor: '[]'}
 									}
 								}
 							}
@@ -29807,16 +29914,15 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$optionItem = F3(
 					_rtfeldman$elm_css$Html_Styled$div,
 					{
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('material-icons'),
+						_0: _bluedogtraining$bdt_elm$Form_MultiSelect_Css$checkBox,
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text(
-							A2(
-								_elm_lang$core$List$member,
-								option,
-								_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedOptions)) ? 'check_box' : 'check_box_outline_blank'),
+						_0: A2(
+							_elm_lang$core$List$member,
+							option,
+							_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedOptions)) ? A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$CheckBoxChecked, 14, _elm_lang$core$Color$black) : A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$CheckBoxUnchecked, 14, _elm_lang$core$Color$black),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -29833,7 +29939,7 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$optionList = F2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('option-list'),
+				_0: _bluedogtraining$bdt_elm$Form_MultiSelect_Css$optionList,
 				_1: {ctor: '[]'}
 			},
 			A2(
@@ -29848,7 +29954,7 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$open = F2(
 				_rtfeldman$elm_css$Html_Styled$div,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('bdt-elm select-container'),
+					_0: _bluedogtraining$bdt_elm$Form_MultiSelect_Css$container,
 					_1: {ctor: '[]'}
 				},
 				{
@@ -29857,7 +29963,7 @@ var _bluedogtraining$bdt_elm$Form_MultiSelect_Internal$open = F2(
 						_rtfeldman$elm_css$Html_Styled$div,
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('input option-label'),
+							_0: A2(_bluedogtraining$bdt_elm$Form_MultiSelect_Css$input, viewState.isError, viewState.isLocked),
 							_1: {
 								ctor: '::',
 								_0: _rtfeldman$elm_css$Html_Styled_Attributes$tabindex(-1),

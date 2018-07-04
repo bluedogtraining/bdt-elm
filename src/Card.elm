@@ -109,6 +109,5 @@ renderCardBlock : CardBlock msg -> Html msg
 renderCardBlock (CardBlock cardBlockConfig) =
 
     div
-        [ Css.block cardBlockConfig.defaultCols cardBlockConfig.sizes
-        ]
+        [ Css.block cardBlockConfig.defaultCols cardBlockConfig.sizes ]
         cardBlockConfig.children

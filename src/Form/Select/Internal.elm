@@ -23,6 +23,7 @@ import VirtualDom
 import Dom
 import Dict
 import Task
+import Color
 
 import List.Extra as List
 
@@ -33,6 +34,7 @@ import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 import Icon
+import Icon.Internal as Icon
 
 import Form.Select.Css as Css
 
@@ -280,7 +282,7 @@ closed state viewState =
                 ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             , clearButton state viewState
-            , Icon.expand_more
+            , Icon.render Icon.ExpandMore 16 Color.black
             ]
         ]
         |> Html.toUnstyled
@@ -312,7 +314,7 @@ clearButton state viewState =
 
     Html.divIf (viewState.isClearable && Resettable.getValue state.selectedOption /= Nothing)
         [ onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear) ]
-        [ Icon.clear ]
+        [ Icon.render Icon.Clear 12 Color.black ]
 
 
 optionList : State option -> ViewState option -> Html (Msg option)

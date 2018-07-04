@@ -21,6 +21,8 @@ type alias Model =
     , multiSelect : MultiSelect.Model MusicGenre
     , searchSelect : SearchSelect.Model Country
     , datePicker : DatePicker.Model
+    , datePicker2 : DatePicker.Model
+    , datePicker3 : DatePicker.Model
     , textArea : TextArea.Model
     }
 
@@ -34,5 +36,7 @@ initialModel =
     , multiSelect = MultiSelect.init MusicGenre.asNonempty
     , searchSelect = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Countries.countryDecoder
     , datePicker = DatePicker.init
+    , datePicker2 = DatePicker.init
+    , datePicker3 = DatePicker.init
     , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [("[]", "☐")]
     }

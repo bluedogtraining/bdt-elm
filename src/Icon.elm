@@ -6,3 +6,6 @@ type Icon
     | Clear
     | CheckBoxChecked
     | CheckBoxUnchecked
+    | Calendar
+    | ChevronLeft
+    | ChevronRight

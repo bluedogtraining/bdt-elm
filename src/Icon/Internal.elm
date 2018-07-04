@@ -12,6 +12,7 @@ import Color exposing (Color)
 import Material.Icons.Navigation as MaterialIcon
 import Material.Icons.Content as MaterialIcon
 import Material.Icons.Toggle as MaterialIcon
+import Material.Icons.Action as MaterialIcon
 
 import Icon exposing (Icon (..))
 
@@ -31,6 +32,15 @@ render icon size color =
 
         CheckBoxUnchecked ->
             renderIcon size color MaterialIcon.check_box_outline_blank
+
+        Calendar ->
+            renderIcon size color MaterialIcon.perm_contact_calendar
+
+        ChevronLeft ->
+            renderIcon size color MaterialIcon.chevron_left
+
+        ChevronRight ->
+            renderIcon size color MaterialIcon.chevron_right
 
 
 renderIcon : Int -> Color -> (Color -> Int -> Svg msg) -> Html msg

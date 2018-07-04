@@ -21,4 +21,6 @@ type Msg
     | MultiSelectMsg (MultiSelect.Msg MusicGenre)
     | SearchSelectMsg (SearchSelect.Msg Country)
     | DatePickerMsg DatePicker.Msg
+    | DatePicker2Msg DatePicker.Msg
+    | DatePicker3Msg DatePicker.Msg
     | TextAreaMsg TextArea.Msg

@@ -195,11 +195,8 @@ handleKeyboardInput state keyboardInput =
         Just focusedOption ->
             case keyboardInput of
                 Enter ->
-                    { state
-                        | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
-                        , isOpen = False
-                        , input = ""
-                    } ! []
+                    { state | selectedOption = Resettable.update (Just focusedOption) state.selectedOption }
+                        ! [ Task.attempt DomFocus (Dom.blur "OPEN_SEARCH_SELECT") ]
 
                 Up ->
                     let
@@ -302,7 +299,7 @@ open state viewState =
         [ Css.container ]
         [ input
             [ Css.input viewState.isLocked viewState.isError
-            , Html.maybeAttribute id viewState.id
+            , id "OPEN_SEARCH_SELECT"
             , type_ "text"
             , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")
             , tabindex -1

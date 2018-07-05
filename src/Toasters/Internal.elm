@@ -99,7 +99,9 @@ item : Toaster -> Html Msg
 item toaster =
 
     div
-        [ Css.toaster toaster.color toaster.ticks ]
+        [ Css.toaster toaster.color toaster.ticks
+        , onClick <| Close toaster
+        ]
         [ div
             [ Css.toasterMessage ]
             [ text toaster.message ]

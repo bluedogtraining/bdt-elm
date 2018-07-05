@@ -17,6 +17,7 @@ card =
         , boxShadow4 (px 0) (px 1) (px 3) (rgba 0 0 0 0.12)
         , borderRadius <| px 2
         , color <| hex "4f4f4f"
+        , marginBottom <| px 15
         ]
 
 

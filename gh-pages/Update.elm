@@ -58,5 +58,21 @@ update msg model =
             in
                 { model | datePicker = newDatePicker } ! [ Cmd.map DatePickerMsg cmd ]
 
+        DatePicker2Msg datePickerMsg ->
+            let
+                (newDatePicker, cmd) =
+                    DatePicker.update datePickerMsg model.datePicker2
+
+            in
+                { model | datePicker2 = newDatePicker } ! [ Cmd.map DatePicker2Msg cmd ]
+
+        DatePicker3Msg datePickerMsg ->
+            let
+                (newDatePicker, cmd) =
+                    DatePicker.update datePickerMsg model.datePicker3
+
+            in
+                { model | datePicker3 = newDatePicker } ! [ Cmd.map DatePicker3Msg cmd ]
+
         TextAreaMsg textAreaMsg ->
             { model | textArea = TextArea.update textAreaMsg model.textArea } ! []

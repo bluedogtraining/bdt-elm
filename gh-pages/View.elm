@@ -116,11 +116,58 @@ view model =
                                     []
                                     [ text "Search Select" ]
                                 , SearchSelect.view model.searchSelect
+                                    |> SearchSelect.setToLabel (\option -> option.name ++ " (" ++ String.join ", " option.altSpellings ++ ")")
                                     |> SearchSelect.render
                                     |> Html.map SearchSelectMsg
                                 , div
                                     []
                                     [ text <| "Value: " ++ toString (SearchSelect.getSelectedOption model.searchSelect) ]
+                                ]
+                            ]
+                        |> Card.footer []
+                        |> Card.render
+                    ]
+                , Grid.colSizes Twelve [ Lg ~ Six ]
+                    [ Card.view
+                        |> Card.header "Date Pickers!" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ label
+                                    []
+                                    [ text "Simple Date Picker" ]
+                                , DatePicker.view model.datePicker
+                                    |> DatePicker.render
+                                    |> Html.map DatePickerMsg
+                                , div
+                                    []
+                                    [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker) ]
+                                ]
+                            , Card.block Twelve
+                                [ label
+                                    []
+                                    [ text "Date Picker with min and max dates" ]
+                                , DatePicker.view model.datePicker2
+                                    |> DatePicker.setIsClearable True
+                                    |> DatePicker.setMinDate (Just <| Date.fromTime <| Time.second * 1506760131)
+                                    |> DatePicker.setMaxDate (Just <| Date.fromTime <| Time.second * 1549770131)
+                                    |> DatePicker.render
+                                    |> Html.map DatePicker2Msg
+                                , div
+                                    []
+                                    [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker2) ]
+                                ]
+                            , Card.block Twelve
+                                [ label
+                                    []
+                                    [ text "Date Time Picker!" ]
+                                , DatePicker.view model.datePicker3
+                                    |> DatePicker.setIsClearable True
+                                    |> DatePicker.setIncludeTime True
+                                    |> DatePicker.render
+                                    |> Html.map DatePicker3Msg
+                                , div
+                                    []
+                                    [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker3) ]
                                 ]
                             ]
                         |> Card.footer []
@@ -145,92 +192,3 @@ view model =
                 ]
             ]
         ]
-
-
---            , div
---                [ class "row" ]
---                [ div
---                    [ class "col-6" ]
---                    [ h2
---                        []
---                        [ text "Input" ]
---                    , Input.view model.input
---                        |> Input.render
---                        |> Html.map InputMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ Input.getValue model.input ]
---                    ]
---                , div
---                    [ class "col-6" ]
---                    [ h2
---                        []
---                        [ text "Int Input" ]
---                    , IntInput.view model.intInput
---                        |> IntInput.render
---                        |> Html.map IntInputMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ toString (IntInput.getValue model.intInput) ]
---                    , h2
---                        []
---                        [ text "Float Input" ]
---                    , FloatInput.view model.floatInput
---                        |> FloatInput.render
---                        |> Html.map FloatInputMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ toString (FloatInput.getValue model.floatInput) ]
---                    , h2
---                        []
---                        [ text "Select" ]
---                    , Select.view model.select
---                        |> Select.render
---                        |> Html.map SelectMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ toString (Select.getSelectedOption model.select) ]
---                    , h2
---                        []
---                        [ text "Multi Select" ]
---                    , MultiSelect.view model.multiSelect
---                        |> MultiSelect.render
---                        |> Html.map MultiSelectMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ toString (MultiSelect.getSelectedOptions model.multiSelect) ]
---                    , h2
---                        []
---                        [ text "Search Select" ]
---                    , SearchSelect.view model.searchSelect
---                        |> SearchSelect.render
---                        |> Html.map SearchSelectMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ toString (SearchSelect.getSelectedOption model.searchSelect) ]
---                    , h2
---                        []
---                        [ text "Date Picker" ]
---                    , DatePicker.view model.datePicker
---                        |> DatePicker.setIsClearable True
---                        |> DatePicker.setIncludeTime True
---                        |> DatePicker.setMinDate (Just <| Date.fromTime <| Time.second * 1506760131)
---                        |> DatePicker.setMaxDate (Just <| Date.fromTime <| Time.second * 1549770131)
---                        |> DatePicker.render
---                        |> Html.map DatePickerMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker) ]
---                    , h2
---                        []
---                        [ text "TextArea" ]
---                    , TextArea.view model.textArea
---                        |> TextArea.render
---                        |> Html.map TextAreaMsg
---                    , div
---                        []
---                        [ text <| "Value: " ++ TextArea.getValue model.textArea ]
---                    ]
---                ]
---            ]
---        ]

@@ -25,6 +25,7 @@ import Dom
 import Dict
 import Task
 import Date exposing (Date)
+import Color
 
 import Date.Extra.Core as Date
 import Date.Extra.Compare as Date
@@ -36,9 +37,13 @@ import Form.Helpers as Form
 import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
+import Icon
+import Icon.Internal as Icon
+
 import Form.Select as Select
 
 import Form.DatePicker.Helpers as Helpers
+import Form.DatePicker.Css as Css
 
 
 -- MODEL --
@@ -357,20 +362,19 @@ closed : State -> ViewState -> VirtualDom.Node Msg
 closed state viewState =
 
    div
-        [ class "bdt-elm datepicker-container" ]
+        [ Css.container ]
         [ div
-            [ class "input"
-            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            [ Css.input viewState.isLocked viewState.isError
             , tabindex 0 ? not viewState.isLocked
             , onFocus (Open viewState.minDate viewState.maxDate viewState.includeTime) ? not viewState.isLocked
             , onClick (Open viewState.minDate viewState.maxDate viewState.includeTime) ? not viewState.isLocked
             ]
             [ div
-                [ class "date" ]
+                [ Css.title ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel) ]
-            , div
-                [ class "material-icons" ]
-                [ text <| if viewState.isInput then "calendar_today" else "" ]
+            , Html.divIf viewState.isInput
+                []
+                [ Icon.render Icon.Calendar 16 Color.black ]
             ]
         ]
         |> Html.toUnstyled
@@ -380,20 +384,19 @@ open : State -> ViewState -> VirtualDom.Node Msg
 open state viewState =
 
    div
-        [ class "bdt-elm datepicker-container" ]
+        [ Css.container ]
         [ div
-            [ class "input"
-            , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+            [ Css.input viewState.isLocked viewState.isError
             , tabindex 0
             , id "FORM_DATEPICKER"
             , onBlur Blur
             ]
             [ div
-                [ class "date" ]
+                [ Css.title ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel)  ]
-            , div
-                [ class "material-icons" ]
-                [ text <| if viewState.isInput then "calendar_today" else "" ]
+            , Html.divIf viewState.isInput
+                []
+                [ Icon.render Icon.Calendar 16 Color.black ]
             ]
         , calendar state viewState
         ]
@@ -409,11 +412,11 @@ calendar state viewState =
 
         Just date ->
             div
-                [ class "calendar"
+                [ Css.calendar
                 , disableMouseDown ? not (Helpers.isTimeFocused state.time) ]
                 [ calendarNavigation state viewState date
                 , div
-                    [ class "week-day-list" ]
+                    [ Css.weekDayList ]
                     (List.map calendarWeekDay ["mon", "tue", "wed", "thu", "fri", "sat", "sun"])
                 , div
                     []
@@ -432,11 +435,11 @@ calendarNavigation : State -> ViewState -> Date -> Html Msg
 calendarNavigation state viewState navigationDate =
 
     div
-        [ class "navigation" ]
+        [ Css.navigation ]
         [ previousYearArrow viewState navigationDate
         , previousMonthArrow viewState navigationDate
         , div
-            [ class "date" ]
+            [ Css.date ]
             [ text (calendarNavigationTitle navigationDate) ]
         , nextMonthArrow viewState navigationDate
         , nextYearArrow viewState navigationDate
@@ -459,16 +462,13 @@ previousYearArrow viewState navigationDate =
 
     in
         div
-            [ class "year-arrows"
-            , classList [("disabled", isDisabled)]
+            [ Css.yearArrows isDisabled
             , onClick (PreviousYear viewState.minDate) ? not isDisabled
             ]
             [ div
-                [ class "material-icons" ]
-                [ text "chevron_left" ]
-            , div
-                [ class "material-icons" ]
-                [ text "chevron_left" ]
+                [ Css.offsetYearArrow ]
+                [ Icon.render Icon.ChevronLeft 16 Color.black ]
+            , Icon.render Icon.ChevronLeft 16 Color.black
             ]
 
 
@@ -482,11 +482,10 @@ previousMonthArrow viewState navigationDate =
 
     in
         div
-            [ classList [("disabled", isDisabled)]
-            , class "material-icons month-arrows"
+            [ Css.monthArrows isDisabled
             , onClick PreviousMonth ? not isDisabled
             ]
-            [ text "chevron_left" ]
+            [ Icon.render Icon.ChevronLeft 16 Color.black ]
 
 
 nextYearArrow : ViewState -> Date -> Html Msg
@@ -499,16 +498,13 @@ nextYearArrow viewState navigationDate =
 
     in
         div
-            [ class "year-arrows"
-            , classList [("disabled", isDisabled)]
+            [ Css.yearArrows isDisabled
             , onClick (NextYear viewState.maxDate) ? not isDisabled
             ]
             [ div
-                [ class "material-icons" ]
-                [ text "chevron_right" ]
-            , div
-                [ class "material-icons" ]
-                [ text "chevron_right" ]
+                [ Css.offsetYearArrow ]
+                [ Icon.render Icon.ChevronRight 16 Color.black ]
+            , Icon.render Icon.ChevronRight 16 Color.black
             ]
 
 
@@ -522,17 +518,16 @@ nextMonthArrow viewState navigationDate =
 
     in
         div
-            [ classList [("disabled", isDisabled)]
-            , class "material-icons month-arrows"
+            [ Css.monthArrows isDisabled
             , onClick NextMonth ? not isDisabled
             ]
-            [ text "chevron_right" ]
+            [ Icon.render Icon.ChevronRight 16 Color.black ]
 
 
 calendarWeekDay : String -> Html Msg
 calendarWeekDay day =
     div
-        [ class "week-day-item" ]
+        [ Css.weekDayItem ]
         [ text day ]
 
 
@@ -548,14 +543,14 @@ calendarDays state viewState navigationDate =
 
     in
         div
-            [ class "calendar-day-list" ]
+            []
             (List.map (calendarDayRow state viewState firstOfMonth) rows)
 
 
 calendarDayRow : State -> ViewState -> Date -> List (Bool, Int) -> Html Msg
 calendarDayRow state viewState firstOfMonth row =
     div
-        [ class "calendar-day-row" ]
+        [ Css.calendarDayRow ]
         (List.map (calendarDay state viewState firstOfMonth) row)
 
 
@@ -589,8 +584,7 @@ calendarDay state viewState firstOfMonth (isCurrentMonth, dayNumber) =
 
     in
         div
-            [ class "calendar-day-item"
-            , classList [("selected", isSelected), ("selected-time-date", isSelectedTimeDate), ("selectable", isCurrentMonth && isInRange)]
+            [ Css.calendarDayItem isSelected isSelectedTimeDate (isCurrentMonth && isInRange)
             , onClick (SelectDay date viewState.includeTime) ? isCurrentMonth && isInRange ]
             [ text (toString dayNumber) ]
 
@@ -614,12 +608,12 @@ timePicker time selectedDate =
 
     in
         div
-            [ class "timepicker-container" ]
+            [ Css.timePickerContainer ]
             [ div
-                [ class "select-container"
+                [ Css.selectContainer
                 , onMouseDown (OpenTimeSelect Hours |> TimeMsg) ? time.focusedSelect /= Just Hours ]
                 [ div
-                    [ class "select" ]
+                    [ Css.select ]
                     [ Select.view time.hours
                         |> Select.setToLabel Helpers.selectToLabel
                         |> Select.setId "FORM_DATEPICKER_HOURS"
@@ -628,16 +622,16 @@ timePicker time selectedDate =
                     ]
                 ]
             , div
-                [ class "colon" ]
+                [ Css.colon ]
                 [ div
                     []
                     [ text ":" ]
                 ]
             , div
-                [ class "select-container"
+                [ Css.selectContainer
                 , onMouseDown (OpenTimeSelect Minutes |> TimeMsg) ? time.focusedSelect /= Just Minutes ]
                 [ div
-                    [ class "select" ]
+                    [ Css.select ]
                     [ Select.view time.minutes
                         |> Select.setToLabel Helpers.selectToLabel
                         |> Select.setId "FORM_DATEPICKER_MINUTES"
@@ -646,16 +640,16 @@ timePicker time selectedDate =
                     ]
                 ]
             , div
-                [ class "colon" ]
+                [ Css.colon ]
                 [ div
                     []
                     [ text ":" ]
                 ]
             , div
-                [ class "select-container"
+                [ Css.selectContainer
                 , onMouseDown (OpenTimeSelect Seconds |> TimeMsg) ? time.focusedSelect /= Just Seconds ]
                 [ div
-                    [ class "select" ]
+                    [ Css.select ]
                     [ Select.view time.seconds
                         |> Select.setToLabel Helpers.selectToLabel
                         |> Select.setId "FORM_DATEPICKER_SECONDS"
@@ -664,11 +658,11 @@ timePicker time selectedDate =
                     ]
                 ]
             , div
-                [ class "apply-button-container" ]
+                [ Css.applyButtonContainer ]
                 [ div
-                    [ class "apply-button"
-                    , classList [("active", isTimeDateSelected || isDateSelected)]
-                    , onClick Apply ? isTimeDateSelected || isDateSelected ]
+                    [ Css.applyButton <| isTimeDateSelected || isDateSelected
+                    , onClick Apply ? isTimeDateSelected || isDateSelected
+                    ]
                     [ text "Apply" ]
                 ]
             ]
@@ -677,26 +671,17 @@ timePicker time selectedDate =
 clearDateContainer : State -> ViewState -> Html Msg
 clearDateContainer state viewState =
 
-    Html.divIf viewState.isClearable
-        []
-        [ clearDateButton state ]
+    Html.viewIf viewState.isClearable (clearDateButton state)
 
 
 clearDateButton : State -> Html Msg
 clearDateButton state =
 
-    case Resettable.getValue state.selectedDate of
-        Nothing ->
-            div
-                [ class "clear-button"
-                ]
-                [ text "clear currently selected date" ]
-
-        Just _ ->
-            div
-                [ class "clear-button active"
-                , onClick Clear ]
-                [ text "clear currently selected date" ]
+    div
+        [ Css.clearButton <| Resettable.getValue state.selectedDate /= Nothing
+        , onClick Clear ? Resettable.getValue state.selectedDate /= Nothing
+        ]
+        [ text "clear currently selected date" ]
 
 
 -- STATE SETTERS --

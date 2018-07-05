@@ -78,9 +78,14 @@ yearArrows isDisabled =
         arrowStyles isDisabled
         ++
         [ displayFlex
-        , nthChild "2"
-            [ marginRight <| px -14
-            ]
+        ]
+
+
+offsetYearArrow : Attribute msg
+offsetYearArrow =
+
+    css
+        [ marginRight <| px -12
         ]
 
 
@@ -126,103 +131,128 @@ calendarDayRow =
 calendarDayItem : Bool -> Bool -> Bool -> Attribute msg
 calendarDayItem isSelected isSelectedTimeDate isSelectable =
 
-    css
+    css <|
         [ displayFlex
+        , flexBasis <| px 0
         , flexGrow <| int 1
         , justifyContent center
         , alignItems center
         , padding <| px 8
         , margin <| px 3
         , borderRadius <| px 2
-        , backgroundColor <| if isSelectable then hex "f3f3f3" else hex "fbfbfb"
-        , color <| if isSelectable then hex "666666" else hex "ffffff"
         , cursor <| if isSelectable then pointer else notAllowed
+        ]
+        ++
+        calendarDayItemColors isSelected isSelectedTimeDate isSelectable
+
+
+calendarDayItemColors : Bool -> Bool -> Bool -> List Style
+calendarDayItemColors isSelected isSelectedTimeDate isSelectable =
+
+    case (isSelected, isSelectedTimeDate, isSelectable) of
+
+        (_, _, False) ->
+            [ backgroundColor <| hex "fbfbfb"
+            , color <| hex "dddddd"
+            ]
+
+        (True, _, _) ->
+            [ backgroundColor <| hex "6bb9f0"
+            , color <| hex "ffffff"
+            ]
+
+        (_, True, _) ->
+            [ backgroundColor <| hex "4b77be"
+            , color <| hex "ffffff"
+                , hover
+                    [ backgroundColor <| hex "6bb9f0"
+                    , color <| hex "ffffff"
+                    ]
+            ]
+
+        _ ->
+            [ backgroundColor <| hex "f3f3f3"
+            , color <| hex "666666"
+                , hover
+                    [ backgroundColor <| hex "6bb9f0"
+                    , color <| hex "ffffff"
+                    ]
+            ]
+
+
+clearButton : Bool -> Attribute msg
+clearButton isActive =
+
+    css
+        [ border3 (px 0) solid (hex "dddddd")
+        , borderTopWidth <| px 1
+        , margin4 (px 10) (px -15) (px -10) (px -15)
+        , displayFlex
+        , padding4 (px 10) (px 10) (px 5) (px 10)
+        , flexGrow <| int 1
+        , justifyContent center
+        , cursor <| if isActive then pointer else notAllowed
+        , color <| if isActive then hex "444444" else hex "dddddd"
         ]
 
 
---    .calendar-day-item {
---        display: flex;
---        flex: 1;
---        justify-content: center;
---        align-items: center;
---        padding: 8px;
---        margin: 3px;
---        border-radius: 2px;
---        background-color: #fbfbfb;
---        color: #dddddd;
---        cursor: not-allowed;
---
---        &.selectable {
---            background-color: #f3f3f3;
---            color: #666666;
---            cursor: pointer;
---
---            &:hover {
---                background-color: #6bb9f0;
---                color: #ffffff;
---            }
---
---            &.selected {
---                background-color: #6bb9f0;
---                color: #ffffff;
---            }
---
---            &.selected-time-date {
---                background-color: #4b77be;
---                color: #ffffff;
---            }
---        }
---    }
---
---.timepicker-container {
---    border: 1px solid #dddddd;
---    border-width: 1px 0;
---    margin: 10px -15px 10px -15px; // remove parent padding, so that we can stretch all the way to the borders
---    display: flex;
---    padding: 0px 10px;
---
---    .select-container {
---        display: flex;
---        align-items: center;
---        margin: 3px 5px;
---
---        .select {
---            width: 62px;
---        }
---    }
---
---    .colon {
---        display: flex;
---        align-items: center;
---    }
---
---    .apply-button-container {
---        flex-grow: 1;
---        display: flex;
---        justify-content: center;
---        align-items: center;
---
---        .apply-button {
---            padding: 8px 15px;
---            border-radius: 2px;
---            cursor: not-allowed;
---            color: #cccccc;
---            background-color: #ffffff;
---
---            &.active {
---                cursor: pointer;
---                color: #ffffff;
---                background-color: #2ecc71;
---            }
---        }
---    }
---}
---
---.clear-button {
---    flex-grow: 1;
---    text-align: center;
---    margin: -10px -15px -15px -15px; // remove parent padding, so that we can stretch all the way to the borders
---    padding: 15px 15px;
---    cursor: pointer;
---    color: #666666;
---}
+timePickerContainer : Attribute msg
+timePickerContainer =
+
+    css
+        [ border3 (px 0) solid (hex "dddddd")
+        , borderTopWidth <| px 1
+        , margin4 (px 10) (px -15) (px -10) (px -15)
+        , displayFlex
+        , padding2 (px 0) (px 10)
+        ]
+
+
+selectContainer : Attribute msg
+selectContainer =
+
+    css
+        [ displayFlex
+        , alignItems center
+        , margin2 (px 3) (px 5)
+        ]
+
+
+select : Attribute msg
+select =
+
+    css
+        [ width <| px 62
+        ]
+
+
+colon : Attribute msg
+colon =
+
+    css
+        [ displayFlex
+        , alignItems center
+        ]
+
+
+applyButtonContainer : Attribute msg
+applyButtonContainer =
+
+    css
+        [ flexGrow <| int 1
+        , displayFlex
+        , justifyContent center
+        , alignItems center
+        ]
+
+
+applyButton : Bool -> Attribute msg
+applyButton isActive =
+
+    css
+        [ padding2 (px 8) (px 15)
+        , borderRadius <| px 2
+        , cursor <| if isActive then pointer else notAllowed
+        , color <| if isActive then hex "ffffff" else hex "cccccc"
+        , backgroundColor <| if isActive then hex "2ecc71" else hex "ffffff"
+        ]

@@ -141,7 +141,7 @@ view model =
                             , Card.block Twelve
                                 [ label
                                     []
-                                    [ text "Date Picker with min and max dates)" ]
+                                    [ text "Date Picker with min and max dates" ]
                                 , DatePicker.view model.datePicker2
                                     |> DatePicker.setIsClearable True
                                     |> DatePicker.setMinDate (Just <| Date.fromTime <| Time.second * 1506760131)

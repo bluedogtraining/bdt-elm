@@ -389,7 +389,7 @@ open state viewState =
             [ Css.input viewState.isLocked viewState.isError
             , tabindex 0
             , id "FORM_DATEPICKER"
-            , onBlur Blur
+--            , onBlur Blur
             ]
             [ div
                 [ Css.title ]
@@ -465,7 +465,9 @@ previousYearArrow viewState navigationDate =
             [ Css.yearArrows isDisabled
             , onClick (PreviousYear viewState.minDate) ? not isDisabled
             ]
-            [ Icon.render Icon.ChevronLeft 16 Color.black
+            [ div
+                [ Css.offsetYearArrow ]
+                [ Icon.render Icon.ChevronLeft 16 Color.black ]
             , Icon.render Icon.ChevronLeft 16 Color.black
             ]
 
@@ -499,7 +501,9 @@ nextYearArrow viewState navigationDate =
             [ Css.yearArrows isDisabled
             , onClick (NextYear viewState.maxDate) ? not isDisabled
             ]
-            [ Icon.render Icon.ChevronRight 16 Color.black
+            [ div
+                [ Css.offsetYearArrow ]
+                [ Icon.render Icon.ChevronRight 16 Color.black ]
             , Icon.render Icon.ChevronRight 16 Color.black
             ]
 
@@ -604,12 +608,12 @@ timePicker time selectedDate =
 
     in
         div
-            [ class "timepicker-container" ]
+            [ Css.timePickerContainer ]
             [ div
-                [ class "select-container"
+                [ Css.selectContainer
                 , onMouseDown (OpenTimeSelect Hours |> TimeMsg) ? time.focusedSelect /= Just Hours ]
                 [ div
-                    [ class "select" ]
+                    [ Css.select ]
                     [ Select.view time.hours
                         |> Select.setToLabel Helpers.selectToLabel
                         |> Select.setId "FORM_DATEPICKER_HOURS"
@@ -618,16 +622,16 @@ timePicker time selectedDate =
                     ]
                 ]
             , div
-                [ class "colon" ]
+                [ Css.colon ]
                 [ div
                     []
                     [ text ":" ]
                 ]
             , div
-                [ class "select-container"
+                [ Css.selectContainer
                 , onMouseDown (OpenTimeSelect Minutes |> TimeMsg) ? time.focusedSelect /= Just Minutes ]
                 [ div
-                    [ class "select" ]
+                    [ Css.select ]
                     [ Select.view time.minutes
                         |> Select.setToLabel Helpers.selectToLabel
                         |> Select.setId "FORM_DATEPICKER_MINUTES"
@@ -636,16 +640,16 @@ timePicker time selectedDate =
                     ]
                 ]
             , div
-                [ class "colon" ]
+                [ Css.colon ]
                 [ div
                     []
                     [ text ":" ]
                 ]
             , div
-                [ class "select-container"
+                [ Css.selectContainer
                 , onMouseDown (OpenTimeSelect Seconds |> TimeMsg) ? time.focusedSelect /= Just Seconds ]
                 [ div
-                    [ class "select" ]
+                    [ Css.select ]
                     [ Select.view time.seconds
                         |> Select.setToLabel Helpers.selectToLabel
                         |> Select.setId "FORM_DATEPICKER_SECONDS"
@@ -654,11 +658,11 @@ timePicker time selectedDate =
                     ]
                 ]
             , div
-                [ class "apply-button-container" ]
+                [ Css.applyButtonContainer ]
                 [ div
-                    [ class "apply-button"
-                    , classList [("active", isTimeDateSelected || isDateSelected)]
-                    , onClick Apply ? isTimeDateSelected || isDateSelected ]
+                    [ Css.applyButton <| isTimeDateSelected || isDateSelected
+                    , onClick Apply ? isTimeDateSelected || isDateSelected
+                    ]
                     [ text "Apply" ]
                 ]
             ]
@@ -667,26 +671,17 @@ timePicker time selectedDate =
 clearDateContainer : State -> ViewState -> Html Msg
 clearDateContainer state viewState =
 
-    Html.divIf viewState.isClearable
-        []
-        [ clearDateButton state ]
+    Html.viewIf viewState.isClearable (clearDateButton state)
 
 
 clearDateButton : State -> Html Msg
 clearDateButton state =
 
-    case Resettable.getValue state.selectedDate of
-        Nothing ->
-            div
-                [ class "clear-button"
-                ]
-                [ text "clear currently selected date" ]
-
-        Just _ ->
-            div
-                [ class "clear-button active"
-                , onClick Clear ]
-                [ text "clear currently selected date" ]
+    div
+        [ Css.clearButton <| Resettable.getValue state.selectedDate /= Nothing
+        , onClick Clear ? Resettable.getValue state.selectedDate /= Nothing
+        ]
+        [ text "clear currently selected date" ]
 
 
 -- STATE SETTERS --

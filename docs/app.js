@@ -26501,42 +26501,312 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$toTimeLabel = function (dat
 };
 var _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$toLabel = _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$dateToString;
 
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$applyButton = function (isActive) {
+	return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Css$padding2,
+				_rtfeldman$elm_css$Css$px(8),
+				_rtfeldman$elm_css$Css$px(15)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$borderRadius(
+					_rtfeldman$elm_css$Css$px(2)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$cursor(
+						isActive ? _rtfeldman$elm_css$Css$pointer : _rtfeldman$elm_css$Css$notAllowed),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$color(
+							isActive ? _rtfeldman$elm_css$Css$hex('ffffff') : _rtfeldman$elm_css$Css$hex('cccccc')),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$backgroundColor(
+								isActive ? _rtfeldman$elm_css$Css$hex('2ecc71') : _rtfeldman$elm_css$Css$hex('ffffff')),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$applyButtonContainer = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$flexGrow(
+			_rtfeldman$elm_css$Css$int(1)),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$displayFlex,
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$colon = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+			_1: {ctor: '[]'}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$select = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$width(
+			_rtfeldman$elm_css$Css$px(62)),
+		_1: {ctor: '[]'}
+	});
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$selectContainer = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Css$margin2,
+					_rtfeldman$elm_css$Css$px(3),
+					_rtfeldman$elm_css$Css$px(5)),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$timePickerContainer = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: A3(
+			_rtfeldman$elm_css$Css$border3,
+			_rtfeldman$elm_css$Css$px(0),
+			_rtfeldman$elm_css$Css$solid,
+			_rtfeldman$elm_css$Css$hex('dddddd')),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$borderTopWidth(
+				_rtfeldman$elm_css$Css$px(1)),
+			_1: {
+				ctor: '::',
+				_0: A4(
+					_rtfeldman$elm_css$Css$margin4,
+					_rtfeldman$elm_css$Css$px(10),
+					_rtfeldman$elm_css$Css$px(-15),
+					_rtfeldman$elm_css$Css$px(-10),
+					_rtfeldman$elm_css$Css$px(-15)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$displayFlex,
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Css$padding2,
+							_rtfeldman$elm_css$Css$px(0),
+							_rtfeldman$elm_css$Css$px(10)),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$clearButton = function (isActive) {
+	return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+		{
+			ctor: '::',
+			_0: A3(
+				_rtfeldman$elm_css$Css$border3,
+				_rtfeldman$elm_css$Css$px(0),
+				_rtfeldman$elm_css$Css$solid,
+				_rtfeldman$elm_css$Css$hex('dddddd')),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$borderTopWidth(
+					_rtfeldman$elm_css$Css$px(1)),
+				_1: {
+					ctor: '::',
+					_0: A4(
+						_rtfeldman$elm_css$Css$margin4,
+						_rtfeldman$elm_css$Css$px(10),
+						_rtfeldman$elm_css$Css$px(-15),
+						_rtfeldman$elm_css$Css$px(-10),
+						_rtfeldman$elm_css$Css$px(-15)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$displayFlex,
+						_1: {
+							ctor: '::',
+							_0: A4(
+								_rtfeldman$elm_css$Css$padding4,
+								_rtfeldman$elm_css$Css$px(10),
+								_rtfeldman$elm_css$Css$px(10),
+								_rtfeldman$elm_css$Css$px(5),
+								_rtfeldman$elm_css$Css$px(10)),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$flexGrow(
+									_rtfeldman$elm_css$Css$int(1)),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$cursor(
+											isActive ? _rtfeldman$elm_css$Css$pointer : _rtfeldman$elm_css$Css$notAllowed),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$color(
+												isActive ? _rtfeldman$elm_css$Css$hex('444444') : _rtfeldman$elm_css$Css$hex('dddddd')),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$calendarDayItemColors = F3(
+	function (isSelected, isSelectedTimeDate, isSelectable) {
+		var _p0 = {ctor: '_Tuple3', _0: isSelected, _1: isSelectedTimeDate, _2: isSelectable};
+		_v0_3:
+		do {
+			if (_p0.ctor === '_Tuple3') {
+				if (_p0._2 === false) {
+					return {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$backgroundColor(
+							_rtfeldman$elm_css$Css$hex('fbfbfb')),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$color(
+								_rtfeldman$elm_css$Css$hex('dddddd')),
+							_1: {ctor: '[]'}
+						}
+					};
+				} else {
+					if (_p0._0 === true) {
+						return {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$backgroundColor(
+								_rtfeldman$elm_css$Css$hex('6bb9f0')),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$color(
+									_rtfeldman$elm_css$Css$hex('ffffff')),
+								_1: {ctor: '[]'}
+							}
+						};
+					} else {
+						if (_p0._1 === true) {
+							return {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$backgroundColor(
+									_rtfeldman$elm_css$Css$hex('4b77be')),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$color(
+										_rtfeldman$elm_css$Css$hex('ffffff')),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$hover(
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$backgroundColor(
+													_rtfeldman$elm_css$Css$hex('6bb9f0')),
+												_1: {
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css$color(
+														_rtfeldman$elm_css$Css$hex('ffffff')),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							};
+						} else {
+							break _v0_3;
+						}
+					}
+				}
+			} else {
+				break _v0_3;
+			}
+		} while(false);
+		return {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$backgroundColor(
+				_rtfeldman$elm_css$Css$hex('f3f3f3')),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$color(
+					_rtfeldman$elm_css$Css$hex('666666')),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$hover(
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$backgroundColor(
+								_rtfeldman$elm_css$Css$hex('6bb9f0')),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$color(
+									_rtfeldman$elm_css$Css$hex('ffffff')),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		};
+	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Css$calendarDayItem = F3(
 	function (isSelected, isSelectedTimeDate, isSelectable) {
 		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Css$displayFlex,
-				_1: {
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$flexGrow(
-						_rtfeldman$elm_css$Css$int(1)),
+					_0: _rtfeldman$elm_css$Css$displayFlex,
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
+						_0: _rtfeldman$elm_css$Css$flexBasis(
+							_rtfeldman$elm_css$Css$px(0)),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+							_0: _rtfeldman$elm_css$Css$flexGrow(
+								_rtfeldman$elm_css$Css$int(1)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$padding(
-									_rtfeldman$elm_css$Css$px(8)),
+								_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$margin(
-										_rtfeldman$elm_css$Css$px(3)),
+									_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$borderRadius(
-											_rtfeldman$elm_css$Css$px(2)),
+										_0: _rtfeldman$elm_css$Css$padding(
+											_rtfeldman$elm_css$Css$px(8)),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$backgroundColor(
-												isSelectable ? _rtfeldman$elm_css$Css$hex('f3f3f3') : _rtfeldman$elm_css$Css$hex('fbfbfb')),
+											_0: _rtfeldman$elm_css$Css$margin(
+												_rtfeldman$elm_css$Css$px(3)),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$color(
-													isSelectable ? _rtfeldman$elm_css$Css$hex('666666') : _rtfeldman$elm_css$Css$hex('ffffff')),
+												_0: _rtfeldman$elm_css$Css$borderRadius(
+													_rtfeldman$elm_css$Css$px(2)),
 												_1: {
 													ctor: '::',
 													_0: _rtfeldman$elm_css$Css$cursor(
@@ -26550,8 +26820,8 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Css$calendarDayItem = F3(
 							}
 						}
 					}
-				}
-			});
+				},
+				A3(_bluedogtraining$bdt_elm$Form_DatePicker_Css$calendarDayItemColors, isSelected, isSelectedTimeDate, isSelectable)));
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Css$calendarDayRow = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
@@ -26624,6 +26894,13 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Css$weekDayList = _rtfeldman$elm_cs
 			}
 		}
 	});
+var _bluedogtraining$bdt_elm$Form_DatePicker_Css$offsetYearArrow = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$marginRight(
+			_rtfeldman$elm_css$Css$px(-12)),
+		_1: {ctor: '[]'}
+	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Css$arrowStyles = function (isDisabled) {
 	return {
 		ctor: '::',
@@ -26650,19 +26927,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Css$yearArrows = function (isDisabl
 			{
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$displayFlex,
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_rtfeldman$elm_css$Css$nthChild,
-						'2',
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$marginRight(
-								_rtfeldman$elm_css$Css$px(-14)),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			}));
 };
 var _bluedogtraining$bdt_elm$Form_DatePicker_Css$monthArrows = function (isDisabled) {
@@ -27058,50 +27323,37 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$disableMouseDown = A3(
 	_elm_lang$core$Json_Decode$succeed(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$NoOp));
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$Clear = {ctor: 'Clear'};
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$clearDateButton = function (state) {
-	var _p9 = _bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate);
-	if (_p9.ctor === 'Nothing') {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$clearButton(
+				!_elm_lang$core$Native_Utils.eq(
+					_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate),
+					_elm_lang$core$Maybe$Nothing)),
+			_1: {
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('clear-button'),
+				_0: A2(
+					_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+					_rtfeldman$elm_css$Html_Styled_Events$onClick(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Clear),
+					!_elm_lang$core$Native_Utils.eq(
+						_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate),
+						_elm_lang$core$Maybe$Nothing)),
 				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('clear currently selected date'),
-				_1: {ctor: '[]'}
-			});
-	} else {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('clear-button active'),
-				_1: {
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Clear),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled$text('clear currently selected date'),
-				_1: {ctor: '[]'}
-			});
-	}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled$text('clear currently selected date'),
+			_1: {ctor: '[]'}
+		});
 };
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$clearDateContainer = F2(
 	function (state, viewState) {
-		return A3(
-			_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+		return A2(
+			_bluedogtraining$bdt_elm$Html_Styled_Bdt$viewIf,
 			viewState.isClearable,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: _bluedogtraining$bdt_elm$Form_DatePicker_Internal$clearDateButton(state),
-				_1: {ctor: '[]'}
-			});
+			_bluedogtraining$bdt_elm$Form_DatePicker_Internal$clearDateButton(state));
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$Apply = {ctor: 'Apply'};
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg = function (a) {
@@ -27112,51 +27364,51 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$SelectDay = F2(
 		return {ctor: 'SelectDay', _0: a, _1: b};
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarDay = F4(
-	function (state, viewState, firstOfMonth, _p10) {
-		var _p11 = _p10;
-		var _p15 = _p11._0;
-		var _p14 = _p11._1;
-		var date = A2(_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$dateAtDayNumber, _p14, firstOfMonth);
+	function (state, viewState, firstOfMonth, _p9) {
+		var _p10 = _p9;
+		var _p14 = _p10._0;
+		var _p13 = _p10._1;
+		var date = A2(_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$dateAtDayNumber, _p13, firstOfMonth);
 		var isInRange = A3(
 			_rluiten$elm_date_extra$Date_Extra_Compare$is,
 			_rluiten$elm_date_extra$Date_Extra_Compare$Same,
 			date,
 			A3(_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$maybeClamp, viewState.minDate, viewState.maxDate, date));
 		var isSelected = function () {
-			var _p12 = _bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate);
+			var _p11 = _bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate);
+			if (_p11.ctor === 'Nothing') {
+				return false;
+			} else {
+				return A3(_rluiten$elm_date_extra$Date_Extra_Compare$is, _rluiten$elm_date_extra$Date_Extra_Compare$Same, date, _p11._0);
+			}
+		}();
+		var isSelectedTimeDate = function () {
+			var _p12 = state.time.selectedDate;
 			if (_p12.ctor === 'Nothing') {
 				return false;
 			} else {
 				return A3(_rluiten$elm_date_extra$Date_Extra_Compare$is, _rluiten$elm_date_extra$Date_Extra_Compare$Same, date, _p12._0);
 			}
 		}();
-		var isSelectedTimeDate = function () {
-			var _p13 = state.time.selectedDate;
-			if (_p13.ctor === 'Nothing') {
-				return false;
-			} else {
-				return A3(_rluiten$elm_date_extra$Date_Extra_Compare$is, _rluiten$elm_date_extra$Date_Extra_Compare$Same, date, _p13._0);
-			}
-		}();
 		return A2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Css$calendarDayItem, isSelected, isSelectedTimeDate, _p15 && isInRange),
+				_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Css$calendarDayItem, isSelected, isSelectedTimeDate, _p14 && isInRange),
 				_1: {
 					ctor: '::',
 					_0: A2(
 						_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
 						_rtfeldman$elm_css$Html_Styled_Events$onClick(
 							A2(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$SelectDay, date, viewState.includeTime)),
-						_p15 && isInRange),
+						_p14 && isInRange),
 					_1: {ctor: '[]'}
 				}
 			},
 			{
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Html_Styled$text(
-					_elm_lang$core$Basics$toString(_p14)),
+					_elm_lang$core$Basics$toString(_p13)),
 				_1: {ctor: '[]'}
 			});
 	});
@@ -27245,7 +27497,18 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$nextYearArrow = F2(
 			},
 			{
 				ctor: '::',
-				_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ChevronRight, 16, _elm_lang$core$Color$black),
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$offsetYearArrow,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ChevronRight, 16, _elm_lang$core$Color$black),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
 					_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ChevronRight, 16, _elm_lang$core$Color$black),
@@ -27312,7 +27575,18 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$previousYearArrow = F2(
 			},
 			{
 				ctor: '::',
-				_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ChevronLeft, 16, _elm_lang$core$Color$black),
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$offsetYearArrow,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ChevronLeft, 16, _elm_lang$core$Color$black),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
 					_0: A3(_bluedogtraining$bdt_elm$Icon_Internal$render, _bluedogtraining$bdt_elm$Icon$ChevronLeft, 16, _elm_lang$core$Color$black),
@@ -27369,8 +27643,8 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$InitWithCurrentDate = F3(
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$openCmd = F4(
 	function (selectedDate, minDate, maxDate, includeTime) {
-		var _p16 = selectedDate;
-		if (_p16.ctor === 'Nothing') {
+		var _p15 = selectedDate;
+		if (_p15.ctor === 'Nothing') {
 			return A2(
 				_elm_lang$core$Task$perform,
 				A2(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$InitWithCurrentDate, minDate, maxDate),
@@ -27475,26 +27749,26 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateHours = function (a)
 };
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 	function (msg, time) {
-		var _p17 = msg;
-		switch (_p17.ctor) {
+		var _p16 = msg;
+		switch (_p16.ctor) {
 			case 'OpenTimeSelect':
-				var _p18 = _p17._0;
+				var _p17 = _p16._0;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						time,
 						{
-							focusedSelect: _elm_lang$core$Maybe$Just(_p18)
+							focusedSelect: _elm_lang$core$Maybe$Just(_p17)
 						}),
 					{
 						ctor: '::',
-						_0: _bluedogtraining$bdt_elm$Form_DatePicker_Internal$openTimeSelect(_p18),
+						_0: _bluedogtraining$bdt_elm$Form_DatePicker_Internal$openTimeSelect(_p17),
 						_1: {ctor: '[]'}
 					});
 			case 'UpdateHours':
-				var _p19 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p17._0, time.hours);
-				var newSelect = _p19._0;
-				var cmd = _p19._1;
+				var _p18 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p16._0, time.hours);
+				var newSelect = _p18._0;
+				var cmd = _p18._1;
 				var focusedSelect = ((!_bluedogtraining$bdt_elm$Form_Select$getIsOpen(newSelect)) && _elm_lang$core$Native_Utils.eq(
 					time.focusedSelect,
 					_elm_lang$core$Maybe$Just(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Hours))) ? _elm_lang$core$Maybe$Nothing : time.focusedSelect;
@@ -27507,9 +27781,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 						ctor: '::',
 						_0: A2(
 							_elm_lang$core$Platform_Cmd$map,
-							function (_p20) {
+							function (_p19) {
 								return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-									_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateHours(_p20));
+									_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateHours(_p19));
 							},
 							cmd),
 						_1: {
@@ -27522,9 +27796,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 						}
 					});
 			case 'UpdateMinutes':
-				var _p21 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p17._0, time.minutes);
-				var newSelect = _p21._0;
-				var cmd = _p21._1;
+				var _p20 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p16._0, time.minutes);
+				var newSelect = _p20._0;
+				var cmd = _p20._1;
 				var focusedSelect = ((!_bluedogtraining$bdt_elm$Form_Select$getIsOpen(newSelect)) && _elm_lang$core$Native_Utils.eq(
 					time.focusedSelect,
 					_elm_lang$core$Maybe$Just(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Minutes))) ? _elm_lang$core$Maybe$Nothing : time.focusedSelect;
@@ -27537,9 +27811,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 						ctor: '::',
 						_0: A2(
 							_elm_lang$core$Platform_Cmd$map,
-							function (_p22) {
+							function (_p21) {
 								return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-									_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateMinutes(_p22));
+									_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateMinutes(_p21));
 							},
 							cmd),
 						_1: {
@@ -27552,9 +27826,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 						}
 					});
 			default:
-				var _p23 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p17._0, time.seconds);
-				var newSelect = _p23._0;
-				var cmd = _p23._1;
+				var _p22 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p16._0, time.seconds);
+				var newSelect = _p22._0;
+				var cmd = _p22._1;
 				var focusedSelect = ((!_bluedogtraining$bdt_elm$Form_Select$getIsOpen(newSelect)) && _elm_lang$core$Native_Utils.eq(
 					time.focusedSelect,
 					_elm_lang$core$Maybe$Just(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Seconds))) ? _elm_lang$core$Maybe$Nothing : time.focusedSelect;
@@ -27567,9 +27841,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 						ctor: '::',
 						_0: A2(
 							_elm_lang$core$Platform_Cmd$map,
-							function (_p24) {
+							function (_p23) {
 								return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-									_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateSeconds(_p24));
+									_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateSeconds(_p23));
 							},
 							cmd),
 						_1: {
@@ -27585,8 +27859,8 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 	function (msg, state) {
-		var _p25 = msg;
-		switch (_p25.ctor) {
+		var _p24 = msg;
+		switch (_p24.ctor) {
 			case 'Open':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -27602,14 +27876,14 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 						_0: A4(
 							_bluedogtraining$bdt_elm$Form_DatePicker_Internal$openCmd,
 							_bluedogtraining$bdt_elm$Resettable$getValue(state.selectedDate),
-							_p25._0,
-							_p25._1,
-							_p25._2),
+							_p24._0,
+							_p24._1,
+							_p24._2),
 						_1: {ctor: '[]'}
 					});
 			case 'Blur':
-				var _p26 = _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$isTimeFocused(state.time);
-				if (_p26 === true) {
+				var _p25 = _bluedogtraining$bdt_elm$Form_DatePicker_Helpers$isTimeFocused(state.time);
+				if (_p25 === true) {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						state,
@@ -27628,7 +27902,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 					_elm_lang$core$Native_Utils.update(
 						state,
 						{
-							navigationDate: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$initNavigationDate, _p25._0, _p25._1, _p25._2)
+							navigationDate: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$initNavigationDate, _p24._0, _p24._1, _p24._2)
 						}),
 					{ctor: '[]'});
 			case 'PreviousYear':
@@ -27639,12 +27913,12 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 						{
 							navigationDate: A2(
 								_elm_lang$core$Maybe$map,
-								function (_p27) {
+								function (_p26) {
 									return A3(
 										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$maybeClamp,
-										_p25._0,
+										_p24._0,
 										state.navigationDate,
-										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$previousYear(_p27));
+										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$previousYear(_p26));
 								},
 								state.navigationDate)
 						}),
@@ -27666,12 +27940,12 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 						{
 							navigationDate: A2(
 								_elm_lang$core$Maybe$map,
-								function (_p28) {
+								function (_p27) {
 									return A3(
 										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$maybeClamp,
 										state.navigationDate,
-										_p25._0,
-										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$nextYear(_p28));
+										_p24._0,
+										_bluedogtraining$bdt_elm$Form_DatePicker_Helpers$nextYear(_p27));
 								},
 								state.navigationDate)
 						}),
@@ -27686,9 +27960,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 						}),
 					{ctor: '[]'});
 			case 'SelectDay':
-				var _p30 = _p25._0;
-				var _p29 = _p25._1;
-				if (_p29 === false) {
+				var _p29 = _p24._0;
+				var _p28 = _p24._1;
+				if (_p28 === false) {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -27696,7 +27970,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 							{
 								selectedDate: A2(
 									_bluedogtraining$bdt_elm$Resettable$update,
-									_elm_lang$core$Maybe$Just(_p30),
+									_elm_lang$core$Maybe$Just(_p29),
 									state.selectedDate),
 								isOpen: false
 							}),
@@ -27711,7 +27985,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 								time: _elm_lang$core$Native_Utils.update(
 									time,
 									{
-										selectedDate: _elm_lang$core$Maybe$Just(_p30)
+										selectedDate: _elm_lang$core$Maybe$Just(_p29)
 									})
 							}),
 						{ctor: '[]'});
@@ -27740,9 +28014,9 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$update = F2(
 						}),
 					{ctor: '[]'});
 			case 'TimeMsg':
-				var _p31 = A2(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime, _p25._0, state.time);
-				var newTime = _p31._0;
-				var cmd = _p31._1;
+				var _p30 = A2(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$updateTime, _p24._0, state.time);
+				var newTime = _p30._0;
+				var cmd = _p30._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
@@ -27776,7 +28050,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('timepicker-container'),
+				_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$timePickerContainer,
 				_1: {ctor: '[]'}
 			},
 			{
@@ -27785,7 +28059,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 					_rtfeldman$elm_css$Html_Styled$div,
 					{
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('select-container'),
+						_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$selectContainer,
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -27805,16 +28079,16 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 							_rtfeldman$elm_css$Html_Styled$div,
 							{
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('select'),
+								_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$select,
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
 								_0: A2(
 									_rtfeldman$elm_css$Html_Styled$map,
-									function (_p32) {
+									function (_p31) {
 										return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-											_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateHours(_p32));
+											_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateHours(_p31));
 									},
 									_bluedogtraining$bdt_elm$Form_Select$render(
 										A2(
@@ -27834,7 +28108,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 						_rtfeldman$elm_css$Html_Styled$div,
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('colon'),
+							_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$colon,
 							_1: {ctor: '[]'}
 						},
 						{
@@ -27855,7 +28129,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 							_rtfeldman$elm_css$Html_Styled$div,
 							{
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('select-container'),
+								_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$selectContainer,
 								_1: {
 									ctor: '::',
 									_0: A2(
@@ -27875,16 +28149,16 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 									_rtfeldman$elm_css$Html_Styled$div,
 									{
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('select'),
+										_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$select,
 										_1: {ctor: '[]'}
 									},
 									{
 										ctor: '::',
 										_0: A2(
 											_rtfeldman$elm_css$Html_Styled$map,
-											function (_p33) {
+											function (_p32) {
 												return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-													_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateMinutes(_p33));
+													_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateMinutes(_p32));
 											},
 											_bluedogtraining$bdt_elm$Form_Select$render(
 												A2(
@@ -27904,7 +28178,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 								_rtfeldman$elm_css$Html_Styled$div,
 								{
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('colon'),
+									_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$colon,
 									_1: {ctor: '[]'}
 								},
 								{
@@ -27925,7 +28199,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 									_rtfeldman$elm_css$Html_Styled$div,
 									{
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('select-container'),
+										_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$selectContainer,
 										_1: {
 											ctor: '::',
 											_0: A2(
@@ -27945,16 +28219,16 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 											_rtfeldman$elm_css$Html_Styled$div,
 											{
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('select'),
+												_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$select,
 												_1: {ctor: '[]'}
 											},
 											{
 												ctor: '::',
 												_0: A2(
 													_rtfeldman$elm_css$Html_Styled$map,
-													function (_p34) {
+													function (_p33) {
 														return _bluedogtraining$bdt_elm$Form_DatePicker_Internal$TimeMsg(
-															_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateSeconds(_p34));
+															_bluedogtraining$bdt_elm$Form_DatePicker_Internal$UpdateSeconds(_p33));
 													},
 													_bluedogtraining$bdt_elm$Form_Select$render(
 														A2(
@@ -27974,7 +28248,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 										_rtfeldman$elm_css$Html_Styled$div,
 										{
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('apply-button-container'),
+											_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$applyButtonContainer,
 											_1: {ctor: '[]'}
 										},
 										{
@@ -27983,23 +28257,14 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePicker = F2(
 												_rtfeldman$elm_css$Html_Styled$div,
 												{
 													ctor: '::',
-													_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('apply-button'),
+													_0: _bluedogtraining$bdt_elm$Form_DatePicker_Css$applyButton(isTimeDateSelected || isDateSelected),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-															{
-																ctor: '::',
-																_0: {ctor: '_Tuple2', _0: 'active', _1: isTimeDateSelected || isDateSelected},
-																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-																_rtfeldman$elm_css$Html_Styled_Events$onClick(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Apply),
-																isTimeDateSelected || isDateSelected),
-															_1: {ctor: '[]'}
-														}
+														_0: A2(
+															_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+															_rtfeldman$elm_css$Html_Styled_Events$onClick(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Apply),
+															isTimeDateSelected || isDateSelected),
+														_1: {ctor: '[]'}
 													}
 												},
 												{
@@ -28029,11 +28294,11 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$timePickerContainer = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendar = F2(
 	function (state, viewState) {
-		var _p35 = state.navigationDate;
-		if (_p35.ctor === 'Nothing') {
+		var _p34 = state.navigationDate;
+		if (_p34.ctor === 'Nothing') {
 			return _rtfeldman$elm_css$Html_Styled$text('');
 		} else {
-			var _p36 = _p35._0;
+			var _p35 = _p34._0;
 			return A2(
 				_rtfeldman$elm_css$Html_Styled$div,
 				{
@@ -28050,7 +28315,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendar = F2(
 				},
 				{
 					ctor: '::',
-					_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarNavigation, state, viewState, _p36),
+					_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarNavigation, state, viewState, _p35),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -28099,7 +28364,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendar = F2(
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarDays, state, viewState, _p36),
+									_0: A3(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$calendarDays, state, viewState, _p35),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
@@ -28139,11 +28404,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$open = F2(
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('FORM_DATEPICKER'),
-									_1: {
-										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Blur),
-										_1: {ctor: '[]'}
-									}
+									_1: {ctor: '[]'}
 								}
 							}
 						},
@@ -28191,8 +28452,8 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$open = F2(
 	});
 var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$render = F2(
 	function (state, viewState) {
-		var _p37 = state.isOpen;
-		if (_p37 === false) {
+		var _p36 = state.isOpen;
+		if (_p36 === false) {
 			return A3(_rtfeldman$elm_css$Html_Styled_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_DatePicker_Internal$closed, state, viewState);
 		} else {
 			return A3(_rtfeldman$elm_css$Html_Styled_Lazy$lazy2, _bluedogtraining$bdt_elm$Form_DatePicker_Internal$open, state, viewState);
@@ -33030,7 +33291,7 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																				{ctor: '[]'},
 																				{
 																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Html_Styled$text('Date Picker with min and max dates)'),
+																					_0: _rtfeldman$elm_css$Html_Styled$text('Date Picker with min and max dates'),
 																					_1: {ctor: '[]'}
 																				}),
 																			_1: {

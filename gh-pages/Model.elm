@@ -1,5 +1,7 @@
 module Model exposing (Model, initialModel)
 
+import Toasters
+
 import Form.Input as Input
 import Form.IntInput as IntInput
 import Form.FloatInput as FloatInput
@@ -14,7 +16,8 @@ import Countries exposing (Country)
 
 
 type alias Model =
-    { input : Input.Model
+    { toasters : Toasters.Model
+    , input : Input.Model
     , intInput : IntInput.Model
     , floatInput : FloatInput.Model
     , select : Select.Model MusicGenre
@@ -29,7 +32,8 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { input = Input.init
+    { toasters = Toasters.init
+    , input = Input.init
     , intInput = IntInput.init
     , floatInput = FloatInput.init
     , select = Select.init MusicGenre.asList

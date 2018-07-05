@@ -1,5 +1,7 @@
 module Msg exposing (Msg (..))
 
+import Toasters
+
 import Form.Input as Input
 import Form.IntInput as IntInput
 import Form.FloatInput as FloatInput
@@ -14,7 +16,10 @@ import Countries exposing (Country)
 
 
 type Msg
-    = InputMsg Input.Msg
+    = ToastersMsg Toasters.Msg
+    | AddGreenToaster
+    | AddRedToaster
+    | InputMsg Input.Msg
     | IntInputMsg IntInput.Msg
     | FloatInputMsg FloatInput.Msg
     | SelectMsg (Select.Msg MusicGenre)

@@ -1,5 +1,7 @@
 module Update exposing (update)
 
+import Toasters
+
 import Form.Input as Input
 import Form.IntInput as IntInput
 import Form.FloatInput as FloatInput
@@ -17,6 +19,15 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
 
     case msg of
+        ToastersMsg toasterMsg ->
+            { model | toasters = Toasters.update toasterMsg model.toasters } ! []
+
+        AddGreenToaster ->
+            { model | toasters = Toasters.addGreen "Green Toasters are great." model.toasters } ! []
+
+        AddRedToaster ->
+            { model | toasters = Toasters.addRed "Red Toasters are even better!" model.toasters } ! []
+
         InputMsg inputMsg ->
             { model | input = Input.update inputMsg model.input } ! []
 

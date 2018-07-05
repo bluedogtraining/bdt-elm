@@ -12,6 +12,7 @@ import Msg exposing (Msg (..))
 import Model exposing (Model, initialModel)
 import Update exposing (update)
 import View exposing (view)
+import Subscriptions exposing (subscriptions)
 
 
 main : Program Never Model Msg
@@ -20,5 +21,5 @@ main =
         { init = initialModel ! []
         , update = update
         , view = view
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }

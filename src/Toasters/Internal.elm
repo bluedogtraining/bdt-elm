@@ -1,8 +1,8 @@
-module Toasters exposing
-    ( Model, init
+module Toasters.Internal exposing
+    ( Toaster, init
     , Msg, update
     , subscription
-    , addSuccess, addInfo, addWarning, addDanger
+    , add, view
     )
 
 import Html.Styled exposing (..)
@@ -11,27 +11,23 @@ import Html.Styled.Attributes exposing (..)
 
 import Time
 
+import Toasters.Css as Css
+import Toasters.Color exposing (Color)
+
 
 type alias Toaster =
-    { context : Context
+    { color : Color
     , message : String
     , ticks : Int
     }
 
 
-initialToaster : Context -> String -> Toaster
-initialToaster context message =
-    { context = context
+initialToaster : Color -> String -> Toaster
+initialToaster color message =
+    { color = color
     , message = message
     , ticks = 0
     }
-
-
-type Context
-    = Success
-    | Info
-    | Warning
-    | Danger
 
 
 type Msg
@@ -39,28 +35,21 @@ type Msg
     | Close Toaster
 
 
-type Model =
-    Model (List Toaster)
 
-
-init : Model
+init : List Toaster
 init  =
-    Model []
+    []
 
 
-update : Msg -> Model -> Model
-update toasterMsg (Model toasters) =
+update : Msg -> List Toaster -> List Toaster
+update toasterMsg toasters =
 
     case toasterMsg of
         Close toaster ->
-            toasters
-                |> List.filter ((/=) toaster)
-                |> Model
+            List.filter ((/=) toaster) toasters
 
         Tick ->
-            toasters
-                |> List.foldl tick []
-                |> Model
+            List.foldl tick [] toasters
 
 
 tick : Toaster -> List Toaster -> List Toaster
@@ -74,8 +63,8 @@ tick toaster toasters =
             List.append toasters [{ toaster | ticks = toaster.ticks + 1 }]
 
 
-subscription : Model -> Sub Msg
-subscription (Model toasters) =
+subscription : List Toaster -> Sub Msg
+subscription toasters =
 
     case List.isEmpty toasters of
 
@@ -86,44 +75,21 @@ subscription (Model toasters) =
             Sub.none
 
 
-add : Context -> String -> Model -> Model
-add context message (Model toasters) =
+add : Color -> String -> List Toaster -> List Toaster
+add color message toasters =
 
-    initialToaster context message
-        |> List.singleton
-        |> List.append toasters
-        |> Model
+    initialToaster color message :: toasters
 
 
-addInfo : String -> Model -> Model
-addInfo =
-    add Info
+view : List Toaster -> Html Msg
+view toasters =
 
-
-addWarning : String -> Model -> Model
-addWarning =
-    add Warning
-
-
-addDanger : String -> Model -> Model
-addDanger =
-    add Danger
-
-
-addSuccess : String -> Model -> Model
-addSuccess =
-    add Success
-
-
-view : Model -> Html Msg
-view (Model toasters) =
-
-    S.relativeContainer
-        []
-        [ S.absoluteContainer
-            []
-            [ S.fixedContainer
-                []
+    div
+        [ Css.relativeContainer ]
+        [ div
+            [ Css.absoluteContainer ]
+            [ div
+                [ Css.fixedContainer ]
                 (List.map item toasters)
             ]
         ]
@@ -132,15 +98,12 @@ view (Model toasters) =
 item : Toaster -> Html Msg
 item toaster =
 
-    S.toaster toaster.context toaster.ticks
-        []
-        [ button
-            [ type_ "button", class "close", onClick (toaster |> Close) ]
-            [ span
-                []
-                [ text "×" ]
-            ]
-        , div
-            []
+    div
+        [ Css.toaster toaster.color toaster.ticks ]
+        [ div
+            [ Css.toasterMessage ]
             [ text toaster.message ]
+        , div
+            [ Css.timerBar toaster.color toaster.ticks ]
+            []
         ]

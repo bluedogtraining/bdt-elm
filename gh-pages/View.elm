@@ -1,10 +1,13 @@
 module View exposing (view)
 
 import Html.Styled as Html exposing (..)
+import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 
 import Date
 import Time
+
+import Toasters
 
 import Form.Input as Input
 import Form.IntInput as IntInput
@@ -33,7 +36,9 @@ view : Model -> Html Msg
 view model =
     div
         [ Css.background ]
-        [ div
+        [ Toasters.view model.toasters
+            |> Html.map ToastersMsg
+        , div
             [ Css.container ]
             [ h1
                 []
@@ -164,6 +169,22 @@ view model =
                                 , div
                                     []
                                     [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker3) ]
+                                ]
+                            ]
+                        |> Card.footer []
+                        |> Card.render
+                    ]
+                , Grid.colSizes Twelve [ Lg ~ Six ]
+                    [ Card.view
+                        |> Card.header "Toasters" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ button
+                                    [ onClick AddGreenToaster ]
+                                    [ text "Add Green Toaster" ]
+                                , button
+                                    [ onClick AddRedToaster ]
+                                    [ text "Add Red Toaster" ]
                                 ]
                             ]
                         |> Card.footer []

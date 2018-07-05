@@ -20,6 +20,8 @@ import Tuple.Bdt exposing ((~))
 import Grid
 import Card
 
+import Button
+
 import Msg exposing (Msg (..))
 import Model exposing (Model)
 
@@ -27,6 +29,8 @@ import Styles as Css
 import Grid.Css as Css
 
 import Grid.Size exposing (..)
+
+import Icon
 
 
 view : Model -> Html Msg
@@ -120,6 +124,22 @@ view model =
                                 ]
                             ]
                         |> Card.footer []
+                        |> Card.render
+                    ]
+                , Grid.colSizes Twelve [ Lg ~ Six ]
+                    [ Card.view
+                        |> Card.header "Example Buttons" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ Button.view
+                                    |> Button.text "Click Me"
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon Icon.CheckBoxUnchecked
+                                    |> Button.green
+                                    |> Button.render
+                                ]
+                            ]
                         |> Card.render
                     ]
                 ]

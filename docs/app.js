@@ -28404,7 +28404,11 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$open = F2(
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('FORM_DATEPICKER'),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$Blur),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						},

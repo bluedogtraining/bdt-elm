@@ -389,7 +389,7 @@ open state viewState =
             [ Css.input viewState.isLocked viewState.isError
             , tabindex 0
             , id "FORM_DATEPICKER"
---            , onBlur Blur
+            , onBlur Blur
             ]
             [ div
                 [ Css.title ]

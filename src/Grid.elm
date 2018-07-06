@@ -1,5 +1,12 @@
 module Grid exposing (row, col, colSizes)
 
+{-| Module to create Grids with Rows and Cols
+
+# Add Elements
+@docs row, col, colSizes
+
+-}
+
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 
@@ -22,6 +29,8 @@ type alias ColConfig msg =
     }
 
 
+{-| Add a row
+-}
 row : List (Col msg) -> Html msg
 row cols =
 
@@ -30,12 +39,16 @@ row cols =
         (List.map renderCol cols)
 
 
+{-| Add a col
+-}
 col : Cols -> List (Html msg) -> Col msg
 col cols children =
 
     Col <| ColConfig cols [] children
 
 
+{-| Add a col, specifying different col sizes based on window size
+-}
 colSizes : Cols -> List (Size, Cols) -> List (Html msg) -> Col msg
 colSizes cols sizes children =
 

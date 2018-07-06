@@ -183,12 +183,16 @@ view model =
                         |> Card.header "Toasters" []
                         |> Card.body
                             [ Card.block Twelve
-                                [ button
-                                    [ onClick AddGreenToaster ]
-                                    [ text "Add Green Toaster" ]
-                                , button
-                                    [ onClick AddRedToaster ]
-                                    [ text "Add Red Toaster" ]
+                                [ Button.view
+                                    |> Button.text "Add Green Toaster"
+                                    |> Button.green
+                                    |> Button.onClick AddGreenToaster
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.text "Add Red Toaster"
+                                    |> Button.red
+                                    |> Button.onClick AddRedToaster
+                                    |> Button.render
                                 ]
                             ]
                         |> Card.footer []
@@ -200,11 +204,56 @@ view model =
                         |> Card.body
                             [ Card.block Twelve
                                 [ Button.view
-                                    |> Button.text "Click Me"
+                                    |> Button.text "Normal"
                                     |> Button.render
                                 , Button.view
-                                    |> Button.icon Icon.CheckBoxUnchecked
+                                    |> Button.text "Disabled :("
+                                    |> Button.isDisabled True
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.text "Small!"
+                                    |> Button.small
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.text "Green!"
                                     |> Button.green
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.text "Red!"
+                                    |> Button.red
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.text "Loading!"
+                                    |> Button.isLoading True
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.text "Small, green, loading!"
+                                    |> Button.small
+                                    |> Button.green
+                                    |> Button.isLoading True
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon Icon.Calendar
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon Icon.Calendar
+                                    |> Button.isDisabled True
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon Icon.Calendar
+                                    |> Button.small
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon Icon.Calendar
+                                    |> Button.green
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon Icon.Calendar
+                                    |> Button.red
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon Icon.Calendar
+                                    |> Button.isLoading True
                                     |> Button.render
                                 ]
                             ]

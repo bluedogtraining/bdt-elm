@@ -17,6 +17,13 @@
         "Form.SearchSelect",
         "Form.DatePicker",
         "Form.TextArea",
+        "Toasters",
+        "Grid",
+        "Card",
+        "Icon",
+        "Button",
+        "Tuple.Bdt",
+        "Html.Styled.Bdt",
         "InfixPrecedence"
     ],
     "dependencies": {

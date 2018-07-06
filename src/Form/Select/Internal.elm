@@ -34,7 +34,6 @@ import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
 import Icon
-import Icon.Internal as Icon
 
 import Form.Select.Css as Css
 

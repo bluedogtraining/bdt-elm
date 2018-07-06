@@ -1,49 +1,111 @@
 module Button.Css exposing (..)
 
 import Css exposing (..)
-import Color
+import Css.Foreign exposing (..)
+import Css.Transitions as Transitions exposing (transition)
 
-import Html.Styled exposing (Attribute)
+import Html.Styled exposing (Html, Attribute)
 import Html.Styled.Attributes exposing (css)
+
+import Color
 
 import Html.Styled.Bdt exposing ((?))
 
-import Button.Content as Content exposing (Content)
-import Button.Size as Size exposing (Size)
+import Button.Content exposing (Content (..))
+import Button.Size exposing (Size (..))
 
 
-button : Size -> Content -> Color.Color -> Attribute msg
-button size content color =
+button : Size -> Content -> Color.Color -> Bool -> Bool -> Attribute msg
+button size content color isDisabled isLoading =
 
-    css
-        [ contentPadding size content
-        , border (px 0)
+    css <|
+        [ border (px 0)
         , backgroundColor transparent
         , fontWeight bold
         , Css.color <| Css.rgb (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue)
-        , lineHeight (Css.rem 1)
+        , displayFlex
+        , justifyContent center
+        , alignItems center
+        , display inlineBlock
+        , outlineWidth <| px 0
+        , cursor <| if isDisabled || isLoading then notAllowed else pointer
+        , height <| buttonHeight size
+        , buttonWidth content size
+        , padding2 (px 0) (buttonPadding content size)
+        , verticalAlign middle
         , hover
             [ backgroundColor (lightenColor color)
             ]
         ]
 
 
-contentPadding : Size -> Content -> Style
-contentPadding size content =
+buttonHeight : Size -> Rem
+buttonHeight size =
 
-    case content of
+    case size of
+        Small -> Css.rem 1
+        Normal -> Css.rem 1.5
 
-        Content.Text _ ->
-            padding2 (Size.paddingY size) (Size.paddingX size)
 
-        Content.Icon _ ->
-            padding (Size.paddingY size)
+buttonWidth : Content -> Size -> Style
+buttonWidth content size =
+
+    case (content, size) of
+        (Icon _, Small) -> width <| Css.rem 1
+        (Icon _, Normal) -> width <| Css.rem 1.5
+        _ -> width <| auto
+
+
+buttonPadding : Content -> Size -> Rem
+buttonPadding content size =
+
+    case (content, size) of
+        (Text _, Small) -> Css.rem 0.5
+        (Text _, Normal) -> Css.rem 1
+        _ -> Css.rem 0
 
 
 lightenColor : Color.Color -> Css.Color
 lightenColor color =
     color
         |> Color.toHsl
-        |> (\color -> Color.hsl color.hue color.saturation (color.lightness + 0.45) )
+        |> (\color -> Color.hsl color.hue color.saturation (color.lightness + 0.45))
         |> Color.toRgb
         |> (\color -> Css.rgb color.red color.green color.blue)
+
+
+loadingTextContainer : Attribute msg
+loadingTextContainer =
+
+    css
+        [ displayFlex
+        , alignItems center
+        , justifyContent center
+        ]
+
+
+loadingText : Attribute msg
+loadingText =
+
+    css
+        [ marginLeft <| Css.rem 0.25
+        ]
+
+
+-- Hacky stuff below, @todo: fix it up once this is ready: https://github.com/rtfeldman/elm-css/issues/431
+
+
+loading : Attribute msg
+loading =
+    css
+        [ property "animation" "spin 1.5s linear infinite"
+        ]
+
+
+spinKeyFrames : Html msg
+spinKeyFrames =
+
+    global
+         [ selector "@keyframes spin"
+             [ property "0% { transform" "rotate(0deg); } 100% { transform: rotate(360deg); }" ]
+         ]

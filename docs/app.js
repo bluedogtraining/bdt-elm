@@ -34051,7 +34051,8 @@ var _bluedogtraining$bdt_elm$Toasters_Css$toaster = F2(
 											_0: _rtfeldman$elm_css$Css_Transitions$transition(
 												{
 													ctor: '::',
-													_0: _rtfeldman$elm_css$Css_Transitions$opacity(_elm_lang$core$Time$millisecond * 600),
+													_0: _rtfeldman$elm_css$Css_Transitions$opacity(
+														_elm_lang$core$Time$millisecond * ((_elm_lang$core$Native_Utils.cmp(ticks, 3) < 0) ? 0 : 600)),
 													_1: {ctor: '[]'}
 												}),
 											_1: {

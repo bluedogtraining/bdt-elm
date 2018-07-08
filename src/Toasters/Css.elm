@@ -49,7 +49,7 @@ toaster toasterColor ticks =
         , cursor pointer
         , opacity <| if ticks < 3 || ticks > 97 then int 0 else int 1
         , transition
-            [ Transitions.opacity <| Time.millisecond * 600
+            [ Transitions.opacity <| Time.millisecond * if ticks < 3 then 0 else 600
             ]
         , boxShadow4 (px 0) (px 8) (px 16) (rgba 0 0 0 0.3)
         ]

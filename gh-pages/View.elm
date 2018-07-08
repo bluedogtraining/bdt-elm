@@ -200,7 +200,7 @@ view model =
                     ]
                 , Grid.colSizes Twelve [ Lg ~ Six ]
                     [ Card.view
-                        |> Card.header "Example Buttons" []
+                        |> Card.header "Example Buttons" [ Button.view |> Button.text "Header Button", Button.view |> Button.text "Another Button" ]
                         |> Card.body
                             [ Card.block Twelve
                                 [ Button.view
@@ -257,6 +257,7 @@ view model =
                                     |> Button.render
                                 ]
                             ]
+                        |> Card.footer [ Button.view |> Button.text "Footer Button" ]
                         |> Card.render
                     ]
                 ]

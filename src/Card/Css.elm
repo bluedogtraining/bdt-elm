@@ -25,8 +25,19 @@ header : Attribute msg
 header =
     css
         [ displayFlex
+        , justifyContent spaceBetween
         , padding2 (px 12) (px 16)
         , borderBottom3 (px 1) solid (hex "ededed")
+        ]
+
+
+footer : Attribute msg
+footer =
+    css
+        [ displayFlex
+        , justifyContent flexEnd
+        , padding2 (px 12) (px 16)
+        , borderTop3 (px 1) solid (hex "ededed")
         ]
 
 

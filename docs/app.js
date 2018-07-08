@@ -22400,24 +22400,53 @@ var _bluedogtraining$bdt_elm$Card_Css$headerTitle = _rtfeldman$elm_css$Html_Styl
 			_1: {ctor: '[]'}
 		}
 	});
+var _bluedogtraining$bdt_elm$Card_Css$footer = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$flexEnd),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Css$padding2,
+					_rtfeldman$elm_css$Css$px(12),
+					_rtfeldman$elm_css$Css$px(16)),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_rtfeldman$elm_css$Css$borderTop3,
+						_rtfeldman$elm_css$Css$px(1),
+						_rtfeldman$elm_css$Css$solid,
+						_rtfeldman$elm_css$Css$hex('ededed')),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
 var _bluedogtraining$bdt_elm$Card_Css$header = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
 		ctor: '::',
 		_0: _rtfeldman$elm_css$Css$displayFlex,
 		_1: {
 			ctor: '::',
-			_0: A2(
-				_rtfeldman$elm_css$Css$padding2,
-				_rtfeldman$elm_css$Css$px(12),
-				_rtfeldman$elm_css$Css$px(16)),
+			_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$spaceBetween),
 			_1: {
 				ctor: '::',
-				_0: A3(
-					_rtfeldman$elm_css$Css$borderBottom3,
-					_rtfeldman$elm_css$Css$px(1),
-					_rtfeldman$elm_css$Css$solid,
-					_rtfeldman$elm_css$Css$hex('ededed')),
-				_1: {ctor: '[]'}
+				_0: A2(
+					_rtfeldman$elm_css$Css$padding2,
+					_rtfeldman$elm_css$Css$px(12),
+					_rtfeldman$elm_css$Css$px(16)),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_rtfeldman$elm_css$Css$borderBottom3,
+						_rtfeldman$elm_css$Css$px(1),
+						_rtfeldman$elm_css$Css$solid,
+						_rtfeldman$elm_css$Css$hex('ededed')),
+					_1: {ctor: '[]'}
+				}
 			}
 		}
 	});
@@ -22473,12 +22502,6 @@ var _bluedogtraining$bdt_elm$Card$renderCardBlock = function (_p0) {
 		},
 		_p2.children);
 };
-var _bluedogtraining$bdt_elm$Card$renderHeaderButton = function (button) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
-		{ctor: '[]'},
-		{ctor: '[]'});
-};
 var _bluedogtraining$bdt_elm$Card$render = function (_p3) {
 	var _p4 = _p3;
 	var _p5 = _p4._0;
@@ -22514,7 +22537,7 @@ var _bluedogtraining$bdt_elm$Card$render = function (_p3) {
 						_0: A2(
 							_rtfeldman$elm_css$Html_Styled$div,
 							{ctor: '[]'},
-							A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Card$renderHeaderButton, _p5.headerButtons)),
+							A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Button$render, _p5.headerButtons)),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -22529,7 +22552,19 @@ var _bluedogtraining$bdt_elm$Card$render = function (_p3) {
 						_1: {ctor: '[]'}
 					},
 					A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Card$renderCardBlock, _p5.cardBlocks)),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+						!_elm_lang$core$List$isEmpty(_p5.footerButtons),
+						{
+							ctor: '::',
+							_0: _bluedogtraining$bdt_elm$Card_Css$footer,
+							_1: {ctor: '[]'}
+						},
+						A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Button$render, _p5.footerButtons)),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -35147,88 +35182,96 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 															ctor: '::',
 															_0: _bluedogtraining$bdt_elm$Card$render(
 																A2(
-																	_bluedogtraining$bdt_elm$Card$body,
+																	_bluedogtraining$bdt_elm$Card$footer,
 																	{
 																		ctor: '::',
-																		_0: A2(
-																			_bluedogtraining$bdt_elm$Card$block,
-																			_bluedogtraining$bdt_elm$Grid_Size$Twelve,
-																			{
-																				ctor: '::',
-																				_0: _bluedogtraining$bdt_elm$Button$render(
-																					A2(_bluedogtraining$bdt_elm$Button$text, 'Normal', _bluedogtraining$bdt_elm$Button$view)),
-																				_1: {
+																		_0: A2(_bluedogtraining$bdt_elm$Button$text, 'Footer Button', _bluedogtraining$bdt_elm$Button$view),
+																		_1: {ctor: '[]'}
+																	},
+																	A2(
+																		_bluedogtraining$bdt_elm$Card$body,
+																		{
+																			ctor: '::',
+																			_0: A2(
+																				_bluedogtraining$bdt_elm$Card$block,
+																				_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																				{
 																					ctor: '::',
 																					_0: _bluedogtraining$bdt_elm$Button$render(
-																						A2(
-																							_bluedogtraining$bdt_elm$Button$isDisabled,
-																							true,
-																							A2(_bluedogtraining$bdt_elm$Button$text, 'Disabled :(', _bluedogtraining$bdt_elm$Button$view))),
+																						A2(_bluedogtraining$bdt_elm$Button$text, 'Normal', _bluedogtraining$bdt_elm$Button$view)),
 																					_1: {
 																						ctor: '::',
 																						_0: _bluedogtraining$bdt_elm$Button$render(
-																							_bluedogtraining$bdt_elm$Button$small(
-																								A2(_bluedogtraining$bdt_elm$Button$text, 'Small!', _bluedogtraining$bdt_elm$Button$view))),
+																							A2(
+																								_bluedogtraining$bdt_elm$Button$isDisabled,
+																								true,
+																								A2(_bluedogtraining$bdt_elm$Button$text, 'Disabled :(', _bluedogtraining$bdt_elm$Button$view))),
 																						_1: {
 																							ctor: '::',
 																							_0: _bluedogtraining$bdt_elm$Button$render(
-																								_bluedogtraining$bdt_elm$Button$green(
-																									A2(_bluedogtraining$bdt_elm$Button$text, 'Green!', _bluedogtraining$bdt_elm$Button$view))),
+																								_bluedogtraining$bdt_elm$Button$small(
+																									A2(_bluedogtraining$bdt_elm$Button$text, 'Small!', _bluedogtraining$bdt_elm$Button$view))),
 																							_1: {
 																								ctor: '::',
 																								_0: _bluedogtraining$bdt_elm$Button$render(
-																									_bluedogtraining$bdt_elm$Button$red(
-																										A2(_bluedogtraining$bdt_elm$Button$text, 'Red!', _bluedogtraining$bdt_elm$Button$view))),
+																									_bluedogtraining$bdt_elm$Button$green(
+																										A2(_bluedogtraining$bdt_elm$Button$text, 'Green!', _bluedogtraining$bdt_elm$Button$view))),
 																								_1: {
 																									ctor: '::',
 																									_0: _bluedogtraining$bdt_elm$Button$render(
-																										A2(
-																											_bluedogtraining$bdt_elm$Button$isLoading,
-																											true,
-																											A2(_bluedogtraining$bdt_elm$Button$text, 'Loading!', _bluedogtraining$bdt_elm$Button$view))),
+																										_bluedogtraining$bdt_elm$Button$red(
+																											A2(_bluedogtraining$bdt_elm$Button$text, 'Red!', _bluedogtraining$bdt_elm$Button$view))),
 																									_1: {
 																										ctor: '::',
 																										_0: _bluedogtraining$bdt_elm$Button$render(
 																											A2(
 																												_bluedogtraining$bdt_elm$Button$isLoading,
 																												true,
-																												_bluedogtraining$bdt_elm$Button$green(
-																													_bluedogtraining$bdt_elm$Button$small(
-																														A2(_bluedogtraining$bdt_elm$Button$text, 'Small, green, loading!', _bluedogtraining$bdt_elm$Button$view))))),
+																												A2(_bluedogtraining$bdt_elm$Button$text, 'Loading!', _bluedogtraining$bdt_elm$Button$view))),
 																										_1: {
 																											ctor: '::',
 																											_0: _bluedogtraining$bdt_elm$Button$render(
-																												A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view)),
+																												A2(
+																													_bluedogtraining$bdt_elm$Button$isLoading,
+																													true,
+																													_bluedogtraining$bdt_elm$Button$green(
+																														_bluedogtraining$bdt_elm$Button$small(
+																															A2(_bluedogtraining$bdt_elm$Button$text, 'Small, green, loading!', _bluedogtraining$bdt_elm$Button$view))))),
 																											_1: {
 																												ctor: '::',
 																												_0: _bluedogtraining$bdt_elm$Button$render(
-																													A2(
-																														_bluedogtraining$bdt_elm$Button$isDisabled,
-																														true,
-																														A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view))),
+																													A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view)),
 																												_1: {
 																													ctor: '::',
 																													_0: _bluedogtraining$bdt_elm$Button$render(
-																														_bluedogtraining$bdt_elm$Button$small(
+																														A2(
+																															_bluedogtraining$bdt_elm$Button$isDisabled,
+																															true,
 																															A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view))),
 																													_1: {
 																														ctor: '::',
 																														_0: _bluedogtraining$bdt_elm$Button$render(
-																															_bluedogtraining$bdt_elm$Button$green(
+																															_bluedogtraining$bdt_elm$Button$small(
 																																A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view))),
 																														_1: {
 																															ctor: '::',
 																															_0: _bluedogtraining$bdt_elm$Button$render(
-																																_bluedogtraining$bdt_elm$Button$red(
+																																_bluedogtraining$bdt_elm$Button$green(
 																																	A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view))),
 																															_1: {
 																																ctor: '::',
 																																_0: _bluedogtraining$bdt_elm$Button$render(
-																																	A2(
-																																		_bluedogtraining$bdt_elm$Button$isLoading,
-																																		true,
+																																	_bluedogtraining$bdt_elm$Button$red(
 																																		A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view))),
-																																_1: {ctor: '[]'}
+																																_1: {
+																																	ctor: '::',
+																																	_0: _bluedogtraining$bdt_elm$Button$render(
+																																		A2(
+																																			_bluedogtraining$bdt_elm$Button$isLoading,
+																																			true,
+																																			A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Calendar, _bluedogtraining$bdt_elm$Button$view))),
+																																	_1: {ctor: '[]'}
+																																}
 																															}
 																														}
 																													}
@@ -35240,15 +35283,22 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																							}
 																						}
 																					}
+																				}),
+																			_1: {ctor: '[]'}
+																		},
+																		A3(
+																			_bluedogtraining$bdt_elm$Card$header,
+																			'Example Buttons',
+																			{
+																				ctor: '::',
+																				_0: A2(_bluedogtraining$bdt_elm$Button$text, 'Header Button', _bluedogtraining$bdt_elm$Button$view),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(_bluedogtraining$bdt_elm$Button$text, 'Another Button', _bluedogtraining$bdt_elm$Button$view),
+																					_1: {ctor: '[]'}
 																				}
-																			}),
-																		_1: {ctor: '[]'}
-																	},
-																	A3(
-																		_bluedogtraining$bdt_elm$Card$header,
-																		'Example Buttons',
-																		{ctor: '[]'},
-																		_bluedogtraining$bdt_elm$Card$view))),
+																			},
+																			_bluedogtraining$bdt_elm$Card$view)))),
 															_1: {ctor: '[]'}
 														}),
 													_1: {ctor: '[]'}

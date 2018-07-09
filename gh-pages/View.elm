@@ -9,6 +9,7 @@ import Time
 
 import Toasters
 
+import Form.Label as Label
 import Form.Input as Input
 import Form.IntInput as IntInput
 import Form.FloatInput as FloatInput
@@ -53,9 +54,8 @@ view model =
                         |> Card.header "Example Inputs" []
                         |> Card.body
                             [ Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Simple text Input" ]
+                                [ Label.view "Simple text Input"
+                                    |> Label.render
                                 , Input.view model.input
                                     |> Input.render
                                     |> Html.map InputMsg
@@ -64,9 +64,8 @@ view model =
                                     [ text <| "Value: " ++ Input.getValue model.input ]
                                 ]
                             , Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Int Input, accepting only ints!" ]
+                                [ Label.view "Int Input, accepting only ints!"
+                                    |> Label.render
                                 , IntInput.view model.intInput
                                     |> IntInput.render
                                     |> Html.map IntInputMsg
@@ -75,9 +74,8 @@ view model =
                                     [ text <| "Value: " ++ toString (IntInput.getValue model.intInput) ]
                                 ]
                             , Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Float Input, accepting only floats!" ]
+                                [ Label.view "Float Input, accepting only floats!"
+                                    |> Label.render
                                 , FloatInput.view model.floatInput
                                     |> FloatInput.render
                                     |> Html.map FloatInputMsg
@@ -94,9 +92,8 @@ view model =
                         |> Card.header "Example Selects" []
                         |> Card.body
                             [ Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Simple Select" ]
+                                [ Label.view "Simple Select"
+                                    |> Label.render
                                 , Select.view model.select
                                     |> Select.setIsClearable True
                                     |> Select.render
@@ -106,9 +103,8 @@ view model =
                                     [ text <| "Value: " ++ toString (Select.getSelectedOption model.select) ]
                                 ]
                             , Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Multi Select" ]
+                                [ Label.view "Multi Select"
+                                    |> Label.render
                                 , MultiSelect.view model.multiSelect
                                     |> MultiSelect.render
                                     |> Html.map MultiSelectMsg
@@ -117,9 +113,8 @@ view model =
                                     [ text <| "Value: " ++ toString (MultiSelect.getSelectedOptions model.multiSelect) ]
                                 ]
                             , Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Search Select" ]
+                                [ Label.view "Search Select"
+                                    |> Label.render
                                 , SearchSelect.view model.searchSelect
                                     |> SearchSelect.setToLabel (\option -> option.name ++ " (" ++ String.join ", " option.altSpellings ++ ")")
                                     |> SearchSelect.render
@@ -137,9 +132,8 @@ view model =
                         |> Card.header "Date Pickers!" []
                         |> Card.body
                             [ Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Simple Date Picker" ]
+                                [ Label.view "Simple Date Picker"
+                                    |> Label.render
                                 , DatePicker.view model.datePicker
                                     |> DatePicker.render
                                     |> Html.map DatePickerMsg
@@ -148,9 +142,8 @@ view model =
                                     [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker) ]
                                 ]
                             , Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Date Picker with min and max dates" ]
+                                [ Label.view "Date Picker with min and max dates"
+                                    |> Label.render
                                 , DatePicker.view model.datePicker2
                                     |> DatePicker.setIsClearable True
                                     |> DatePicker.setMinDate (Just <| Date.fromTime <| Time.second * 1506760131)
@@ -162,9 +155,8 @@ view model =
                                     [ text <| "Value: " ++ toString (DatePicker.getSelectedDate model.datePicker2) ]
                                 ]
                             , Card.block Twelve
-                                [ label
-                                    []
-                                    [ text "Date Time Picker!" ]
+                                [ Label.view "Date Time Picker!"
+                                    |> Label.render
                                 , DatePicker.view model.datePicker3
                                     |> DatePicker.setIsClearable True
                                     |> DatePicker.setIncludeTime True

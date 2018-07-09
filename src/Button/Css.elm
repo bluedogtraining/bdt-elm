@@ -66,7 +66,7 @@ buttonPadding content size =
         (Text _, Small) -> Css.rem 0.3
         (Text _, Normal) -> Css.rem 0.8
         _ -> Css.rem 0
-        
+
 
 lightenColor : Color.Color -> Css.Color
 lightenColor color =

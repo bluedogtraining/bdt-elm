@@ -30934,6 +30934,127 @@ var _bluedogtraining$bdt_elm$Form_IntInput$setId = F2(
 			A2(_bluedogtraining$bdt_elm$Form_IntInput_Internal$setId, id, _p31._1));
 	});
 
+var _bluedogtraining$bdt_elm$Form_Label_Css$mandatory = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$color(
+			A3(_rtfeldman$elm_css$Css$rgb, 189, 54, 47)),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineFlex),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$marginLeft(
+					_rtfeldman$elm_css$Css$px(5)),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_Label_Css$label = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$fontFamilies(
+			{
+				ctor: '::',
+				_0: '-apple-system',
+				_1: {
+					ctor: '::',
+					_0: 'system-ui',
+					_1: {
+						ctor: '::',
+						_0: 'BlinkMacSystemFont',
+						_1: {
+							ctor: '::',
+							_0: 'Segoe UI',
+							_1: {
+								ctor: '::',
+								_0: 'Roboto',
+								_1: {
+									ctor: '::',
+									_0: 'Helvetica Neue',
+									_1: {
+										ctor: '::',
+										_0: 'Arial',
+										_1: {
+											ctor: '::',
+											_0: 'sans-serif',
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$fontWeight(
+				_rtfeldman$elm_css$Css$int(100)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$color(
+					A3(_rtfeldman$elm_css$Css$rgb, 111, 111, 111)),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+
+var _bluedogtraining$bdt_elm$Form_Label$render = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1._0;
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$label,
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Form_Label_Css$label,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Html_Styled$text(_p2.text),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+					_p2.mandatory,
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Form_Label_Css$mandatory,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text('*'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Form_Label$initialConfig = function (text) {
+	return {text: text, mandatory: false};
+};
+var _bluedogtraining$bdt_elm$Form_Label$Config = F2(
+	function (a, b) {
+		return {text: a, mandatory: b};
+	});
+var _bluedogtraining$bdt_elm$Form_Label$Label = function (a) {
+	return {ctor: 'Label', _0: a};
+};
+var _bluedogtraining$bdt_elm$Form_Label$view = function (_p3) {
+	return _bluedogtraining$bdt_elm$Form_Label$Label(
+		_bluedogtraining$bdt_elm$Form_Label$initialConfig(_p3));
+};
+var _bluedogtraining$bdt_elm$Form_Label$mandatory = F2(
+	function (bool, _p4) {
+		var _p5 = _p4;
+		return _bluedogtraining$bdt_elm$Form_Label$Label(
+			_elm_lang$core$Native_Utils.update(
+				_p5._0,
+				{mandatory: bool}));
+	});
+
 var _elm_lang$core$Random$onSelfMsg = F3(
 	function (_p1, _p0, seed) {
 		return _elm_lang$core$Task$succeed(seed);
@@ -34687,14 +34808,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																{
 																	ctor: '::',
-																	_0: A2(
-																		_rtfeldman$elm_css$Html_Styled$label,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: _rtfeldman$elm_css$Html_Styled$text('Simple text Input'),
-																			_1: {ctor: '[]'}
-																		}),
+																	_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																		_bluedogtraining$bdt_elm$Form_Label$view('Simple text Input')),
 																	_1: {
 																		ctor: '::',
 																		_0: A2(
@@ -34727,14 +34842,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																	_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																	{
 																		ctor: '::',
-																		_0: A2(
-																			_rtfeldman$elm_css$Html_Styled$label,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Html_Styled$text('Int Input, accepting only ints!'),
-																				_1: {ctor: '[]'}
-																			}),
+																		_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																			_bluedogtraining$bdt_elm$Form_Label$view('Int Input, accepting only ints!')),
 																		_1: {
 																			ctor: '::',
 																			_0: A2(
@@ -34768,14 +34877,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																		_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																		{
 																			ctor: '::',
-																			_0: A2(
-																				_rtfeldman$elm_css$Html_Styled$label,
-																				{ctor: '[]'},
-																				{
-																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Html_Styled$text('Float Input, accepting only floats!'),
-																					_1: {ctor: '[]'}
-																				}),
+																			_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																				_bluedogtraining$bdt_elm$Form_Label$view('Float Input, accepting only floats!')),
 																			_1: {
 																				ctor: '::',
 																				_0: A2(
@@ -34838,14 +34941,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																	_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																	{
 																		ctor: '::',
-																		_0: A2(
-																			_rtfeldman$elm_css$Html_Styled$label,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Html_Styled$text('Simple Select'),
-																				_1: {ctor: '[]'}
-																			}),
+																		_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																			_bluedogtraining$bdt_elm$Form_Label$view('Simple Select')),
 																		_1: {
 																			ctor: '::',
 																			_0: A2(
@@ -34882,14 +34979,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																		_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																		{
 																			ctor: '::',
-																			_0: A2(
-																				_rtfeldman$elm_css$Html_Styled$label,
-																				{ctor: '[]'},
-																				{
-																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Html_Styled$text('Multi Select'),
-																					_1: {ctor: '[]'}
-																				}),
+																			_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																				_bluedogtraining$bdt_elm$Form_Label$view('Multi Select')),
 																			_1: {
 																				ctor: '::',
 																				_0: A2(
@@ -34923,14 +35014,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																			_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																			{
 																				ctor: '::',
-																				_0: A2(
-																					_rtfeldman$elm_css$Html_Styled$label,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled$text('Search Select'),
-																						_1: {ctor: '[]'}
-																					}),
+																				_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																					_bluedogtraining$bdt_elm$Form_Label$view('Search Select')),
 																				_1: {
 																					ctor: '::',
 																					_0: A2(
@@ -35007,14 +35092,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																		_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																		{
 																			ctor: '::',
-																			_0: A2(
-																				_rtfeldman$elm_css$Html_Styled$label,
-																				{ctor: '[]'},
-																				{
-																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Html_Styled$text('Simple Date Picker'),
-																					_1: {ctor: '[]'}
-																				}),
+																			_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																				_bluedogtraining$bdt_elm$Form_Label$view('Simple Date Picker')),
 																			_1: {
 																				ctor: '::',
 																				_0: A2(
@@ -35048,14 +35127,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																			_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																			{
 																				ctor: '::',
-																				_0: A2(
-																					_rtfeldman$elm_css$Html_Styled$label,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Html_Styled$text('Date Picker with min and max dates'),
-																						_1: {ctor: '[]'}
-																					}),
+																				_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																					_bluedogtraining$bdt_elm$Form_Label$view('Date Picker with min and max dates')),
 																				_1: {
 																					ctor: '::',
 																					_0: A2(
@@ -35100,14 +35173,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																				_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																				{
 																					ctor: '::',
-																					_0: A2(
-																						_rtfeldman$elm_css$Html_Styled$label,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: _rtfeldman$elm_css$Html_Styled$text('Date Time Picker!'),
-																							_1: {ctor: '[]'}
-																						}),
+																					_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																						_bluedogtraining$bdt_elm$Form_Label$view('Date Time Picker!')),
 																					_1: {
 																						ctor: '::',
 																						_0: A2(

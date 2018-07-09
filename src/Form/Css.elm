@@ -32,6 +32,18 @@ select isError isLocked =
     ]
 
 
+title : Bool -> List Style
+title isFaded =
+
+    [ flexGrow <| int 1
+    , color (rgb 111 111 111) ? isFaded
+    , fontWeight (int 200) ? isFaded
+    , fontFamilies
+        [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
+    ]
+
+
+
 selectOptionList : List Style
 selectOptionList =
 

@@ -21,11 +21,10 @@ input isError isLocked =
     css <| Css.input isError isLocked
 
 
-title : Attribute msg
-title =
+title : Bool -> Attribute msg
+title isFaded =
 
-    css
-        [ flexGrow <| int 1 ]
+    css <| Css.title isFaded
 
 
 optionList : Attribute msg

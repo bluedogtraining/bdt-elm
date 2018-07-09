@@ -309,7 +309,7 @@ closed state viewState =
             , onFocus Open ? not viewState.isLocked
             ]
             [ div
-                [ Css.title
+                [ Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)
                 , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
                 ]
                 [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
@@ -330,6 +330,7 @@ open state viewState =
             , tabindex -1
             , onBlur Blur
             , onKeyboardInput <| KeyboardInput False
+            , Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)
             , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
             ]
             [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]

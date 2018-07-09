@@ -279,6 +279,7 @@ closed state viewState =
         [ Css.container ]
         [ input
             [ Css.input viewState.isLocked viewState.isError
+            , Css.title (Resettable.getValue state.selectedOption == Nothing)
             , Html.maybeAttribute id viewState.id
             , type_ "text"
             , disabled viewState.isLocked
@@ -299,6 +300,7 @@ open state viewState =
         [ Css.container ]
         [ input
             [ Css.input viewState.isLocked viewState.isError
+            , Css.title (Resettable.getValue state.selectedOption == Nothing)
             , id "OPEN_SEARCH_SELECT"
             , type_ "text"
             , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")

@@ -284,6 +284,7 @@ view model =
                                     |> Label.mandatory True
                                     |> Label.render
                                 , SearchSelect.view model.countryOfBirth
+                                    |> SearchSelect.setToLabel .name
                                     |> SearchSelect.render
                                     |> Html.map UpdateCountryOfBirth
                                 ]

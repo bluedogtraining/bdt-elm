@@ -277,7 +277,7 @@ closed state viewState =
             ]
             [ div
                 [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
-                , Css.title
+                , Css.title (Resettable.getValue state.selectedOption == Nothing)
                 ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             , clearButton state viewState
@@ -300,7 +300,9 @@ open state viewState =
             , onBlur Blur
             ]
             [ div
-                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
+                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+                , Css.title (Resettable.getValue state.selectedOption == Nothing)
+                ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             ]
         , optionList state viewState

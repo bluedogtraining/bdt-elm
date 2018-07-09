@@ -13,11 +13,11 @@ card : Attribute msg
 card =
     css
         [ backgroundColor <| hex "ffffff"
-        , border3 (px 1) solid (hex "dfdfdf")
-        , boxShadow4 (px 0) (px 1) (px 3) (rgba 0 0 0 0.12)
+        , border3 (px 1) solid (hex "cccccc")
         , borderRadius <| px 2
         , color <| hex "4f4f4f"
-        , marginBottom <| px 15
+        , marginBottom <| Css.rem 0.8
+        , padding2 (Css.rem 0.8) (Css.rem 0)
         ]
 
 
@@ -26,18 +26,12 @@ header =
     css
         [ displayFlex
         , justifyContent spaceBetween
-        , padding2 (px 12) (px 16)
-        , borderBottom3 (px 1) solid (hex "ededed")
-        ]
-
-
-footer : Attribute msg
-footer =
-    css
-        [ displayFlex
-        , justifyContent flexEnd
-        , padding2 (px 12) (px 16)
-        , borderTop3 (px 1) solid (hex "ededed")
+        , alignItems center
+        , padding2 (Css.rem 0) (Css.rem 0.8)
+        , fontFamilies
+            [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
+        , fontSize <| Css.rem 1.2
+        , fontWeight <| int 600
         ]
 
 
@@ -54,6 +48,7 @@ body =
     css
         [ displayFlex
         , flexWrap wrap
+        , padding2 (Css.rem 0.8) (Css.rem 0)
         ]
 
 
@@ -63,7 +58,16 @@ block cols sizes =
         List.map Grid.Css.colSize (Size.orderBySize sizes)
         ++
         [ flexGrow <| num 1
-        , padding <| px 15
+        , padding2 (Css.rem 0.2) (Css.rem 0.8)
         , boxSizing borderBox
         , Grid.Css.defaultColSize cols
+        ]
+
+
+footer : Attribute msg
+footer =
+    css
+        [ displayFlex
+        , justifyContent flexEnd
+        , padding2 (Css.rem 0) (Css.rem 0.8)
         ]

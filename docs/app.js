@@ -21574,9 +21574,9 @@ var _bluedogtraining$bdt_elm$Button_Css$buttonPadding = F2(
 		var _p0 = {ctor: '_Tuple2', _0: content, _1: size};
 		if ((_p0.ctor === '_Tuple2') && (_p0._0.ctor === 'Text')) {
 			if (_p0._1.ctor === 'Small') {
-				return _rtfeldman$elm_css$Css$rem(0.5);
+				return _rtfeldman$elm_css$Css$rem(0.3);
 			} else {
-				return _rtfeldman$elm_css$Css$rem(1);
+				return _rtfeldman$elm_css$Css$rem(0.8);
 			}
 		} else {
 			return _rtfeldman$elm_css$Css$rem(0);
@@ -21614,73 +21614,107 @@ var _bluedogtraining$bdt_elm$Button_Css$button = F5(
 					_rtfeldman$elm_css$Css$px(0)),
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$backgroundColor(_rtfeldman$elm_css$Css$transparent),
+					_0: A3(
+						_rtfeldman$elm_css$Css$border3,
+						_rtfeldman$elm_css$Css$px(1),
+						_rtfeldman$elm_css$Css$solid,
+						A4(
+							_rtfeldman$elm_css$Css$rgba,
+							function (_) {
+								return _.red;
+							}(
+								_elm_lang$core$Color$toRgb(color)),
+							function (_) {
+								return _.green;
+							}(
+								_elm_lang$core$Color$toRgb(color)),
+							function (_) {
+								return _.blue;
+							}(
+								_elm_lang$core$Color$toRgb(color)),
+							0.2)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$fontWeight(_rtfeldman$elm_css$Css$bold),
+						_0: _rtfeldman$elm_css$Css$borderRadius(
+							_rtfeldman$elm_css$Css$px(2)),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$color(
-								A3(
-									_rtfeldman$elm_css$Css$rgb,
-									function (_) {
-										return _.red;
-									}(
-										_elm_lang$core$Color$toRgb(color)),
-									function (_) {
-										return _.green;
-									}(
-										_elm_lang$core$Color$toRgb(color)),
-									function (_) {
-										return _.blue;
-									}(
-										_elm_lang$core$Color$toRgb(color)))),
+							_0: _rtfeldman$elm_css$Css$backgroundColor(_rtfeldman$elm_css$Css$transparent),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$displayFlex,
+								_0: _rtfeldman$elm_css$Css$fontWeight(_rtfeldman$elm_css$Css$bold),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
+									_0: _rtfeldman$elm_css$Css$color(
+										A3(
+											_rtfeldman$elm_css$Css$rgb,
+											function (_) {
+												return _.red;
+											}(
+												_elm_lang$core$Color$toRgb(color)),
+											function (_) {
+												return _.green;
+											}(
+												_elm_lang$core$Color$toRgb(color)),
+											function (_) {
+												return _.blue;
+											}(
+												_elm_lang$core$Color$toRgb(color)))),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+										_0: _rtfeldman$elm_css$Css$displayFlex,
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineBlock),
+											_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$outlineWidth(
-													_rtfeldman$elm_css$Css$px(0)),
+												_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
 												_1: {
 													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$cursor(
-														(isDisabled || isLoading) ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
+													_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineBlock),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$height(
-															_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
+														_0: _rtfeldman$elm_css$Css$outlineWidth(
+															_rtfeldman$elm_css$Css$px(0)),
 														_1: {
 															ctor: '::',
-															_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
+															_0: _rtfeldman$elm_css$Css$cursor(
+																(isDisabled || isLoading) ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_rtfeldman$elm_css$Css$padding2,
-																	_rtfeldman$elm_css$Css$px(0),
-																	A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
+																_0: _rtfeldman$elm_css$Css$height(
+																	_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
 																_1: {
 																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
+																	_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
 																	_1: {
 																		ctor: '::',
-																		_0: _rtfeldman$elm_css$Css$hover(
-																			{
+																		_0: A2(
+																			_rtfeldman$elm_css$Css$padding2,
+																			_rtfeldman$elm_css$Css$px(0),
+																			A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(
+																				_rtfeldman$elm_css$Css$margin2,
+																				_rtfeldman$elm_css$Css$px(0),
+																				_rtfeldman$elm_css$Css$rem(0.2)),
+																			_1: {
 																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Css$backgroundColor(
-																					_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {ctor: '[]'}
+																				_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
+																				_1: {
+																					ctor: '::',
+																					_0: _rtfeldman$elm_css$Css$hover(
+																						{
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Css$backgroundColor(
+																								_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {ctor: '[]'}
+																				}
+																			}
+																		}
 																	}
 																}
 															}

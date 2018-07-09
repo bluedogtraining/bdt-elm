@@ -18,8 +18,10 @@ import Button.Size exposing (Size (..))
 button : Size -> Content -> Color.Color -> Bool -> Bool -> Attribute msg
 button size content color isDisabled isLoading =
 
-    css <|
+    css
         [ border (px 0)
+        , border3 (px 1) solid (Css.rgba (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue) 0.2)
+        , borderRadius (px 2)
         , backgroundColor transparent
         , fontWeight bold
         , Css.color <| Css.rgb (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue)
@@ -32,6 +34,7 @@ button size content color isDisabled isLoading =
         , height <| buttonHeight size
         , buttonWidth content size
         , padding2 (px 0) (buttonPadding content size)
+        , margin2 (px 0) (Css.rem 0.2)
         , verticalAlign middle
         , hover
             [ backgroundColor (lightenColor color)
@@ -60,10 +63,10 @@ buttonPadding : Content -> Size -> Rem
 buttonPadding content size =
 
     case (content, size) of
-        (Text _, Small) -> Css.rem 0.5
-        (Text _, Normal) -> Css.rem 1
+        (Text _, Small) -> Css.rem 0.3
+        (Text _, Normal) -> Css.rem 0.8
         _ -> Css.rem 0
-
+        
 
 lightenColor : Color.Color -> Css.Color
 lightenColor color =

@@ -22632,8 +22632,8 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Css$padding2,
-				_rtfeldman$elm_css$Css$px(5),
-				_rtfeldman$elm_css$Css$px(10)),
+				_rtfeldman$elm_css$Css$px(8),
+				_rtfeldman$elm_css$Css$px(12)),
 			_1: {
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$margin(
@@ -22649,7 +22649,7 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
 							_0: A2(
 								_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
 								_rtfeldman$elm_css$Css$backgroundColor(
-									_rtfeldman$elm_css$Css$hex('eceeef')),
+									_rtfeldman$elm_css$Css$hex('f2f9fc')),
 								isDisabled || isFocused),
 							_1: {
 								ctor: '::',
@@ -22666,7 +22666,7 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
 												_0: A2(
 													_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
 													_rtfeldman$elm_css$Css$backgroundColor(
-														_rtfeldman$elm_css$Css$hex('f6f6f6')),
+														_rtfeldman$elm_css$Css$hex('f2f9fc')),
 													!isDisabled),
 												_1: {ctor: '[]'}
 											}),
@@ -22686,7 +22686,7 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionList = {
 	_1: {
 		ctor: '::',
 		_0: _rtfeldman$elm_css$Css$top(
-			_rtfeldman$elm_css$Css$px(33)),
+			_rtfeldman$elm_css$Css$px(31)),
 		_1: {
 			ctor: '::',
 			_0: _rtfeldman$elm_css$Css$left(
@@ -22712,16 +22712,21 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionList = {
 									_rtfeldman$elm_css$Css$border3,
 									_rtfeldman$elm_css$Css$px(1),
 									_rtfeldman$elm_css$Css$solid,
-									_rtfeldman$elm_css$Css$hex('dddddd')),
+									_rtfeldman$elm_css$Css$hex('cccccc')),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$padding(
-										_rtfeldman$elm_css$Css$px(0)),
+									_0: _rtfeldman$elm_css$Css$borderTopColor(
+										_rtfeldman$elm_css$Css$hex('eeeeee')),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$backgroundColor(
-											_rtfeldman$elm_css$Css$hex('ffffff')),
-										_1: {ctor: '[]'}
+										_0: _rtfeldman$elm_css$Css$padding(
+											_rtfeldman$elm_css$Css$px(0)),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$backgroundColor(
+												_rtfeldman$elm_css$Css$hex('ffffff')),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}
@@ -22781,14 +22786,9 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 												_0: _rtfeldman$elm_css$Css$focus(
 													{
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$borderColor(
-															_rtfeldman$elm_css$Css$hex('67b8ed')),
-														_1: {
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$outlineWidth(
-																_rtfeldman$elm_css$Css$px(0)),
-															_1: {ctor: '[]'}
-														}
+														_0: _rtfeldman$elm_css$Css$outlineWidth(
+															_rtfeldman$elm_css$Css$px(0)),
+														_1: {ctor: '[]'}
 													}),
 												_1: {ctor: '[]'}
 											}
@@ -27104,11 +27104,7 @@ var _bluedogtraining$bdt_elm$Form_Select_Internal$open = F2(
 									_1: {
 										ctor: '::',
 										_0: _rtfeldman$elm_css$Html_Styled_Attributes$tabindex(-1),
-										_1: {
-											ctor: '::',
-											_0: _rtfeldman$elm_css$Html_Styled_Events$onBlur(_bluedogtraining$bdt_elm$Form_Select_Internal$Blur),
-											_1: {ctor: '[]'}
-										}
+										_1: {ctor: '[]'}
 									}
 								}
 							}
@@ -32676,7 +32672,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$infoMessage = _rtfeldman$elm_
 			_0: A2(
 				_rtfeldman$elm_css$Css$padding2,
 				_rtfeldman$elm_css$Css$px(8),
-				_rtfeldman$elm_css$Css$px(16)),
+				_rtfeldman$elm_css$Css$px(12)),
 			_1: {
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$displayFlex,
@@ -32692,7 +32688,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$infoMessage = _rtfeldman$elm_
 							_1: {
 								ctor: '::',
 								_0: _rtfeldman$elm_css$Css$top(
-									_rtfeldman$elm_css$Css$px(37)),
+									_rtfeldman$elm_css$Css$px(35)),
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Css$left(
@@ -32732,7 +32728,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$optionList = _rtfeldman$elm_c
 		{
 			ctor: '::',
 			_0: _rtfeldman$elm_css$Css$top(
-				_rtfeldman$elm_css$Css$px(37)),
+				_rtfeldman$elm_css$Css$px(35)),
 			_1: {ctor: '[]'}
 		}));
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$title = _rtfeldman$elm_css$Html_Styled_Attributes$css(

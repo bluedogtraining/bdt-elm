@@ -9,6 +9,7 @@
     ],
     "exposed-modules": [
         "Resettable",
+        "Form.Label",
         "Form.Input",
         "Form.IntInput",
         "Form.FloatInput",

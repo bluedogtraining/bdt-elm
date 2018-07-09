@@ -12,10 +12,9 @@ input isError isLocked =
     , border3 (px 1) solid (hex <| if isError && not isLocked then "d9534f" else "cccccc")
     , width <| pct 100
     , padding2 (px 6) (px 8)
+    , margin2 (px 10) (px 0)
     , color <| hex "555555"
     , backgroundColor <| hex <| if isLocked then "dddddd" else "ffffff"
-    , marginTop <| px 4
-    , marginBottom <| px 4
     , fontSize <| pt 12
     , focus
         [ outlineWidth (px 0)

@@ -30,9 +30,9 @@ type Config msg
 
 type alias ViewConfig msg =
     { headerTitle : String
-    , headerButtons : List Button
+    , headerButtons : List (Button msg)
     , cardBlocks : List (CardBlock msg)
-    , footerButtons : List Button
+    , footerButtons : List (Button msg)
     }
 
 
@@ -54,7 +54,7 @@ view =
 
 {-| Add a header block
 -}
-header : String -> List Button -> Config msg -> Config msg
+header : String -> List (Button msg) -> Config msg -> Config msg
 header title buttons (Config viewConfig) =
 
     Config { viewConfig | headerTitle = title, headerButtons = buttons }
@@ -70,7 +70,7 @@ body cardBlocks (Config viewConfig) =
 
 {-| Add a footer block
 -}
-footer : List Button -> Config msg -> Config msg
+footer : List (Button msg) -> Config msg -> Config msg
 footer buttons (Config viewConfig) =
 
     Config { viewConfig | footerButtons = buttons }
@@ -115,20 +115,15 @@ render (Config viewConfig) =
                 [ text viewConfig.headerTitle ]
             , div
                 []
-                (List.map renderHeaderButton viewConfig.headerButtons)
+                (List.map Button.render viewConfig.headerButtons)
             ]
         , Html.divIf (not <| List.isEmpty viewConfig.cardBlocks)
             [ Css.body ]
             (List.map renderCardBlock viewConfig.cardBlocks)
+        , Html.divIf (not (List.isEmpty viewConfig.footerButtons))
+            [ Css.footer ]
+            (List.map Button.render viewConfig.footerButtons)
         ]
-
-
-renderHeaderButton : Button -> Html msg
-renderHeaderButton button =
-
-    div
-        []
-        []
 
 
 renderCardBlock : CardBlock msg -> Html msg

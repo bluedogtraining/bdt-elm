@@ -23,6 +23,7 @@ import Material.Icons.Navigation as MaterialIcon
 import Material.Icons.Content as MaterialIcon
 import Material.Icons.Toggle as MaterialIcon
 import Material.Icons.Action as MaterialIcon
+import Material.Icons.Image as MaterialIcon
 
 
 {-| Available Icons
@@ -36,6 +37,7 @@ type Icon
     | ChevronLeft
     | ChevronRight
     | Spinner
+    | Edit
 
 
 {-| Render an icon
@@ -69,6 +71,9 @@ render icon size color =
 
         Spinner ->
             renderIcon size color MaterialIcon.autorenew
+
+        Edit ->
+            renderIcon size color MaterialIcon.edit
 
 
 renderIcon : Int -> Color -> (Color -> Int -> Svg msg) -> Html msg

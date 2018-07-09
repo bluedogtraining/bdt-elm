@@ -29,3 +29,8 @@ type Msg
     | DatePicker2Msg DatePicker.Msg
     | DatePicker3Msg DatePicker.Msg
     | TextAreaMsg TextArea.Msg
+    | UpdateName Input.Msg
+    | UpdateStartDate DatePicker.Msg
+    | UpdateEmail Input.Msg
+    | UpdatePreferredGenre (Select.Msg MusicGenre)
+    | UpdateCountryOfBirth (SearchSelect.Msg Country)

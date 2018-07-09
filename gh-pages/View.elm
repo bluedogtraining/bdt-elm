@@ -252,6 +252,56 @@ view model =
                         |> Card.footer [ Button.view |> Button.text "Footer Button" ]
                         |> Card.render
                     ]
+                , Grid.colSizes Twelve [ Lg ~ Six ]
+                    [ Card.view
+                        |> Card.header "User Details" [ Button.view |> Button.icon Icon.Edit ]
+                        |> Card.body
+                            [ Card.block Six
+                                [ Label.view "Name"
+                                    |> Label.mandatory True
+                                    |> Label.render
+                                , Input.view model.name
+                                    |> Input.render
+                                    |> Html.map UpdateName
+                                ]
+                            , Card.block Six
+                                [ Label.view "Start Date"
+                                    |> Label.mandatory True
+                                    |> Label.render
+                                , DatePicker.view model.startDate
+                                    |> DatePicker.render
+                                    |> Html.map UpdateStartDate
+                                ]
+                            , Card.block Six
+                                [ Label.view "Email"
+                                    |> Label.mandatory True
+                                    |> Label.render
+                                , Input.view model.email
+                                    |> Input.render
+                                    |> Html.map UpdateEmail
+                                ]
+                            , Card.block Six
+                                [ Label.view "Country of Birth"
+                                    |> Label.mandatory True
+                                    |> Label.render
+                                , SearchSelect.view model.countryOfBirth
+                                    |> SearchSelect.render
+                                    |> Html.map UpdateCountryOfBirth
+                                ]
+                            , Card.block Six
+                                [ Label.view "Preferred Music Genre"
+                                    |> Label.render
+                                , Select.view model.preferredGenre
+                                    |> Select.render
+                                    |> Html.map UpdatePreferredGenre
+                                ]
+                            ]
+                        |> Card.footer
+                            [ Button.view |> Button.red |> Button.text "cancel"
+                            , Button.view |> Button.green |> Button.text "save"
+                            ]
+                        |> Card.render
+                    ]
                 ]
             ]
         ]

@@ -27,6 +27,11 @@ type alias Model =
     , datePicker2 : DatePicker.Model
     , datePicker3 : DatePicker.Model
     , textArea : TextArea.Model
+    , name : Input.Model
+    , startDate : DatePicker.Model
+    , email : Input.Model
+    , preferredGenre : Select.Model MusicGenre
+    , countryOfBirth : SearchSelect.Model Country
     }
 
 
@@ -43,4 +48,9 @@ initialModel =
     , datePicker2 = DatePicker.init
     , datePicker3 = DatePicker.init
     , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [("[]", "☐")]
+    , name = Input.init
+    , startDate = DatePicker.init
+    , email = Input.init
+    , preferredGenre = Select.init MusicGenre.asList
+    , countryOfBirth = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Countries.countryDecoder
     }

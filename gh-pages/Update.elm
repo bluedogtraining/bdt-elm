@@ -87,3 +87,34 @@ update msg model =
 
         TextAreaMsg textAreaMsg ->
             { model | textArea = TextArea.update textAreaMsg model.textArea } ! []
+
+
+        UpdateName inputMsg ->
+            { model | name = Input.update inputMsg model.name } ! []
+
+        UpdateStartDate datePickerMsg ->
+            let
+                (newDatePicker, cmd) =
+                    DatePicker.update datePickerMsg model.startDate
+
+            in
+                { model | startDate = newDatePicker } ! [ Cmd.map UpdateStartDate cmd ]
+
+        UpdateEmail inputMsg ->
+            { model | email = Input.update inputMsg model.email } ! []
+
+        UpdatePreferredGenre selectMsg ->
+            let
+                (newSelect, cmd) =
+                    Select.update selectMsg model.preferredGenre
+
+            in
+                { model | preferredGenre = newSelect } ! [ Cmd.map SelectMsg cmd ]
+
+        UpdateCountryOfBirth searchSelectMsg ->
+            let
+                (newSearchSelect, cmd) =
+                    SearchSelect.update searchSelectMsg model.countryOfBirth
+
+            in
+                { model | countryOfBirth = newSearchSelect } ! [ Cmd.map SearchSelectMsg cmd ]

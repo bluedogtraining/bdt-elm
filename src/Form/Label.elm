@@ -1,13 +1,5 @@
 module Form.Label exposing (view, mandatory, render)
 
-import Css exposing (..)
-
-import Html.Styled exposing (..)
-import Html.Styled.Bdt exposing (..)
-
-import Form.Label.Css as Css
-
-
 {-| Module to add Labels to your app
 
 # Initialise
@@ -20,6 +12,13 @@ import Form.Label.Css as Css
 @docs render
 
 -}
+
+import Css exposing (..)
+
+import Html.Styled exposing (..)
+import Html.Styled.Bdt exposing (..)
+
+import Form.Label.Css as Css
 
 
 type Label

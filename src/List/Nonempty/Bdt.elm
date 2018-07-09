@@ -15,17 +15,17 @@ import List.Nonempty as Nonempty exposing (Nonempty)
 
 {-| Nonempty decoder
 
-type alias Student =
-    { firstName : String
-    , courses : Nonempty Course
-    }
+    type alias Student =
+        { firstName : String
+        , courses : Nonempty Course
+        }
 
 
-decoder : Decoder Student
-decoder =
-    Decode.decode Student
-        |> Decode.required "firstName" Decode.string
-        |> Decode.required "courses" (Nonempty.decoder courseDecoder)
+    decoder : Decoder Student
+    decoder =
+        Decode.decode Student
+            |> Decode.required "firstName" Decode.string
+            |> Decode.required "courses" (Nonempty.decoder courseDecoder)
 
 -}
 decoder : Decoder a -> Decoder (Nonempty a)

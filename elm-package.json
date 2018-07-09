@@ -1,5 +1,5 @@
 {
-    "version": "8.1.1",
+    "version": "8.2.0",
     "summary": "Elm modules commonly used at BDT",
     "repository": "https://github.com/bluedogtraining/bdt-elm.git",
     "license": "BSD3",
@@ -26,6 +26,7 @@
         "Tuple.Bdt",
         "Html.Styled.Bdt",
         "List.Nonempty.Bdt",
+        "Date.Bdt",
         "InfixPrecedence"
     ],
     "dependencies": {

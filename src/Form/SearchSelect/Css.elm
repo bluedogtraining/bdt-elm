@@ -34,7 +34,7 @@ optionList =
     css <|
         Css.selectOptionList
         ++
-        [ top <| px 35
+        [ top <| px 41
         ]
 
 
@@ -48,13 +48,14 @@ infoMessage : Attribute msg
 infoMessage =
 
     css
-        [ border3 (px 1) solid (hex "dddddd")
+        [ border3 (px 1) solid (hex "cccccc")
+        , borderTopColor <| hex "eeeeee"
         , padding2 (px 8) (px 12)
         , displayFlex
         , alignItems center
         , justifyContent center
         , position absolute
-        , top <| px 35
+        , top <| px 41
         , left <| px 0
         , right <| px 0
         , zIndex <| int 10

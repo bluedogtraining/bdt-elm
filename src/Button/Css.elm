@@ -35,6 +35,7 @@ button size content color isDisabled isLoading =
         , buttonWidth content size
         , padding2 (px 0) (buttonPadding content size)
         , margin2 (px 0) (Css.rem 0.2)
+        , fontSize <| Css.rem 0.8
         , verticalAlign middle
         , hover
             [ backgroundColor (lightenColor color)
@@ -46,16 +47,16 @@ buttonHeight : Size -> Rem
 buttonHeight size =
 
     case size of
-        Small -> Css.rem 1
-        Normal -> Css.rem 1.5
+        Small -> Css.rem 1.4
+        Normal -> Css.rem 1.8
 
 
 buttonWidth : Content -> Size -> Style
 buttonWidth content size =
 
     case (content, size) of
-        (Icon _, Small) -> width <| Css.rem 1
-        (Icon _, Normal) -> width <| Css.rem 1.5
+        (Icon _, Small) -> width <| Css.rem 1.4
+        (Icon _, Normal) -> width <| Css.rem 1.8
         _ -> width <| auto
 
 

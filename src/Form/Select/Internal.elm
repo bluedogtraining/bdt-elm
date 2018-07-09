@@ -297,7 +297,7 @@ open state viewState =
             , Html.maybeAttribute id viewState.id
             , onKeyboardInput <| KeyboardInput False
             , tabindex -1
---            , onBlur Blur
+            , onBlur Blur
             ]
             [ div
                 [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]

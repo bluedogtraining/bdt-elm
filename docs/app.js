@@ -22826,41 +22826,38 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 							_rtfeldman$elm_css$Css$px(8)),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$color(
-								_rtfeldman$elm_css$Css$hex('555555')),
+							_0: A2(
+								_rtfeldman$elm_css$Css$margin2,
+								_rtfeldman$elm_css$Css$px(10),
+								_rtfeldman$elm_css$Css$px(0)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$backgroundColor(
-									_rtfeldman$elm_css$Css$hex(
-										isLocked ? 'dddddd' : 'ffffff')),
+								_0: _rtfeldman$elm_css$Css$color(
+									_rtfeldman$elm_css$Css$hex('555555')),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$marginTop(
-										_rtfeldman$elm_css$Css$px(4)),
+									_0: _rtfeldman$elm_css$Css$backgroundColor(
+										_rtfeldman$elm_css$Css$hex(
+											isLocked ? 'dddddd' : 'ffffff')),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$marginBottom(
-											_rtfeldman$elm_css$Css$px(4)),
+										_0: _rtfeldman$elm_css$Css$fontSize(
+											_rtfeldman$elm_css$Css$pt(12)),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$fontSize(
-												_rtfeldman$elm_css$Css$pt(12)),
-											_1: {
-												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$focus(
-													{
+											_0: _rtfeldman$elm_css$Css$focus(
+												{
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css$borderColor(
+														_rtfeldman$elm_css$Css$hex('67b8ed')),
+													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$borderColor(
-															_rtfeldman$elm_css$Css$hex('67b8ed')),
-														_1: {
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$outlineWidth(
-																_rtfeldman$elm_css$Css$px(0)),
-															_1: {ctor: '[]'}
-														}
-													}),
-												_1: {ctor: '[]'}
-											}
+														_0: _rtfeldman$elm_css$Css$outlineWidth(
+															_rtfeldman$elm_css$Css$px(0)),
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {ctor: '[]'}
 										}
 									}
 								}

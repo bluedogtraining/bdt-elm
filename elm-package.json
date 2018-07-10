@@ -27,6 +27,7 @@
         "Html.Styled.Bdt",
         "List.Nonempty.Bdt",
         "Date.Bdt",
+        "StringFormatting",
         "InfixPrecedence"
     ],
     "dependencies": {

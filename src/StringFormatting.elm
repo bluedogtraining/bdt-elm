@@ -1,15 +1,15 @@
-module StringFormatting exposing (phoneNumber)
+module StringFormatting exposing (mobileNumber)
 
 {-| String Formatting Helpers
 
 # String Formatting Helpers
-@docs phoneNumber
+@docs mobileNumber
 
 -}
 
 {-| Returns a string as `xxxx xxx xxx`
 -}
-phoneNumber : String -> String
-phoneNumber number =
+mobileNumber : String -> String
+mobileNumber number =
 
     String.join " " [String.slice 0 4 number, String.slice 4 7 number, String.slice 7 10 number]

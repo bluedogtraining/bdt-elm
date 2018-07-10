@@ -29,6 +29,7 @@
         "List.Bdt",
         "List.Nonempty.Bdt",
         "Date.Bdt",
+        "EverySet.Bdt",
         "Dom.Scroll.Bdt",
         "StringFormatting",
         "InfixPrecedence"

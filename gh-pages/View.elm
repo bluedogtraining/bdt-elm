@@ -25,6 +25,7 @@ import Grid
 import Card
 
 import Button
+import Toggle
 
 import Msg exposing (Msg (..))
 import Model exposing (Model)
@@ -188,6 +189,27 @@ view model =
                             ]
                         |> Card.footer []
                         |> Card.render
+                    , Card.view
+                        |> Card.header "Toggle" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ Grid.row
+                                    [ Grid.col Six
+                                        [ Toggle.view model.toggle1 Toggle1
+                                        , Toggle.viewWithLabel "Toggle Me" model.toggle2 Toggle2
+                                        ]
+                                    , Grid.col Six
+                                        [ Button.view
+                                            |> Button.text "I'm a button"
+                                            |> Button.render
+                                        ]
+                                    ]
+
+
+                                ]
+                            ]
+                        |> Card.footer []
+                        |> Card.render
                     ]
                 , Grid.colSizes Twelve [ Lg ~ Six ]
                     [ Card.view
@@ -245,6 +267,10 @@ view model =
                                 , Button.view
                                     |> Button.icon Icon.Calendar
                                     |> Button.isLoading True
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.href "http://google.com"
+                                    |> Button.text "Google It"
                                     |> Button.render
                                 ]
                             ]

@@ -19,24 +19,24 @@ button : Size -> Content -> Color.Color -> Bool -> Bool -> Attribute msg
 button size content color isDisabled isLoading =
 
     css
-        [ border (px 0)
-        , border3 (px 1) solid (Css.rgba (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue) 0.2)
+        [ border3 (px 1) solid (Css.rgba (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue) 0.2)
         , borderRadius (px 2)
         , backgroundColor transparent
         , fontWeight bold
         , Css.color <| Css.rgb (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue)
-        , displayFlex
+        , display inlineFlex
         , justifyContent center
         , alignItems center
-        , display inlineBlock
         , outlineWidth <| px 0
         , cursor <| if isDisabled || isLoading then notAllowed else pointer
         , height <| buttonHeight size
         , buttonWidth content size
         , padding2 (px 0) (buttonPadding content size)
+        , boxSizing borderBox
         , margin2 (px 0) (Css.rem 0.2)
         , fontSize <| Css.rem 0.8
         , verticalAlign middle
+        , textDecoration none
         , hover
             [ backgroundColor (lightenColor color)
             ]

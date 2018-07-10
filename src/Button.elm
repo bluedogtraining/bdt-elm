@@ -1,7 +1,7 @@
 module Button exposing
     ( Button
     , view, viewIf, render
-    , text, icon, onClick, small
+    , text, icon, onClick, href, small
     , isLoading, isDisabled
     , green, red
     )
@@ -15,7 +15,7 @@ module Button exposing
 @docs view, viewIf
 
 # Configure
-@docs text, icon, onClick, small, isLoading, isDisabled, green, red
+@docs text, icon, onClick, href, small, isLoading, isDisabled, green, red
 
 # Render
 @docs render
@@ -57,6 +57,7 @@ type alias Config msg =
     , content : Content
     , color : Color
     , onClick : Maybe msg
+    , url : String
     , isLoading : Bool
     , isDisabled : Bool
     }
@@ -69,6 +70,7 @@ initialConfig =
     , content = Text ""
     , color = Color.rgb 102 102 102
     , onClick = Nothing
+    , url = ""
     , isLoading = False
     , isDisabled = False
     }
@@ -125,6 +127,14 @@ onClick msg (Button config) =
     Button { config | onClick = Just msg }
 
 
+{-| Open a href url when clicked
+-}
+href : String -> Button msg -> Button msg
+href url (Button config) =
+
+    Button { config | url = url }
+
+
 {-| Display as loading, removing the click Msg
 -}
 isLoading : Bool -> Button msg -> Button msg
@@ -162,9 +172,11 @@ red (Button config) =
 render : Button msg -> Html msg
 render (Button config) =
 
-    button
+    a
         [ Css.button config.size config.content config.color config.isDisabled config.isLoading
         , maybeAttribute Html.onClick config.onClick
+        , Html.href config.url ? (not (String.isEmpty config.url))
+        , target "_blank" ? (not (String.isEmpty config.url))
         ]
         [ Css.spinKeyFrames
         , content config.content config.size config.color config.isLoading

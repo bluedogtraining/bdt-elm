@@ -88,6 +88,11 @@ update msg model =
         TextAreaMsg textAreaMsg ->
             { model | textArea = TextArea.update textAreaMsg model.textArea } ! []
 
+        Toggle1 ->
+            { model | toggle1 = not model.toggle1 } ! []
+
+        Toggle2 ->
+            { model | toggle2 = not model.toggle2 } ! []
 
         UpdateName inputMsg ->
             { model | name = Input.update inputMsg model.name } ! []

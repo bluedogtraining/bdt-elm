@@ -25,6 +25,7 @@ import Grid
 import Card
 
 import Button
+import Toggle
 
 import Msg exposing (Msg (..))
 import Model exposing (Model)
@@ -185,6 +186,27 @@ view model =
                                     |> Button.red
                                     |> Button.onClick AddRedToaster
                                     |> Button.render
+                                ]
+                            ]
+                        |> Card.footer []
+                        |> Card.render
+                    , Card.view
+                        |> Card.header "Toggle" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ Grid.row
+                                    [ Grid.col Six
+                                        [ Toggle.view model.toggle1 Toggle1
+                                        , Toggle.viewWithLabel "Toggle Me" model.toggle2 Toggle2
+                                        ]
+                                    , Grid.col Six
+                                        [ Button.view
+                                            |> Button.text "I'm a button"
+                                            |> Button.render
+                                        ]
+                                    ]
+
+
                                 ]
                             ]
                         |> Card.footer []

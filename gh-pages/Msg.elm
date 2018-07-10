@@ -34,3 +34,5 @@ type Msg
     | UpdateEmail Input.Msg
     | UpdatePreferredGenre (Select.Msg MusicGenre)
     | UpdateCountryOfBirth (SearchSelect.Msg Country)
+    | Toggle1
+    | Toggle2

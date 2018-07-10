@@ -27,6 +27,8 @@ type alias Model =
     , datePicker2 : DatePicker.Model
     , datePicker3 : DatePicker.Model
     , textArea : TextArea.Model
+    , toggle1 : Bool
+    , toggle2 : Bool
     , name : Input.Model
     , startDate : DatePicker.Model
     , email : Input.Model
@@ -48,6 +50,8 @@ initialModel =
     , datePicker2 = DatePicker.init
     , datePicker3 = DatePicker.init
     , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [("[]", "☐")]
+    , toggle1 = False
+    , toggle2 = False
     , name = Input.init
     , startDate = DatePicker.init
     , email = Input.init

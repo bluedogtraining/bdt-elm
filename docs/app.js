@@ -34813,6 +34813,8 @@ var _bluedogtraining$bdt_elm$MusicGenre$asNonempty = A2(
 	A2(_elm_lang$core$List$drop, 1, _bluedogtraining$bdt_elm$MusicGenre$asList),
 	_mgold$elm_nonempty_list$List_Nonempty$fromElement(_bluedogtraining$bdt_elm$MusicGenre$Rock));
 
+var _bluedogtraining$bdt_elm$Msg$Toggle2 = {ctor: 'Toggle2'};
+var _bluedogtraining$bdt_elm$Msg$Toggle1 = {ctor: 'Toggle1'};
 var _bluedogtraining$bdt_elm$Msg$UpdateCountryOfBirth = function (a) {
 	return {ctor: 'UpdateCountryOfBirth', _0: a};
 };
@@ -34883,6 +34885,8 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 			_1: {ctor: '[]'}
 		},
 		A2(_bluedogtraining$bdt_elm$Form_TextArea$setSubstituteTabs, true, _bluedogtraining$bdt_elm$Form_TextArea$init)),
+	toggle1: false,
+	toggle2: false,
 	name: _bluedogtraining$bdt_elm$Form_Input$init,
 	startDate: _bluedogtraining$bdt_elm$Form_DatePicker$init,
 	email: _bluedogtraining$bdt_elm$Form_Input$init,
@@ -34905,7 +34909,11 @@ var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 													return function (n) {
 														return function (o) {
 															return function (p) {
-																return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, name: l, startDate: m, email: n, preferredGenre: o, countryOfBirth: p};
+																return function (q) {
+																	return function (r) {
+																		return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, name: n, startDate: o, email: p, preferredGenre: q, countryOfBirth: r};
+																	};
+																};
 															};
 														};
 													};
@@ -35074,6 +35082,20 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 							textArea: A2(_bluedogtraining$bdt_elm$Form_TextArea$update, _p0._0, model.textArea)
 						}),
 					{ctor: '[]'});
+			case 'Toggle1':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{toggle1: !model.toggle1}),
+					{ctor: '[]'});
+			case 'Toggle2':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{toggle2: !model.toggle2}),
+					{ctor: '[]'});
 			case 'UpdateName':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -35141,6 +35163,245 @@ var _bluedogtraining$bdt_elm$Tuple_Bdt_ops = _bluedogtraining$bdt_elm$Tuple_Bdt_
 _bluedogtraining$bdt_elm$Tuple_Bdt_ops['~'] = F2(
 	function (a, b) {
 		return {ctor: '_Tuple2', _0: a, _1: b};
+	});
+
+var _bluedogtraining$bdt_elm$Toggle$switch = function (toggle) {
+	return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+		{
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineBlock),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$width(
+							_rtfeldman$elm_css$Css$rem(3)),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$height(
+								_rtfeldman$elm_css$Css$rem(1.5)),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$backgroundColor(
+										toggle ? A3(_rtfeldman$elm_css$Css$rgb, 81, 163, 81) : _rtfeldman$elm_css$Css$hex('ddd')),
+									_1: {
+										ctor: '::',
+										_0: A3(
+											_rtfeldman$elm_css$Css$border3,
+											_rtfeldman$elm_css$Css$px(1),
+											_rtfeldman$elm_css$Css$solid,
+											toggle ? A3(_rtfeldman$elm_css$Css$rgb, 81, 163, 81) : _rtfeldman$elm_css$Css$hex('ddd')),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$borderRadius(
+												_rtfeldman$elm_css$Css$rem(1.5)),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css_Transitions$transition(
+													{
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css_Transitions$backgroundColor(400),
+														_1: {
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css_Transitions$borderColor(400),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css$before(
+														{
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$block),
+															_1: {
+																ctor: '::',
+																_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+																_1: {
+																	ctor: '::',
+																	_0: _rtfeldman$elm_css$Css$top(
+																		_rtfeldman$elm_css$Css$px(1)),
+																	_1: {
+																		ctor: '::',
+																		_0: _rtfeldman$elm_css$Css$right(
+																			_rtfeldman$elm_css$Css$px(1)),
+																		_1: {
+																			ctor: '::',
+																			_0: _rtfeldman$elm_css$Css$left(
+																				_rtfeldman$elm_css$Css$px(1)),
+																			_1: {
+																				ctor: '::',
+																				_0: _rtfeldman$elm_css$Css$bottom(
+																					_rtfeldman$elm_css$Css$px(1)),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(_rtfeldman$elm_css$Css$property, 'content', ''),
+																					_1: {
+																						ctor: '::',
+																						_0: _rtfeldman$elm_css$Css$backgroundColor(
+																							toggle ? _rtfeldman$elm_css$Css$hex('8ce196') : _rtfeldman$elm_css$Css$hex('f1f1f1')),
+																						_1: {
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Css$borderRadius(
+																								_rtfeldman$elm_css$Css$rem(1.3)),
+																							_1: {ctor: '[]'}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}),
+													_1: {
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$after(
+															{
+																ctor: '::',
+																_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$block),
+																_1: {
+																	ctor: '::',
+																	_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+																	_1: {
+																		ctor: '::',
+																		_0: _rtfeldman$elm_css$Css$top(
+																			_rtfeldman$elm_css$Css$px(1)),
+																		_1: {
+																			ctor: '::',
+																			_0: _rtfeldman$elm_css$Css$left(
+																				_rtfeldman$elm_css$Css$px(1)),
+																			_1: {
+																				ctor: '::',
+																				_0: _rtfeldman$elm_css$Css$bottom(
+																					_rtfeldman$elm_css$Css$px(1)),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(_rtfeldman$elm_css$Css$property, 'content', '\'\''),
+																					_1: {
+																						ctor: '::',
+																						_0: _rtfeldman$elm_css$Css$width(
+																							_rtfeldman$elm_css$Css$rem(1.3)),
+																						_1: {
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Css$backgroundColor(
+																								_rtfeldman$elm_css$Css$hex('fff')),
+																							_1: {
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Css$borderRadius(
+																									_rtfeldman$elm_css$Css$rem(1.3)),
+																								_1: {
+																									ctor: '::',
+																									_0: A4(
+																										_rtfeldman$elm_css$Css$boxShadow4,
+																										_rtfeldman$elm_css$Css$px(0),
+																										_rtfeldman$elm_css$Css$px(2),
+																										_rtfeldman$elm_css$Css$px(5),
+																										A4(_rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.3)),
+																									_1: {
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Css_Transitions$transition(
+																											{
+																												ctor: '::',
+																												_0: _rtfeldman$elm_css$Css_Transitions$margin(400),
+																												_1: {ctor: '[]'}
+																											}),
+																										_1: {
+																											ctor: '::',
+																											_0: _rtfeldman$elm_css$Css$marginLeft(
+																												toggle ? _rtfeldman$elm_css$Css$rem(1.45) : _rtfeldman$elm_css$Css$rem(5.0e-2)),
+																											_1: {ctor: '[]'}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Toggle$view = F2(
+	function (toggle, msg) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
+				ctor: '::',
+				_0: _bluedogtraining$bdt_elm$Toggle$switch(toggle),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(msg),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
+	});
+var _bluedogtraining$bdt_elm$Toggle$viewWithLabel = F3(
+	function (string, toggle, msg) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineFlex),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_bluedogtraining$bdt_elm$Toggle$view, toggle, msg),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$span,
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+								{
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$marginLeft(
+										_rtfeldman$elm_css$Css$px(5)),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled$text(string),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
 
 var _bluedogtraining$bdt_elm$Styles$background = _rtfeldman$elm_css$Html_Styled_Attributes$css(
@@ -35666,7 +35927,61 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																		'Toasters',
 																		{ctor: '[]'},
 																		_bluedogtraining$bdt_elm$Card$view)))),
-														_1: {ctor: '[]'}
+														_1: {
+															ctor: '::',
+															_0: _bluedogtraining$bdt_elm$Card$render(
+																A2(
+																	_bluedogtraining$bdt_elm$Card$footer,
+																	{ctor: '[]'},
+																	A2(
+																		_bluedogtraining$bdt_elm$Card$body,
+																		{
+																			ctor: '::',
+																			_0: A2(
+																				_bluedogtraining$bdt_elm$Card$block,
+																				_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																				{
+																					ctor: '::',
+																					_0: _bluedogtraining$bdt_elm$Grid$row(
+																						{
+																							ctor: '::',
+																							_0: A2(
+																								_bluedogtraining$bdt_elm$Grid$col,
+																								_bluedogtraining$bdt_elm$Grid_Size$Six,
+																								{
+																									ctor: '::',
+																									_0: A2(_bluedogtraining$bdt_elm$Toggle$view, model.toggle1, _bluedogtraining$bdt_elm$Msg$Toggle1),
+																									_1: {
+																										ctor: '::',
+																										_0: A3(_bluedogtraining$bdt_elm$Toggle$viewWithLabel, 'Toggle Me', model.toggle2, _bluedogtraining$bdt_elm$Msg$Toggle2),
+																										_1: {ctor: '[]'}
+																									}
+																								}),
+																							_1: {
+																								ctor: '::',
+																								_0: A2(
+																									_bluedogtraining$bdt_elm$Grid$col,
+																									_bluedogtraining$bdt_elm$Grid_Size$Six,
+																									{
+																										ctor: '::',
+																										_0: _bluedogtraining$bdt_elm$Button$render(
+																											A2(_bluedogtraining$bdt_elm$Button$text, 'I\'m a button', _bluedogtraining$bdt_elm$Button$view)),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							}
+																						}),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {ctor: '[]'}
+																		},
+																		A3(
+																			_bluedogtraining$bdt_elm$Card$header,
+																			'Toggle',
+																			{ctor: '[]'},
+																			_bluedogtraining$bdt_elm$Card$view)))),
+															_1: {ctor: '[]'}
+														}
 													}),
 												_1: {
 													ctor: '::',
@@ -35998,7 +36313,7 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _bluedogtraining$bdt_elm$Main$main !== 'undefined') {
-    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

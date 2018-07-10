@@ -1,5 +1,5 @@
 {
-    "version": "8.2.0",
+    "version": "8.3.0",
     "summary": "Elm modules commonly used at BDT",
     "repository": "https://github.com/bluedogtraining/bdt-elm.git",
     "license": "BSD3",
@@ -25,12 +25,15 @@
         "Button",
         "Tuple.Bdt",
         "Html.Styled.Bdt",
+        "List.Bdt",
         "List.Nonempty.Bdt",
         "Date.Bdt",
+        "Dom.Scroll.Bdt",
         "StringFormatting",
         "InfixPrecedence"
     ],
     "dependencies": {
+        "Gizra/elm-all-set": "1.0.0 <= v < 2.0.0",
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",
         "elm-community/elm-material-icons": "2.0.1 <= v < 3.0.0",
         "elm-community/json-extra": "2.7.0 <= v < 3.0.0",

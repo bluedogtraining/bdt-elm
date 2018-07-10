@@ -268,6 +268,10 @@ view model =
                                     |> Button.icon Icon.Calendar
                                     |> Button.isLoading True
                                     |> Button.render
+                                , Button.view
+                                    |> Button.href "http://google.com"
+                                    |> Button.text "Google It"
+                                    |> Button.render
                                 ]
                             ]
                         |> Card.footer [ Button.view |> Button.text "Footer Button" ]

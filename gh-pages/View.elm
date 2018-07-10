@@ -30,7 +30,6 @@ import Toggle
 import Msg exposing (Msg (..))
 import Model exposing (Model)
 
-import Styles as Css
 import Grid.Css as Css
 
 import Grid.Size exposing (..)
@@ -41,7 +40,7 @@ import Icon
 view : Model -> Html Msg
 view model =
     div
-        [ Css.background ]
+        []
         [ Toasters.view model.toasters
             |> Html.map ToastersMsg
         , div
@@ -307,6 +306,7 @@ view model =
                                     |> Label.mandatory True
                                     |> Label.render
                                 , SearchSelect.view model.countryOfBirth
+                                    |> SearchSelect.setToLabel .name
                                     |> SearchSelect.render
                                     |> Html.map UpdateCountryOfBirth
                                 ]

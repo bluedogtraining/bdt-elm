@@ -17,8 +17,7 @@ input isError isLocked =
     , backgroundColor <| hex <| if isLocked then "dddddd" else "ffffff"
     , fontSize <| pt 12
     , focus
-        [ borderColor <| hex "67b8ed"
-        , outlineWidth (px 0)
+        [ outlineWidth (px 0)
         ]
     ]
 
@@ -33,17 +32,30 @@ select isError isLocked =
     ]
 
 
+title : Bool -> List Style
+title isFaded =
+
+    [ flexGrow <| int 1
+    , color (rgb 111 111 111) ? isFaded
+    , fontWeight (int 200) ? isFaded
+    , fontFamilies
+        [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
+    ]
+
+
+
 selectOptionList : List Style
 selectOptionList =
 
     [ position absolute
-    , top <| px 33
+    , top <| px 31
     , left <| px 0
     , right <| px 0
     , zIndex <| int 10
     , maxHeight <| px 200
     , overflowY scroll
-    , border3 (px 1) solid (hex "dddddd")
+    , border3 (px 1) solid (hex "cccccc")
+    , borderTopColor <| hex "eeeeee"
     , padding <| px 0
     , backgroundColor <| hex "ffffff"
     ]
@@ -52,14 +64,14 @@ selectOptionList =
 selectOptionItem : Bool -> Bool -> List Style
 selectOptionItem isDisabled isFocused =
 
-    [ padding2 (px 5) (px 10)
+    [ padding2 (px 8) (px 12)
     , margin <| px 0
     , displayFlex
     , alignItems center
-    , backgroundColor (hex "eceeef") ? isDisabled || isFocused
+    , backgroundColor (hex "f2f9fc") ? isDisabled || isFocused
     , cursor pointer
     , outlineWidth <| px 0
     , hover
-        [ backgroundColor (hex "f6f6f6") ? not isDisabled
+        [ backgroundColor (hex "f2f9fc") ? not isDisabled
         ]
     ]

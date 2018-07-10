@@ -122,4 +122,4 @@ update msg model =
                     SearchSelect.update searchSelectMsg model.countryOfBirth
 
             in
-                { model | countryOfBirth = newSearchSelect } ! [ Cmd.map SearchSelectMsg cmd ]
+                { model | countryOfBirth = newSearchSelect } ! [ Cmd.map UpdateCountryOfBirth cmd ]

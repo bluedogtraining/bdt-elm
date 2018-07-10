@@ -21,11 +21,10 @@ input isError isLocked =
     css <| Css.input isError isLocked
 
 
-title : Attribute msg
-title =
+title : Bool -> Attribute msg
+title isFaded =
 
-    css
-        [ flexGrow <| int 1 ]
+    css <| Css.title isFaded
 
 
 optionList : Attribute msg
@@ -34,7 +33,7 @@ optionList =
     css <|
         Css.selectOptionList
         ++
-        [ top <| px 37
+        [ top <| px 41
         ]
 
 
@@ -48,13 +47,14 @@ infoMessage : Attribute msg
 infoMessage =
 
     css
-        [ border3 (px 1) solid (hex "dddddd")
-        , padding2 (px 8) (px 16)
+        [ border3 (px 1) solid (hex "cccccc")
+        , borderTopColor <| hex "eeeeee"
+        , padding2 (px 8) (px 12)
         , displayFlex
         , alignItems center
         , justifyContent center
         , position absolute
-        , top <| px 37
+        , top <| px 41
         , left <| px 0
         , right <| px 0
         , zIndex <| int 10

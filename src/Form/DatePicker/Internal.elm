@@ -369,7 +369,7 @@ closed state viewState =
             , onClick (Open viewState.minDate viewState.maxDate viewState.includeTime) ? not viewState.isLocked
             ]
             [ div
-                [ Css.title ]
+                [ Css.title (Resettable.getValue state.selectedDate == Nothing) ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel) ]
             , Html.divIf viewState.isInput
                 []
@@ -391,7 +391,7 @@ open state viewState =
             , onBlur Blur
             ]
             [ div
-                [ Css.title ]
+                [ Css.title (Resettable.getValue state.selectedDate == Nothing) ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel)  ]
             , Html.divIf viewState.isInput
                 []

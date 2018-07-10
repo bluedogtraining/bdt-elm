@@ -7,6 +7,7 @@ import Html.Styled.Attributes exposing (css)
 
 import Grid.Css
 import Grid.Size as Size exposing (..)
+import Grid.SizeHelpers as SizeHelpers
 
 
 card : Attribute msg
@@ -55,7 +56,7 @@ body =
 block : Cols -> List (Size, Cols) -> Attribute msg
 block cols sizes =
     css <|
-        List.map Grid.Css.colSize (Size.orderBySize sizes)
+        List.map Grid.Css.colSize (SizeHelpers.orderBySize sizes)
         ++
         [ flexGrow <| num 1
         , padding2 (Css.rem 0.2) (Css.rem 0.8)

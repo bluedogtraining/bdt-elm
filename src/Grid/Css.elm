@@ -6,12 +6,13 @@ import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes exposing (css)
 
 import Grid.Size as Size exposing (..)
+import Grid.SizeHelpers as SizeHelpers
 
 
 container : Attribute msg
 container =
     css <|
-        List.map containerWidth (List.reverse Size.asList)
+        List.map containerWidth (List.reverse SizeHelpers.sizeAsList)
         ++
         [ maxWidth (pct 100)
         , paddingLeft <| px 15
@@ -26,8 +27,8 @@ container =
 containerWidth : Size -> Style
 containerWidth size =
     Media.withMedia
-        [ Media.all [ Media.minWidth <| px (Size.breakpointWidth size) ] ]
-        [ width <| px (Size.containerWidth size) ]
+        [ Media.all [ Media.minWidth <| px (SizeHelpers.breakpointPxWidth size) ] ]
+        [ width <| px (SizeHelpers.containerPxWidth size) ]
 
 
 row : Attribute msg
@@ -43,7 +44,7 @@ row =
 col : Cols -> List (Size, Cols) -> Attribute msg
 col cols sizes =
     css <|
-        List.map colSize (Size.orderBySize sizes)
+        List.map colSize (SizeHelpers.orderBySize sizes)
         ++
         [ flexGrow <| num 1
         , paddingLeft <| px 15
@@ -58,8 +59,8 @@ defaultColSize cols =
 
     Media.withMedia
         [ Media.all [] ]
-        [ flexBasis <| pct (100 / 12 * (Size.colsToFloat cols))
-        , maxWidth <| pct (100 / 12 * (Size.colsToFloat cols))
+        [ flexBasis <| pct (100 / 12 * (SizeHelpers.colsToFloat cols))
+        , maxWidth <| pct (100 / 12 * (SizeHelpers.colsToFloat cols))
         ]
 
 
@@ -67,7 +68,7 @@ colSize : (Size, Cols) -> Style
 colSize (size, cols) =
 
     Media.withMedia
-        [ Media.all <| [ Media.minWidth <| px (breakpointWidth size) ] ]
-        [ flexBasis <| pct (100 / 12 * (Size.colsToFloat cols))
-        , maxWidth <| pct (100 / 12 * (Size.colsToFloat cols))
+        [ Media.all <| [ Media.minWidth <| px (SizeHelpers.breakpointPxWidth size) ] ]
+        [ flexBasis <| pct (100 / 12 * (SizeHelpers.colsToFloat cols))
+        , maxWidth <| pct (100 / 12 * (SizeHelpers.colsToFloat cols))
         ]

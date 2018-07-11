@@ -1,6 +1,7 @@
 module Date.Bdt exposing
     ( toString, maybeDateToString, maybeDateToTimeString, maybeDateToDateTimeString, monthToString
     , order
+    , encode, encodeMaybe
     )
 
 {-| Date Helpers
@@ -16,6 +17,8 @@ module Date.Bdt exposing
 import Date exposing (Date, Month (..), month)
 import Date.Extra.Compare
 import Date.Extra.Format exposing (isoString)
+
+import Json.Encode as Encode exposing (Value)
 
 
 {-| Returns a string as dd/mm/yyyy
@@ -126,3 +129,20 @@ order date1 date2 =
         GT
     else
         EQ
+
+
+{-| Encode a Date
+-}
+encode : Date -> Value
+encode =
+    isoString >> Encode.string
+
+
+{-| Encode a Maybe Date
+-}
+encodeMaybe : Maybe Date -> Value
+encodeMaybe maybeDate =
+
+    maybeDate
+        |> Maybe.map encode
+        |> Maybe.withDefault Encode.null

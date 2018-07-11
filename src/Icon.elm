@@ -24,6 +24,7 @@ import Material.Icons.Content as MaterialIcon
 import Material.Icons.Toggle as MaterialIcon
 import Material.Icons.Action as MaterialIcon
 import Material.Icons.Image as MaterialIcon
+import Material.Icons.File as MaterialIcon
 
 
 {-| Available Icons
@@ -38,6 +39,8 @@ type Icon
     | ChevronRight
     | Spinner
     | Edit
+    | Download
+    | Delete
 
 
 {-| Render an icon
@@ -74,6 +77,12 @@ render icon size color =
 
         Edit ->
             renderIcon size color MaterialIcon.edit
+
+        Download ->
+            renderIcon size color MaterialIcon.cloud_download
+
+        Delete ->
+            renderIcon size color MaterialIcon.delete
 
 
 renderIcon : Int -> Color -> (Color -> Int -> Svg msg) -> Html msg

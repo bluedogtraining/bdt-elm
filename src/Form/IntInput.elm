@@ -76,7 +76,7 @@ type alias Msg =
     myUpdate msg model =
         case msg of
             UpdateMyInput inputMsg ->
-                { model | myInput = Input.update inputMsg mode.myInput } ! []
+                { model | myInput = Input.update inputMsg model.myInput } ! []
 -}
 update : Internal.Msg -> Model -> Model
 update msg (Model state) =

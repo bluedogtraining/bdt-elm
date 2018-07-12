@@ -8,6 +8,7 @@ import Form.FloatInput as FloatInput
 import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
+import Form.DropZone as DropZone
 import Form.DatePicker as DatePicker
 import Form.TextArea as TextArea
 
@@ -29,6 +30,7 @@ type alias Model =
     , textArea : TextArea.Model
     , toggle1 : Bool
     , toggle2 : Bool
+    , dropZone : DropZone.Model
     , name : Input.Model
     , startDate : DatePicker.Model
     , email : Input.Model
@@ -52,6 +54,7 @@ initialModel =
     , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [("[]", "☐")]
     , toggle1 = False
     , toggle2 = False
+    , dropZone = DropZone.init
     , name = Input.init
     , startDate = DatePicker.init
     , email = Input.init

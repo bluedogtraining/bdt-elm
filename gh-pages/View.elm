@@ -22,19 +22,15 @@ import Form.TextArea as TextArea
 import Tuple.Bdt exposing ((~))
 
 import Grid
+import Grid.Size exposing (..)
 import Card
-
+import Modal
+import Icon
 import Button
 import Toggle
 
 import Msg exposing (Msg (..))
 import Model exposing (Model)
-
-import Grid.Css as Css
-
-import Grid.Size exposing (..)
-
-import Icon
 
 
 view : Model -> Html Msg
@@ -43,8 +39,8 @@ view model =
         []
         [ Toasters.view model.toasters
             |> Html.map ToastersMsg
-        , div
-            [ Css.container ]
+        , Grid.container
+            []
             [ h1
                 []
                 [ text "Form Elements" ]
@@ -190,6 +186,82 @@ view model =
                         |> Card.footer []
                         |> Card.render
                     , Card.view
+                        |> Card.header "Modal" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ Button.view
+                                    |> Button.text "Open Sm Modal"
+                                    |> Button.onClick OpenSmModal
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.text "Open Lg Modal"
+                                    |> Button.onClick OpenLgModal
+                                    |> Button.render
+                                , Modal.view model.modalSmOpen CloseSmModal
+                                    |> Modal.setSize Sm
+                                    |> Modal.header "Hi I'm Sm Modal" []
+                                    |> Modal.body
+                                        [ Modal.block Twelve
+                                            [ text "Modal Content" ]
+                                        ]
+                                    |> Modal.footer []
+                                    |> Modal.render
+                                , Modal.view model.modalLgOpen CloseLgModal
+                                    |> Modal.setSize Lg
+                                    |> Modal.header "Hi I'm Lg Modal" []
+                                        |> Modal.body
+                                            [ Modal.block Twelve
+                                                [ p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                , p [] [ text "Modal Content" ]
+                                                ]
+                                            ]
+                                        |> Modal.footer
+                                            [ Button.view
+                                                |> Button.text "Cancel"
+                                                |> Button.onClick CloseLgModal
+                                                |> Button.red
+                                            , Button.view
+                                                |> Button.text "Save"
+                                                |> Button.green
+                                            ]
+                                        |> Modal.render
+                                ]
+                            ]
+                        |> Card.footer []
+                        |> Card.render
+                    , Card.view
                         |> Card.header "Toggle" []
                         |> Card.body
                             [ Card.block Twelve
@@ -204,8 +276,6 @@ view model =
                                             |> Button.render
                                         ]
                                     ]
-
-
                                 ]
                             ]
                         |> Card.footer []

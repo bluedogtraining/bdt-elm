@@ -123,3 +123,15 @@ update msg model =
 
             in
                 { model | countryOfBirth = newSearchSelect } ! [ Cmd.map UpdateCountryOfBirth cmd ]
+
+        OpenSmModal ->
+            { model | modalSmOpen = True } ! []
+
+        CloseSmModal ->
+            { model | modalSmOpen = False } ! []
+
+        OpenLgModal ->
+            { model | modalLgOpen = True } ! []
+
+        CloseLgModal ->
+            { model | modalLgOpen = False } ! []

@@ -12,16 +12,20 @@ import Grid.SizeHelpers as SizeHelpers
 container : Attribute msg
 container =
     css <|
-        List.map containerWidth (List.reverse SizeHelpers.sizeAsList)
+        containerWidths
         ++
         [ maxWidth (pct 100)
         , paddingLeft <| px 15
         , paddingRight <| px 15
-        , position relative
         , marginLeft auto
         , marginRight auto
         , fontFamilies ["Arial"]
         ]
+
+
+containerWidths : List Style
+containerWidths =
+    List.map containerWidth (List.reverse SizeHelpers.sizeAsList)
 
 
 containerWidth : Size -> Style

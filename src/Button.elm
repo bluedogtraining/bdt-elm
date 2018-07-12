@@ -175,8 +175,8 @@ render (Button config) =
     a
         [ Css.button config.size config.content config.color config.isDisabled config.isLoading
         , maybeAttribute Html.onClick config.onClick
-        , Html.href config.url ? (not (String.isEmpty config.url))
-        , target "_blank" ? (not (String.isEmpty config.url))
+        , Html.href config.url ? not (String.isEmpty config.url)
+        , target "_blank" ? not (String.isEmpty config.url)
         ]
         [ Css.spinKeyFrames
         , content config.content config.size config.color config.isLoading

@@ -1,9 +1,9 @@
-module Grid exposing (row, col, colSizes)
+module Grid exposing (container, row, col, colSizes)
 
 {-| Module to create Grids with Rows and Cols
 
 # Add Elements
-@docs row, col, colSizes
+@docs container, row, col, colSizes
 
 -}
 
@@ -27,6 +27,15 @@ type alias ColConfig msg =
     , sizes : List (Size, Cols)
     , children : List (Html msg)
     }
+
+
+{-| Create a container
+-}
+container : List (Attribute msg) -> List (Html msg) -> Html msg
+container attributes children =
+    div
+        ([ Css.container ] ++ attributes)
+        children
 
 
 {-| Add a row

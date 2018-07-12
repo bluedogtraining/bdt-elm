@@ -22019,14 +22019,18 @@ var _bluedogtraining$bdt_elm$Button_Css$button = F5(
 																					_0: _rtfeldman$elm_css$Css$textDecoration(_rtfeldman$elm_css$Css$none),
 																					_1: {
 																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Css$hover(
-																							{
-																								ctor: '::',
-																								_0: _rtfeldman$elm_css$Css$backgroundColor(
-																									_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {ctor: '[]'}
+																						_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
+																						_1: {
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Css$hover(
+																								{
+																									ctor: '::',
+																									_0: _rtfeldman$elm_css$Css$backgroundColor(
+																										_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
+																									_1: {ctor: '[]'}
+																								}),
+																							_1: {ctor: '[]'}
+																						}
 																					}
 																				}
 																			}
@@ -22679,13 +22683,14 @@ var _bluedogtraining$bdt_elm$Grid_Css$containerWidth = function (size) {
 			_1: {ctor: '[]'}
 		});
 };
+var _bluedogtraining$bdt_elm$Grid_Css$containerWidths = A2(
+	_elm_lang$core$List$map,
+	_bluedogtraining$bdt_elm$Grid_Css$containerWidth,
+	_elm_lang$core$List$reverse(_bluedogtraining$bdt_elm$Grid_SizeHelpers$sizeAsList));
 var _bluedogtraining$bdt_elm$Grid_Css$container = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	A2(
 		_elm_lang$core$Basics_ops['++'],
-		A2(
-			_elm_lang$core$List$map,
-			_bluedogtraining$bdt_elm$Grid_Css$containerWidth,
-			_elm_lang$core$List$reverse(_bluedogtraining$bdt_elm$Grid_SizeHelpers$sizeAsList)),
+		_bluedogtraining$bdt_elm$Grid_Css$containerWidths,
 		{
 			ctor: '::',
 			_0: _rtfeldman$elm_css$Css$maxWidth(
@@ -22700,23 +22705,19 @@ var _bluedogtraining$bdt_elm$Grid_Css$container = _rtfeldman$elm_css$Html_Styled
 						_rtfeldman$elm_css$Css$px(15)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
+						_0: _rtfeldman$elm_css$Css$marginLeft(_rtfeldman$elm_css$Css$auto),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$marginLeft(_rtfeldman$elm_css$Css$auto),
+							_0: _rtfeldman$elm_css$Css$marginRight(_rtfeldman$elm_css$Css$auto),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$marginRight(_rtfeldman$elm_css$Css$auto),
-								_1: {
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$fontFamilies(
-										{
-											ctor: '::',
-											_0: 'Arial',
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
+								_0: _rtfeldman$elm_css$Css$fontFamilies(
+									{
+										ctor: '::',
+										_0: 'Arial',
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
 							}
 						}
 					}
@@ -34585,6 +34586,20 @@ var _bluedogtraining$bdt_elm$Grid$row = function (cols) {
 		},
 		A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Grid$renderCol, cols));
 };
+var _bluedogtraining$bdt_elm$Grid$container = F2(
+	function (attributes, children) {
+		return A2(
+			_rtfeldman$elm_css$Html_Styled$div,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: _bluedogtraining$bdt_elm$Grid_Css$container,
+					_1: {ctor: '[]'}
+				},
+				attributes),
+			children);
+	});
 var _bluedogtraining$bdt_elm$Grid$ColConfig = F3(
 	function (a, b, c) {
 		return {defaultCols: a, sizes: b, children: c};
@@ -34742,7 +34757,7 @@ var _bluedogtraining$bdt_elm$Toasters_Css$fixedContainer = _rtfeldman$elm_css$Ht
 		_1: {
 			ctor: '::',
 			_0: _rtfeldman$elm_css$Css$zIndex(
-				_rtfeldman$elm_css$Css$int(100)),
+				_rtfeldman$elm_css$Css$int(101)),
 			_1: {ctor: '[]'}
 		}
 	});
@@ -34975,6 +34990,10 @@ var _bluedogtraining$bdt_elm$MusicGenre$asNonempty = A2(
 	A2(_elm_lang$core$List$drop, 1, _bluedogtraining$bdt_elm$MusicGenre$asList),
 	_mgold$elm_nonempty_list$List_Nonempty$fromElement(_bluedogtraining$bdt_elm$MusicGenre$Rock));
 
+var _bluedogtraining$bdt_elm$Msg$CloseLgModal = {ctor: 'CloseLgModal'};
+var _bluedogtraining$bdt_elm$Msg$OpenLgModal = {ctor: 'OpenLgModal'};
+var _bluedogtraining$bdt_elm$Msg$CloseSmModal = {ctor: 'CloseSmModal'};
+var _bluedogtraining$bdt_elm$Msg$OpenSmModal = {ctor: 'OpenSmModal'};
 var _bluedogtraining$bdt_elm$Msg$Toggle2 = {ctor: 'Toggle2'};
 var _bluedogtraining$bdt_elm$Msg$Toggle1 = {ctor: 'Toggle1'};
 var _bluedogtraining$bdt_elm$Msg$UpdateCountryOfBirth = function (a) {
@@ -35053,7 +35072,9 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 	startDate: _bluedogtraining$bdt_elm$Form_DatePicker$init,
 	email: _bluedogtraining$bdt_elm$Form_Input$init,
 	preferredGenre: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList),
-	countryOfBirth: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://restcountries.eu/rest/v2/name/', _bluedogtraining$bdt_elm$Countries$countryDecoder)
+	countryOfBirth: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://restcountries.eu/rest/v2/name/', _bluedogtraining$bdt_elm$Countries$countryDecoder),
+	modalSmOpen: false,
+	modalLgOpen: false
 };
 var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 	return function (b) {
@@ -35073,7 +35094,11 @@ var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 															return function (p) {
 																return function (q) {
 																	return function (r) {
-																		return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, name: n, startDate: o, email: p, preferredGenre: q, countryOfBirth: r};
+																		return function (s) {
+																			return function (t) {
+																				return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, name: n, startDate: o, email: p, preferredGenre: q, countryOfBirth: r, modalSmOpen: s, modalLgOpen: t};
+																			};
+																		};
 																	};
 																};
 															};
@@ -35304,7 +35329,7 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$SelectMsg, cmd),
 						_1: {ctor: '[]'}
 					});
-			default:
+			case 'UpdateCountryOfBirth':
 				var _p9 = A2(_bluedogtraining$bdt_elm$Form_SearchSelect$update, _p0._0, model.countryOfBirth);
 				var newSearchSelect = _p9._0;
 				var cmd = _p9._1;
@@ -35318,6 +35343,34 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$UpdateCountryOfBirth, cmd),
 						_1: {ctor: '[]'}
 					});
+			case 'OpenSmModal':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{modalSmOpen: true}),
+					{ctor: '[]'});
+			case 'CloseSmModal':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{modalSmOpen: false}),
+					{ctor: '[]'});
+			case 'OpenLgModal':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{modalLgOpen: true}),
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{modalLgOpen: false}),
+					{ctor: '[]'});
 		}
 	});
 
@@ -35327,7 +35380,507 @@ _bluedogtraining$bdt_elm$Tuple_Bdt_ops['~'] = F2(
 		return {ctor: '_Tuple2', _0: a, _1: b};
 	});
 
-var _bluedogtraining$bdt_elm$Toggle$switch = function (toggle) {
+var _bluedogtraining$bdt_elm$Modal_Css$closeIcon = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$right(
+				_rtfeldman$elm_css$Css$rem(1)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$top(
+					_rtfeldman$elm_css$Css$rem(1)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Modal_Css$footer = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$flexEnd),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Css$padding2,
+					_rtfeldman$elm_css$Css$rem(0),
+					_rtfeldman$elm_css$Css$rem(0.8)),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Modal_Css$block = F2(
+	function (cols, sizes) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$List$map,
+					_bluedogtraining$bdt_elm$Grid_Css$colSize,
+					_bluedogtraining$bdt_elm$Grid_SizeHelpers$orderBySize(sizes)),
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$flexGrow(
+						_rtfeldman$elm_css$Css$num(1)),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_rtfeldman$elm_css$Css$padding2,
+							_rtfeldman$elm_css$Css$rem(0.2),
+							_rtfeldman$elm_css$Css$rem(0.8)),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+							_1: {
+								ctor: '::',
+								_0: _bluedogtraining$bdt_elm$Grid_Css$defaultColSize(cols),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}));
+	});
+var _bluedogtraining$bdt_elm$Modal_Css$body = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$flexWrap(_rtfeldman$elm_css$Css$wrap),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Css$margin2,
+					_rtfeldman$elm_css$Css$rem(0.8),
+					_rtfeldman$elm_css$Css$rem(0)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$maxHeight(
+						A3(
+							_rtfeldman$elm_css$Css$calc,
+							_rtfeldman$elm_css$Css$vh(100),
+							_rtfeldman$elm_css$Css$minus,
+							_rtfeldman$elm_css$Css$rem(13))),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$scroll),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Modal_Css$headerTitle = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$flexGrow(
+				_rtfeldman$elm_css$Css$int(1)),
+			_1: {ctor: '[]'}
+		}
+	});
+var _bluedogtraining$bdt_elm$Modal_Css$header = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$spaceBetween),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Css$padding2,
+						_rtfeldman$elm_css$Css$rem(0),
+						_rtfeldman$elm_css$Css$rem(0.8)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$fontFamilies(
+							{
+								ctor: '::',
+								_0: '-apple-system',
+								_1: {
+									ctor: '::',
+									_0: 'system-ui',
+									_1: {
+										ctor: '::',
+										_0: 'BlinkMacSystemFont',
+										_1: {
+											ctor: '::',
+											_0: 'Segoe UI',
+											_1: {
+												ctor: '::',
+												_0: 'Roboto',
+												_1: {
+													ctor: '::',
+													_0: 'Helvetica Neue',
+													_1: {
+														ctor: '::',
+														_0: 'Arial',
+														_1: {
+															ctor: '::',
+															_0: 'sans-serif',
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$fontSize(
+								_rtfeldman$elm_css$Css$rem(1.2)),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$fontWeight(
+									_rtfeldman$elm_css$Css$int(600)),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Modal_Css$modal = function (size) {
+	return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_bluedogtraining$bdt_elm$Grid_Css$containerWidths,
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$maxWidth(
+					_rtfeldman$elm_css$Css$px(
+						_bluedogtraining$bdt_elm$Grid_SizeHelpers$containerPxWidth(size))),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$fixed),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$top(
+							_rtfeldman$elm_css$Css$rem(3)),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$left(
+								_rtfeldman$elm_css$Css$pct(50)),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$transform(
+									_rtfeldman$elm_css$Css$translate(
+										_rtfeldman$elm_css$Css$pct(-50))),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$zIndex(
+										_rtfeldman$elm_css$Css$int(100)),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$backgroundColor(
+											_rtfeldman$elm_css$Css$hex('ffffff')),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$borderRadius(
+												_rtfeldman$elm_css$Css$px(2)),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$padding(
+													_rtfeldman$elm_css$Css$rem(1)),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}));
+};
+var _bluedogtraining$bdt_elm$Modal_Css$background = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$backgroundColor(
+			A4(_rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.4)),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$fixed),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$top(
+					_rtfeldman$elm_css$Css$px(0)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$right(
+						_rtfeldman$elm_css$Css$px(0)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$bottom(
+							_rtfeldman$elm_css$Css$px(0)),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$left(
+								_rtfeldman$elm_css$Css$px(0)),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$zIndex(
+									_rtfeldman$elm_css$Css$int(100)),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Modal_Css$removeBodyScroll = _rtfeldman$elm_css$Css_Foreign$global(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css_Foreign$body(
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$overflow(_rtfeldman$elm_css$Css$hidden),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+
+var _bluedogtraining$bdt_elm$Modal$closeIcon = function (closeMsg) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Modal_Css$closeIcon,
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(closeMsg),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A3(_bluedogtraining$bdt_elm$Icon$render, _bluedogtraining$bdt_elm$Icon$Clear, 12, _elm_lang$core$Color$black),
+			_1: {ctor: '[]'}
+		});
+};
+var _bluedogtraining$bdt_elm$Modal$renderModalBlock = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1._0;
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: A2(_bluedogtraining$bdt_elm$Modal_Css$block, _p2.defaultCols, _p2.sizes),
+			_1: {ctor: '[]'}
+		},
+		_p2.children);
+};
+var _bluedogtraining$bdt_elm$Modal$render = function (_p3) {
+	var _p4 = _p3;
+	var _p5 = _p4._0;
+	return A3(
+		_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+		_p5.isOpen,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Modal_Css$removeBodyScroll,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Modal_Css$background,
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(_p5.closeMsg),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$div,
+						{
+							ctor: '::',
+							_0: _bluedogtraining$bdt_elm$Modal_Css$modal(_p5.size),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _bluedogtraining$bdt_elm$Modal$closeIcon(_p5.closeMsg),
+							_1: {
+								ctor: '::',
+								_0: A3(
+									_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+									(!_elm_lang$core$Native_Utils.eq(_p5.headerTitle, '')) || (!_elm_lang$core$List$isEmpty(_p5.headerButtons)),
+									{
+										ctor: '::',
+										_0: _bluedogtraining$bdt_elm$Modal_Css$header,
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_rtfeldman$elm_css$Html_Styled$span,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Html_Styled$text(_p5.headerTitle),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_rtfeldman$elm_css$Html_Styled$div,
+												{ctor: '[]'},
+												A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Button$render, _p5.headerButtons)),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A3(
+										_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+										!_elm_lang$core$List$isEmpty(_p5.modalBlocks),
+										{
+											ctor: '::',
+											_0: _bluedogtraining$bdt_elm$Modal_Css$body,
+											_1: {ctor: '[]'}
+										},
+										A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Modal$renderModalBlock, _p5.modalBlocks)),
+									_1: {
+										ctor: '::',
+										_0: A3(
+											_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+											!_elm_lang$core$List$isEmpty(_p5.footerButtons),
+											{
+												ctor: '::',
+												_0: _bluedogtraining$bdt_elm$Modal_Css$footer,
+												_1: {ctor: '[]'}
+											},
+											A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Button$render, _p5.footerButtons)),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Modal$initialViewConfig = F2(
+	function (isOpen, msg) {
+		return {
+			isOpen: isOpen,
+			closeMsg: msg,
+			size: _bluedogtraining$bdt_elm$Grid_Size$Md,
+			headerTitle: '',
+			headerButtons: {ctor: '[]'},
+			modalBlocks: {ctor: '[]'},
+			footerButtons: {ctor: '[]'}
+		};
+	});
+var _bluedogtraining$bdt_elm$Modal$ViewConfig = F7(
+	function (a, b, c, d, e, f, g) {
+		return {isOpen: a, closeMsg: b, size: c, headerTitle: d, headerButtons: e, modalBlocks: f, footerButtons: g};
+	});
+var _bluedogtraining$bdt_elm$Modal$ModalBlockConfig = F3(
+	function (a, b, c) {
+		return {defaultCols: a, sizes: b, children: c};
+	});
+var _bluedogtraining$bdt_elm$Modal$Config = function (a) {
+	return {ctor: 'Config', _0: a};
+};
+var _bluedogtraining$bdt_elm$Modal$view = F2(
+	function (isOpen, closeMsg) {
+		return _bluedogtraining$bdt_elm$Modal$Config(
+			A2(_bluedogtraining$bdt_elm$Modal$initialViewConfig, isOpen, closeMsg));
+	});
+var _bluedogtraining$bdt_elm$Modal$setSize = F2(
+	function (size, _p6) {
+		var _p7 = _p6;
+		return _bluedogtraining$bdt_elm$Modal$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p7._0,
+				{size: size}));
+	});
+var _bluedogtraining$bdt_elm$Modal$header = F3(
+	function (title, buttons, _p8) {
+		var _p9 = _p8;
+		return _bluedogtraining$bdt_elm$Modal$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p9._0,
+				{headerTitle: title, headerButtons: buttons}));
+	});
+var _bluedogtraining$bdt_elm$Modal$body = F2(
+	function (modalBlocks, _p10) {
+		var _p11 = _p10;
+		return _bluedogtraining$bdt_elm$Modal$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p11._0,
+				{modalBlocks: modalBlocks}));
+	});
+var _bluedogtraining$bdt_elm$Modal$footer = F2(
+	function (buttons, _p12) {
+		var _p13 = _p12;
+		return _bluedogtraining$bdt_elm$Modal$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p13._0,
+				{footerButtons: buttons}));
+	});
+var _bluedogtraining$bdt_elm$Modal$ModalBlock = function (a) {
+	return {ctor: 'ModalBlock', _0: a};
+};
+var _bluedogtraining$bdt_elm$Modal$block = F2(
+	function (cols, children) {
+		return _bluedogtraining$bdt_elm$Modal$ModalBlock(
+			A3(
+				_bluedogtraining$bdt_elm$Modal$ModalBlockConfig,
+				cols,
+				{ctor: '[]'},
+				children));
+	});
+var _bluedogtraining$bdt_elm$Modal$blockSizes = F3(
+	function (cols, sizes, children) {
+		return _bluedogtraining$bdt_elm$Modal$ModalBlock(
+			A3(_bluedogtraining$bdt_elm$Modal$ModalBlockConfig, cols, sizes, children));
+	});
+
+var _bluedogtraining$bdt_elm$Toggle_Css$label = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$marginLeft(
+			_rtfeldman$elm_css$Css$px(5)),
+		_1: {ctor: '[]'}
+	});
+var _bluedogtraining$bdt_elm$Toggle_Css$labelContainer = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineFlex),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+			_1: {ctor: '[]'}
+		}
+	});
+var _bluedogtraining$bdt_elm$Toggle_Css$toggle = function (toggle) {
 	return _rtfeldman$elm_css$Html_Styled_Attributes$css(
 		{
 			ctor: '::',
@@ -35505,13 +36058,14 @@ var _bluedogtraining$bdt_elm$Toggle$switch = function (toggle) {
 			}
 		});
 };
+
 var _bluedogtraining$bdt_elm$Toggle$view = F2(
-	function (toggle, msg) {
+	function (state, msg) {
 		return A2(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: _bluedogtraining$bdt_elm$Toggle$switch(toggle),
+				_0: _bluedogtraining$bdt_elm$Toggle_Css$toggle(state),
 				_1: {
 					ctor: '::',
 					_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(msg),
@@ -35526,16 +36080,7 @@ var _bluedogtraining$bdt_elm$Toggle$viewWithLabel = F3(
 			_rtfeldman$elm_css$Html_Styled$div,
 			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineFlex),
-						_1: {
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
-							_1: {ctor: '[]'}
-						}
-					}),
+				_0: _bluedogtraining$bdt_elm$Toggle_Css$labelContainer,
 				_1: {ctor: '[]'}
 			},
 			{
@@ -35547,13 +36092,7 @@ var _bluedogtraining$bdt_elm$Toggle$viewWithLabel = F3(
 						_rtfeldman$elm_css$Html_Styled$span,
 						{
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-								{
-									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$marginLeft(
-										_rtfeldman$elm_css$Css$px(5)),
-									_1: {ctor: '[]'}
-								}),
+							_0: _bluedogtraining$bdt_elm$Toggle_Css$label,
 							_1: {ctor: '[]'}
 						},
 						{
@@ -35579,12 +36118,8 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$div,
-					{
-						ctor: '::',
-						_0: _bluedogtraining$bdt_elm$Grid_Css$container,
-						_1: {ctor: '[]'}
-					},
+					_bluedogtraining$bdt_elm$Grid$container,
+					{ctor: '[]'},
 					{
 						ctor: '::',
 						_0: A2(
@@ -36097,45 +36632,524 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																				_bluedogtraining$bdt_elm$Grid_Size$Twelve,
 																				{
 																					ctor: '::',
-																					_0: _bluedogtraining$bdt_elm$Grid$row(
-																						{
+																					_0: _bluedogtraining$bdt_elm$Button$render(
+																						A2(
+																							_bluedogtraining$bdt_elm$Button$onClick,
+																							_bluedogtraining$bdt_elm$Msg$OpenSmModal,
+																							A2(_bluedogtraining$bdt_elm$Button$text, 'Open Sm Modal', _bluedogtraining$bdt_elm$Button$view))),
+																					_1: {
+																						ctor: '::',
+																						_0: _bluedogtraining$bdt_elm$Button$render(
+																							A2(
+																								_bluedogtraining$bdt_elm$Button$onClick,
+																								_bluedogtraining$bdt_elm$Msg$OpenLgModal,
+																								A2(_bluedogtraining$bdt_elm$Button$text, 'Open Lg Modal', _bluedogtraining$bdt_elm$Button$view))),
+																						_1: {
 																							ctor: '::',
-																							_0: A2(
-																								_bluedogtraining$bdt_elm$Grid$col,
-																								_bluedogtraining$bdt_elm$Grid_Size$Six,
-																								{
-																									ctor: '::',
-																									_0: A2(_bluedogtraining$bdt_elm$Toggle$view, model.toggle1, _bluedogtraining$bdt_elm$Msg$Toggle1),
-																									_1: {
-																										ctor: '::',
-																										_0: A3(_bluedogtraining$bdt_elm$Toggle$viewWithLabel, 'Toggle Me', model.toggle2, _bluedogtraining$bdt_elm$Msg$Toggle2),
-																										_1: {ctor: '[]'}
-																									}
-																								}),
+																							_0: _bluedogtraining$bdt_elm$Modal$render(
+																								A2(
+																									_bluedogtraining$bdt_elm$Modal$footer,
+																									{ctor: '[]'},
+																									A2(
+																										_bluedogtraining$bdt_elm$Modal$body,
+																										{
+																											ctor: '::',
+																											_0: A2(
+																												_bluedogtraining$bdt_elm$Modal$block,
+																												_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																												{
+																													ctor: '::',
+																													_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																													_1: {ctor: '[]'}
+																												}),
+																											_1: {ctor: '[]'}
+																										},
+																										A3(
+																											_bluedogtraining$bdt_elm$Modal$header,
+																											'Hi I\'m Sm Modal',
+																											{ctor: '[]'},
+																											A2(
+																												_bluedogtraining$bdt_elm$Modal$setSize,
+																												_bluedogtraining$bdt_elm$Grid_Size$Sm,
+																												A2(_bluedogtraining$bdt_elm$Modal$view, model.modalSmOpen, _bluedogtraining$bdt_elm$Msg$CloseSmModal)))))),
 																							_1: {
+																								ctor: '::',
+																								_0: _bluedogtraining$bdt_elm$Modal$render(
+																									A2(
+																										_bluedogtraining$bdt_elm$Modal$footer,
+																										{
+																											ctor: '::',
+																											_0: _bluedogtraining$bdt_elm$Button$red(
+																												A2(
+																													_bluedogtraining$bdt_elm$Button$onClick,
+																													_bluedogtraining$bdt_elm$Msg$CloseLgModal,
+																													A2(_bluedogtraining$bdt_elm$Button$text, 'Cancel', _bluedogtraining$bdt_elm$Button$view))),
+																											_1: {
+																												ctor: '::',
+																												_0: _bluedogtraining$bdt_elm$Button$green(
+																													A2(_bluedogtraining$bdt_elm$Button$text, 'Save', _bluedogtraining$bdt_elm$Button$view)),
+																												_1: {ctor: '[]'}
+																											}
+																										},
+																										A2(
+																											_bluedogtraining$bdt_elm$Modal$body,
+																											{
+																												ctor: '::',
+																												_0: A2(
+																													_bluedogtraining$bdt_elm$Modal$block,
+																													_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																													{
+																														ctor: '::',
+																														_0: A2(
+																															_rtfeldman$elm_css$Html_Styled$p,
+																															{ctor: '[]'},
+																															{
+																																ctor: '::',
+																																_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																_1: {ctor: '[]'}
+																															}),
+																														_1: {
+																															ctor: '::',
+																															_0: A2(
+																																_rtfeldman$elm_css$Html_Styled$p,
+																																{ctor: '[]'},
+																																{
+																																	ctor: '::',
+																																	_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																	_1: {ctor: '[]'}
+																																}),
+																															_1: {
+																																ctor: '::',
+																																_0: A2(
+																																	_rtfeldman$elm_css$Html_Styled$p,
+																																	{ctor: '[]'},
+																																	{
+																																		ctor: '::',
+																																		_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																		_1: {ctor: '[]'}
+																																	}),
+																																_1: {
+																																	ctor: '::',
+																																	_0: A2(
+																																		_rtfeldman$elm_css$Html_Styled$p,
+																																		{ctor: '[]'},
+																																		{
+																																			ctor: '::',
+																																			_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																			_1: {ctor: '[]'}
+																																		}),
+																																	_1: {
+																																		ctor: '::',
+																																		_0: A2(
+																																			_rtfeldman$elm_css$Html_Styled$p,
+																																			{ctor: '[]'},
+																																			{
+																																				ctor: '::',
+																																				_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																				_1: {ctor: '[]'}
+																																			}),
+																																		_1: {
+																																			ctor: '::',
+																																			_0: A2(
+																																				_rtfeldman$elm_css$Html_Styled$p,
+																																				{ctor: '[]'},
+																																				{
+																																					ctor: '::',
+																																					_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																					_1: {ctor: '[]'}
+																																				}),
+																																			_1: {
+																																				ctor: '::',
+																																				_0: A2(
+																																					_rtfeldman$elm_css$Html_Styled$p,
+																																					{ctor: '[]'},
+																																					{
+																																						ctor: '::',
+																																						_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																						_1: {ctor: '[]'}
+																																					}),
+																																				_1: {
+																																					ctor: '::',
+																																					_0: A2(
+																																						_rtfeldman$elm_css$Html_Styled$p,
+																																						{ctor: '[]'},
+																																						{
+																																							ctor: '::',
+																																							_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																							_1: {ctor: '[]'}
+																																						}),
+																																					_1: {
+																																						ctor: '::',
+																																						_0: A2(
+																																							_rtfeldman$elm_css$Html_Styled$p,
+																																							{ctor: '[]'},
+																																							{
+																																								ctor: '::',
+																																								_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																								_1: {ctor: '[]'}
+																																							}),
+																																						_1: {
+																																							ctor: '::',
+																																							_0: A2(
+																																								_rtfeldman$elm_css$Html_Styled$p,
+																																								{ctor: '[]'},
+																																								{
+																																									ctor: '::',
+																																									_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																									_1: {ctor: '[]'}
+																																								}),
+																																							_1: {
+																																								ctor: '::',
+																																								_0: A2(
+																																									_rtfeldman$elm_css$Html_Styled$p,
+																																									{ctor: '[]'},
+																																									{
+																																										ctor: '::',
+																																										_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																										_1: {ctor: '[]'}
+																																									}),
+																																								_1: {
+																																									ctor: '::',
+																																									_0: A2(
+																																										_rtfeldman$elm_css$Html_Styled$p,
+																																										{ctor: '[]'},
+																																										{
+																																											ctor: '::',
+																																											_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																											_1: {ctor: '[]'}
+																																										}),
+																																									_1: {
+																																										ctor: '::',
+																																										_0: A2(
+																																											_rtfeldman$elm_css$Html_Styled$p,
+																																											{ctor: '[]'},
+																																											{
+																																												ctor: '::',
+																																												_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																												_1: {ctor: '[]'}
+																																											}),
+																																										_1: {
+																																											ctor: '::',
+																																											_0: A2(
+																																												_rtfeldman$elm_css$Html_Styled$p,
+																																												{ctor: '[]'},
+																																												{
+																																													ctor: '::',
+																																													_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																													_1: {ctor: '[]'}
+																																												}),
+																																											_1: {
+																																												ctor: '::',
+																																												_0: A2(
+																																													_rtfeldman$elm_css$Html_Styled$p,
+																																													{ctor: '[]'},
+																																													{
+																																														ctor: '::',
+																																														_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																														_1: {ctor: '[]'}
+																																													}),
+																																												_1: {
+																																													ctor: '::',
+																																													_0: A2(
+																																														_rtfeldman$elm_css$Html_Styled$p,
+																																														{ctor: '[]'},
+																																														{
+																																															ctor: '::',
+																																															_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																															_1: {ctor: '[]'}
+																																														}),
+																																													_1: {
+																																														ctor: '::',
+																																														_0: A2(
+																																															_rtfeldman$elm_css$Html_Styled$p,
+																																															{ctor: '[]'},
+																																															{
+																																																ctor: '::',
+																																																_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																_1: {ctor: '[]'}
+																																															}),
+																																														_1: {
+																																															ctor: '::',
+																																															_0: A2(
+																																																_rtfeldman$elm_css$Html_Styled$p,
+																																																{ctor: '[]'},
+																																																{
+																																																	ctor: '::',
+																																																	_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																	_1: {ctor: '[]'}
+																																																}),
+																																															_1: {
+																																																ctor: '::',
+																																																_0: A2(
+																																																	_rtfeldman$elm_css$Html_Styled$p,
+																																																	{ctor: '[]'},
+																																																	{
+																																																		ctor: '::',
+																																																		_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																		_1: {ctor: '[]'}
+																																																	}),
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: A2(
+																																																		_rtfeldman$elm_css$Html_Styled$p,
+																																																		{ctor: '[]'},
+																																																		{
+																																																			ctor: '::',
+																																																			_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																			_1: {ctor: '[]'}
+																																																		}),
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: A2(
+																																																			_rtfeldman$elm_css$Html_Styled$p,
+																																																			{ctor: '[]'},
+																																																			{
+																																																				ctor: '::',
+																																																				_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																				_1: {ctor: '[]'}
+																																																			}),
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: A2(
+																																																				_rtfeldman$elm_css$Html_Styled$p,
+																																																				{ctor: '[]'},
+																																																				{
+																																																					ctor: '::',
+																																																					_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																					_1: {ctor: '[]'}
+																																																				}),
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: A2(
+																																																					_rtfeldman$elm_css$Html_Styled$p,
+																																																					{ctor: '[]'},
+																																																					{
+																																																						ctor: '::',
+																																																						_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																						_1: {ctor: '[]'}
+																																																					}),
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: A2(
+																																																						_rtfeldman$elm_css$Html_Styled$p,
+																																																						{ctor: '[]'},
+																																																						{
+																																																							ctor: '::',
+																																																							_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																							_1: {ctor: '[]'}
+																																																						}),
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: A2(
+																																																							_rtfeldman$elm_css$Html_Styled$p,
+																																																							{ctor: '[]'},
+																																																							{
+																																																								ctor: '::',
+																																																								_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																								_1: {ctor: '[]'}
+																																																							}),
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: A2(
+																																																								_rtfeldman$elm_css$Html_Styled$p,
+																																																								{ctor: '[]'},
+																																																								{
+																																																									ctor: '::',
+																																																									_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																									_1: {ctor: '[]'}
+																																																								}),
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: A2(
+																																																									_rtfeldman$elm_css$Html_Styled$p,
+																																																									{ctor: '[]'},
+																																																									{
+																																																										ctor: '::',
+																																																										_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																										_1: {ctor: '[]'}
+																																																									}),
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: A2(
+																																																										_rtfeldman$elm_css$Html_Styled$p,
+																																																										{ctor: '[]'},
+																																																										{
+																																																											ctor: '::',
+																																																											_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																											_1: {ctor: '[]'}
+																																																										}),
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: A2(
+																																																											_rtfeldman$elm_css$Html_Styled$p,
+																																																											{ctor: '[]'},
+																																																											{
+																																																												ctor: '::',
+																																																												_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																												_1: {ctor: '[]'}
+																																																											}),
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: A2(
+																																																												_rtfeldman$elm_css$Html_Styled$p,
+																																																												{ctor: '[]'},
+																																																												{
+																																																													ctor: '::',
+																																																													_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																													_1: {ctor: '[]'}
+																																																												}),
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: A2(
+																																																													_rtfeldman$elm_css$Html_Styled$p,
+																																																													{ctor: '[]'},
+																																																													{
+																																																														ctor: '::',
+																																																														_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																														_1: {ctor: '[]'}
+																																																													}),
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: A2(
+																																																														_rtfeldman$elm_css$Html_Styled$p,
+																																																														{ctor: '[]'},
+																																																														{
+																																																															ctor: '::',
+																																																															_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																															_1: {ctor: '[]'}
+																																																														}),
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: A2(
+																																																															_rtfeldman$elm_css$Html_Styled$p,
+																																																															{ctor: '[]'},
+																																																															{
+																																																																ctor: '::',
+																																																																_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																																_1: {ctor: '[]'}
+																																																															}),
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: A2(
+																																																																_rtfeldman$elm_css$Html_Styled$p,
+																																																																{ctor: '[]'},
+																																																																{
+																																																																	ctor: '::',
+																																																																	_0: _rtfeldman$elm_css$Html_Styled$text('Modal Content'),
+																																																																	_1: {ctor: '[]'}
+																																																																}),
+																																																															_1: {ctor: '[]'}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}),
+																												_1: {ctor: '[]'}
+																											},
+																											A3(
+																												_bluedogtraining$bdt_elm$Modal$header,
+																												'Hi I\'m Lg Modal',
+																												{ctor: '[]'},
+																												A2(
+																													_bluedogtraining$bdt_elm$Modal$setSize,
+																													_bluedogtraining$bdt_elm$Grid_Size$Lg,
+																													A2(_bluedogtraining$bdt_elm$Modal$view, model.modalLgOpen, _bluedogtraining$bdt_elm$Msg$CloseLgModal)))))),
+																								_1: {ctor: '[]'}
+																							}
+																						}
+																					}
+																				}),
+																			_1: {ctor: '[]'}
+																		},
+																		A3(
+																			_bluedogtraining$bdt_elm$Card$header,
+																			'Modal',
+																			{ctor: '[]'},
+																			_bluedogtraining$bdt_elm$Card$view)))),
+															_1: {
+																ctor: '::',
+																_0: _bluedogtraining$bdt_elm$Card$render(
+																	A2(
+																		_bluedogtraining$bdt_elm$Card$footer,
+																		{ctor: '[]'},
+																		A2(
+																			_bluedogtraining$bdt_elm$Card$body,
+																			{
+																				ctor: '::',
+																				_0: A2(
+																					_bluedogtraining$bdt_elm$Card$block,
+																					_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																					{
+																						ctor: '::',
+																						_0: _bluedogtraining$bdt_elm$Grid$row(
+																							{
 																								ctor: '::',
 																								_0: A2(
 																									_bluedogtraining$bdt_elm$Grid$col,
 																									_bluedogtraining$bdt_elm$Grid_Size$Six,
 																									{
 																										ctor: '::',
-																										_0: _bluedogtraining$bdt_elm$Button$render(
-																											A2(_bluedogtraining$bdt_elm$Button$text, 'I\'m a button', _bluedogtraining$bdt_elm$Button$view)),
-																										_1: {ctor: '[]'}
+																										_0: A2(_bluedogtraining$bdt_elm$Toggle$view, model.toggle1, _bluedogtraining$bdt_elm$Msg$Toggle1),
+																										_1: {
+																											ctor: '::',
+																											_0: A3(_bluedogtraining$bdt_elm$Toggle$viewWithLabel, 'Toggle Me', model.toggle2, _bluedogtraining$bdt_elm$Msg$Toggle2),
+																											_1: {ctor: '[]'}
+																										}
 																									}),
-																								_1: {ctor: '[]'}
-																							}
-																						}),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {ctor: '[]'}
-																		},
-																		A3(
-																			_bluedogtraining$bdt_elm$Card$header,
-																			'Toggle',
-																			{ctor: '[]'},
-																			_bluedogtraining$bdt_elm$Card$view)))),
-															_1: {ctor: '[]'}
+																								_1: {
+																									ctor: '::',
+																									_0: A2(
+																										_bluedogtraining$bdt_elm$Grid$col,
+																										_bluedogtraining$bdt_elm$Grid_Size$Six,
+																										{
+																											ctor: '::',
+																											_0: _bluedogtraining$bdt_elm$Button$render(
+																												A2(_bluedogtraining$bdt_elm$Button$text, 'I\'m a button', _bluedogtraining$bdt_elm$Button$view)),
+																											_1: {ctor: '[]'}
+																										}),
+																									_1: {ctor: '[]'}
+																								}
+																							}),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {ctor: '[]'}
+																			},
+																			A3(
+																				_bluedogtraining$bdt_elm$Card$header,
+																				'Toggle',
+																				{ctor: '[]'},
+																				_bluedogtraining$bdt_elm$Card$view)))),
+																_1: {ctor: '[]'}
+															}
 														}
 													}),
 												_1: {
@@ -36481,7 +37495,7 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _bluedogtraining$bdt_elm$Main$main !== 'undefined') {
-    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

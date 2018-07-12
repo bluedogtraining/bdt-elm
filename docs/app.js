@@ -4085,6 +4085,1119 @@ var _elm_lang$core$Platform$Task = {ctor: 'Task'};
 var _elm_lang$core$Platform$ProcessId = {ctor: 'ProcessId'};
 var _elm_lang$core$Platform$Router = {ctor: 'Router'};
 
+var _eeue56$elm_all_dict$EveryDict$foldr = F3(
+	function (f, acc, t) {
+		foldr:
+		while (true) {
+			var _p0 = t;
+			if (_p0.ctor === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var _v1 = f,
+					_v2 = A3(
+					f,
+					_p0._1,
+					_p0._2,
+					A3(_eeue56$elm_all_dict$EveryDict$foldr, f, acc, _p0._4)),
+					_v3 = _p0._3;
+				f = _v1;
+				acc = _v2;
+				t = _v3;
+				continue foldr;
+			}
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$keys = function (dict) {
+	return A3(
+		_eeue56$elm_all_dict$EveryDict$foldr,
+		F3(
+			function (key, value, keyList) {
+				return {ctor: '::', _0: key, _1: keyList};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _eeue56$elm_all_dict$EveryDict$values = function (dict) {
+	return A3(
+		_eeue56$elm_all_dict$EveryDict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return {ctor: '::', _0: value, _1: valueList};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _eeue56$elm_all_dict$EveryDict$toList = function (dict) {
+	return A3(
+		_eeue56$elm_all_dict$EveryDict$foldr,
+		F3(
+			function (key, value, list) {
+				return {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: key, _1: value},
+					_1: list
+				};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _eeue56$elm_all_dict$EveryDict$foldl = F3(
+	function (f, acc, dict) {
+		foldl:
+		while (true) {
+			var _p1 = dict;
+			if (_p1.ctor === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var _v5 = f,
+					_v6 = A3(
+					f,
+					_p1._1,
+					_p1._2,
+					A3(_eeue56$elm_all_dict$EveryDict$foldl, f, acc, _p1._3)),
+					_v7 = _p1._4;
+				f = _v5;
+				acc = _v6;
+				dict = _v7;
+				continue foldl;
+			}
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$isBBlack = function (dict) {
+	var _p2 = dict;
+	_v8_2:
+	do {
+		if (_p2.ctor === 'RBNode_elm_builtin') {
+			if (_p2._0.ctor === 'BBlack') {
+				return true;
+			} else {
+				break _v8_2;
+			}
+		} else {
+			if (_p2._0.ctor === 'LBBlack') {
+				return true;
+			} else {
+				break _v8_2;
+			}
+		}
+	} while(false);
+	return false;
+};
+var _eeue56$elm_all_dict$EveryDict$showFlag = function (f) {
+	var _p3 = f;
+	switch (_p3.ctor) {
+		case 'Insert':
+			return 'Insert';
+		case 'Remove':
+			return 'Remove';
+		default:
+			return 'Same';
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$sizeHelp = F2(
+	function (n, dict) {
+		sizeHelp:
+		while (true) {
+			var _p4 = dict;
+			if (_p4.ctor === 'RBEmpty_elm_builtin') {
+				return n;
+			} else {
+				var _v11 = A2(_eeue56$elm_all_dict$EveryDict$sizeHelp, n + 1, _p4._4),
+					_v12 = _p4._3;
+				n = _v11;
+				dict = _v12;
+				continue sizeHelp;
+			}
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$size = function (dict) {
+	return A2(_eeue56$elm_all_dict$EveryDict$sizeHelp, 0, dict);
+};
+var _eeue56$elm_all_dict$EveryDict$isEmpty = function (dict) {
+	var _p5 = dict;
+	if (_p5.ctor === 'RBEmpty_elm_builtin') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$max = function (dict) {
+	max:
+	while (true) {
+		var _p6 = dict;
+		if (_p6.ctor === 'RBNode_elm_builtin') {
+			if (_p6._4.ctor === 'RBEmpty_elm_builtin') {
+				return {ctor: '_Tuple2', _0: _p6._1, _1: _p6._2};
+			} else {
+				var _v15 = _p6._4;
+				dict = _v15;
+				continue max;
+			}
+		} else {
+			return _elm_lang$core$Native_Utils.crashCase(
+				'EveryDict',
+				{
+					start: {line: 127, column: 5},
+					end: {line: 135, column: 51}
+				},
+				_p6)('(max Empty) is not defined');
+		}
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$min = function (dict) {
+	min:
+	while (true) {
+		var _p8 = dict;
+		if (_p8.ctor === 'RBNode_elm_builtin') {
+			if ((_p8._3.ctor === 'RBEmpty_elm_builtin') && (_p8._3._0.ctor === 'LBlack')) {
+				return {ctor: '_Tuple2', _0: _p8._1, _1: _p8._2};
+			} else {
+				var _v17 = _p8._3;
+				dict = _v17;
+				continue min;
+			}
+		} else {
+			return _elm_lang$core$Native_Utils.crashCase(
+				'EveryDict',
+				{
+					start: {line: 115, column: 5},
+					end: {line: 123, column: 51}
+				},
+				_p8)('(min Empty) is not defined');
+		}
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$eq = F2(
+	function (first, second) {
+		return _elm_lang$core$Native_Utils.eq(
+			_eeue56$elm_all_dict$EveryDict$toList(first),
+			_eeue56$elm_all_dict$EveryDict$toList(second));
+	});
+var _eeue56$elm_all_dict$EveryDict$ord = _elm_lang$core$Basics$toString;
+var _eeue56$elm_all_dict$EveryDict$get_ = F2(
+	function (targetKey, dict) {
+		get_:
+		while (true) {
+			var _p10 = dict;
+			if (_p10.ctor === 'RBEmpty_elm_builtin') {
+				return _elm_lang$core$Maybe$Nothing;
+			} else {
+				var _p11 = A2(
+					_elm_lang$core$Basics$compare,
+					_eeue56$elm_all_dict$EveryDict$ord(targetKey),
+					_eeue56$elm_all_dict$EveryDict$ord(_p10._1));
+				switch (_p11.ctor) {
+					case 'LT':
+						var _v20 = targetKey,
+							_v21 = _p10._3;
+						targetKey = _v20;
+						dict = _v21;
+						continue get_;
+					case 'EQ':
+						return _elm_lang$core$Maybe$Just(_p10._2);
+					default:
+						var _v22 = targetKey,
+							_v23 = _p10._4;
+						targetKey = _v22;
+						dict = _v23;
+						continue get_;
+				}
+			}
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$get = F2(
+	function (targetKey, dict) {
+		return A2(_eeue56$elm_all_dict$EveryDict$get_, targetKey, dict);
+	});
+var _eeue56$elm_all_dict$EveryDict$member = F2(
+	function (key, dict) {
+		var _p12 = A2(_eeue56$elm_all_dict$EveryDict$get_, key, dict);
+		if (_p12.ctor === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$showLColor = function (color) {
+	var _p13 = color;
+	if (_p13.ctor === 'LBlack') {
+		return 'LBlack';
+	} else {
+		return 'LBBlack';
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$showNColor = function (c) {
+	var _p14 = c;
+	switch (_p14.ctor) {
+		case 'Red':
+			return 'Red';
+		case 'Black':
+			return 'Black';
+		case 'BBlack':
+			return 'BBlack';
+		default:
+			return 'NBlack';
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$reportRemBug = F4(
+	function (msg, c, lgot, rgot) {
+		return _elm_lang$core$Native_Utils.crash(
+			'EveryDict',
+			{
+				start: {line: 320, column: 3},
+				end: {line: 320, column: 14}
+			})(
+			_elm_lang$core$String$concat(
+				{
+					ctor: '::',
+					_0: 'Internal red-black tree invariant violated, expected ',
+					_1: {
+						ctor: '::',
+						_0: msg,
+						_1: {
+							ctor: '::',
+							_0: ' and got ',
+							_1: {
+								ctor: '::',
+								_0: _eeue56$elm_all_dict$EveryDict$showNColor(c),
+								_1: {
+									ctor: '::',
+									_0: '/',
+									_1: {
+										ctor: '::',
+										_0: lgot,
+										_1: {
+											ctor: '::',
+											_0: '/',
+											_1: {
+												ctor: '::',
+												_0: rgot,
+												_1: {
+													ctor: '::',
+													_0: '\nPlease report this bug to <https://github.com/elm-lang/Elm/issues>',
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}));
+	});
+var _eeue56$elm_all_dict$EveryDict$NBlack = {ctor: 'NBlack'};
+var _eeue56$elm_all_dict$EveryDict$BBlack = {ctor: 'BBlack'};
+var _eeue56$elm_all_dict$EveryDict$Black = {ctor: 'Black'};
+var _eeue56$elm_all_dict$EveryDict$blackish = function (t) {
+	var _p15 = t;
+	if (_p15.ctor === 'RBNode_elm_builtin') {
+		var _p16 = _p15._0;
+		return _elm_lang$core$Native_Utils.eq(_p16, _eeue56$elm_all_dict$EveryDict$Black) || _elm_lang$core$Native_Utils.eq(_p16, _eeue56$elm_all_dict$EveryDict$BBlack);
+	} else {
+		return true;
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$Red = {ctor: 'Red'};
+var _eeue56$elm_all_dict$EveryDict$moreBlack = function (color) {
+	var _p17 = color;
+	switch (_p17.ctor) {
+		case 'Black':
+			return _eeue56$elm_all_dict$EveryDict$BBlack;
+		case 'Red':
+			return _eeue56$elm_all_dict$EveryDict$Black;
+		case 'NBlack':
+			return _eeue56$elm_all_dict$EveryDict$Red;
+		default:
+			return _elm_lang$core$Native_Utils.crashCase(
+				'EveryDict',
+				{
+					start: {line: 294, column: 5},
+					end: {line: 298, column: 73}
+				},
+				_p17)('Can\'t make a double black node more black!');
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$lessBlack = function (color) {
+	var _p19 = color;
+	switch (_p19.ctor) {
+		case 'BBlack':
+			return _eeue56$elm_all_dict$EveryDict$Black;
+		case 'Black':
+			return _eeue56$elm_all_dict$EveryDict$Red;
+		case 'Red':
+			return _eeue56$elm_all_dict$EveryDict$NBlack;
+		default:
+			return _elm_lang$core$Native_Utils.crashCase(
+				'EveryDict',
+				{
+					start: {line: 303, column: 5},
+					end: {line: 307, column: 75}
+				},
+				_p19)('Can\'t make a negative black node less black!');
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$LBBlack = {ctor: 'LBBlack'};
+var _eeue56$elm_all_dict$EveryDict$LBlack = {ctor: 'LBlack'};
+var _eeue56$elm_all_dict$EveryDict$RBEmpty_elm_builtin = function (a) {
+	return {ctor: 'RBEmpty_elm_builtin', _0: a};
+};
+var _eeue56$elm_all_dict$EveryDict$empty = _eeue56$elm_all_dict$EveryDict$RBEmpty_elm_builtin(_eeue56$elm_all_dict$EveryDict$LBlack);
+var _eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin = F5(
+	function (a, b, c, d, e) {
+		return {ctor: 'RBNode_elm_builtin', _0: a, _1: b, _2: c, _3: d, _4: e};
+	});
+var _eeue56$elm_all_dict$EveryDict$ensureBlackRoot = function (dict) {
+	var _p21 = dict;
+	if (_p21.ctor === 'RBNode_elm_builtin') {
+		switch (_p21._0.ctor) {
+			case 'Red':
+				return A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, _p21._1, _p21._2, _p21._3, _p21._4);
+			case 'Black':
+				return dict;
+			default:
+				return dict;
+		}
+	} else {
+		return dict;
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$lessBlackTree = function (dict) {
+	var _p22 = dict;
+	if (_p22.ctor === 'RBNode_elm_builtin') {
+		return A5(
+			_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin,
+			_eeue56$elm_all_dict$EveryDict$lessBlack(_p22._0),
+			_p22._1,
+			_p22._2,
+			_p22._3,
+			_p22._4);
+	} else {
+		if (_p22._0.ctor === 'LBBlack') {
+			return _eeue56$elm_all_dict$EveryDict$RBEmpty_elm_builtin(_eeue56$elm_all_dict$EveryDict$LBlack);
+		} else {
+			return dict;
+		}
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$blacken = function (t) {
+	var _p23 = t;
+	if (_p23.ctor === 'RBEmpty_elm_builtin') {
+		return _eeue56$elm_all_dict$EveryDict$RBEmpty_elm_builtin(_eeue56$elm_all_dict$EveryDict$LBlack);
+	} else {
+		return A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, _p23._1, _p23._2, _p23._3, _p23._4);
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$redden = function (t) {
+	var _p24 = t;
+	if (_p24.ctor === 'RBEmpty_elm_builtin') {
+		return _elm_lang$core$Native_Utils.crashCase(
+			'EveryDict',
+			{
+				start: {line: 440, column: 5},
+				end: {line: 442, column: 69}
+			},
+			_p24)('can\'t make a Leaf red');
+	} else {
+		return A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Red, _p24._1, _p24._2, _p24._3, _p24._4);
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$balance_node = function (t) {
+	var assemble = function (col) {
+		return function (xk) {
+			return function (xv) {
+				return function (yk) {
+					return function (yv) {
+						return function (zk) {
+							return function (zv) {
+								return function (a) {
+									return function (b) {
+										return function (c) {
+											return function (d) {
+												return A5(
+													_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin,
+													_eeue56$elm_all_dict$EveryDict$lessBlack(col),
+													yk,
+													yv,
+													A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, xk, xv, a, b),
+													A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, zk, zv, c, d));
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+	if (_eeue56$elm_all_dict$EveryDict$blackish(t)) {
+		var _p26 = t;
+		_v34_6:
+		do {
+			_v34_5:
+			do {
+				_v34_4:
+				do {
+					_v34_3:
+					do {
+						_v34_2:
+						do {
+							_v34_1:
+							do {
+								_v34_0:
+								do {
+									if (_p26.ctor === 'RBNode_elm_builtin') {
+										if (_p26._3.ctor === 'RBNode_elm_builtin') {
+											if (_p26._4.ctor === 'RBNode_elm_builtin') {
+												switch (_p26._3._0.ctor) {
+													case 'Red':
+														switch (_p26._4._0.ctor) {
+															case 'Red':
+																if ((_p26._3._3.ctor === 'RBNode_elm_builtin') && (_p26._3._3._0.ctor === 'Red')) {
+																	break _v34_0;
+																} else {
+																	if ((_p26._3._4.ctor === 'RBNode_elm_builtin') && (_p26._3._4._0.ctor === 'Red')) {
+																		break _v34_1;
+																	} else {
+																		if ((_p26._4._3.ctor === 'RBNode_elm_builtin') && (_p26._4._3._0.ctor === 'Red')) {
+																			break _v34_2;
+																		} else {
+																			if ((_p26._4._4.ctor === 'RBNode_elm_builtin') && (_p26._4._4._0.ctor === 'Red')) {
+																				break _v34_3;
+																			} else {
+																				break _v34_6;
+																			}
+																		}
+																	}
+																}
+															case 'NBlack':
+																if ((_p26._3._3.ctor === 'RBNode_elm_builtin') && (_p26._3._3._0.ctor === 'Red')) {
+																	break _v34_0;
+																} else {
+																	if ((_p26._3._4.ctor === 'RBNode_elm_builtin') && (_p26._3._4._0.ctor === 'Red')) {
+																		break _v34_1;
+																	} else {
+																		if (((_p26._0.ctor === 'BBlack') && (_p26._4._3.ctor === 'RBNode_elm_builtin')) && (_p26._4._3._0.ctor === 'Black')) {
+																			break _v34_4;
+																		} else {
+																			break _v34_6;
+																		}
+																	}
+																}
+															default:
+																if ((_p26._3._3.ctor === 'RBNode_elm_builtin') && (_p26._3._3._0.ctor === 'Red')) {
+																	break _v34_0;
+																} else {
+																	if ((_p26._3._4.ctor === 'RBNode_elm_builtin') && (_p26._3._4._0.ctor === 'Red')) {
+																		break _v34_1;
+																	} else {
+																		break _v34_6;
+																	}
+																}
+														}
+													case 'NBlack':
+														switch (_p26._4._0.ctor) {
+															case 'Red':
+																if ((_p26._4._3.ctor === 'RBNode_elm_builtin') && (_p26._4._3._0.ctor === 'Red')) {
+																	break _v34_2;
+																} else {
+																	if ((_p26._4._4.ctor === 'RBNode_elm_builtin') && (_p26._4._4._0.ctor === 'Red')) {
+																		break _v34_3;
+																	} else {
+																		if (((_p26._0.ctor === 'BBlack') && (_p26._3._4.ctor === 'RBNode_elm_builtin')) && (_p26._3._4._0.ctor === 'Black')) {
+																			break _v34_5;
+																		} else {
+																			break _v34_6;
+																		}
+																	}
+																}
+															case 'NBlack':
+																if (_p26._0.ctor === 'BBlack') {
+																	if ((_p26._4._3.ctor === 'RBNode_elm_builtin') && (_p26._4._3._0.ctor === 'Black')) {
+																		break _v34_4;
+																	} else {
+																		if ((_p26._3._4.ctor === 'RBNode_elm_builtin') && (_p26._3._4._0.ctor === 'Black')) {
+																			break _v34_5;
+																		} else {
+																			break _v34_6;
+																		}
+																	}
+																} else {
+																	break _v34_6;
+																}
+															default:
+																if (((_p26._0.ctor === 'BBlack') && (_p26._3._4.ctor === 'RBNode_elm_builtin')) && (_p26._3._4._0.ctor === 'Black')) {
+																	break _v34_5;
+																} else {
+																	break _v34_6;
+																}
+														}
+													default:
+														switch (_p26._4._0.ctor) {
+															case 'Red':
+																if ((_p26._4._3.ctor === 'RBNode_elm_builtin') && (_p26._4._3._0.ctor === 'Red')) {
+																	break _v34_2;
+																} else {
+																	if ((_p26._4._4.ctor === 'RBNode_elm_builtin') && (_p26._4._4._0.ctor === 'Red')) {
+																		break _v34_3;
+																	} else {
+																		break _v34_6;
+																	}
+																}
+															case 'NBlack':
+																if (((_p26._0.ctor === 'BBlack') && (_p26._4._3.ctor === 'RBNode_elm_builtin')) && (_p26._4._3._0.ctor === 'Black')) {
+																	break _v34_4;
+																} else {
+																	break _v34_6;
+																}
+															default:
+																break _v34_6;
+														}
+												}
+											} else {
+												switch (_p26._3._0.ctor) {
+													case 'Red':
+														if ((_p26._3._3.ctor === 'RBNode_elm_builtin') && (_p26._3._3._0.ctor === 'Red')) {
+															break _v34_0;
+														} else {
+															if ((_p26._3._4.ctor === 'RBNode_elm_builtin') && (_p26._3._4._0.ctor === 'Red')) {
+																break _v34_1;
+															} else {
+																break _v34_6;
+															}
+														}
+													case 'NBlack':
+														if (((_p26._0.ctor === 'BBlack') && (_p26._3._4.ctor === 'RBNode_elm_builtin')) && (_p26._3._4._0.ctor === 'Black')) {
+															break _v34_5;
+														} else {
+															break _v34_6;
+														}
+													default:
+														break _v34_6;
+												}
+											}
+										} else {
+											if (_p26._4.ctor === 'RBNode_elm_builtin') {
+												switch (_p26._4._0.ctor) {
+													case 'Red':
+														if ((_p26._4._3.ctor === 'RBNode_elm_builtin') && (_p26._4._3._0.ctor === 'Red')) {
+															break _v34_2;
+														} else {
+															if ((_p26._4._4.ctor === 'RBNode_elm_builtin') && (_p26._4._4._0.ctor === 'Red')) {
+																break _v34_3;
+															} else {
+																break _v34_6;
+															}
+														}
+													case 'NBlack':
+														if (((_p26._0.ctor === 'BBlack') && (_p26._4._3.ctor === 'RBNode_elm_builtin')) && (_p26._4._3._0.ctor === 'Black')) {
+															break _v34_4;
+														} else {
+															break _v34_6;
+														}
+													default:
+														break _v34_6;
+												}
+											} else {
+												break _v34_6;
+											}
+										}
+									} else {
+										break _v34_6;
+									}
+								} while(false);
+								return assemble(_p26._0)(_p26._3._3._1)(_p26._3._3._2)(_p26._3._1)(_p26._3._2)(_p26._1)(_p26._2)(_p26._3._3._3)(_p26._3._3._4)(_p26._3._4)(_p26._4);
+							} while(false);
+							return assemble(_p26._0)(_p26._3._1)(_p26._3._2)(_p26._3._4._1)(_p26._3._4._2)(_p26._1)(_p26._2)(_p26._3._3)(_p26._3._4._3)(_p26._3._4._4)(_p26._4);
+						} while(false);
+						return assemble(_p26._0)(_p26._1)(_p26._2)(_p26._4._3._1)(_p26._4._3._2)(_p26._4._1)(_p26._4._2)(_p26._3)(_p26._4._3._3)(_p26._4._3._4)(_p26._4._4);
+					} while(false);
+					return assemble(_p26._0)(_p26._1)(_p26._2)(_p26._4._1)(_p26._4._2)(_p26._4._4._1)(_p26._4._4._2)(_p26._3)(_p26._4._3)(_p26._4._4._3)(_p26._4._4._4);
+				} while(false);
+				var _p28 = _p26._4._4;
+				var _p27 = _p28;
+				if ((_p27.ctor === 'RBNode_elm_builtin') && (_p27._0.ctor === 'Black')) {
+					return A5(
+						_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin,
+						_eeue56$elm_all_dict$EveryDict$Black,
+						_p26._4._3._1,
+						_p26._4._3._2,
+						A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, _p26._1, _p26._2, _p26._3, _p26._4._3._3),
+						A5(
+							_eeue56$elm_all_dict$EveryDict$balance,
+							_eeue56$elm_all_dict$EveryDict$Black,
+							_p26._4._1,
+							_p26._4._2,
+							_p26._4._3._4,
+							_eeue56$elm_all_dict$EveryDict$redden(_p28)));
+				} else {
+					return t;
+				}
+			} while(false);
+			var _p30 = _p26._3._3;
+			var _p29 = _p30;
+			if ((_p29.ctor === 'RBNode_elm_builtin') && (_p29._0.ctor === 'Black')) {
+				return A5(
+					_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin,
+					_eeue56$elm_all_dict$EveryDict$Black,
+					_p26._3._4._1,
+					_p26._3._4._2,
+					A5(
+						_eeue56$elm_all_dict$EveryDict$balance,
+						_eeue56$elm_all_dict$EveryDict$Black,
+						_p26._3._1,
+						_p26._3._2,
+						_eeue56$elm_all_dict$EveryDict$redden(_p30),
+						_p26._3._4._3),
+					A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, _p26._1, _p26._2, _p26._3._4._4, _p26._4));
+			} else {
+				return t;
+			}
+		} while(false);
+		return t;
+	} else {
+		return t;
+	}
+};
+var _eeue56$elm_all_dict$EveryDict$balance = F5(
+	function (c, k, v, l, r) {
+		return _eeue56$elm_all_dict$EveryDict$balance_node(
+			A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, c, k, v, l, r));
+	});
+var _eeue56$elm_all_dict$EveryDict$bubble = F5(
+	function (c, k, v, l, r) {
+		return (_eeue56$elm_all_dict$EveryDict$isBBlack(l) || _eeue56$elm_all_dict$EveryDict$isBBlack(r)) ? A5(
+			_eeue56$elm_all_dict$EveryDict$balance,
+			_eeue56$elm_all_dict$EveryDict$moreBlack(c),
+			k,
+			v,
+			_eeue56$elm_all_dict$EveryDict$lessBlackTree(l),
+			_eeue56$elm_all_dict$EveryDict$lessBlackTree(r)) : A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, c, k, v, l, r);
+	});
+var _eeue56$elm_all_dict$EveryDict$remove_max = F5(
+	function (c, k, v, l, r) {
+		var _p31 = r;
+		if (_p31.ctor === 'RBEmpty_elm_builtin') {
+			return A3(_eeue56$elm_all_dict$EveryDict$rem, c, l, r);
+		} else {
+			return A5(
+				_eeue56$elm_all_dict$EveryDict$bubble,
+				c,
+				k,
+				v,
+				l,
+				A5(_eeue56$elm_all_dict$EveryDict$remove_max, _p31._0, _p31._1, _p31._2, _p31._3, _p31._4));
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$rem = F3(
+	function (c, l, r) {
+		var _p32 = {ctor: '_Tuple2', _0: l, _1: r};
+		if (_p32._0.ctor === 'RBEmpty_elm_builtin') {
+			if (_p32._1.ctor === 'RBEmpty_elm_builtin') {
+				var _p33 = c;
+				switch (_p33.ctor) {
+					case 'Red':
+						return _eeue56$elm_all_dict$EveryDict$RBEmpty_elm_builtin(_eeue56$elm_all_dict$EveryDict$LBlack);
+					case 'Black':
+						return _eeue56$elm_all_dict$EveryDict$RBEmpty_elm_builtin(_eeue56$elm_all_dict$EveryDict$LBBlack);
+					default:
+						return _eeue56$elm_all_dict$Native_Debug.crash('cannot have bblack or nblack nodes at this point');
+				}
+			} else {
+				var _p36 = _p32._1._0;
+				var _p35 = _p32._0._0;
+				var _p34 = {ctor: '_Tuple3', _0: c, _1: _p35, _2: _p36};
+				if ((((_p34.ctor === '_Tuple3') && (_p34._0.ctor === 'Black')) && (_p34._1.ctor === 'LBlack')) && (_p34._2.ctor === 'Red')) {
+					return A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, _p32._1._1, _p32._1._2, _p32._1._3, _p32._1._4);
+				} else {
+					return A4(
+						_eeue56$elm_all_dict$EveryDict$reportRemBug,
+						'Black/LBlack/Red',
+						c,
+						_eeue56$elm_all_dict$EveryDict$showLColor(_p35),
+						_eeue56$elm_all_dict$EveryDict$showNColor(_p36));
+				}
+			}
+		} else {
+			if (_p32._1.ctor === 'RBEmpty_elm_builtin') {
+				var _p39 = _p32._1._0;
+				var _p38 = _p32._0._0;
+				var _p37 = {ctor: '_Tuple3', _0: c, _1: _p38, _2: _p39};
+				if ((((_p37.ctor === '_Tuple3') && (_p37._0.ctor === 'Black')) && (_p37._1.ctor === 'Red')) && (_p37._2.ctor === 'LBlack')) {
+					return A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Black, _p32._0._1, _p32._0._2, _p32._0._3, _p32._0._4);
+				} else {
+					return A4(
+						_eeue56$elm_all_dict$EveryDict$reportRemBug,
+						'Black/Red/LBlack',
+						c,
+						_eeue56$elm_all_dict$EveryDict$showNColor(_p38),
+						_eeue56$elm_all_dict$EveryDict$showLColor(_p39));
+				}
+			} else {
+				var _p45 = _p32._0._2;
+				var _p44 = _p32._0._4;
+				var _p43 = _p32._0._3;
+				var _p42 = _p32._0._1;
+				var _p41 = _p32._0._0;
+				var l_ = A5(_eeue56$elm_all_dict$EveryDict$remove_max, _p41, _p42, _p45, _p43, _p44);
+				var r = A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _p32._1._0, _p32._1._1, _p32._1._2, _p32._1._3, _p32._1._4);
+				var l = A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _p41, _p42, _p45, _p43, _p44);
+				var _p40 = _eeue56$elm_all_dict$EveryDict$max(l);
+				var k = _p40._0;
+				var v = _p40._1;
+				return A5(_eeue56$elm_all_dict$EveryDict$bubble, c, k, v, l_, r);
+			}
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$map = F2(
+	function (f, dict) {
+		var _p46 = dict;
+		if (_p46.ctor === 'RBEmpty_elm_builtin') {
+			return _eeue56$elm_all_dict$EveryDict$RBEmpty_elm_builtin(_p46._0);
+		} else {
+			var _p47 = _p46._1;
+			return A5(
+				_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin,
+				_p46._0,
+				_p47,
+				A2(f, _p47, _p46._2),
+				A2(_eeue56$elm_all_dict$EveryDict$map, f, _p46._3),
+				A2(_eeue56$elm_all_dict$EveryDict$map, f, _p46._4));
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$Same = {ctor: 'Same'};
+var _eeue56$elm_all_dict$EveryDict$Remove = {ctor: 'Remove'};
+var _eeue56$elm_all_dict$EveryDict$Insert = {ctor: 'Insert'};
+var _eeue56$elm_all_dict$EveryDict$update = F3(
+	function (k, alter, dict) {
+		var up = function (dict) {
+			var _p48 = dict;
+			if (_p48.ctor === 'RBEmpty_elm_builtin') {
+				var _p49 = alter(_elm_lang$core$Maybe$Nothing);
+				if (_p49.ctor === 'Nothing') {
+					return {ctor: '_Tuple2', _0: _eeue56$elm_all_dict$EveryDict$Same, _1: _eeue56$elm_all_dict$EveryDict$empty};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _eeue56$elm_all_dict$EveryDict$Insert,
+						_1: A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _eeue56$elm_all_dict$EveryDict$Red, k, _p49._0, _eeue56$elm_all_dict$EveryDict$empty, _eeue56$elm_all_dict$EveryDict$empty)
+					};
+				}
+			} else {
+				var _p60 = _p48._2;
+				var _p59 = _p48._4;
+				var _p58 = _p48._3;
+				var _p57 = _p48._1;
+				var _p56 = _p48._0;
+				var _p50 = A2(
+					_elm_lang$core$Basics$compare,
+					_eeue56$elm_all_dict$EveryDict$ord(k),
+					_eeue56$elm_all_dict$EveryDict$ord(_p57));
+				switch (_p50.ctor) {
+					case 'EQ':
+						var _p51 = alter(
+							_elm_lang$core$Maybe$Just(_p60));
+						if (_p51.ctor === 'Nothing') {
+							return {
+								ctor: '_Tuple2',
+								_0: _eeue56$elm_all_dict$EveryDict$Remove,
+								_1: A3(_eeue56$elm_all_dict$EveryDict$rem, _p56, _p58, _p59)
+							};
+						} else {
+							return {
+								ctor: '_Tuple2',
+								_0: _eeue56$elm_all_dict$EveryDict$Same,
+								_1: A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _p56, _p57, _p51._0, _p58, _p59)
+							};
+						}
+					case 'LT':
+						var _p52 = up(_p58);
+						var flag = _p52._0;
+						var newLeft = _p52._1;
+						var _p53 = flag;
+						switch (_p53.ctor) {
+							case 'Same':
+								return {
+									ctor: '_Tuple2',
+									_0: _eeue56$elm_all_dict$EveryDict$Same,
+									_1: A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _p56, _p57, _p60, newLeft, _p59)
+								};
+							case 'Insert':
+								return {
+									ctor: '_Tuple2',
+									_0: _eeue56$elm_all_dict$EveryDict$Insert,
+									_1: A5(_eeue56$elm_all_dict$EveryDict$balance, _p56, _p57, _p60, newLeft, _p59)
+								};
+							default:
+								return {
+									ctor: '_Tuple2',
+									_0: _eeue56$elm_all_dict$EveryDict$Remove,
+									_1: A5(_eeue56$elm_all_dict$EveryDict$bubble, _p56, _p57, _p60, newLeft, _p59)
+								};
+						}
+					default:
+						var _p54 = up(_p59);
+						var flag = _p54._0;
+						var newRight = _p54._1;
+						var _p55 = flag;
+						switch (_p55.ctor) {
+							case 'Same':
+								return {
+									ctor: '_Tuple2',
+									_0: _eeue56$elm_all_dict$EveryDict$Same,
+									_1: A5(_eeue56$elm_all_dict$EveryDict$RBNode_elm_builtin, _p56, _p57, _p60, _p58, newRight)
+								};
+							case 'Insert':
+								return {
+									ctor: '_Tuple2',
+									_0: _eeue56$elm_all_dict$EveryDict$Insert,
+									_1: A5(_eeue56$elm_all_dict$EveryDict$balance, _p56, _p57, _p60, _p58, newRight)
+								};
+							default:
+								return {
+									ctor: '_Tuple2',
+									_0: _eeue56$elm_all_dict$EveryDict$Remove,
+									_1: A5(_eeue56$elm_all_dict$EveryDict$bubble, _p56, _p57, _p60, _p58, newRight)
+								};
+						}
+				}
+			}
+		};
+		var _p61 = up(dict);
+		var flag = _p61._0;
+		var updatedDict = _p61._1;
+		var _p62 = flag;
+		switch (_p62.ctor) {
+			case 'Same':
+				return updatedDict;
+			case 'Insert':
+				return _eeue56$elm_all_dict$EveryDict$ensureBlackRoot(updatedDict);
+			default:
+				return _eeue56$elm_all_dict$EveryDict$blacken(updatedDict);
+		}
+	});
+var _eeue56$elm_all_dict$EveryDict$insert = F3(
+	function (key, value, dict) {
+		return A3(
+			_eeue56$elm_all_dict$EveryDict$update,
+			key,
+			_elm_lang$core$Basics$always(
+				_elm_lang$core$Maybe$Just(value)),
+			dict);
+	});
+var _eeue56$elm_all_dict$EveryDict$singleton = F2(
+	function (key, value) {
+		return A3(_eeue56$elm_all_dict$EveryDict$insert, key, value, _eeue56$elm_all_dict$EveryDict$empty);
+	});
+var _eeue56$elm_all_dict$EveryDict$union = F2(
+	function (t1, t2) {
+		return A3(_eeue56$elm_all_dict$EveryDict$foldl, _eeue56$elm_all_dict$EveryDict$insert, t2, t1);
+	});
+var _eeue56$elm_all_dict$EveryDict$fromList = function (assocs) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (_p63, dict) {
+				var _p64 = _p63;
+				return A3(_eeue56$elm_all_dict$EveryDict$insert, _p64._0, _p64._1, dict);
+			}),
+		_eeue56$elm_all_dict$EveryDict$empty,
+		assocs);
+};
+var _eeue56$elm_all_dict$EveryDict$filter = F2(
+	function (predicate, dictionary) {
+		var add = F3(
+			function (key, value, dict) {
+				return A2(predicate, key, value) ? A3(_eeue56$elm_all_dict$EveryDict$insert, key, value, dict) : dict;
+			});
+		return A3(_eeue56$elm_all_dict$EveryDict$foldl, add, _eeue56$elm_all_dict$EveryDict$empty, dictionary);
+	});
+var _eeue56$elm_all_dict$EveryDict$intersect = F2(
+	function (t1, t2) {
+		return A2(
+			_eeue56$elm_all_dict$EveryDict$filter,
+			F2(
+				function (k, _p65) {
+					return A2(_eeue56$elm_all_dict$EveryDict$member, k, t2);
+				}),
+			t1);
+	});
+var _eeue56$elm_all_dict$EveryDict$partition = F2(
+	function (predicate, dict) {
+		var add = F3(
+			function (key, value, _p66) {
+				var _p67 = _p66;
+				var _p69 = _p67._1;
+				var _p68 = _p67._0;
+				return A2(predicate, key, value) ? {
+					ctor: '_Tuple2',
+					_0: A3(_eeue56$elm_all_dict$EveryDict$insert, key, value, _p68),
+					_1: _p69
+				} : {
+					ctor: '_Tuple2',
+					_0: _p68,
+					_1: A3(_eeue56$elm_all_dict$EveryDict$insert, key, value, _p69)
+				};
+			});
+		return A3(
+			_eeue56$elm_all_dict$EveryDict$foldl,
+			add,
+			{ctor: '_Tuple2', _0: _eeue56$elm_all_dict$EveryDict$empty, _1: _eeue56$elm_all_dict$EveryDict$empty},
+			dict);
+	});
+var _eeue56$elm_all_dict$EveryDict$remove = F2(
+	function (key, dict) {
+		return A3(
+			_eeue56$elm_all_dict$EveryDict$update,
+			key,
+			_elm_lang$core$Basics$always(_elm_lang$core$Maybe$Nothing),
+			dict);
+	});
+var _eeue56$elm_all_dict$EveryDict$diff = F2(
+	function (t1, t2) {
+		return A3(
+			_eeue56$elm_all_dict$EveryDict$foldl,
+			F3(
+				function (k, v, t) {
+					return A2(_eeue56$elm_all_dict$EveryDict$remove, k, t);
+				}),
+			t1,
+			t2);
+	});
+
+var _Gizra$elm_all_set$EverySet$foldr = F3(
+	function (f, b, _p0) {
+		var _p1 = _p0;
+		return A3(
+			_eeue56$elm_all_dict$EveryDict$foldr,
+			F3(
+				function (k, _p2, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p1._0);
+	});
+var _Gizra$elm_all_set$EverySet$foldl = F3(
+	function (f, b, _p3) {
+		var _p4 = _p3;
+		return A3(
+			_eeue56$elm_all_dict$EveryDict$foldl,
+			F3(
+				function (k, _p5, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p4._0);
+	});
+var _Gizra$elm_all_set$EverySet$toList = function (_p6) {
+	var _p7 = _p6;
+	return _eeue56$elm_all_dict$EveryDict$keys(_p7._0);
+};
+var _Gizra$elm_all_set$EverySet$size = function (_p8) {
+	var _p9 = _p8;
+	return _eeue56$elm_all_dict$EveryDict$size(_p9._0);
+};
+var _Gizra$elm_all_set$EverySet$member = F2(
+	function (k, _p10) {
+		var _p11 = _p10;
+		return A2(_eeue56$elm_all_dict$EveryDict$member, k, _p11._0);
+	});
+var _Gizra$elm_all_set$EverySet$isEmpty = function (_p12) {
+	var _p13 = _p12;
+	return _eeue56$elm_all_dict$EveryDict$isEmpty(_p13._0);
+};
+var _Gizra$elm_all_set$EverySet$EverySet = function (a) {
+	return {ctor: 'EverySet', _0: a};
+};
+var _Gizra$elm_all_set$EverySet$empty = _Gizra$elm_all_set$EverySet$EverySet(_eeue56$elm_all_dict$EveryDict$empty);
+var _Gizra$elm_all_set$EverySet$singleton = function (k) {
+	return _Gizra$elm_all_set$EverySet$EverySet(
+		A2(
+			_eeue56$elm_all_dict$EveryDict$singleton,
+			k,
+			{ctor: '_Tuple0'}));
+};
+var _Gizra$elm_all_set$EverySet$insert = F2(
+	function (k, _p14) {
+		var _p15 = _p14;
+		return _Gizra$elm_all_set$EverySet$EverySet(
+			A3(
+				_eeue56$elm_all_dict$EveryDict$insert,
+				k,
+				{ctor: '_Tuple0'},
+				_p15._0));
+	});
+var _Gizra$elm_all_set$EverySet$fromList = function (xs) {
+	return A3(_elm_lang$core$List$foldl, _Gizra$elm_all_set$EverySet$insert, _Gizra$elm_all_set$EverySet$empty, xs);
+};
+var _Gizra$elm_all_set$EverySet$map = F2(
+	function (f, s) {
+		return _Gizra$elm_all_set$EverySet$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				f,
+				_Gizra$elm_all_set$EverySet$toList(s)));
+	});
+var _Gizra$elm_all_set$EverySet$remove = F2(
+	function (k, _p16) {
+		var _p17 = _p16;
+		return _Gizra$elm_all_set$EverySet$EverySet(
+			A2(_eeue56$elm_all_dict$EveryDict$remove, k, _p17._0));
+	});
+var _Gizra$elm_all_set$EverySet$union = F2(
+	function (_p19, _p18) {
+		var _p20 = _p19;
+		var _p21 = _p18;
+		return _Gizra$elm_all_set$EverySet$EverySet(
+			A2(_eeue56$elm_all_dict$EveryDict$union, _p20._0, _p21._0));
+	});
+var _Gizra$elm_all_set$EverySet$intersect = F2(
+	function (_p23, _p22) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		return _Gizra$elm_all_set$EverySet$EverySet(
+			A2(_eeue56$elm_all_dict$EveryDict$intersect, _p24._0, _p25._0));
+	});
+var _Gizra$elm_all_set$EverySet$diff = F2(
+	function (_p27, _p26) {
+		var _p28 = _p27;
+		var _p29 = _p26;
+		return _Gizra$elm_all_set$EverySet$EverySet(
+			A2(_eeue56$elm_all_dict$EveryDict$diff, _p28._0, _p29._0));
+	});
+var _Gizra$elm_all_set$EverySet$filter = F2(
+	function (p, _p30) {
+		var _p31 = _p30;
+		return _Gizra$elm_all_set$EverySet$EverySet(
+			A2(
+				_eeue56$elm_all_dict$EveryDict$filter,
+				F2(
+					function (k, _p32) {
+						return p(k);
+					}),
+				_p31._0));
+	});
+var _Gizra$elm_all_set$EverySet$partition = F2(
+	function (p, _p33) {
+		var _p34 = _p33;
+		var _p35 = A2(
+			_eeue56$elm_all_dict$EveryDict$partition,
+			F2(
+				function (k, _p36) {
+					return p(k);
+				}),
+			_p34._0);
+		var p1 = _p35._0;
+		var p2 = _p35._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _Gizra$elm_all_set$EverySet$EverySet(p1),
+			_1: _Gizra$elm_all_set$EverySet$EverySet(p2)
+		};
+	});
+
 //import Native.List //
 
 var _elm_lang$core$Native_Array = function() {
@@ -20185,6 +21298,20 @@ var _elm_community$elm_material_icons$Material_Icons_Image$assistant = _elm_comm
 var _elm_community$elm_material_icons$Material_Icons_Image$adjust = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3-8c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z');
 var _elm_community$elm_material_icons$Material_Icons_Image$add_to_photos = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z');
 
+var _elm_community$elm_material_icons$Material_Icons_File$folder_shared = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm4 8h-8v-1c0-1.33 2.67-2 4-2s4 .67 4 2v1z');
+var _elm_community$elm_material_icons$Material_Icons_File$folder_open = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z');
+var _elm_community$elm_material_icons$Material_Icons_File$folder = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z');
+var _elm_community$elm_material_icons$Material_Icons_File$file_upload = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z');
+var _elm_community$elm_material_icons$Material_Icons_File$file_download = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z');
+var _elm_community$elm_material_icons$Material_Icons_File$cloud_upload = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z');
+var _elm_community$elm_material_icons$Material_Icons_File$cloud_queue = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h.71C7.37 7.69 9.48 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3s-1.34 3-3 3z');
+var _elm_community$elm_material_icons$Material_Icons_File$cloud_off = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19.35 10.04C18.67 6.59 15.64 4 12 4c-1.48 0-2.85.43-4.01 1.17l1.46 1.46C10.21 6.23 11.08 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3 0 1.13-.64 2.11-1.56 2.62l1.45 1.45C23.16 18.16 24 16.68 24 15c0-2.64-2.05-4.78-4.65-4.96zM3 5.27l2.75 2.74C2.56 8.15 0 10.77 0 14c0 3.31 2.69 6 6 6h11.73l2 2L21 20.73 4.27 4 3 5.27zM7.73 10l8 8H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h1.73z');
+var _elm_community$elm_material_icons$Material_Icons_File$cloud_download = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z');
+var _elm_community$elm_material_icons$Material_Icons_File$cloud_done = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM10 17l-3.5-3.5 1.41-1.41L10 14.17 15.18 9l1.41 1.41L10 17z');
+var _elm_community$elm_material_icons$Material_Icons_File$cloud_circle = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.5 14H8c-1.66 0-3-1.34-3-3s1.34-3 3-3l.14.01C8.58 8.28 10.13 7 12 7c2.21 0 4 1.79 4 4h.5c1.38 0 2.5 1.12 2.5 2.5S17.88 16 16.5 16z');
+var _elm_community$elm_material_icons$Material_Icons_File$cloud = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z');
+var _elm_community$elm_material_icons$Material_Icons_File$attachment = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M7.5 18C4.46 18 2 15.54 2 12.5S4.46 7 7.5 7H18c2.21 0 4 1.79 4 4s-1.79 4-4 4H9.5C8.12 15 7 13.88 7 12.5S8.12 10 9.5 10H17v1.5H9.5c-.55 0-1 .45-1 1s.45 1 1 1H18c1.38 0 2.5-1.12 2.5-2.5S19.38 8.5 18 8.5H7.5c-2.21 0-4 1.79-4 4s1.79 4 4 4H17V18H7.5z');
+
 var _bluedogtraining$bdt_elm$Icon$renderIcon = F3(
 	function (size, color, materialIcon) {
 		return A2(
@@ -20256,10 +21383,16 @@ var _bluedogtraining$bdt_elm$Icon$render = F3(
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Navigation$chevron_right);
 			case 'Spinner':
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Action$autorenew);
-			default:
+			case 'Edit':
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Image$edit);
+			case 'Download':
+				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_File$cloud_download);
+			default:
+				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Action$delete);
 		}
 	});
+var _bluedogtraining$bdt_elm$Icon$Delete = {ctor: 'Delete'};
+var _bluedogtraining$bdt_elm$Icon$Download = {ctor: 'Download'};
 var _bluedogtraining$bdt_elm$Icon$Edit = {ctor: 'Edit'};
 var _bluedogtraining$bdt_elm$Icon$Spinner = {ctor: 'Spinner'};
 var _bluedogtraining$bdt_elm$Icon$ChevronRight = {ctor: 'ChevronRight'};
@@ -30445,6 +31578,1193 @@ var _bluedogtraining$bdt_elm$Form_DatePicker$setId = F2(
 			A2(_bluedogtraining$bdt_elm$Form_DatePicker_Internal$setId, id, _p43._1));
 	});
 
+var _elm_lang$html$Html_Attributes$map = _elm_lang$virtual_dom$VirtualDom$mapProperty;
+var _elm_lang$html$Html_Attributes$attribute = _elm_lang$virtual_dom$VirtualDom$attribute;
+var _elm_lang$html$Html_Attributes$contextmenu = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'contextmenu', value);
+};
+var _elm_lang$html$Html_Attributes$draggable = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'draggable', value);
+};
+var _elm_lang$html$Html_Attributes$itemprop = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'itemprop', value);
+};
+var _elm_lang$html$Html_Attributes$tabindex = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'tabIndex',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$charset = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'charset', value);
+};
+var _elm_lang$html$Html_Attributes$height = function (value) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'height',
+		_elm_lang$core$Basics$toString(value));
+};
+var _elm_lang$html$Html_Attributes$width = function (value) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'width',
+		_elm_lang$core$Basics$toString(value));
+};
+var _elm_lang$html$Html_Attributes$formaction = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'formAction', value);
+};
+var _elm_lang$html$Html_Attributes$list = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'list', value);
+};
+var _elm_lang$html$Html_Attributes$minlength = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'minLength',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$maxlength = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'maxlength',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$size = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'size',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$form = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'form', value);
+};
+var _elm_lang$html$Html_Attributes$cols = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'cols',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$rows = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'rows',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$challenge = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'challenge', value);
+};
+var _elm_lang$html$Html_Attributes$media = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'media', value);
+};
+var _elm_lang$html$Html_Attributes$rel = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'rel', value);
+};
+var _elm_lang$html$Html_Attributes$datetime = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'datetime', value);
+};
+var _elm_lang$html$Html_Attributes$pubdate = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'pubdate', value);
+};
+var _elm_lang$html$Html_Attributes$colspan = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'colspan',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$rowspan = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'rowspan',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$manifest = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'manifest', value);
+};
+var _elm_lang$html$Html_Attributes$property = _elm_lang$virtual_dom$VirtualDom$property;
+var _elm_lang$html$Html_Attributes$stringProperty = F2(
+	function (name, string) {
+		return A2(
+			_elm_lang$html$Html_Attributes$property,
+			name,
+			_elm_lang$core$Json_Encode$string(string));
+	});
+var _elm_lang$html$Html_Attributes$class = function (name) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'className', name);
+};
+var _elm_lang$html$Html_Attributes$id = function (name) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'id', name);
+};
+var _elm_lang$html$Html_Attributes$title = function (name) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'title', name);
+};
+var _elm_lang$html$Html_Attributes$accesskey = function ($char) {
+	return A2(
+		_elm_lang$html$Html_Attributes$stringProperty,
+		'accessKey',
+		_elm_lang$core$String$fromChar($char));
+};
+var _elm_lang$html$Html_Attributes$dir = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'dir', value);
+};
+var _elm_lang$html$Html_Attributes$dropzone = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'dropzone', value);
+};
+var _elm_lang$html$Html_Attributes$lang = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'lang', value);
+};
+var _elm_lang$html$Html_Attributes$content = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'content', value);
+};
+var _elm_lang$html$Html_Attributes$httpEquiv = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'httpEquiv', value);
+};
+var _elm_lang$html$Html_Attributes$language = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'language', value);
+};
+var _elm_lang$html$Html_Attributes$src = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'src', value);
+};
+var _elm_lang$html$Html_Attributes$alt = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'alt', value);
+};
+var _elm_lang$html$Html_Attributes$preload = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'preload', value);
+};
+var _elm_lang$html$Html_Attributes$poster = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'poster', value);
+};
+var _elm_lang$html$Html_Attributes$kind = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'kind', value);
+};
+var _elm_lang$html$Html_Attributes$srclang = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'srclang', value);
+};
+var _elm_lang$html$Html_Attributes$sandbox = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'sandbox', value);
+};
+var _elm_lang$html$Html_Attributes$srcdoc = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'srcdoc', value);
+};
+var _elm_lang$html$Html_Attributes$type_ = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'type', value);
+};
+var _elm_lang$html$Html_Attributes$value = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'value', value);
+};
+var _elm_lang$html$Html_Attributes$defaultValue = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'defaultValue', value);
+};
+var _elm_lang$html$Html_Attributes$placeholder = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'placeholder', value);
+};
+var _elm_lang$html$Html_Attributes$accept = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'accept', value);
+};
+var _elm_lang$html$Html_Attributes$acceptCharset = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'acceptCharset', value);
+};
+var _elm_lang$html$Html_Attributes$action = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'action', value);
+};
+var _elm_lang$html$Html_Attributes$autocomplete = function (bool) {
+	return A2(
+		_elm_lang$html$Html_Attributes$stringProperty,
+		'autocomplete',
+		bool ? 'on' : 'off');
+};
+var _elm_lang$html$Html_Attributes$enctype = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'enctype', value);
+};
+var _elm_lang$html$Html_Attributes$method = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'method', value);
+};
+var _elm_lang$html$Html_Attributes$name = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'name', value);
+};
+var _elm_lang$html$Html_Attributes$pattern = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'pattern', value);
+};
+var _elm_lang$html$Html_Attributes$for = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'htmlFor', value);
+};
+var _elm_lang$html$Html_Attributes$max = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'max', value);
+};
+var _elm_lang$html$Html_Attributes$min = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'min', value);
+};
+var _elm_lang$html$Html_Attributes$step = function (n) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'step', n);
+};
+var _elm_lang$html$Html_Attributes$wrap = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'wrap', value);
+};
+var _elm_lang$html$Html_Attributes$usemap = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'useMap', value);
+};
+var _elm_lang$html$Html_Attributes$shape = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'shape', value);
+};
+var _elm_lang$html$Html_Attributes$coords = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'coords', value);
+};
+var _elm_lang$html$Html_Attributes$keytype = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'keytype', value);
+};
+var _elm_lang$html$Html_Attributes$align = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'align', value);
+};
+var _elm_lang$html$Html_Attributes$cite = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'cite', value);
+};
+var _elm_lang$html$Html_Attributes$href = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'href', value);
+};
+var _elm_lang$html$Html_Attributes$target = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'target', value);
+};
+var _elm_lang$html$Html_Attributes$downloadAs = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'download', value);
+};
+var _elm_lang$html$Html_Attributes$hreflang = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'hreflang', value);
+};
+var _elm_lang$html$Html_Attributes$ping = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'ping', value);
+};
+var _elm_lang$html$Html_Attributes$start = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$stringProperty,
+		'start',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$headers = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'headers', value);
+};
+var _elm_lang$html$Html_Attributes$scope = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'scope', value);
+};
+var _elm_lang$html$Html_Attributes$boolProperty = F2(
+	function (name, bool) {
+		return A2(
+			_elm_lang$html$Html_Attributes$property,
+			name,
+			_elm_lang$core$Json_Encode$bool(bool));
+	});
+var _elm_lang$html$Html_Attributes$hidden = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'hidden', bool);
+};
+var _elm_lang$html$Html_Attributes$contenteditable = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'contentEditable', bool);
+};
+var _elm_lang$html$Html_Attributes$spellcheck = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'spellcheck', bool);
+};
+var _elm_lang$html$Html_Attributes$async = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'async', bool);
+};
+var _elm_lang$html$Html_Attributes$defer = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'defer', bool);
+};
+var _elm_lang$html$Html_Attributes$scoped = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'scoped', bool);
+};
+var _elm_lang$html$Html_Attributes$autoplay = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'autoplay', bool);
+};
+var _elm_lang$html$Html_Attributes$controls = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'controls', bool);
+};
+var _elm_lang$html$Html_Attributes$loop = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'loop', bool);
+};
+var _elm_lang$html$Html_Attributes$default = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'default', bool);
+};
+var _elm_lang$html$Html_Attributes$seamless = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'seamless', bool);
+};
+var _elm_lang$html$Html_Attributes$checked = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'checked', bool);
+};
+var _elm_lang$html$Html_Attributes$selected = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'selected', bool);
+};
+var _elm_lang$html$Html_Attributes$autofocus = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'autofocus', bool);
+};
+var _elm_lang$html$Html_Attributes$disabled = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'disabled', bool);
+};
+var _elm_lang$html$Html_Attributes$multiple = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'multiple', bool);
+};
+var _elm_lang$html$Html_Attributes$novalidate = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'noValidate', bool);
+};
+var _elm_lang$html$Html_Attributes$readonly = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'readOnly', bool);
+};
+var _elm_lang$html$Html_Attributes$required = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'required', bool);
+};
+var _elm_lang$html$Html_Attributes$ismap = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'isMap', value);
+};
+var _elm_lang$html$Html_Attributes$download = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'download', bool);
+};
+var _elm_lang$html$Html_Attributes$reversed = function (bool) {
+	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'reversed', bool);
+};
+var _elm_lang$html$Html_Attributes$classList = function (list) {
+	return _elm_lang$html$Html_Attributes$class(
+		A2(
+			_elm_lang$core$String$join,
+			' ',
+			A2(
+				_elm_lang$core$List$map,
+				_elm_lang$core$Tuple$first,
+				A2(_elm_lang$core$List$filter, _elm_lang$core$Tuple$second, list))));
+};
+var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
+
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+
+var _norpan$elm_file_reader$FileReader$handleFiles = '\n    var fileObjects = [];\n    var index = 0;\n    var reader = new FileReader();\n    var dataFormat = event.target.dataset.format;\n    var encoding = event.target.dataset.encoding;\n    reader.onload = function() {\n        var data;\n        switch(dataFormat) {\n            case \'DataURL\':\n            case \'Text\':\n                data = reader.result;\n                break;\n            case \'Base64\':\n                data = reader.result.split(\',\')[1];\n                break;\n        }\n        var lastModified = files[index].lastModified;\n        if (!lastModified) {\n          lastModified = files[index].lastModifiedDate.getTime();\n        }\n        var result =\n            { lastModified: lastModified\n            , name: files[index].name\n            , size: files[index].size\n            , mimeType: files[index].type\n            , dataFormat: dataFormat\n            , encoding: encoding\n            , data: data\n            };\n        fileObjects.push(result);\n        index++;\n        readOne();\n    }\n    reader.onerror = function () {\n        var lastModified = files[index].lastModified;\n        if (!lastModified) {\n          lastModified = files[index].lastModifiedDate.getTime();\n        }\n        var result =\n            { lastModified: lastModified\n            , name: files[index].name\n            , size: files[index].size\n            , mimeType: files[index].type\n            , dataFormat: dataFormat\n            , encoding: encoding\n            , errorCode: reader.error.code\n            , errorName: reader.error.name\n            , errorMessage: reader.error.message\n            };\n        fileObjects.push(result);\n        index++;\n        readOne();\n    }\n    function readOne() {\n        var file = files[index];\n        if (file) {\n            switch(dataFormat) {\n                case \'DataURL\':\n                case \'Base64\':\n                    reader.readAsDataURL(file);\n                    break;\n                case \'Text\':\n                    reader.readAsText(file, encoding);\n                    break;\n            }\n        } else {\n            if (fileObjects.length > 0) {\n                var filesEvent;\n                try {\n                  filesEvent = new CustomEvent(\"files\", { detail: fileObjects });\n                } catch(e) {\n                  filesEvent = document.createEvent(\"CustomEvent\");\n                  filesEvent.initCustomEvent(\"files\", false, false, fileObjects);\n                }\n                event.target.dispatchEvent(filesEvent);\n            }\n        }\n      }\n    readOne();\n';
+var _norpan$elm_file_reader$FileReader$onChangeHandler = A2(_elm_lang$core$Basics_ops['++'], '\n    event.preventDefault();\n    event.stopPropagation();\n    var files = event.target.files;\n    ', _norpan$elm_file_reader$FileReader$handleFiles);
+var _norpan$elm_file_reader$FileReader$onDropHandler = A2(_elm_lang$core$Basics_ops['++'], '\n    event.preventDefault();\n    event.stopPropagation();\n    var files = event.dataTransfer.files;\n    ', _norpan$elm_file_reader$FileReader$handleFiles);
+var _norpan$elm_file_reader$FileReader$dataFormatAttributes = function (dataFormat) {
+	var _p0 = dataFormat;
+	switch (_p0.ctor) {
+		case 'DataURL':
+			return {
+				ctor: '::',
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-format', 'DataURL'),
+				_1: {ctor: '[]'}
+			};
+		case 'Base64':
+			return {
+				ctor: '::',
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-format', 'Base64'),
+				_1: {ctor: '[]'}
+			};
+		default:
+			return {
+				ctor: '::',
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-format', 'Text'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'data-encoding', _p0._0),
+					_1: {ctor: '[]'}
+				}
+			};
+	}
+};
+var _norpan$elm_file_reader$FileReader$default = F2(
+	function (a, decoder) {
+		return _elm_lang$core$Json_Decode$oneOf(
+			{
+				ctor: '::',
+				_0: decoder,
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$core$Json_Decode$succeed(a),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _norpan$elm_file_reader$FileReader$File = F6(
+	function (a, b, c, d, e, f) {
+		return {lastModified: a, name: b, size: c, mimeType: d, dataFormat: e, data: f};
+	});
+var _norpan$elm_file_reader$FileReader$Error = F3(
+	function (a, b, c) {
+		return {code: a, name: b, message: c};
+	});
+var _norpan$elm_file_reader$FileReader$errorDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_norpan$elm_file_reader$FileReader$Error,
+	A2(
+		_norpan$elm_file_reader$FileReader$default,
+		0,
+		A2(_elm_lang$core$Json_Decode$field, 'errorCode', _elm_lang$core$Json_Decode$int)),
+	A2(
+		_norpan$elm_file_reader$FileReader$default,
+		'',
+		A2(_elm_lang$core$Json_Decode$field, 'errorName', _elm_lang$core$Json_Decode$string)),
+	A2(
+		_norpan$elm_file_reader$FileReader$default,
+		'',
+		A2(_elm_lang$core$Json_Decode$field, 'errorMessage', _elm_lang$core$Json_Decode$string)));
+var _norpan$elm_file_reader$FileReader$Text = function (a) {
+	return {ctor: 'Text', _0: a};
+};
+var _norpan$elm_file_reader$FileReader$Base64 = {ctor: 'Base64'};
+var _norpan$elm_file_reader$FileReader$DataURL = {ctor: 'DataURL'};
+var _norpan$elm_file_reader$FileReader$dataFormatDecoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (dataFormat) {
+		var _p1 = dataFormat;
+		switch (_p1) {
+			case 'DataURL':
+				return _elm_lang$core$Json_Decode$succeed(_norpan$elm_file_reader$FileReader$DataURL);
+			case 'Base64':
+				return _elm_lang$core$Json_Decode$succeed(_norpan$elm_file_reader$FileReader$Base64);
+			case 'Text':
+				return A2(
+					_elm_lang$core$Json_Decode$map,
+					_norpan$elm_file_reader$FileReader$Text,
+					A2(_elm_lang$core$Json_Decode$field, 'encoding', _elm_lang$core$Json_Decode$string));
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(_elm_lang$core$Basics_ops['++'], 'Unknown data format: ', dataFormat));
+		}
+	},
+	A2(_elm_lang$core$Json_Decode$field, 'dataFormat', _elm_lang$core$Json_Decode$string));
+var _norpan$elm_file_reader$FileReader$fileDecoder = A7(
+	_elm_lang$core$Json_Decode$map6,
+	_norpan$elm_file_reader$FileReader$File,
+	A2(_elm_lang$core$Json_Decode$field, 'lastModified', _elm_lang$core$Json_Decode$float),
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'size', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'mimeType', _elm_lang$core$Json_Decode$string),
+	_norpan$elm_file_reader$FileReader$dataFormatDecoder,
+	_elm_lang$core$Json_Decode$oneOf(
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$core$Json_Decode$map,
+				_elm_lang$core$Result$Ok,
+				A2(_elm_lang$core$Json_Decode$field, 'data', _elm_lang$core$Json_Decode$string)),
+			_1: {
+				ctor: '::',
+				_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Result$Err, _norpan$elm_file_reader$FileReader$errorDecoder),
+				_1: {ctor: '[]'}
+			}
+		}));
+var _norpan$elm_file_reader$FileReader$fileInput = F2(
+	function (dataFormat, fileMsg) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$type_('file'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'onchange', _norpan$elm_file_reader$FileReader$onChangeHandler),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html_Events$on,
+							'files',
+							A2(
+								_elm_lang$core$Json_Decode$map,
+								fileMsg,
+								A2(
+									_elm_lang$core$Json_Decode$field,
+									'detail',
+									A2(_elm_lang$core$Json_Decode$index, 0, _norpan$elm_file_reader$FileReader$fileDecoder)))),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			_norpan$elm_file_reader$FileReader$dataFormatAttributes(dataFormat));
+	});
+var _norpan$elm_file_reader$FileReader$filesInput = F2(
+	function (dataFormat, filesMsg) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$type_('file'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$multiple(true),
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$html$Html_Attributes$attribute, 'onchange', _norpan$elm_file_reader$FileReader$onChangeHandler),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html_Events$on,
+								'files',
+								A2(
+									_elm_lang$core$Json_Decode$map,
+									filesMsg,
+									A2(
+										_elm_lang$core$Json_Decode$field,
+										'detail',
+										_elm_lang$core$Json_Decode$list(_norpan$elm_file_reader$FileReader$fileDecoder)))),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			_norpan$elm_file_reader$FileReader$dataFormatAttributes(dataFormat));
+	});
+var _norpan$elm_file_reader$FileReader$dropZone = function (_p2) {
+	var _p3 = _p2;
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: A3(
+				_elm_lang$html$Html_Events$onWithOptions,
+				'dragenter',
+				{preventDefault: true, stopPropagation: true},
+				_elm_lang$core$Json_Decode$succeed(_p3.enterMsg)),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_elm_lang$html$Html_Events$onWithOptions,
+					'dragleave',
+					{preventDefault: true, stopPropagation: true},
+					_elm_lang$core$Json_Decode$succeed(_p3.leaveMsg)),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'ondragover', 'event.preventDefault(); event.stopPropagation();'),
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$html$Html_Attributes$attribute, 'ondrop', _norpan$elm_file_reader$FileReader$onDropHandler),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html_Events$on,
+								'files',
+								A2(
+									_elm_lang$core$Json_Decode$map,
+									_p3.filesMsg,
+									A2(
+										_elm_lang$core$Json_Decode$field,
+										'detail',
+										_elm_lang$core$Json_Decode$list(_norpan$elm_file_reader$FileReader$fileDecoder)))),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		},
+		_norpan$elm_file_reader$FileReader$dataFormatAttributes(_p3.dataFormat));
+};
+
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$removeIcon = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$hover(
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$backgroundColor(
+						A3(_rtfeldman$elm_css$Css$rgb, 189, 54, 47)),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$file = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$displayFlex,
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$spaceBetween),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Css$padding2,
+						_rtfeldman$elm_css$Css$rem(0.3),
+						_rtfeldman$elm_css$Css$rem(0)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$fontSize(
+							_rtfeldman$elm_css$Css$rem(0.8)),
+						_1: {
+							ctor: '::',
+							_0: A3(
+								_rtfeldman$elm_css$Css$borderBottom3,
+								_rtfeldman$elm_css$Css$px(1),
+								_rtfeldman$elm_css$Css$solid,
+								A3(_rtfeldman$elm_css$Css$rgb, 204, 204, 204)),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$fileList = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{ctor: '[]'});
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$filesInput = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$visibility(_rtfeldman$elm_css$Css$hidden),
+			_1: {ctor: '[]'}
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$backgroundCase = F3(
+	function (isLocked, isError, areFilesHovering) {
+		var _p0 = {ctor: '_Tuple3', _0: isLocked, _1: isError, _2: areFilesHovering};
+		_v0_3:
+		do {
+			if (_p0.ctor === '_Tuple3') {
+				if (_p0._0 === true) {
+					return A3(_rtfeldman$elm_css$Css$rgb, 238, 238, 238);
+				} else {
+					if (_p0._2 === false) {
+						if (_p0._1 === true) {
+							return A3(_rtfeldman$elm_css$Css$rgb, 246, 221, 219);
+						} else {
+							break _v0_3;
+						}
+					} else {
+						return A3(_rtfeldman$elm_css$Css$rgb, 231, 243, 231);
+					}
+				}
+			} else {
+				break _v0_3;
+			}
+		} while(false);
+		return A3(_rtfeldman$elm_css$Css$rgb, 255, 255, 255);
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$borderCase = F3(
+	function (isLocked, isError, areFilesHovering) {
+		var _p1 = {ctor: '_Tuple3', _0: isLocked, _1: isError, _2: areFilesHovering};
+		_v1_3:
+		do {
+			_v1_0:
+			do {
+				if (_p1.ctor === '_Tuple3') {
+					if (_p1._2 === false) {
+						if (_p1._0 === true) {
+							break _v1_0;
+						} else {
+							if (_p1._1 === true) {
+								return A3(_rtfeldman$elm_css$Css$rgb, 189, 54, 47);
+							} else {
+								break _v1_3;
+							}
+						}
+					} else {
+						if (_p1._0 === true) {
+							break _v1_0;
+						} else {
+							return A3(_rtfeldman$elm_css$Css$rgb, 81, 163, 81);
+						}
+					}
+				} else {
+					break _v1_3;
+				}
+			} while(false);
+			return A3(_rtfeldman$elm_css$Css$rgb, 204, 204, 204);
+		} while(false);
+		return A3(_rtfeldman$elm_css$Css$rgb, 204, 204, 204);
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$dropZone = F3(
+	function (isLocked, isError, areFilesHovering) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			{
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Css$padding2,
+					_rtfeldman$elm_css$Css$rem(1.5),
+					_rtfeldman$elm_css$Css$rem(3)),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_rtfeldman$elm_css$Css$border3,
+						_rtfeldman$elm_css$Css$px(2),
+						_rtfeldman$elm_css$Css$dashed,
+						A3(_bluedogtraining$bdt_elm$Form_DropZone_Css$borderCase, isLocked, isError, areFilesHovering)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$displayFlex,
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$backgroundColor(
+										A3(_bluedogtraining$bdt_elm$Form_DropZone_Css$backgroundCase, isLocked, isError, areFilesHovering)),
+									_1: {
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css_Transitions$transition(
+											{
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css_Transitions$backgroundColor(400),
+												_1: {
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css_Transitions$borderColor(400),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$width(
+												_rtfeldman$elm_css$Css$pct(100)),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$height(
+													_rtfeldman$elm_css$Css$pct(100)),
+												_1: {
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+													_1: {
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$marginBottom(
+															_rtfeldman$elm_css$Css$rem(0.3)),
+														_1: {
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css$fontFamilies(
+																{
+																	ctor: '::',
+																	_0: '-apple-system',
+																	_1: {
+																		ctor: '::',
+																		_0: 'system-ui',
+																		_1: {
+																			ctor: '::',
+																			_0: 'BlinkMacSystemFont',
+																			_1: {
+																				ctor: '::',
+																				_0: 'Segoe UI',
+																				_1: {
+																					ctor: '::',
+																					_0: 'Roboto',
+																					_1: {
+																						ctor: '::',
+																						_0: 'Helvetica Neue',
+																						_1: {
+																							ctor: '::',
+																							_0: 'Arial',
+																							_1: {
+																								ctor: '::',
+																								_0: 'sans-serif',
+																								_1: {ctor: '[]'}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}),
+															_1: {
+																ctor: '::',
+																_0: _rtfeldman$elm_css$Css$fontWeight(
+																	_rtfeldman$elm_css$Css$int(100)),
+																_1: {
+																	ctor: '::',
+																	_0: _rtfeldman$elm_css$Css$color(
+																		A3(_rtfeldman$elm_css$Css$rgb, 111, 111, 111)),
+																	_1: {
+																		ctor: '::',
+																		_0: _rtfeldman$elm_css$Css$cursor(
+																			isLocked ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	});
+
+var _bluedogtraining$bdt_elm$Form_DropZone$getValue = function (_p0) {
+	var _p1 = _p0;
+	return _Gizra$elm_all_set$EverySet$toList(
+		_bluedogtraining$bdt_elm$Resettable$getValue(_p1._0.files));
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$getIsChanged = function (_p2) {
+	var _p3 = _p2;
+	return _bluedogtraining$bdt_elm$Resettable$getIsChanged(_p3._0.files);
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$initialViewState = {isLocked: false, isError: false, label: 'Drop files here or click to select files'};
+var _bluedogtraining$bdt_elm$Form_DropZone$initialModel = {
+	files: _bluedogtraining$bdt_elm$Resettable$init(_Gizra$elm_all_set$EverySet$empty),
+	areFilesHovering: false,
+	isLoading: false
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$State = F3(
+	function (a, b, c) {
+		return {files: a, areFilesHovering: b, isLoading: c};
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$ViewState = F3(
+	function (a, b, c) {
+		return {isLocked: a, isError: b, label: c};
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$Model = function (a) {
+	return {ctor: 'Model', _0: a};
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$init = _bluedogtraining$bdt_elm$Form_DropZone$Model(_bluedogtraining$bdt_elm$Form_DropZone$initialModel);
+var _bluedogtraining$bdt_elm$Form_DropZone$update = F2(
+	function (msg, _p4) {
+		var _p5 = _p4;
+		var _p7 = _p5._0;
+		var _p6 = msg;
+		switch (_p6.ctor) {
+			case 'Enter':
+				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+					_elm_lang$core$Native_Utils.update(
+						_p7,
+						{areFilesHovering: true}));
+			case 'Leave':
+				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+					_elm_lang$core$Native_Utils.update(
+						_p7,
+						{areFilesHovering: false}));
+			case 'Files':
+				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+					_elm_lang$core$Native_Utils.update(
+						_p7,
+						{
+							areFilesHovering: false,
+							files: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								A2(
+									_Gizra$elm_all_set$EverySet$union,
+									_bluedogtraining$bdt_elm$Resettable$getValue(_p7.files),
+									_Gizra$elm_all_set$EverySet$fromList(_p6._0)),
+								_p7.files)
+						}));
+			default:
+				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+					_elm_lang$core$Native_Utils.update(
+						_p7,
+						{
+							files: A2(
+								_bluedogtraining$bdt_elm$Resettable$update,
+								A2(
+									_Gizra$elm_all_set$EverySet$remove,
+									_p6._0,
+									_bluedogtraining$bdt_elm$Resettable$getValue(_p7.files)),
+								_p7.files)
+						}));
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$reInitialise = function (_p8) {
+	var _p9 = _p8;
+	var _p10 = _p9._0;
+	return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+		_elm_lang$core$Native_Utils.update(
+			_p10,
+			{
+				files: _bluedogtraining$bdt_elm$Resettable$init(
+					_bluedogtraining$bdt_elm$Resettable$getValue(_p10.files))
+			}));
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$reset = function (_p11) {
+	var _p12 = _p11;
+	var _p13 = _p12._0;
+	return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+		_elm_lang$core$Native_Utils.update(
+			_p13,
+			{
+				files: _bluedogtraining$bdt_elm$Resettable$reset(_p13.files)
+			}));
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$setInitialValue = F2(
+	function (files, _p14) {
+		var _p15 = _p14;
+		return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+			_elm_lang$core$Native_Utils.update(
+				_p15._0,
+				{
+					files: _bluedogtraining$bdt_elm$Resettable$init(
+						_Gizra$elm_all_set$EverySet$fromList(files))
+				}));
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$setValue = F2(
+	function (files, _p16) {
+		var _p17 = _p16;
+		var _p18 = _p17._0;
+		return _bluedogtraining$bdt_elm$Form_DropZone$Model(
+			_elm_lang$core$Native_Utils.update(
+				_p18,
+				{
+					files: A2(
+						_bluedogtraining$bdt_elm$Resettable$update,
+						_Gizra$elm_all_set$EverySet$fromList(files),
+						_p18.files)
+				}));
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$View = F2(
+	function (a, b) {
+		return {ctor: 'View', _0: a, _1: b};
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$view = function (_p19) {
+	var _p20 = _p19;
+	return A2(_bluedogtraining$bdt_elm$Form_DropZone$View, _p20._0, _bluedogtraining$bdt_elm$Form_DropZone$initialViewState);
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$setIsError = F2(
+	function (isError, _p21) {
+		var _p22 = _p21;
+		return A2(
+			_bluedogtraining$bdt_elm$Form_DropZone$View,
+			_p22._0,
+			_elm_lang$core$Native_Utils.update(
+				_p22._1,
+				{isError: isError}));
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$setIsLocked = F2(
+	function (isLocked, _p23) {
+		var _p24 = _p23;
+		return A2(
+			_bluedogtraining$bdt_elm$Form_DropZone$View,
+			_p24._0,
+			_elm_lang$core$Native_Utils.update(
+				_p24._1,
+				{isLocked: isLocked}));
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$setLabel = F2(
+	function (label, _p25) {
+		var _p26 = _p25;
+		return A2(
+			_bluedogtraining$bdt_elm$Form_DropZone$View,
+			_p26._0,
+			_elm_lang$core$Native_Utils.update(
+				_p26._1,
+				{label: label}));
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$Remove = function (a) {
+	return {ctor: 'Remove', _0: a};
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$file = function (file) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Form_DropZone_Css$file,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$span,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled$text(file.name),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _bluedogtraining$bdt_elm$Button$render(
+					A2(
+						_bluedogtraining$bdt_elm$Button$onClick,
+						_bluedogtraining$bdt_elm$Form_DropZone$Remove(file),
+						_bluedogtraining$bdt_elm$Button$small(
+							_bluedogtraining$bdt_elm$Button$red(
+								A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Clear, _bluedogtraining$bdt_elm$Button$view))))),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$Files = function (a) {
+	return {ctor: 'Files', _0: a};
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$Leave = {ctor: 'Leave'};
+var _bluedogtraining$bdt_elm$Form_DropZone$Enter = {ctor: 'Enter'};
+var _bluedogtraining$bdt_elm$Form_DropZone$dropZoneModel = {dataFormat: _norpan$elm_file_reader$FileReader$Base64, enterMsg: _bluedogtraining$bdt_elm$Form_DropZone$Enter, leaveMsg: _bluedogtraining$bdt_elm$Form_DropZone$Leave, filesMsg: _bluedogtraining$bdt_elm$Form_DropZone$Files};
+var _bluedogtraining$bdt_elm$Form_DropZone$render = function (_p27) {
+	var _p28 = _p27;
+	var _p30 = _p28._1;
+	var _p29 = _p28._0;
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$label,
+				A2(
+					_elm_lang$core$List$append,
+					A2(
+						_elm_lang$core$List$map,
+						_rtfeldman$elm_css$Html_Styled_Attributes$fromUnstyled,
+						_norpan$elm_file_reader$FileReader$dropZone(_bluedogtraining$bdt_elm$Form_DropZone$dropZoneModel)),
+					{
+						ctor: '::',
+						_0: A3(_bluedogtraining$bdt_elm$Form_DropZone_Css$dropZone, _p30.isLocked, _p30.isError, _p29.areFilesHovering),
+						_1: {ctor: '[]'}
+					}),
+				{
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$input,
+						A2(
+							_elm_lang$core$List$append,
+							A2(
+								_elm_lang$core$List$map,
+								_rtfeldman$elm_css$Html_Styled_Attributes$fromUnstyled,
+								A2(_norpan$elm_file_reader$FileReader$filesInput, _norpan$elm_file_reader$FileReader$Base64, _bluedogtraining$bdt_elm$Form_DropZone$Files)),
+							{
+								ctor: '::',
+								_0: _bluedogtraining$bdt_elm$Form_DropZone_Css$filesInput,
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(_p30.isLocked),
+									_1: {ctor: '[]'}
+								}
+							}),
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text(_p30.label),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$div,
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Form_DropZone_Css$fileList,
+						_1: {ctor: '[]'}
+					},
+					_Gizra$elm_all_set$EverySet$toList(
+						A2(
+							_Gizra$elm_all_set$EverySet$map,
+							_bluedogtraining$bdt_elm$Form_DropZone$file,
+							_bluedogtraining$bdt_elm$Resettable$getValue(_p29.files)))),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+
 var _bluedogtraining$bdt_elm$Form_FloatInput_Css$input = F2(
 	function (isError, isLocked) {
 		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
@@ -34990,6 +37310,9 @@ var _bluedogtraining$bdt_elm$MusicGenre$asNonempty = A2(
 	A2(_elm_lang$core$List$drop, 1, _bluedogtraining$bdt_elm$MusicGenre$asList),
 	_mgold$elm_nonempty_list$List_Nonempty$fromElement(_bluedogtraining$bdt_elm$MusicGenre$Rock));
 
+var _bluedogtraining$bdt_elm$Msg$DropZone = function (a) {
+	return {ctor: 'DropZone', _0: a};
+};
 var _bluedogtraining$bdt_elm$Msg$CloseLgModal = {ctor: 'CloseLgModal'};
 var _bluedogtraining$bdt_elm$Msg$OpenLgModal = {ctor: 'OpenLgModal'};
 var _bluedogtraining$bdt_elm$Msg$CloseSmModal = {ctor: 'CloseSmModal'};
@@ -35068,6 +37391,7 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 		A2(_bluedogtraining$bdt_elm$Form_TextArea$setSubstituteTabs, true, _bluedogtraining$bdt_elm$Form_TextArea$init)),
 	toggle1: false,
 	toggle2: false,
+	dropZone: _bluedogtraining$bdt_elm$Form_DropZone$init,
 	name: _bluedogtraining$bdt_elm$Form_Input$init,
 	startDate: _bluedogtraining$bdt_elm$Form_DatePicker$init,
 	email: _bluedogtraining$bdt_elm$Form_Input$init,
@@ -35096,7 +37420,9 @@ var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 																	return function (r) {
 																		return function (s) {
 																			return function (t) {
-																				return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, name: n, startDate: o, email: p, preferredGenre: q, countryOfBirth: r, modalSmOpen: s, modalLgOpen: t};
+																				return function (u) {
+																					return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, dropZone: n, name: o, startDate: p, email: q, preferredGenre: r, countryOfBirth: s, modalSmOpen: t, modalLgOpen: u};
+																				};
 																			};
 																		};
 																	};
@@ -35282,6 +37608,15 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{toggle2: !model.toggle2}),
+					{ctor: '[]'});
+			case 'DropZone':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							dropZone: A2(_bluedogtraining$bdt_elm$Form_DropZone$update, _p0._0, model.dropZone)
+						}),
 					{ctor: '[]'});
 			case 'UpdateName':
 				return A2(
@@ -37132,8 +39467,11 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																										_bluedogtraining$bdt_elm$Grid_Size$Six,
 																										{
 																											ctor: '::',
-																											_0: _bluedogtraining$bdt_elm$Button$render(
-																												A2(_bluedogtraining$bdt_elm$Button$text, 'I\'m a button', _bluedogtraining$bdt_elm$Button$view)),
+																											_0: A2(
+																												_rtfeldman$elm_css$Html_Styled$map,
+																												_bluedogtraining$bdt_elm$Msg$DropZone,
+																												_bluedogtraining$bdt_elm$Button$render(
+																													A2(_bluedogtraining$bdt_elm$Button$text, 'I\'m a button', _bluedogtraining$bdt_elm$Button$view))),
 																											_1: {ctor: '[]'}
 																										}),
 																									_1: {ctor: '[]'}
@@ -37148,7 +39486,52 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																				'Toggle',
 																				{ctor: '[]'},
 																				_bluedogtraining$bdt_elm$Card$view)))),
-																_1: {ctor: '[]'}
+																_1: {
+																	ctor: '::',
+																	_0: _bluedogtraining$bdt_elm$Card$render(
+																		A2(
+																			_bluedogtraining$bdt_elm$Card$footer,
+																			{ctor: '[]'},
+																			A2(
+																				_bluedogtraining$bdt_elm$Card$body,
+																				{
+																					ctor: '::',
+																					_0: A2(
+																						_bluedogtraining$bdt_elm$Card$block,
+																						_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																						{
+																							ctor: '::',
+																							_0: _bluedogtraining$bdt_elm$Grid$row(
+																								{
+																									ctor: '::',
+																									_0: A2(
+																										_bluedogtraining$bdt_elm$Grid$col,
+																										_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																										{
+																											ctor: '::',
+																											_0: A2(
+																												_rtfeldman$elm_css$Html_Styled$map,
+																												_bluedogtraining$bdt_elm$Msg$DropZone,
+																												_bluedogtraining$bdt_elm$Form_DropZone$render(
+																													A2(
+																														_bluedogtraining$bdt_elm$Form_DropZone$setLabel,
+																														'Drop files here or click to select files',
+																														_bluedogtraining$bdt_elm$Form_DropZone$view(model.dropZone)))),
+																											_1: {ctor: '[]'}
+																										}),
+																									_1: {ctor: '[]'}
+																								}),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {ctor: '[]'}
+																				},
+																				A3(
+																					_bluedogtraining$bdt_elm$Card$header,
+																					'File Uploads',
+																					{ctor: '[]'},
+																					_bluedogtraining$bdt_elm$Card$view)))),
+																	_1: {ctor: '[]'}
+																}
 															}
 														}
 													}),
@@ -37495,7 +39878,7 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _bluedogtraining$bdt_elm$Main$main !== 'undefined') {
-    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"DropZone":["Form.DropZone.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"FileReader.DataFormat":{"args":[],"tags":{"Text":["String"],"DataURL":[],"Base64":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.DropZone.Msg":{"args":[],"tags":{"Enter":[],"Remove":["FileReader.File"],"Files":["List FileReader.File"],"Leave":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"FileReader.Error":{"args":[],"type":"{ code : Int, name : String, message : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"FileReader.File":{"args":[],"type":"{ lastModified : Time.Time , name : String , size : Int , mimeType : String , dataFormat : FileReader.DataFormat , data : Result.Result FileReader.Error String }"},"Time.Time":{"args":[],"type":"Float"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

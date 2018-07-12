@@ -17,6 +17,7 @@ import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.DatePicker as DatePicker
+import Form.DropZone as DropZone
 import Form.TextArea as TextArea
 
 import Tuple.Bdt exposing ((~))
@@ -274,6 +275,23 @@ view model =
                                         [ Button.view
                                             |> Button.text "I'm a button"
                                             |> Button.render
+                                            |> Html.map DropZone
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        |> Card.footer []
+                        |> Card.render
+                    , Card.view
+                        |> Card.header "File Uploads" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ Grid.row
+                                    [ Grid.col Twelve
+                                        [ DropZone.view model.dropZone
+                                            |> DropZone.setLabel "Drop files here or click to select files"
+                                            |> DropZone.render
+                                            |> Html.map DropZone
                                         ]
                                     ]
                                 ]

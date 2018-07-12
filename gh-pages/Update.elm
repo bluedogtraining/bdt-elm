@@ -8,6 +8,7 @@ import Form.FloatInput as FloatInput
 import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
+import Form.DropZone as DropZone
 import Form.DatePicker as DatePicker
 import Form.TextArea as TextArea
 
@@ -93,6 +94,9 @@ update msg model =
 
         Toggle2 ->
             { model | toggle2 = not model.toggle2 } ! []
+
+        DropZone dropZoneMsg ->
+            { model | dropZone = DropZone.update dropZoneMsg model.dropZone} ! []
 
         UpdateName inputMsg ->
             { model | name = Input.update inputMsg model.name } ! []

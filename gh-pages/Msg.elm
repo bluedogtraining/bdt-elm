@@ -8,6 +8,7 @@ import Form.FloatInput as FloatInput
 import Form.Select as Select
 import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
+import Form.DropZone as DropZone
 import Form.DatePicker as DatePicker
 import Form.TextArea as TextArea
 
@@ -40,3 +41,4 @@ type Msg
     | CloseSmModal
     | OpenLgModal
     | CloseLgModal
+    | DropZone DropZone.Msg

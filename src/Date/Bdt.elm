@@ -140,7 +140,7 @@ encode : Date -> Value
 encode =
     isoString >> Encode.string
 
-css
+
 {-| Encode a Maybe Date
 -}
 encodeMaybe : Maybe Date -> Value

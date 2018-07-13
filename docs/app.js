@@ -24217,45 +24217,54 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Css$padding2,
-				_rtfeldman$elm_css$Css$px(8),
-				_rtfeldman$elm_css$Css$px(12)),
+				_rtfeldman$elm_css$Css$px(6),
+				_rtfeldman$elm_css$Css$px(8)),
 			_1: {
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$margin(
 					_rtfeldman$elm_css$Css$px(0)),
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$displayFlex,
+					_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+						_0: _rtfeldman$elm_css$Css$height(
+							_rtfeldman$elm_css$Css$rem(2)),
 						_1: {
 							ctor: '::',
-							_0: A2(
-								_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
-								_rtfeldman$elm_css$Css$backgroundColor(
-									_rtfeldman$elm_css$Css$hex('f2f9fc')),
-								isDisabled || isFocused),
+							_0: _rtfeldman$elm_css$Css$displayFlex,
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+								_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$outlineWidth(
-										_rtfeldman$elm_css$Css$px(0)),
+									_0: A2(
+										_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
+										_rtfeldman$elm_css$Css$backgroundColor(
+											_rtfeldman$elm_css$Css$hex('f2f9fc')),
+										isDisabled || isFocused),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$hover(
-											{
+										_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+										_1: {
+											ctor: '::',
+											_0: _rtfeldman$elm_css$Css$outlineWidth(
+												_rtfeldman$elm_css$Css$px(0)),
+											_1: {
 												ctor: '::',
-												_0: A2(
-													_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
-													_rtfeldman$elm_css$Css$backgroundColor(
-														_rtfeldman$elm_css$Css$hex('f2f9fc')),
-													!isDisabled),
+												_0: _rtfeldman$elm_css$Css$hover(
+													{
+														ctor: '::',
+														_0: A2(
+															_bluedogtraining$bdt_elm$Css_Bdt_ops['?'],
+															_rtfeldman$elm_css$Css$backgroundColor(
+																_rtfeldman$elm_css$Css$hex('f2f9fc')),
+															!isDisabled),
+														_1: {ctor: '[]'}
+													}),
 												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
+											}
+										}
 									}
 								}
 							}

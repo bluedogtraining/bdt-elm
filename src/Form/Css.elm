@@ -64,8 +64,10 @@ selectOptionList =
 selectOptionItem : Bool -> Bool -> List Style
 selectOptionItem isDisabled isFocused =
 
-    [ padding2 (px 8) (px 12)
+    [ padding2 (px 6) (px 8)
     , margin <| px 0
+    , boxSizing borderBox
+    , height <| Css.rem 2
     , displayFlex
     , alignItems center
     , backgroundColor (hex "f2f9fc") ? isDisabled || isFocused

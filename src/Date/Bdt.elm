@@ -12,6 +12,9 @@ module Date.Bdt exposing
 # Sort Dates
 @docs order
 
+# Encode Dates
+@docs encode, encodeMaybe
+
 -}
 
 import Date exposing (Date, Month (..), month)
@@ -137,7 +140,7 @@ encode : Date -> Value
 encode =
     isoString >> Encode.string
 
-
+css
 {-| Encode a Maybe Date
 -}
 encodeMaybe : Maybe Date -> Value

@@ -24290,7 +24290,7 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionList = {
 							_rtfeldman$elm_css$Css$px(200)),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$scroll),
+							_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$auto),
 							_1: {
 								ctor: '::',
 								_0: A3(
@@ -24402,39 +24402,44 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 						_rtfeldman$elm_css$Css$pct(100)),
 					_1: {
 						ctor: '::',
-						_0: A2(
-							_rtfeldman$elm_css$Css$padding2,
-							_rtfeldman$elm_css$Css$px(6),
-							_rtfeldman$elm_css$Css$px(8)),
+						_0: _rtfeldman$elm_css$Css$height(
+							_rtfeldman$elm_css$Css$rem(2)),
 						_1: {
 							ctor: '::',
 							_0: A2(
-								_rtfeldman$elm_css$Css$margin2,
-								_rtfeldman$elm_css$Css$px(10),
-								_rtfeldman$elm_css$Css$px(0)),
+								_rtfeldman$elm_css$Css$padding2,
+								_rtfeldman$elm_css$Css$px(6),
+								_rtfeldman$elm_css$Css$px(8)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$color(
-									_rtfeldman$elm_css$Css$hex('555555')),
+								_0: A2(
+									_rtfeldman$elm_css$Css$margin2,
+									_rtfeldman$elm_css$Css$px(10),
+									_rtfeldman$elm_css$Css$px(0)),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$backgroundColor(
-										_rtfeldman$elm_css$Css$hex(
-											isLocked ? 'dddddd' : 'ffffff')),
+									_0: _rtfeldman$elm_css$Css$color(
+										_rtfeldman$elm_css$Css$hex('555555')),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$fontSize(
-											_rtfeldman$elm_css$Css$pt(12)),
+										_0: _rtfeldman$elm_css$Css$backgroundColor(
+											_rtfeldman$elm_css$Css$hex(
+												isLocked ? 'dddddd' : 'ffffff')),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$focus(
-												{
-													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$outlineWidth(
-														_rtfeldman$elm_css$Css$px(0)),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
+											_0: _rtfeldman$elm_css$Css$fontSize(
+												_rtfeldman$elm_css$Css$pt(12)),
+											_1: {
+												ctor: '::',
+												_0: _rtfeldman$elm_css$Css$focus(
+													{
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$outlineWidth(
+															_rtfeldman$elm_css$Css$px(0)),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
@@ -37806,7 +37811,7 @@ var _bluedogtraining$bdt_elm$Modal_Css$body = _rtfeldman$elm_css$Html_Styled_Att
 							_rtfeldman$elm_css$Css$rem(13))),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$scroll),
+						_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$auto),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -37934,7 +37939,15 @@ var _bluedogtraining$bdt_elm$Modal_Css$modal = function (size) {
 												ctor: '::',
 												_0: _rtfeldman$elm_css$Css$padding(
 													_rtfeldman$elm_css$Css$rem(1)),
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: A3(
+														_rtfeldman$elm_css$Css$border3,
+														_rtfeldman$elm_css$Css$px(1),
+														_rtfeldman$elm_css$Css$solid,
+														_rtfeldman$elm_css$Css$hex('777777')),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -38365,7 +38378,7 @@ var _bluedogtraining$bdt_elm$Toggle_Css$toggle = function (toggle) {
 																										_1: {
 																											ctor: '::',
 																											_0: _rtfeldman$elm_css$Css$marginLeft(
-																												toggle ? _rtfeldman$elm_css$Css$rem(1.45) : _rtfeldman$elm_css$Css$rem(5.0e-2)),
+																												toggle ? _rtfeldman$elm_css$Css$rem(1.45) : _rtfeldman$elm_css$Css$rem(0)),
 																											_1: {ctor: '[]'}
 																										}
 																									}

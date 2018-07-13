@@ -48,7 +48,7 @@ toggle toggle =
             , transition
                 [ Transitions.margin 400
                 ]
-            , marginLeft (if toggle then Css.rem 1.45 else Css.rem 0.05)
+            , marginLeft (if toggle then Css.rem 1.45 else Css.rem 0)
             ]
         ]
 

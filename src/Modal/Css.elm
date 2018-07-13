@@ -47,6 +47,7 @@ modal size =
         , backgroundColor <| hex "ffffff"
         , borderRadius <| px 2
         , padding <| Css.rem 1
+        , border3 (px 1) solid (hex "777777")
         ]
 
 
@@ -79,7 +80,7 @@ body =
         , flexWrap wrap
         , margin2 (Css.rem 0.8) (Css.rem 0)
         , maxHeight <| calc (vh 100) minus (Css.rem 13)
-        , overflowY scroll
+        , overflowY auto
         ]
 
 

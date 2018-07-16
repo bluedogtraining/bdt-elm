@@ -1,5 +1,6 @@
 module Form.DropZone exposing
-    ( Model, init
+    ( File
+    , Model, init
     , Msg, update
     , view, render
     , reInitialise, reset
@@ -12,7 +13,7 @@ module Form.DropZone exposing
 {-| Module to add a file DropZone to your app
 
 # Initialise and update
-@docs Model, init, Msg, update
+@docs File, Model, init, Msg, update
 
 # View and render
 @docs view, render
@@ -44,6 +45,11 @@ import Icon
 import Button
 
 import Form.DropZone.Css as Css
+
+
+{-| The result of a file reading operation
+-}
+type alias File = FileReader.File
 
 
 {-| Add a DropZone.Model to your model.

@@ -37,4 +37,8 @@ type Msg
     | UpdateCountryOfBirth (SearchSelect.Msg Country)
     | Toggle1
     | Toggle2
+    | OpenSmModal
+    | CloseSmModal
+    | OpenLgModal
+    | CloseLgModal
     | DropZone DropZone.Msg

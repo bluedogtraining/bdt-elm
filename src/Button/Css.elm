@@ -37,6 +37,7 @@ button size content color isDisabled isLoading =
         , fontSize <| Css.rem 0.8
         , verticalAlign middle
         , textDecoration none
+        , property "user-select" "none"
         , hover
             [ backgroundColor (lightenColor color)
             ]
@@ -101,6 +102,7 @@ loadingText =
 
 loading : Attribute msg
 loading =
+
     css
         [ property "animation" "spin 1.5s linear infinite"
         ]

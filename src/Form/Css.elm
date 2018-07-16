@@ -11,6 +11,7 @@ input isError isLocked =
     [ boxSizing borderBox
     , border3 (px 1) solid (hex <| if isError && not isLocked then "d9534f" else "cccccc")
     , width <| pct 100
+    , height <| Css.rem 2
     , padding2 (px 6) (px 8)
     , margin2 (px 10) (px 0)
     , color <| hex "555555"
@@ -43,7 +44,6 @@ title isFaded =
     ]
 
 
-
 selectOptionList : List Style
 selectOptionList =
 
@@ -53,7 +53,7 @@ selectOptionList =
     , right <| px 0
     , zIndex <| int 10
     , maxHeight <| px 200
-    , overflowY scroll
+    , overflowY auto
     , border3 (px 1) solid (hex "cccccc")
     , borderTopColor <| hex "eeeeee"
     , padding <| px 0
@@ -64,8 +64,10 @@ selectOptionList =
 selectOptionItem : Bool -> Bool -> List Style
 selectOptionItem isDisabled isFocused =
 
-    [ padding2 (px 8) (px 12)
+    [ padding2 (px 6) (px 8)
     , margin <| px 0
+    , boxSizing borderBox
+    , height <| Css.rem 2
     , displayFlex
     , alignItems center
     , backgroundColor (hex "f2f9fc") ? isDisabled || isFocused

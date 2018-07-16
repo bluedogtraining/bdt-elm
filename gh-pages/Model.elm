@@ -36,6 +36,8 @@ type alias Model =
     , email : Input.Model
     , preferredGenre : Select.Model MusicGenre
     , countryOfBirth : SearchSelect.Model Country
+    , modalSmOpen : Bool
+    , modalLgOpen : Bool
     }
 
 
@@ -60,4 +62,6 @@ initialModel =
     , email = Input.init
     , preferredGenre = Select.init MusicGenre.asList
     , countryOfBirth = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Countries.countryDecoder
+    , modalSmOpen = False
+    , modalLgOpen = False
     }

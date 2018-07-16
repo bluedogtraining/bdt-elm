@@ -33,7 +33,7 @@ fixedContainer =
 
     css
         [ position fixed
-        , zIndex <| int 100
+        , zIndex <| int 101
         ]
 
 

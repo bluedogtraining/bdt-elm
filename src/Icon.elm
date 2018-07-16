@@ -46,6 +46,9 @@ type Icon
     | FastRewind
     | SkipPrevious
     | SkipNext
+    | Lock
+    | LockOpen
+    | Add
 
 
 {-| Render an icon
@@ -100,6 +103,15 @@ render icon size color =
 
         SkipPrevious ->
             renderIcon size color MaterialIcon.skip_previous
+
+        Lock ->
+            renderIcon size color MaterialIcon.lock
+
+        LockOpen ->
+            renderIcon size color MaterialIcon.lock_open
+
+        Add ->
+            renderIcon size color MaterialIcon.add
 
 
 renderIcon : Int -> Color -> (Color -> Int -> Svg msg) -> Html msg

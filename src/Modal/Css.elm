@@ -39,6 +39,7 @@ modal size =
         Grid.containerWidths
         ++
         [ maxWidth <| px <| SizeHelpers.containerPxWidth size
+        , boxSizing borderBox
         , position fixed
         , top <| Css.rem 3
         , left <| pct 50

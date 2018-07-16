@@ -23817,9 +23817,21 @@ var _bluedogtraining$bdt_elm$Grid_Css$containerWidth = function (size) {
 		});
 };
 var _bluedogtraining$bdt_elm$Grid_Css$containerWidths = A2(
-	_elm_lang$core$List$map,
-	_bluedogtraining$bdt_elm$Grid_Css$containerWidth,
-	_elm_lang$core$List$reverse(_bluedogtraining$bdt_elm$Grid_SizeHelpers$sizeAsList));
+	_elm_lang$core$Basics_ops['++'],
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$width(
+			A3(
+				_rtfeldman$elm_css$Css$calc,
+				_rtfeldman$elm_css$Css$pct(100),
+				_rtfeldman$elm_css$Css$minus,
+				_rtfeldman$elm_css$Css$rem(2))),
+		_1: {ctor: '[]'}
+	},
+	A2(
+		_elm_lang$core$List$map,
+		_bluedogtraining$bdt_elm$Grid_Css$containerWidth,
+		_elm_lang$core$List$reverse(_bluedogtraining$bdt_elm$Grid_SizeHelpers$sizeAsList)));
 var _bluedogtraining$bdt_elm$Grid_Css$container = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	A2(
 		_elm_lang$core$Basics_ops['++'],
@@ -23830,27 +23842,31 @@ var _bluedogtraining$bdt_elm$Grid_Css$container = _rtfeldman$elm_css$Html_Styled
 				_rtfeldman$elm_css$Css$pct(100)),
 			_1: {
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Css$paddingLeft(
-					_rtfeldman$elm_css$Css$px(15)),
+				_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$paddingRight(
+					_0: _rtfeldman$elm_css$Css$paddingLeft(
 						_rtfeldman$elm_css$Css$px(15)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$marginLeft(_rtfeldman$elm_css$Css$auto),
+						_0: _rtfeldman$elm_css$Css$paddingRight(
+							_rtfeldman$elm_css$Css$px(15)),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$marginRight(_rtfeldman$elm_css$Css$auto),
+							_0: _rtfeldman$elm_css$Css$marginLeft(_rtfeldman$elm_css$Css$auto),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$fontFamilies(
-									{
-										ctor: '::',
-										_0: 'Arial',
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
+								_0: _rtfeldman$elm_css$Css$marginRight(_rtfeldman$elm_css$Css$auto),
+								_1: {
+									ctor: '::',
+									_0: _rtfeldman$elm_css$Css$fontFamilies(
+										{
+											ctor: '::',
+											_0: 'Arial',
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}
@@ -37918,44 +37934,48 @@ var _bluedogtraining$bdt_elm$Modal_Css$modal = function (size) {
 						_bluedogtraining$bdt_elm$Grid_SizeHelpers$containerPxWidth(size))),
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$fixed),
+					_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$top(
-							_rtfeldman$elm_css$Css$rem(3)),
+						_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$fixed),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$left(
-								_rtfeldman$elm_css$Css$pct(50)),
+							_0: _rtfeldman$elm_css$Css$top(
+								_rtfeldman$elm_css$Css$rem(3)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$transform(
-									_rtfeldman$elm_css$Css$translate(
-										_rtfeldman$elm_css$Css$pct(-50))),
+								_0: _rtfeldman$elm_css$Css$left(
+									_rtfeldman$elm_css$Css$pct(50)),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$zIndex(
-										_rtfeldman$elm_css$Css$int(100)),
+									_0: _rtfeldman$elm_css$Css$transform(
+										_rtfeldman$elm_css$Css$translate(
+											_rtfeldman$elm_css$Css$pct(-50))),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$backgroundColor(
-											_rtfeldman$elm_css$Css$hex('ffffff')),
+										_0: _rtfeldman$elm_css$Css$zIndex(
+											_rtfeldman$elm_css$Css$int(100)),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$borderRadius(
-												_rtfeldman$elm_css$Css$px(2)),
+											_0: _rtfeldman$elm_css$Css$backgroundColor(
+												_rtfeldman$elm_css$Css$hex('ffffff')),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$padding(
-													_rtfeldman$elm_css$Css$rem(1)),
+												_0: _rtfeldman$elm_css$Css$borderRadius(
+													_rtfeldman$elm_css$Css$px(2)),
 												_1: {
 													ctor: '::',
-													_0: A3(
-														_rtfeldman$elm_css$Css$border3,
-														_rtfeldman$elm_css$Css$px(1),
-														_rtfeldman$elm_css$Css$solid,
-														_rtfeldman$elm_css$Css$hex('777777')),
-													_1: {ctor: '[]'}
+													_0: _rtfeldman$elm_css$Css$padding(
+														_rtfeldman$elm_css$Css$rem(1)),
+													_1: {
+														ctor: '::',
+														_0: A3(
+															_rtfeldman$elm_css$Css$border3,
+															_rtfeldman$elm_css$Css$px(1),
+															_rtfeldman$elm_css$Css$solid,
+															_rtfeldman$elm_css$Css$hex('777777')),
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										}

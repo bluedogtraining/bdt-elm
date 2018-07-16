@@ -15,6 +15,7 @@ container =
         containerWidths
         ++
         [ maxWidth (pct 100)
+        , boxSizing borderBox
         , paddingLeft <| px 15
         , paddingRight <| px 15
         , marginLeft auto
@@ -25,6 +26,8 @@ container =
 
 containerWidths : List Style
 containerWidths =
+    [ width <| calc (pct 100) minus (Css.rem 2) ]
+    ++
     List.map containerWidth (List.reverse SizeHelpers.sizeAsList)
 
 

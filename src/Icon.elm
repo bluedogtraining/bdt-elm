@@ -25,6 +25,7 @@ import Material.Icons.Toggle as MaterialIcon
 import Material.Icons.Action as MaterialIcon
 import Material.Icons.Image as MaterialIcon
 import Material.Icons.File as MaterialIcon
+import Material.Icons.Av as MaterialIcon
 
 
 {-| Available Icons
@@ -41,6 +42,10 @@ type Icon
     | Edit
     | Download
     | Delete
+    | FastForward
+    | FastRewind
+    | SkipPrevious
+    | SkipNext
 
 
 {-| Render an icon
@@ -83,6 +88,18 @@ render icon size color =
 
         Delete ->
             renderIcon size color MaterialIcon.delete
+
+        FastForward ->
+            renderIcon size color MaterialIcon.fast_forward
+
+        FastRewind ->
+            renderIcon size color MaterialIcon.fast_rewind
+
+        SkipNext ->
+            renderIcon size color MaterialIcon.skip_next
+
+        SkipPrevious ->
+            renderIcon size color MaterialIcon.skip_previous
 
 
 renderIcon : Int -> Color -> (Color -> Int -> Svg msg) -> Html msg

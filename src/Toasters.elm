@@ -1,6 +1,6 @@
 module Toasters exposing
     ( Model, init
-    , Msg, update
+    , Msg, update, merge
     , subscription
     , addGreen, addRed
     , view
@@ -9,7 +9,7 @@ module Toasters exposing
 {-| Module to add Toasters to your app
 
 # Initialise and update
-@docs Model, init, Msg, update
+@docs Model, init, Msg, update, merge
 
 # Subscription
 @docs subscription
@@ -71,6 +71,18 @@ update : Msg -> Model -> Model
 update toasterMsg (Model toasters) =
 
     Model <| Internal.update toasterMsg toasters
+
+
+{-| Merge multiple toaster models into one.
+Useful when Return types that carry their own Toasters.Model want to merge back into the application Toasters.Model
+
+    { appModel | toasters = Toasters.merge return.toasters appModel.toasters }
+
+-}
+merge : Model -> Model -> Model
+merge (Model new) (Model existing) =
+
+    Model <| List.append existing new
 
 
 {-| Add to your subscription function.

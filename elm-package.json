@@ -27,6 +27,7 @@
         "Icon",
         "Button",
         "Toggle",
+        "Basics.Bdt",
         "Tuple.Bdt",
         "Html.Styled.Bdt",
         "List.Bdt",

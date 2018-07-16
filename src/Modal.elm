@@ -1,9 +1,9 @@
-module Modal exposing (view, setSize, header, body, footer, block, blockSizes, render)
+module Modal exposing (view, viewIf, setSize, header, body, footer, block, blockSizes, render)
 
 {-| Module to create Modals with Headers, ModalBlocks and Footers
 
 # Init
-@docs view, setSize
+@docs view, viewIf, setSize
 
 # Create blocks
 @docs header, body, footer, block, blockSizes
@@ -56,9 +56,17 @@ initialViewConfig isOpen msg =
 
 {-| Init a modal
 -}
-view : Bool -> msg -> Config msg
-view isOpen closeMsg =
-    Config <| initialViewConfig isOpen closeMsg
+view : msg -> Config msg
+view =
+    Config << initialViewConfig True
+
+
+{-| Init a modal conditionally
+-}
+viewIf : Bool -> msg -> Config msg
+viewIf isOpen =
+
+    Config << initialViewConfig isOpen
 
 
 {-| Set the modal size

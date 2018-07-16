@@ -198,7 +198,7 @@ view model =
                                     |> Button.text "Open Lg Modal"
                                     |> Button.onClick OpenLgModal
                                     |> Button.render
-                                , Modal.view model.modalSmOpen CloseSmModal
+                                , Modal.viewIf model.modalSmOpen CloseSmModal
                                     |> Modal.setSize Sm
                                     |> Modal.header "Hi I'm Sm Modal" []
                                     |> Modal.body
@@ -207,7 +207,7 @@ view model =
                                         ]
                                     |> Modal.footer []
                                     |> Modal.render
-                                , Modal.view model.modalLgOpen CloseLgModal
+                                , Modal.viewIf model.modalLgOpen CloseLgModal
                                     |> Modal.setSize Lg
                                     |> Modal.header "Hi I'm Lg Modal" []
                                         |> Modal.body

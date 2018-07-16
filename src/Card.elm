@@ -1,9 +1,9 @@
-module Card exposing (view, header, body, footer, block, blockSizes, render)
+module Card exposing (view, viewIf, header, body, footer, block, blockSizes, render)
 
 {-| Module to create Cards with Headers, CardBlocks and Footers
 
 # Init
-@docs view
+@docs view, viewIf
 
 # Create blocks
 @docs header, body, footer, block, blockSizes
@@ -29,16 +29,18 @@ type Config msg
 
 
 type alias ViewConfig msg =
-    { headerTitle : String
+    { isShown : Bool
+    , headerTitle : String
     , headerButtons : List (Button msg)
     , cardBlocks : List (CardBlock msg)
     , footerButtons : List (Button msg)
     }
 
 
-initialViewConfig : ViewConfig msg
-initialViewConfig =
-    { headerTitle = ""
+initialViewConfig : Bool -> ViewConfig msg
+initialViewConfig isShown =
+    { isShown = isShown
+    , headerTitle = ""
     , headerButtons = []
     , cardBlocks = []
     , footerButtons = []
@@ -49,7 +51,15 @@ initialViewConfig =
 -}
 view : Config msg
 view =
-    Config initialViewConfig
+    Config <| initialViewConfig True
+
+
+{-| Init a card conditionally
+-}
+viewIf : Bool -> Config msg
+viewIf isShown =
+
+    Config <| initialViewConfig isShown
 
 
 {-| Add a header block

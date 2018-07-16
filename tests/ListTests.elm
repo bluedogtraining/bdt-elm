@@ -18,6 +18,7 @@ suite =
         [ test "test groupWhile with no successions" test1
         , test "test groupWhile with successions" test2
         , test "test groupWhile after a sort" test3
+        , test "test sortByDate" test4
         ]
 
 
@@ -59,4 +60,18 @@ test3 _ =
         |> Expect.equal
             [ Nonempty { name = "One", date = Time.second * 1 |> Date.fromTime } [ { name = "Three", date = Time.second * 1 |> Date.fromTime } ]
             , Nonempty { name = "Two", date = Time.second * 2 |> Date.fromTime } []
+            ]
+
+
+test4 : () -> Expectation
+test4 _ =
+    [ { name = "One", date = Time.second * 1 |> Date.fromTime }
+    , { name = "Two", date = Time.second * 2 |> Date.fromTime }
+    , { name = "Three", date = Time.second * 1 |> Date.fromTime }
+    ]
+        |> List.sortByDate .date
+        |> Expect.equal
+            [ { name = "One", date = Time.second * 1 |> Date.fromTime }
+            , { name = "Three", date = Time.second * 1 |> Date.fromTime }
+            , { name = "Two", date = Time.second * 2 |> Date.fromTime }
             ]

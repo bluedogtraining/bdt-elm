@@ -24134,15 +24134,18 @@ var _bluedogtraining$bdt_elm$Card$render = function (_p3) {
 			}
 		});
 };
-var _bluedogtraining$bdt_elm$Card$initialViewConfig = {
-	headerTitle: '',
-	headerButtons: {ctor: '[]'},
-	cardBlocks: {ctor: '[]'},
-	footerButtons: {ctor: '[]'}
+var _bluedogtraining$bdt_elm$Card$initialViewConfig = function (isShown) {
+	return {
+		isShown: isShown,
+		headerTitle: '',
+		headerButtons: {ctor: '[]'},
+		cardBlocks: {ctor: '[]'},
+		footerButtons: {ctor: '[]'}
+	};
 };
-var _bluedogtraining$bdt_elm$Card$ViewConfig = F4(
-	function (a, b, c, d) {
-		return {headerTitle: a, headerButtons: b, cardBlocks: c, footerButtons: d};
+var _bluedogtraining$bdt_elm$Card$ViewConfig = F5(
+	function (a, b, c, d, e) {
+		return {isShown: a, headerTitle: b, headerButtons: c, cardBlocks: d, footerButtons: e};
 	});
 var _bluedogtraining$bdt_elm$Card$CardBlockConfig = F3(
 	function (a, b, c) {
@@ -24151,7 +24154,12 @@ var _bluedogtraining$bdt_elm$Card$CardBlockConfig = F3(
 var _bluedogtraining$bdt_elm$Card$Config = function (a) {
 	return {ctor: 'Config', _0: a};
 };
-var _bluedogtraining$bdt_elm$Card$view = _bluedogtraining$bdt_elm$Card$Config(_bluedogtraining$bdt_elm$Card$initialViewConfig);
+var _bluedogtraining$bdt_elm$Card$view = _bluedogtraining$bdt_elm$Card$Config(
+	_bluedogtraining$bdt_elm$Card$initialViewConfig(true));
+var _bluedogtraining$bdt_elm$Card$viewIf = function (isShown) {
+	return _bluedogtraining$bdt_elm$Card$Config(
+		_bluedogtraining$bdt_elm$Card$initialViewConfig(isShown));
+};
 var _bluedogtraining$bdt_elm$Card$header = F3(
 	function (title, buttons, _p6) {
 		var _p7 = _p6;
@@ -37296,17 +37304,24 @@ var _bluedogtraining$bdt_elm$Toasters$update = F2(
 		return _bluedogtraining$bdt_elm$Toasters$Model(
 			A2(_bluedogtraining$bdt_elm$Toasters_Internal$update, toasterMsg, _p5._0));
 	});
-var _bluedogtraining$bdt_elm$Toasters$addGreen = F2(
-	function (message, _p6) {
-		var _p7 = _p6;
+var _bluedogtraining$bdt_elm$Toasters$merge = F2(
+	function (_p7, _p6) {
+		var _p8 = _p7;
+		var _p9 = _p6;
 		return _bluedogtraining$bdt_elm$Toasters$Model(
-			A3(_bluedogtraining$bdt_elm$Toasters_Internal$add, _bluedogtraining$bdt_elm$Toasters_Color$Green, message, _p7._0));
+			A2(_elm_lang$core$List$append, _p9._0, _p8._0));
+	});
+var _bluedogtraining$bdt_elm$Toasters$addGreen = F2(
+	function (message, _p10) {
+		var _p11 = _p10;
+		return _bluedogtraining$bdt_elm$Toasters$Model(
+			A3(_bluedogtraining$bdt_elm$Toasters_Internal$add, _bluedogtraining$bdt_elm$Toasters_Color$Green, message, _p11._0));
 	});
 var _bluedogtraining$bdt_elm$Toasters$addRed = F2(
-	function (message, _p8) {
-		var _p9 = _p8;
+	function (message, _p12) {
+		var _p13 = _p12;
 		return _bluedogtraining$bdt_elm$Toasters$Model(
-			A3(_bluedogtraining$bdt_elm$Toasters_Internal$add, _bluedogtraining$bdt_elm$Toasters_Color$Red, message, _p9._0));
+			A3(_bluedogtraining$bdt_elm$Toasters_Internal$add, _bluedogtraining$bdt_elm$Toasters_Color$Red, message, _p13._0));
 	});
 
 var _bluedogtraining$bdt_elm$MusicGenre$Pop = {ctor: 'Pop'};
@@ -38185,41 +38200,46 @@ var _bluedogtraining$bdt_elm$Modal$ModalBlockConfig = F3(
 var _bluedogtraining$bdt_elm$Modal$Config = function (a) {
 	return {ctor: 'Config', _0: a};
 };
-var _bluedogtraining$bdt_elm$Modal$view = F2(
-	function (isOpen, closeMsg) {
+var _bluedogtraining$bdt_elm$Modal$view = function (_p6) {
+	return _bluedogtraining$bdt_elm$Modal$Config(
+		A2(_bluedogtraining$bdt_elm$Modal$initialViewConfig, true, _p6));
+};
+var _bluedogtraining$bdt_elm$Modal$viewIf = function (isOpen) {
+	return function (_p7) {
 		return _bluedogtraining$bdt_elm$Modal$Config(
-			A2(_bluedogtraining$bdt_elm$Modal$initialViewConfig, isOpen, closeMsg));
-	});
+			A2(_bluedogtraining$bdt_elm$Modal$initialViewConfig, isOpen, _p7));
+	};
+};
 var _bluedogtraining$bdt_elm$Modal$setSize = F2(
-	function (size, _p6) {
-		var _p7 = _p6;
-		return _bluedogtraining$bdt_elm$Modal$Config(
-			_elm_lang$core$Native_Utils.update(
-				_p7._0,
-				{size: size}));
-	});
-var _bluedogtraining$bdt_elm$Modal$header = F3(
-	function (title, buttons, _p8) {
+	function (size, _p8) {
 		var _p9 = _p8;
 		return _bluedogtraining$bdt_elm$Modal$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p9._0,
-				{headerTitle: title, headerButtons: buttons}));
+				{size: size}));
 	});
-var _bluedogtraining$bdt_elm$Modal$body = F2(
-	function (modalBlocks, _p10) {
+var _bluedogtraining$bdt_elm$Modal$header = F3(
+	function (title, buttons, _p10) {
 		var _p11 = _p10;
 		return _bluedogtraining$bdt_elm$Modal$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p11._0,
-				{modalBlocks: modalBlocks}));
+				{headerTitle: title, headerButtons: buttons}));
 	});
-var _bluedogtraining$bdt_elm$Modal$footer = F2(
-	function (buttons, _p12) {
+var _bluedogtraining$bdt_elm$Modal$body = F2(
+	function (modalBlocks, _p12) {
 		var _p13 = _p12;
 		return _bluedogtraining$bdt_elm$Modal$Config(
 			_elm_lang$core$Native_Utils.update(
 				_p13._0,
+				{modalBlocks: modalBlocks}));
+	});
+var _bluedogtraining$bdt_elm$Modal$footer = F2(
+	function (buttons, _p14) {
+		var _p15 = _p14;
+		return _bluedogtraining$bdt_elm$Modal$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p15._0,
 				{footerButtons: buttons}));
 	});
 var _bluedogtraining$bdt_elm$Modal$ModalBlock = function (a) {
@@ -39048,7 +39068,7 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																											A2(
 																												_bluedogtraining$bdt_elm$Modal$setSize,
 																												_bluedogtraining$bdt_elm$Grid_Size$Sm,
-																												A2(_bluedogtraining$bdt_elm$Modal$view, model.modalSmOpen, _bluedogtraining$bdt_elm$Msg$CloseSmModal)))))),
+																												A2(_bluedogtraining$bdt_elm$Modal$viewIf, model.modalSmOpen, _bluedogtraining$bdt_elm$Msg$CloseSmModal)))))),
 																							_1: {
 																								ctor: '::',
 																								_0: _bluedogtraining$bdt_elm$Modal$render(
@@ -39459,7 +39479,7 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																												A2(
 																													_bluedogtraining$bdt_elm$Modal$setSize,
 																													_bluedogtraining$bdt_elm$Grid_Size$Lg,
-																													A2(_bluedogtraining$bdt_elm$Modal$view, model.modalLgOpen, _bluedogtraining$bdt_elm$Msg$CloseLgModal)))))),
+																													A2(_bluedogtraining$bdt_elm$Modal$viewIf, model.modalLgOpen, _bluedogtraining$bdt_elm$Msg$CloseLgModal)))))),
 																								_1: {ctor: '[]'}
 																							}
 																						}

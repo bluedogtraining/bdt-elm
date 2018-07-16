@@ -2,6 +2,9 @@ module List.Bdt exposing (sortByDate, groupWhile)
 
 {-| List Helpers
 
+# Sorting
+@docs sortByDate
+
 # Grouping
 @docs groupWhile
 

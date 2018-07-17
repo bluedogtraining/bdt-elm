@@ -24828,8 +24828,9 @@ var _bluedogtraining$bdt_elm$Card$renderCardBlock = function (_p0) {
 var _bluedogtraining$bdt_elm$Card$render = function (_p3) {
 	var _p4 = _p3;
 	var _p5 = _p4._0;
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
+	return A3(
+		_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+		_p5.isShown,
 		{
 			ctor: '::',
 			_0: _bluedogtraining$bdt_elm$Card_Css$card,

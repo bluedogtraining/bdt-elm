@@ -76,13 +76,6 @@ filesInput =
         ]
 
 
-fileList : Attribute msg
-fileList =
-    css
-        [
-        ]
-
-
 file : Attribute msg
 file =
     css
@@ -92,6 +85,21 @@ file =
         , padding2 (Css.rem 0.3) (Css.rem 0)
         , fontSize <| Css.rem 0.8
         , borderBottom3 (px 1) solid (rgb 204 204 204)
+        , lastChild
+            [ borderBottomWidth <| px 0
+            ]
+        ]
+
+
+errorTitle : Attribute msg
+errorTitle =
+    css
+        [ color <| rgb 189 54 47
+        , backgroundColor <| rgb 241 221 219
+        , margin2 (Css.rem 0.4) (Css.rem 0)
+        , padding2 (Css.rem 0.2) (Css.rem 0.4)
+        , fontSize <| Css.rem 0.8
+        , textAlign center
         ]
 
 

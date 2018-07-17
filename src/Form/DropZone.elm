@@ -1,19 +1,19 @@
 module Form.DropZone exposing
-    ( File
-    , Model, init
+    ( Model, init
     , Msg, update
     , view, render
     , reInitialise, reset
     , setInitialValue, setValue
     , setIsError, setIsLocked
     , setLabel
-    , getIsChanged, getValue
+    , getIsChanged, getFiles
+    , Files, OkFile, ErrFile
     )
 
 {-| Module to add a file DropZone to your app
 
 # Initialise and update
-@docs File, Model, init, Msg, update
+@docs Model, init, Msg, update
 
 # View and render
 @docs view, render
@@ -25,7 +25,7 @@ module Form.DropZone exposing
 @docs setIsError, setIsLocked, setLabel
 
 # Getters
-@docs getValue, getIsChanged
+@docs getIsChanged, getFiles, Files, OkFile, ErrFile
 
 -}
 
@@ -33,6 +33,9 @@ import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attribute exposing (..)
 import Html.Styled.Events exposing (onClick)
 
+import Html.Styled.Bdt as Html
+
+import Time exposing (Time)
 import Color
 
 import EverySet exposing (EverySet)
@@ -45,11 +48,6 @@ import Icon
 import Button
 
 import Form.DropZone.Css as Css
-
-
-{-| The result of a file reading operation
--}
-type alias File = FileReader.File
 
 
 {-| Add a DropZone.Model to your model.
@@ -75,7 +73,6 @@ type alias State =
 
 initialModel : State
 initialModel =
-
     { files = Resettable.init EverySet.empty
     , areFilesHovering = False
     , isLoading = False
@@ -117,7 +114,7 @@ initialViewState =
 type Msg
     = Enter
     | Leave
-    | Files (List File)
+    | Add (List File)
     | Remove File
 
 
@@ -136,22 +133,22 @@ update msg (Model state) =
 
         Enter ->
             { state | areFilesHovering = True }
-            |> Model
+                |> Model
 
         Leave ->
             { state | areFilesHovering = False }
-            |> Model
+                |> Model
 
-        Files files ->
+        Add files ->
             { state
                 | areFilesHovering = False
                 , files = Resettable.update (EverySet.union (Resettable.getValue state.files) (EverySet.fromList files)) state.files
             }
-            |> Model
+                |> Model
 
         Remove file ->
             { state | files = Resettable.update (Resettable.getValue state.files |> EverySet.remove file) state.files }
-            |> Model
+                |> Model
 
 
 {-| Transform an DropZone.Model into an DropZone.View, which allows us to pipe View Setters on it.
@@ -193,7 +190,7 @@ render (View state viewState) =
             )
             [ input
                 ( List.append
-                    (FileReader.filesInput FileReader.Base64 Files |> List.map Attribute.fromUnstyled)
+                    (FileReader.filesInput FileReader.Base64 Add |> List.map Attribute.fromUnstyled)
                     [ Css.filesInput
                     , disabled viewState.isLocked
                     ]
@@ -201,14 +198,42 @@ render (View state viewState) =
                 []
             , text viewState.label
             ]
-        , div
-            [ Css.fileList ]
-            (Resettable.getValue state.files |> EverySet.map file |> EverySet.toList)
+        , Resettable.getValue state.files
+            |> EverySet.foldl split ([], [])
+            |> fileLists
         ]
 
 
-file : FileReader.File -> Html Msg
-file file =
+split : File -> (List File, List (File, FileReader.Error)) -> (List File, List (File, FileReader.Error))
+split file (oks, errs) =
+
+    case file.data of
+        Err error ->
+            (oks, errs ++ [(file, error)])
+
+        Ok base64 ->
+            (oks ++ [file], errs)
+
+
+fileLists : (List File, List (File, FileReader.Error)) -> Html Msg
+fileLists (oks, errs) =
+
+    div
+        []
+        [ div
+            []
+            (List.map okFile oks)
+        , Html.divIf (not <| List.isEmpty errs)
+            [ Css.errorTitle ]
+            [ text "The following files had errors" ]
+        , div
+            []
+            (List.map errFile errs)
+        ]
+
+
+okFile : File -> Html Msg
+okFile file =
 
     div
         [ Css.file ]
@@ -224,13 +249,29 @@ file file =
         ]
 
 
+errFile : (File, FileReader.Error) -> Html Msg
+errFile (file, error) =
+
+    div
+        [ Css.file ]
+        [ span
+            []
+            [ text <| file.name ++ " - " ++ error.message ]
+        , Button.view
+            |> Button.icon Icon.Clear
+            |> Button.red
+            |> Button.small
+            |> Button.onClick (Remove file)
+            |> Button.render
+        ]
+
 
 dropZoneModel : { dataFormat : FileReader.DataFormat , enterMsg : Msg, leaveMsg : Msg, filesMsg : List File -> Msg }
 dropZoneModel =
     { dataFormat = FileReader.Base64
     , enterMsg = Enter
     , leaveMsg = Leave
-    , filesMsg = Files
+    , filesMsg = Add
     }
 
 
@@ -278,6 +319,7 @@ setIsError isError (View state viewState) =
 -}
 setIsLocked : Bool -> View -> View
 setIsLocked isLocked (View state viewState) =
+
     View state { viewState | isLocked = isLocked }
 
 
@@ -285,6 +327,7 @@ setIsLocked isLocked (View state viewState) =
 -}
 setLabel : String -> View -> View
 setLabel label (View state viewState) =
+
     View state { viewState | label = label }
 
 
@@ -299,7 +342,50 @@ getIsChanged (Model state) =
 {-| Get the current value of your DropZone. This is what you'd use to display the data somewhere outside of your DropZone,
 or to send the files to the backend for example etc.
 -}
-getValue : Model -> List File
-getValue (Model state) =
+getFiles : Model -> Files
+getFiles (Model state) =
 
-    Resettable.getValue state.files |> EverySet.toList
+    state.files
+        |> Resettable.getValue
+        |> EverySet.foldl splitFiles (Files [] [])
+
+
+{-| List of files that imported properly and list of files that didn't
+-}
+type alias Files =
+    { ok : List OkFile
+    , err : List ErrFile
+    }
+
+
+{-| File that imported successfully
+-}
+type alias OkFile =
+    { lastModified : Time
+    , name : String
+    , size : Int
+    , mimeType : String
+    , base64 : String
+    }
+
+
+{-| File that didn't import successfully
+-}
+type alias ErrFile =
+    { lastModified : Time
+    , name : String
+    , size : Int
+    , mimeType : String
+    , error : FileReader.Error
+    }
+
+
+splitFiles : File -> Files -> Files
+splitFiles file acc =
+
+    case file.data of
+        Err error ->
+            { acc | err = acc.err ++ [ ErrFile file.lastModified file.name file.size file.mimeType error ] }
+
+        Ok base64 ->
+            { acc | ok = acc.ok ++ [ OkFile file.lastModified file.name file.size file.mimeType base64 ] }

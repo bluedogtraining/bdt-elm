@@ -116,7 +116,7 @@ blockSizes cols sizes children =
 render : Config msg -> Html msg
 render (Config viewConfig) =
 
-    div
+    Html.divIf viewConfig.isShown
         [ Css.card ]
         [ Html.divIf (viewConfig.headerTitle /= "" || not (List.isEmpty viewConfig.headerButtons))
             [ Css.header ]

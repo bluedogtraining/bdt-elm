@@ -22123,10 +22123,19 @@ var _bluedogtraining$bdt_elm$Icon$render = F3(
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Av$fast_rewind);
 			case 'SkipNext':
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Av$skip_next);
-			default:
+			case 'SkipPrevious':
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Av$skip_previous);
+			case 'Lock':
+				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Action$lock);
+			case 'LockOpen':
+				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Action$lock_open);
+			default:
+				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Content$add);
 		}
 	});
+var _bluedogtraining$bdt_elm$Icon$Add = {ctor: 'Add'};
+var _bluedogtraining$bdt_elm$Icon$LockOpen = {ctor: 'LockOpen'};
+var _bluedogtraining$bdt_elm$Icon$Lock = {ctor: 'Lock'};
 var _bluedogtraining$bdt_elm$Icon$SkipNext = {ctor: 'SkipNext'};
 var _bluedogtraining$bdt_elm$Icon$SkipPrevious = {ctor: 'SkipPrevious'};
 var _bluedogtraining$bdt_elm$Icon$FastRewind = {ctor: 'FastRewind'};
@@ -24811,8 +24820,9 @@ var _bluedogtraining$bdt_elm$Card$renderCardBlock = function (_p0) {
 var _bluedogtraining$bdt_elm$Card$render = function (_p3) {
 	var _p4 = _p3;
 	var _p5 = _p4._0;
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
+	return A3(
+		_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+		_p5.isShown,
 		{
 			ctor: '::',
 			_0: _bluedogtraining$bdt_elm$Card_Css$card,

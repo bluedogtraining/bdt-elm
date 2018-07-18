@@ -42,3 +42,4 @@ type Msg
     | OpenLgModal
     | CloseLgModal
     | DropZone DropZone.Msg
+    | UpdateMaybeBLockSelect (Select.Msg MusicGenre)

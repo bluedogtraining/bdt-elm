@@ -24816,8 +24816,9 @@ var _bluedogtraining$bdt_elm$Card_Css$card = _rtfeldman$elm_css$Html_Styled_Attr
 var _bluedogtraining$bdt_elm$Card$renderCardBlock = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1._0;
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
+	return A3(
+		_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+		!_elm_lang$core$List$isEmpty(_p2.children),
 		{
 			ctor: '::',
 			_0: A2(_bluedogtraining$bdt_elm$Card_Css$block, _p2.defaultCols, _p2.sizes),
@@ -24953,6 +24954,52 @@ var _bluedogtraining$bdt_elm$Card$block = F2(
 				cols,
 				{ctor: '[]'},
 				children));
+	});
+var _bluedogtraining$bdt_elm$Card$blockIf = F3(
+	function (cols, isShown, child) {
+		var _p12 = isShown;
+		if (_p12 === false) {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{ctor: '[]'}));
+		} else {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: child,
+						_1: {ctor: '[]'}
+					}));
+		}
+	});
+var _bluedogtraining$bdt_elm$Card$maybeBlock = F3(
+	function (cols, maybe, child) {
+		var _p13 = maybe;
+		if (_p13.ctor === 'Nothing') {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{ctor: '[]'}));
+		} else {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: child(_p13._0),
+						_1: {ctor: '[]'}
+					}));
+		}
 	});
 var _bluedogtraining$bdt_elm$Card$blockSizes = F3(
 	function (cols, sizes, children) {
@@ -38312,6 +38359,9 @@ var _bluedogtraining$bdt_elm$MusicGenre$asNonempty = A2(
 	A2(_elm_lang$core$List$drop, 1, _bluedogtraining$bdt_elm$MusicGenre$asList),
 	_mgold$elm_nonempty_list$List_Nonempty$fromElement(_bluedogtraining$bdt_elm$MusicGenre$Rock));
 
+var _bluedogtraining$bdt_elm$Msg$UpdateMaybeBLockSelect = function (a) {
+	return {ctor: 'UpdateMaybeBLockSelect', _0: a};
+};
 var _bluedogtraining$bdt_elm$Msg$DropZone = function (a) {
 	return {ctor: 'DropZone', _0: a};
 };
@@ -38400,7 +38450,8 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 	preferredGenre: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList),
 	countryOfBirth: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://restcountries.eu/rest/v2/name/', _bluedogtraining$bdt_elm$Countries$countryDecoder),
 	modalSmOpen: false,
-	modalLgOpen: false
+	modalLgOpen: false,
+	maybeBlockSelect: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList)
 };
 var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 	return function (b) {
@@ -38423,7 +38474,9 @@ var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 																		return function (s) {
 																			return function (t) {
 																				return function (u) {
-																					return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, dropZone: n, name: o, startDate: p, email: q, preferredGenre: r, countryOfBirth: s, modalSmOpen: t, modalLgOpen: u};
+																					return function (v) {
+																						return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, dropZone: n, name: o, startDate: p, email: q, preferredGenre: r, countryOfBirth: s, modalSmOpen: t, modalLgOpen: u, maybeBlockSelect: v};
+																					};
 																				};
 																			};
 																		};
@@ -38701,13 +38754,27 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 						model,
 						{modalLgOpen: true}),
 					{ctor: '[]'});
-			default:
+			case 'CloseLgModal':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{modalLgOpen: false}),
 					{ctor: '[]'});
+			default:
+				var _p10 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p0._0, model.maybeBlockSelect);
+				var newSelect = _p10._0;
+				var cmd = _p10._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{maybeBlockSelect: newSelect}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$SelectMsg, cmd),
+						_1: {ctor: '[]'}
+					});
 		}
 	});
 
@@ -39459,6 +39526,38 @@ var _bluedogtraining$bdt_elm$Toggle$viewWithLabel = F3(
 			});
 	});
 
+var _bluedogtraining$bdt_elm$View$maybeBlockView = function (musicGenre) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled$text('This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear).'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Selected: ',
+								_elm_lang$core$Basics$toString(musicGenre))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _bluedogtraining$bdt_elm$View$view = function (model) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
@@ -40854,7 +40953,50 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																					_1: {ctor: '[]'}
 																				},
 																				_bluedogtraining$bdt_elm$Card$view)))),
-																_1: {ctor: '[]'}
+																_1: {
+																	ctor: '::',
+																	_0: _bluedogtraining$bdt_elm$Card$render(
+																		A2(
+																			_bluedogtraining$bdt_elm$Card$body,
+																			{
+																				ctor: '::',
+																				_0: A2(
+																					_bluedogtraining$bdt_elm$Card$block,
+																					_bluedogtraining$bdt_elm$Grid_Size$Six,
+																					{
+																						ctor: '::',
+																						_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																							_bluedogtraining$bdt_elm$Form_Label$view('Preferred Music Genre')),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(
+																								_rtfeldman$elm_css$Html_Styled$map,
+																								_bluedogtraining$bdt_elm$Msg$UpdateMaybeBLockSelect,
+																								_bluedogtraining$bdt_elm$Form_Select$render(
+																									A2(
+																										_bluedogtraining$bdt_elm$Form_Select$setIsClearable,
+																										true,
+																										_bluedogtraining$bdt_elm$Form_Select$view(model.maybeBlockSelect)))),
+																							_1: {ctor: '[]'}
+																						}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: A3(
+																						_bluedogtraining$bdt_elm$Card$maybeBlock,
+																						_bluedogtraining$bdt_elm$Grid_Size$Six,
+																						_bluedogtraining$bdt_elm$Form_Select$getSelectedOption(model.maybeBlockSelect),
+																						_bluedogtraining$bdt_elm$View$maybeBlockView),
+																					_1: {ctor: '[]'}
+																				}
+																			},
+																			A3(
+																				_bluedogtraining$bdt_elm$Card$header,
+																				'Conditional Blocks',
+																				{ctor: '[]'},
+																				_bluedogtraining$bdt_elm$Card$view))),
+																	_1: {ctor: '[]'}
+																}
 															}),
 														_1: {ctor: '[]'}
 													}
@@ -40897,7 +41039,7 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _bluedogtraining$bdt_elm$Main$main !== 'undefined') {
-    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"DropZone":["Form.DropZone.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"FileReader.DataFormat":{"args":[],"tags":{"Text":["String"],"DataURL":[],"Base64":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.DropZone.Msg":{"args":[],"tags":{"Enter":[],"Remove":["FileReader.File"],"Add":["List FileReader.File"],"Leave":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"FileReader.Error":{"args":[],"type":"{ code : Int, name : String, message : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"FileReader.File":{"args":[],"type":"{ lastModified : Time.Time , name : String , size : Int , mimeType : String , dataFormat : FileReader.DataFormat , data : Result.Result FileReader.Error String }"},"Time.Time":{"args":[],"type":"Float"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"DropZone":["Form.DropZone.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"FileReader.DataFormat":{"args":[],"tags":{"Text":["String"],"DataURL":[],"Base64":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.DropZone.Msg":{"args":[],"tags":{"Enter":[],"Remove":["FileReader.File"],"Add":["List FileReader.File"],"Leave":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"FileReader.Error":{"args":[],"type":"{ code : Int, name : String, message : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"FileReader.File":{"args":[],"type":"{ lastModified : Time.Time , name : String , size : Int , mimeType : String , dataFormat : FileReader.DataFormat , data : Result.Result FileReader.Error String }"},"Time.Time":{"args":[],"type":"Float"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

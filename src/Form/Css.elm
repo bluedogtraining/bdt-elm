@@ -65,7 +65,7 @@ selectOptionList =
 selectOptionItem : Bool -> Bool -> List Style
 selectOptionItem isDisabled isFocused =
 
-    [ padding2 (Css.rem 0.1) (Css.rem 0.15)
+    [ padding2 (Css.rem 0) (Css.rem 0.4)
     , margin <| px 0
     , boxSizing borderBox
     , height <| Css.rem 2

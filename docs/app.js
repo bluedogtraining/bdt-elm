@@ -25046,8 +25046,8 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Css$padding2,
-				_rtfeldman$elm_css$Css$rem(0.1),
-				_rtfeldman$elm_css$Css$rem(0.15)),
+				_rtfeldman$elm_css$Css$rem(0),
+				_rtfeldman$elm_css$Css$rem(0.4)),
 			_1: {
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$margin(
@@ -36708,7 +36708,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$infoMessage = _rtfeldman$elm_
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Css$top(
-										_rtfeldman$elm_css$Css$px(41)),
+										_rtfeldman$elm_css$Css$px(39)),
 									_1: {
 										ctor: '::',
 										_0: _rtfeldman$elm_css$Css$left(
@@ -36749,7 +36749,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$optionList = _rtfeldman$elm_c
 		{
 			ctor: '::',
 			_0: _rtfeldman$elm_css$Css$top(
-				_rtfeldman$elm_css$Css$px(41)),
+				_rtfeldman$elm_css$Css$px(39)),
 			_1: {ctor: '[]'}
 		}));
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$title = function (isFaded) {

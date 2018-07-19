@@ -25046,8 +25046,8 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Css$padding2,
-				_rtfeldman$elm_css$Css$px(6),
-				_rtfeldman$elm_css$Css$px(8)),
+				_rtfeldman$elm_css$Css$rem(0.1),
+				_rtfeldman$elm_css$Css$rem(0.15)),
 			_1: {
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$margin(
@@ -25246,14 +25246,14 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 							ctor: '::',
 							_0: A2(
 								_rtfeldman$elm_css$Css$padding2,
-								_rtfeldman$elm_css$Css$px(6),
-								_rtfeldman$elm_css$Css$px(8)),
+								_rtfeldman$elm_css$Css$rem(0),
+								_rtfeldman$elm_css$Css$rem(0.4)),
 							_1: {
 								ctor: '::',
 								_0: A2(
 									_rtfeldman$elm_css$Css$margin2,
-									_rtfeldman$elm_css$Css$px(10),
-									_rtfeldman$elm_css$Css$px(0)),
+									_rtfeldman$elm_css$Css$rem(0.5),
+									_rtfeldman$elm_css$Css$rem(0)),
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Css$color(
@@ -25266,14 +25266,14 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 										_1: {
 											ctor: '::',
 											_0: _rtfeldman$elm_css$Css$fontSize(
-												_rtfeldman$elm_css$Css$pt(12)),
+												_rtfeldman$elm_css$Css$rem(0.8)),
 											_1: {
 												ctor: '::',
 												_0: _rtfeldman$elm_css$Css$focus(
 													{
 														ctor: '::',
 														_0: _rtfeldman$elm_css$Css$outlineWidth(
-															_rtfeldman$elm_css$Css$px(0)),
+															_rtfeldman$elm_css$Css$rem(0)),
 														_1: {ctor: '[]'}
 													}),
 												_1: {ctor: '[]'}
@@ -25299,7 +25299,11 @@ var _bluedogtraining$bdt_elm$Form_Css$select = F2(
 				_1: {
 					ctor: '::',
 					_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+						_1: {ctor: '[]'}
+					}
 				}
 			});
 	});

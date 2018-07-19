@@ -12,13 +12,13 @@ input isError isLocked =
     , border3 (px 1) solid (hex <| if isError && not isLocked then "d9534f" else "cccccc")
     , width <| pct 100
     , height <| Css.rem 2
-    , padding2 (px 6) (px 8)
-    , margin2 (px 10) (px 0)
+    , padding2 (Css.rem 0) (Css.rem 0.4)
+    , margin2 (Css.rem 0.5) (Css.rem 0)
     , color <| hex "555555"
     , backgroundColor <| hex <| if isLocked then "dddddd" else "ffffff"
-    , fontSize <| pt 12
+    , fontSize <| Css.rem 0.8
     , focus
-        [ outlineWidth (px 0)
+        [ outlineWidth (Css.rem 0)
         ]
     ]
 
@@ -30,6 +30,7 @@ select isError isLocked =
     ++
     [ displayFlex
     , cursor pointer
+    , alignItems center
     ]
 
 
@@ -64,7 +65,7 @@ selectOptionList =
 selectOptionItem : Bool -> Bool -> List Style
 selectOptionItem isDisabled isFocused =
 
-    [ padding2 (px 6) (px 8)
+    [ padding2 (Css.rem 0.1) (Css.rem 0.15)
     , margin <| px 0
     , boxSizing borderBox
     , height <| Css.rem 2

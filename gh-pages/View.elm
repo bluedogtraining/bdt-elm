@@ -168,6 +168,16 @@ view model =
                             ]
                         |> Card.footer []
                         |> Card.render
+                    , Card.view
+                        |> Card.header "Text Area!" []
+                        |> Card.body
+                            [ Card.block Twelve
+                                [ TextArea.view model.textArea
+                                    |> TextArea.render
+                                    |> Html.map TextAreaMsg
+                                ]
+                            ]
+                        |> Card.render
                     ]
                 , Grid.colSizes Twelve [ Lg ~ Six ]
                     [ Card.view

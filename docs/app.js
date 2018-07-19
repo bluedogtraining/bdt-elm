@@ -25243,43 +25243,48 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 						_rtfeldman$elm_css$Css$pct(100)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$height(
-							_rtfeldman$elm_css$Css$rem(2)),
+						_0: _rtfeldman$elm_css$Css$maxWidth(
+							_rtfeldman$elm_css$Css$pct(100)),
 						_1: {
 							ctor: '::',
-							_0: A2(
-								_rtfeldman$elm_css$Css$padding2,
-								_rtfeldman$elm_css$Css$rem(0),
-								_rtfeldman$elm_css$Css$rem(0.4)),
+							_0: _rtfeldman$elm_css$Css$height(
+								_rtfeldman$elm_css$Css$rem(2)),
 							_1: {
 								ctor: '::',
 								_0: A2(
-									_rtfeldman$elm_css$Css$margin2,
-									_rtfeldman$elm_css$Css$rem(0.5),
-									_rtfeldman$elm_css$Css$rem(0)),
+									_rtfeldman$elm_css$Css$padding2,
+									_rtfeldman$elm_css$Css$rem(0),
+									_rtfeldman$elm_css$Css$rem(0.4)),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$color(
-										_rtfeldman$elm_css$Css$hex('555555')),
+									_0: A2(
+										_rtfeldman$elm_css$Css$margin2,
+										_rtfeldman$elm_css$Css$rem(0.5),
+										_rtfeldman$elm_css$Css$rem(0)),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$backgroundColor(
-											_rtfeldman$elm_css$Css$hex(
-												isLocked ? 'dddddd' : 'ffffff')),
+										_0: _rtfeldman$elm_css$Css$color(
+											_rtfeldman$elm_css$Css$hex('555555')),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$fontSize(
-												_rtfeldman$elm_css$Css$rem(0.8)),
+											_0: _rtfeldman$elm_css$Css$backgroundColor(
+												_rtfeldman$elm_css$Css$hex(
+													isLocked ? 'dddddd' : 'ffffff')),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$focus(
-													{
-														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$outlineWidth(
-															_rtfeldman$elm_css$Css$rem(0)),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
+												_0: _rtfeldman$elm_css$Css$fontSize(
+													_rtfeldman$elm_css$Css$rem(0.8)),
+												_1: {
+													ctor: '::',
+													_0: _rtfeldman$elm_css$Css$focus(
+														{
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css$outlineWidth(
+																_rtfeldman$elm_css$Css$rem(0)),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -37755,55 +37760,43 @@ var _bluedogtraining$bdt_elm$Form_TextArea_Internal$inputField = F2(
 				_rtfeldman$elm_css$Html_Styled$textarea,
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$class('bdt-elm input'),
+					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
+						A2(_bluedogtraining$bdt_elm$Form_Css$input, viewState.isError, viewState.isLocked)),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled_Attributes$classList(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'locked', _1: viewState.isLocked},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'error', _1: viewState.isError},
-									_1: {ctor: '[]'}
-								}
-							}),
+						_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(viewState.isLocked),
+							_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(
+								_bluedogtraining$bdt_elm$Resettable$getValue(state.value)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Html_Styled_Attributes$value(
-									_bluedogtraining$bdt_elm$Resettable$getValue(state.value)),
+								_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_TextArea_Internal$Input),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_TextArea_Internal$Input),
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
+										_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
 										_1: {
 											ctor: '::',
-											_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
+											_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
 											_1: {
 												ctor: '::',
-												_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$id, viewState.id),
+												_0: A2(
+													_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+													A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'onkeydown', 'if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+\'\t\'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}'),
+													state.substituteTabs),
 												_1: {
 													ctor: '::',
 													_0: A2(
 														_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-														A2(_rtfeldman$elm_css$Html_Styled_Attributes$attribute, 'onkeydown', 'if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+\'\t\'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}'),
+														A2(
+															_rtfeldman$elm_css$Html_Styled_Events$on,
+															'keyup',
+															A2(_elm_lang$core$Json_Decode$andThen, _bluedogtraining$bdt_elm$Form_TextArea_Internal$shouldUpdateTab, _rtfeldman$elm_css$Html_Styled_Events$keyCode)),
 														state.substituteTabs),
-													_1: {
-														ctor: '::',
-														_0: A2(
-															_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-															A2(
-																_rtfeldman$elm_css$Html_Styled_Events$on,
-																'keyup',
-																A2(_elm_lang$core$Json_Decode$andThen, _bluedogtraining$bdt_elm$Form_TextArea_Internal$shouldUpdateTab, _rtfeldman$elm_css$Html_Styled_Events$keyCode)),
-															state.substituteTabs),
-														_1: {ctor: '[]'}
-													}
+													_1: {ctor: '[]'}
 												}
 											}
 										}
@@ -40026,7 +40019,34 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																	'Date Pickers!',
 																	{ctor: '[]'},
 																	_bluedogtraining$bdt_elm$Card$view)))),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: _bluedogtraining$bdt_elm$Card$render(
+															A2(
+																_bluedogtraining$bdt_elm$Card$body,
+																{
+																	ctor: '::',
+																	_0: A2(
+																		_bluedogtraining$bdt_elm$Card$block,
+																		_bluedogtraining$bdt_elm$Grid_Size$Twelve,
+																		{
+																			ctor: '::',
+																			_0: A2(
+																				_rtfeldman$elm_css$Html_Styled$map,
+																				_bluedogtraining$bdt_elm$Msg$TextAreaMsg,
+																				_bluedogtraining$bdt_elm$Form_TextArea$render(
+																					_bluedogtraining$bdt_elm$Form_TextArea$view(model.textArea))),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																},
+																A3(
+																	_bluedogtraining$bdt_elm$Card$header,
+																	'Text Area!',
+																	{ctor: '[]'},
+																	_bluedogtraining$bdt_elm$Card$view))),
+														_1: {ctor: '[]'}
+													}
 												}),
 											_1: {
 												ctor: '::',

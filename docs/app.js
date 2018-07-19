@@ -22040,6 +22040,11 @@ var _elm_community$elm_material_icons$Material_Icons_Av$airplay = F2(
 			});
 	});
 
+var _elm_community$elm_material_icons$Material_Icons_Alert$warning = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z');
+var _elm_community$elm_material_icons$Material_Icons_Alert$error_outline = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z');
+var _elm_community$elm_material_icons$Material_Icons_Alert$error = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z');
+var _elm_community$elm_material_icons$Material_Icons_Alert$add_alert = _elm_community$elm_material_icons$Material_Icons_Internal$icon('M10.01 21.01c0 1.1.89 1.99 1.99 1.99s1.99-.89 1.99-1.99h-3.98zm8.87-4.19V11c0-3.25-2.25-5.97-5.29-6.69v-.72C13.59 2.71 12.88 2 12 2s-1.59.71-1.59 1.59v.72C7.37 5.03 5.12 7.75 5.12 11v5.82L3 18.94V20h18v-1.06l-2.12-2.12zM16 13.01h-3v3h-2v-3H8V11h3V8h2v3h3v2.01z');
+
 var _bluedogtraining$bdt_elm$Icon$renderIcon = F3(
 	function (size, color, materialIcon) {
 		return A2(
@@ -22129,10 +22134,13 @@ var _bluedogtraining$bdt_elm$Icon$render = F3(
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Action$lock);
 			case 'LockOpen':
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Action$lock_open);
-			default:
+			case 'Add':
 				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Content$add);
+			default:
+				return A3(_bluedogtraining$bdt_elm$Icon$renderIcon, size, color, _elm_community$elm_material_icons$Material_Icons_Alert$warning);
 		}
 	});
+var _bluedogtraining$bdt_elm$Icon$Warning = {ctor: 'Warning'};
 var _bluedogtraining$bdt_elm$Icon$Add = {ctor: 'Add'};
 var _bluedogtraining$bdt_elm$Icon$LockOpen = {ctor: 'LockOpen'};
 var _bluedogtraining$bdt_elm$Icon$Lock = {ctor: 'Lock'};
@@ -24808,8 +24816,9 @@ var _bluedogtraining$bdt_elm$Card_Css$card = _rtfeldman$elm_css$Html_Styled_Attr
 var _bluedogtraining$bdt_elm$Card$renderCardBlock = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1._0;
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
+	return A3(
+		_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+		!_elm_lang$core$List$isEmpty(_p2.children),
 		{
 			ctor: '::',
 			_0: A2(_bluedogtraining$bdt_elm$Card_Css$block, _p2.defaultCols, _p2.sizes),
@@ -24946,6 +24955,52 @@ var _bluedogtraining$bdt_elm$Card$block = F2(
 				{ctor: '[]'},
 				children));
 	});
+var _bluedogtraining$bdt_elm$Card$blockIf = F3(
+	function (cols, isShown, child) {
+		var _p12 = isShown;
+		if (_p12 === false) {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{ctor: '[]'}));
+		} else {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: child,
+						_1: {ctor: '[]'}
+					}));
+		}
+	});
+var _bluedogtraining$bdt_elm$Card$maybeBlock = F3(
+	function (cols, maybe, child) {
+		var _p13 = maybe;
+		if (_p13.ctor === 'Nothing') {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{ctor: '[]'}));
+		} else {
+			return _bluedogtraining$bdt_elm$Card$CardBlock(
+				A3(
+					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
+					cols,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: child(_p13._0),
+						_1: {ctor: '[]'}
+					}));
+		}
+	});
 var _bluedogtraining$bdt_elm$Card$blockSizes = F3(
 	function (cols, sizes, children) {
 		return _bluedogtraining$bdt_elm$Card$CardBlock(
@@ -24991,8 +25046,8 @@ var _bluedogtraining$bdt_elm$Form_Css$selectOptionItem = F2(
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Css$padding2,
-				_rtfeldman$elm_css$Css$px(6),
-				_rtfeldman$elm_css$Css$px(8)),
+				_rtfeldman$elm_css$Css$rem(0),
+				_rtfeldman$elm_css$Css$rem(0.4)),
 			_1: {
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$margin(
@@ -25191,14 +25246,14 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 							ctor: '::',
 							_0: A2(
 								_rtfeldman$elm_css$Css$padding2,
-								_rtfeldman$elm_css$Css$px(6),
-								_rtfeldman$elm_css$Css$px(8)),
+								_rtfeldman$elm_css$Css$rem(0),
+								_rtfeldman$elm_css$Css$rem(0.4)),
 							_1: {
 								ctor: '::',
 								_0: A2(
 									_rtfeldman$elm_css$Css$margin2,
-									_rtfeldman$elm_css$Css$px(10),
-									_rtfeldman$elm_css$Css$px(0)),
+									_rtfeldman$elm_css$Css$rem(0.5),
+									_rtfeldman$elm_css$Css$rem(0)),
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Css$color(
@@ -25211,14 +25266,14 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 										_1: {
 											ctor: '::',
 											_0: _rtfeldman$elm_css$Css$fontSize(
-												_rtfeldman$elm_css$Css$pt(12)),
+												_rtfeldman$elm_css$Css$rem(0.8)),
 											_1: {
 												ctor: '::',
 												_0: _rtfeldman$elm_css$Css$focus(
 													{
 														ctor: '::',
 														_0: _rtfeldman$elm_css$Css$outlineWidth(
-															_rtfeldman$elm_css$Css$px(0)),
+															_rtfeldman$elm_css$Css$rem(0)),
 														_1: {ctor: '[]'}
 													}),
 												_1: {ctor: '[]'}
@@ -25244,7 +25299,11 @@ var _bluedogtraining$bdt_elm$Form_Css$select = F2(
 				_1: {
 					ctor: '::',
 					_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+						_1: {ctor: '[]'}
+					}
 				}
 			});
 	});
@@ -33064,6 +33123,41 @@ var _bluedogtraining$bdt_elm$Form_DropZone_Css$removeIcon = _rtfeldman$elm_css$H
 			_1: {ctor: '[]'}
 		}
 	});
+var _bluedogtraining$bdt_elm$Form_DropZone_Css$errorTitle = _rtfeldman$elm_css$Html_Styled_Attributes$css(
+	{
+		ctor: '::',
+		_0: _rtfeldman$elm_css$Css$color(
+			A3(_rtfeldman$elm_css$Css$rgb, 189, 54, 47)),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$backgroundColor(
+				A3(_rtfeldman$elm_css$Css$rgb, 241, 221, 219)),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Css$margin2,
+					_rtfeldman$elm_css$Css$rem(0.4),
+					_rtfeldman$elm_css$Css$rem(0)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Css$padding2,
+						_rtfeldman$elm_css$Css$rem(0.2),
+						_rtfeldman$elm_css$Css$rem(0.4)),
+					_1: {
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Css$fontSize(
+							_rtfeldman$elm_css$Css$rem(0.8)),
+						_1: {
+							ctor: '::',
+							_0: _rtfeldman$elm_css$Css$textAlign(_rtfeldman$elm_css$Css$center),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
 var _bluedogtraining$bdt_elm$Form_DropZone_Css$file = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
 		ctor: '::',
@@ -33091,15 +33185,23 @@ var _bluedogtraining$bdt_elm$Form_DropZone_Css$file = _rtfeldman$elm_css$Html_St
 								_rtfeldman$elm_css$Css$px(1),
 								_rtfeldman$elm_css$Css$solid,
 								A3(_rtfeldman$elm_css$Css$rgb, 204, 204, 204)),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _rtfeldman$elm_css$Css$lastChild(
+									{
+										ctor: '::',
+										_0: _rtfeldman$elm_css$Css$borderBottomWidth(
+											_rtfeldman$elm_css$Css$px(0)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
 			}
 		}
 	});
-var _bluedogtraining$bdt_elm$Form_DropZone_Css$fileList = _rtfeldman$elm_css$Html_Styled_Attributes$css(
-	{ctor: '[]'});
 var _bluedogtraining$bdt_elm$Form_DropZone_Css$filesInput = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
 		ctor: '::',
@@ -33290,15 +33392,44 @@ var _bluedogtraining$bdt_elm$Form_DropZone_Css$dropZone = F3(
 			});
 	});
 
-var _bluedogtraining$bdt_elm$Form_DropZone$getValue = function (_p0) {
+var _bluedogtraining$bdt_elm$Form_DropZone$getIsChanged = function (_p0) {
 	var _p1 = _p0;
-	return _Gizra$elm_all_set$EverySet$toList(
-		_bluedogtraining$bdt_elm$Resettable$getValue(_p1._0.files));
+	return _bluedogtraining$bdt_elm$Resettable$getIsChanged(_p1._0.files);
 };
-var _bluedogtraining$bdt_elm$Form_DropZone$getIsChanged = function (_p2) {
-	var _p3 = _p2;
-	return _bluedogtraining$bdt_elm$Resettable$getIsChanged(_p3._0.files);
-};
+var _bluedogtraining$bdt_elm$Form_DropZone$split = F2(
+	function (file, _p2) {
+		var _p3 = _p2;
+		var _p6 = _p3._0;
+		var _p5 = _p3._1;
+		var _p4 = file.data;
+		if (_p4.ctor === 'Err') {
+			return {
+				ctor: '_Tuple2',
+				_0: _p6,
+				_1: A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p5,
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: file, _1: _p4._0},
+						_1: {ctor: '[]'}
+					})
+			};
+		} else {
+			return {
+				ctor: '_Tuple2',
+				_0: A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p6,
+					{
+						ctor: '::',
+						_0: file,
+						_1: {ctor: '[]'}
+					}),
+				_1: _p5
+			};
+		}
+	});
 var _bluedogtraining$bdt_elm$Form_DropZone$initialViewState = {isLocked: false, isError: false, label: 'Drop files here or click to select files'};
 var _bluedogtraining$bdt_elm$Form_DropZone$initialModel = {
 	files: _bluedogtraining$bdt_elm$Resettable$init(_Gizra$elm_all_set$EverySet$empty),
@@ -33313,143 +33444,197 @@ var _bluedogtraining$bdt_elm$Form_DropZone$ViewState = F3(
 	function (a, b, c) {
 		return {isLocked: a, isError: b, label: c};
 	});
+var _bluedogtraining$bdt_elm$Form_DropZone$Files = F2(
+	function (a, b) {
+		return {ok: a, err: b};
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$OkFile = F5(
+	function (a, b, c, d, e) {
+		return {lastModified: a, name: b, size: c, mimeType: d, base64: e};
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$ErrFile = F5(
+	function (a, b, c, d, e) {
+		return {lastModified: a, name: b, size: c, mimeType: d, error: e};
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$splitFiles = F2(
+	function (file, acc) {
+		var _p7 = file.data;
+		if (_p7.ctor === 'Err') {
+			return _elm_lang$core$Native_Utils.update(
+				acc,
+				{
+					err: A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc.err,
+						{
+							ctor: '::',
+							_0: A5(_bluedogtraining$bdt_elm$Form_DropZone$ErrFile, file.lastModified, file.name, file.size, file.mimeType, _p7._0),
+							_1: {ctor: '[]'}
+						})
+				});
+		} else {
+			return _elm_lang$core$Native_Utils.update(
+				acc,
+				{
+					ok: A2(
+						_elm_lang$core$Basics_ops['++'],
+						acc.ok,
+						{
+							ctor: '::',
+							_0: A5(_bluedogtraining$bdt_elm$Form_DropZone$OkFile, file.lastModified, file.name, file.size, file.mimeType, _p7._0),
+							_1: {ctor: '[]'}
+						})
+				});
+		}
+	});
+var _bluedogtraining$bdt_elm$Form_DropZone$getFiles = function (_p8) {
+	var _p9 = _p8;
+	return A3(
+		_Gizra$elm_all_set$EverySet$foldl,
+		_bluedogtraining$bdt_elm$Form_DropZone$splitFiles,
+		A2(
+			_bluedogtraining$bdt_elm$Form_DropZone$Files,
+			{ctor: '[]'},
+			{ctor: '[]'}),
+		_bluedogtraining$bdt_elm$Resettable$getValue(_p9._0.files));
+};
 var _bluedogtraining$bdt_elm$Form_DropZone$Model = function (a) {
 	return {ctor: 'Model', _0: a};
 };
 var _bluedogtraining$bdt_elm$Form_DropZone$init = _bluedogtraining$bdt_elm$Form_DropZone$Model(_bluedogtraining$bdt_elm$Form_DropZone$initialModel);
 var _bluedogtraining$bdt_elm$Form_DropZone$update = F2(
-	function (msg, _p4) {
-		var _p5 = _p4;
-		var _p7 = _p5._0;
-		var _p6 = msg;
-		switch (_p6.ctor) {
+	function (msg, _p10) {
+		var _p11 = _p10;
+		var _p13 = _p11._0;
+		var _p12 = msg;
+		switch (_p12.ctor) {
 			case 'Enter':
 				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 					_elm_lang$core$Native_Utils.update(
-						_p7,
+						_p13,
 						{areFilesHovering: true}));
 			case 'Leave':
 				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 					_elm_lang$core$Native_Utils.update(
-						_p7,
+						_p13,
 						{areFilesHovering: false}));
-			case 'Files':
+			case 'Add':
 				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 					_elm_lang$core$Native_Utils.update(
-						_p7,
+						_p13,
 						{
 							areFilesHovering: false,
 							files: A2(
 								_bluedogtraining$bdt_elm$Resettable$update,
 								A2(
 									_Gizra$elm_all_set$EverySet$union,
-									_bluedogtraining$bdt_elm$Resettable$getValue(_p7.files),
-									_Gizra$elm_all_set$EverySet$fromList(_p6._0)),
-								_p7.files)
+									_bluedogtraining$bdt_elm$Resettable$getValue(_p13.files),
+									_Gizra$elm_all_set$EverySet$fromList(_p12._0)),
+								_p13.files)
 						}));
 			default:
 				return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 					_elm_lang$core$Native_Utils.update(
-						_p7,
+						_p13,
 						{
 							files: A2(
 								_bluedogtraining$bdt_elm$Resettable$update,
 								A2(
 									_Gizra$elm_all_set$EverySet$remove,
-									_p6._0,
-									_bluedogtraining$bdt_elm$Resettable$getValue(_p7.files)),
-								_p7.files)
+									_p12._0,
+									_bluedogtraining$bdt_elm$Resettable$getValue(_p13.files)),
+								_p13.files)
 						}));
 		}
 	});
-var _bluedogtraining$bdt_elm$Form_DropZone$reInitialise = function (_p8) {
-	var _p9 = _p8;
-	var _p10 = _p9._0;
+var _bluedogtraining$bdt_elm$Form_DropZone$reInitialise = function (_p14) {
+	var _p15 = _p14;
+	var _p16 = _p15._0;
 	return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 		_elm_lang$core$Native_Utils.update(
-			_p10,
+			_p16,
 			{
 				files: _bluedogtraining$bdt_elm$Resettable$init(
-					_bluedogtraining$bdt_elm$Resettable$getValue(_p10.files))
+					_bluedogtraining$bdt_elm$Resettable$getValue(_p16.files))
 			}));
 };
-var _bluedogtraining$bdt_elm$Form_DropZone$reset = function (_p11) {
-	var _p12 = _p11;
-	var _p13 = _p12._0;
+var _bluedogtraining$bdt_elm$Form_DropZone$reset = function (_p17) {
+	var _p18 = _p17;
+	var _p19 = _p18._0;
 	return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 		_elm_lang$core$Native_Utils.update(
-			_p13,
+			_p19,
 			{
-				files: _bluedogtraining$bdt_elm$Resettable$reset(_p13.files)
+				files: _bluedogtraining$bdt_elm$Resettable$reset(_p19.files)
 			}));
 };
 var _bluedogtraining$bdt_elm$Form_DropZone$setInitialValue = F2(
-	function (files, _p14) {
-		var _p15 = _p14;
+	function (files, _p20) {
+		var _p21 = _p20;
 		return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 			_elm_lang$core$Native_Utils.update(
-				_p15._0,
+				_p21._0,
 				{
 					files: _bluedogtraining$bdt_elm$Resettable$init(
 						_Gizra$elm_all_set$EverySet$fromList(files))
 				}));
 	});
 var _bluedogtraining$bdt_elm$Form_DropZone$setValue = F2(
-	function (files, _p16) {
-		var _p17 = _p16;
-		var _p18 = _p17._0;
+	function (files, _p22) {
+		var _p23 = _p22;
+		var _p24 = _p23._0;
 		return _bluedogtraining$bdt_elm$Form_DropZone$Model(
 			_elm_lang$core$Native_Utils.update(
-				_p18,
+				_p24,
 				{
 					files: A2(
 						_bluedogtraining$bdt_elm$Resettable$update,
 						_Gizra$elm_all_set$EverySet$fromList(files),
-						_p18.files)
+						_p24.files)
 				}));
 	});
 var _bluedogtraining$bdt_elm$Form_DropZone$View = F2(
 	function (a, b) {
 		return {ctor: 'View', _0: a, _1: b};
 	});
-var _bluedogtraining$bdt_elm$Form_DropZone$view = function (_p19) {
-	var _p20 = _p19;
-	return A2(_bluedogtraining$bdt_elm$Form_DropZone$View, _p20._0, _bluedogtraining$bdt_elm$Form_DropZone$initialViewState);
+var _bluedogtraining$bdt_elm$Form_DropZone$view = function (_p25) {
+	var _p26 = _p25;
+	return A2(_bluedogtraining$bdt_elm$Form_DropZone$View, _p26._0, _bluedogtraining$bdt_elm$Form_DropZone$initialViewState);
 };
 var _bluedogtraining$bdt_elm$Form_DropZone$setIsError = F2(
-	function (isError, _p21) {
-		var _p22 = _p21;
+	function (isError, _p27) {
+		var _p28 = _p27;
 		return A2(
 			_bluedogtraining$bdt_elm$Form_DropZone$View,
-			_p22._0,
+			_p28._0,
 			_elm_lang$core$Native_Utils.update(
-				_p22._1,
+				_p28._1,
 				{isError: isError}));
 	});
 var _bluedogtraining$bdt_elm$Form_DropZone$setIsLocked = F2(
-	function (isLocked, _p23) {
-		var _p24 = _p23;
+	function (isLocked, _p29) {
+		var _p30 = _p29;
 		return A2(
 			_bluedogtraining$bdt_elm$Form_DropZone$View,
-			_p24._0,
+			_p30._0,
 			_elm_lang$core$Native_Utils.update(
-				_p24._1,
+				_p30._1,
 				{isLocked: isLocked}));
 	});
 var _bluedogtraining$bdt_elm$Form_DropZone$setLabel = F2(
-	function (label, _p25) {
-		var _p26 = _p25;
+	function (label, _p31) {
+		var _p32 = _p31;
 		return A2(
 			_bluedogtraining$bdt_elm$Form_DropZone$View,
-			_p26._0,
+			_p32._0,
 			_elm_lang$core$Native_Utils.update(
-				_p26._1,
+				_p32._1,
 				{label: label}));
 	});
 var _bluedogtraining$bdt_elm$Form_DropZone$Remove = function (a) {
 	return {ctor: 'Remove', _0: a};
 };
-var _bluedogtraining$bdt_elm$Form_DropZone$file = function (file) {
+var _bluedogtraining$bdt_elm$Form_DropZone$okFile = function (file) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
 		{
@@ -33480,16 +33665,91 @@ var _bluedogtraining$bdt_elm$Form_DropZone$file = function (file) {
 			}
 		});
 };
-var _bluedogtraining$bdt_elm$Form_DropZone$Files = function (a) {
-	return {ctor: 'Files', _0: a};
+var _bluedogtraining$bdt_elm$Form_DropZone$errFile = function (_p33) {
+	var _p34 = _p33;
+	var _p35 = _p34._0;
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Form_DropZone_Css$file,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$span,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_p35.name,
+							A2(_elm_lang$core$Basics_ops['++'], ' - ', _p34._1.message))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _bluedogtraining$bdt_elm$Button$render(
+					A2(
+						_bluedogtraining$bdt_elm$Button$onClick,
+						_bluedogtraining$bdt_elm$Form_DropZone$Remove(_p35),
+						_bluedogtraining$bdt_elm$Button$small(
+							_bluedogtraining$bdt_elm$Button$red(
+								A2(_bluedogtraining$bdt_elm$Button$icon, _bluedogtraining$bdt_elm$Icon$Clear, _bluedogtraining$bdt_elm$Button$view))))),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$fileLists = function (_p36) {
+	var _p37 = _p36;
+	var _p38 = _p37._1;
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$div,
+				{ctor: '[]'},
+				A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Form_DropZone$okFile, _p37._0)),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+					!_elm_lang$core$List$isEmpty(_p38),
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Form_DropZone_Css$errorTitle,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text('The following files had errors'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_rtfeldman$elm_css$Html_Styled$div,
+						{ctor: '[]'},
+						A2(_elm_lang$core$List$map, _bluedogtraining$bdt_elm$Form_DropZone$errFile, _p38)),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Form_DropZone$Add = function (a) {
+	return {ctor: 'Add', _0: a};
 };
 var _bluedogtraining$bdt_elm$Form_DropZone$Leave = {ctor: 'Leave'};
 var _bluedogtraining$bdt_elm$Form_DropZone$Enter = {ctor: 'Enter'};
-var _bluedogtraining$bdt_elm$Form_DropZone$dropZoneModel = {dataFormat: _norpan$elm_file_reader$FileReader$Base64, enterMsg: _bluedogtraining$bdt_elm$Form_DropZone$Enter, leaveMsg: _bluedogtraining$bdt_elm$Form_DropZone$Leave, filesMsg: _bluedogtraining$bdt_elm$Form_DropZone$Files};
-var _bluedogtraining$bdt_elm$Form_DropZone$render = function (_p27) {
-	var _p28 = _p27;
-	var _p30 = _p28._1;
-	var _p29 = _p28._0;
+var _bluedogtraining$bdt_elm$Form_DropZone$dropZoneModel = {dataFormat: _norpan$elm_file_reader$FileReader$Base64, enterMsg: _bluedogtraining$bdt_elm$Form_DropZone$Enter, leaveMsg: _bluedogtraining$bdt_elm$Form_DropZone$Leave, filesMsg: _bluedogtraining$bdt_elm$Form_DropZone$Add};
+var _bluedogtraining$bdt_elm$Form_DropZone$render = function (_p39) {
+	var _p40 = _p39;
+	var _p42 = _p40._1;
+	var _p41 = _p40._0;
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
 		{ctor: '[]'},
@@ -33505,7 +33765,7 @@ var _bluedogtraining$bdt_elm$Form_DropZone$render = function (_p27) {
 						_norpan$elm_file_reader$FileReader$dropZone(_bluedogtraining$bdt_elm$Form_DropZone$dropZoneModel)),
 					{
 						ctor: '::',
-						_0: A3(_bluedogtraining$bdt_elm$Form_DropZone_Css$dropZone, _p30.isLocked, _p30.isError, _p29.areFilesHovering),
+						_0: A3(_bluedogtraining$bdt_elm$Form_DropZone_Css$dropZone, _p42.isLocked, _p42.isError, _p41.areFilesHovering),
 						_1: {ctor: '[]'}
 					}),
 				{
@@ -33517,37 +33777,35 @@ var _bluedogtraining$bdt_elm$Form_DropZone$render = function (_p27) {
 							A2(
 								_elm_lang$core$List$map,
 								_rtfeldman$elm_css$Html_Styled_Attributes$fromUnstyled,
-								A2(_norpan$elm_file_reader$FileReader$filesInput, _norpan$elm_file_reader$FileReader$Base64, _bluedogtraining$bdt_elm$Form_DropZone$Files)),
+								A2(_norpan$elm_file_reader$FileReader$filesInput, _norpan$elm_file_reader$FileReader$Base64, _bluedogtraining$bdt_elm$Form_DropZone$Add)),
 							{
 								ctor: '::',
 								_0: _bluedogtraining$bdt_elm$Form_DropZone_Css$filesInput,
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(_p30.isLocked),
+									_0: _rtfeldman$elm_css$Html_Styled_Attributes$disabled(_p42.isLocked),
 									_1: {ctor: '[]'}
 								}
 							}),
 						{ctor: '[]'}),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text(_p30.label),
+						_0: _rtfeldman$elm_css$Html_Styled$text(_p42.label),
 						_1: {ctor: '[]'}
 					}
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$div,
-					{
-						ctor: '::',
-						_0: _bluedogtraining$bdt_elm$Form_DropZone_Css$fileList,
-						_1: {ctor: '[]'}
-					},
-					_Gizra$elm_all_set$EverySet$toList(
-						A2(
-							_Gizra$elm_all_set$EverySet$map,
-							_bluedogtraining$bdt_elm$Form_DropZone$file,
-							_bluedogtraining$bdt_elm$Resettable$getValue(_p29.files)))),
+				_0: _bluedogtraining$bdt_elm$Form_DropZone$fileLists(
+					A3(
+						_Gizra$elm_all_set$EverySet$foldl,
+						_bluedogtraining$bdt_elm$Form_DropZone$split,
+						{
+							ctor: '_Tuple2',
+							_0: {ctor: '[]'},
+							_1: {ctor: '[]'}
+						},
+						_bluedogtraining$bdt_elm$Resettable$getValue(_p41.files))),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -36450,7 +36708,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$infoMessage = _rtfeldman$elm_
 								_1: {
 									ctor: '::',
 									_0: _rtfeldman$elm_css$Css$top(
-										_rtfeldman$elm_css$Css$px(41)),
+										_rtfeldman$elm_css$Css$px(39)),
 									_1: {
 										ctor: '::',
 										_0: _rtfeldman$elm_css$Css$left(
@@ -36491,7 +36749,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$optionList = _rtfeldman$elm_c
 		{
 			ctor: '::',
 			_0: _rtfeldman$elm_css$Css$top(
-				_rtfeldman$elm_css$Css$px(41)),
+				_rtfeldman$elm_css$Css$px(39)),
 			_1: {ctor: '[]'}
 		}));
 var _bluedogtraining$bdt_elm$Form_SearchSelect_Css$title = function (isFaded) {
@@ -38105,6 +38363,9 @@ var _bluedogtraining$bdt_elm$MusicGenre$asNonempty = A2(
 	A2(_elm_lang$core$List$drop, 1, _bluedogtraining$bdt_elm$MusicGenre$asList),
 	_mgold$elm_nonempty_list$List_Nonempty$fromElement(_bluedogtraining$bdt_elm$MusicGenre$Rock));
 
+var _bluedogtraining$bdt_elm$Msg$UpdateMaybeBLockSelect = function (a) {
+	return {ctor: 'UpdateMaybeBLockSelect', _0: a};
+};
 var _bluedogtraining$bdt_elm$Msg$DropZone = function (a) {
 	return {ctor: 'DropZone', _0: a};
 };
@@ -38193,7 +38454,8 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 	preferredGenre: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList),
 	countryOfBirth: A2(_bluedogtraining$bdt_elm$Form_SearchSelect$init, 'https://restcountries.eu/rest/v2/name/', _bluedogtraining$bdt_elm$Countries$countryDecoder),
 	modalSmOpen: false,
-	modalLgOpen: false
+	modalLgOpen: false,
+	maybeBlockSelect: _bluedogtraining$bdt_elm$Form_Select$init(_bluedogtraining$bdt_elm$MusicGenre$asList)
 };
 var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 	return function (b) {
@@ -38216,7 +38478,9 @@ var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 																		return function (s) {
 																			return function (t) {
 																				return function (u) {
-																					return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, dropZone: n, name: o, startDate: p, email: q, preferredGenre: r, countryOfBirth: s, modalSmOpen: t, modalLgOpen: u};
+																					return function (v) {
+																						return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, dropZone: n, name: o, startDate: p, email: q, preferredGenre: r, countryOfBirth: s, modalSmOpen: t, modalLgOpen: u, maybeBlockSelect: v};
+																					};
 																				};
 																			};
 																		};
@@ -38494,13 +38758,27 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 						model,
 						{modalLgOpen: true}),
 					{ctor: '[]'});
-			default:
+			case 'CloseLgModal':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{modalLgOpen: false}),
 					{ctor: '[]'});
+			default:
+				var _p10 = A2(_bluedogtraining$bdt_elm$Form_Select$update, _p0._0, model.maybeBlockSelect);
+				var newSelect = _p10._0;
+				var cmd = _p10._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{maybeBlockSelect: newSelect}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _bluedogtraining$bdt_elm$Msg$SelectMsg, cmd),
+						_1: {ctor: '[]'}
+					});
 		}
 	});
 
@@ -39252,6 +39530,38 @@ var _bluedogtraining$bdt_elm$Toggle$viewWithLabel = F3(
 			});
 	});
 
+var _bluedogtraining$bdt_elm$View$maybeBlockView = function (musicGenre) {
+	return A2(
+		_rtfeldman$elm_css$Html_Styled$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Html_Styled$text('This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear).'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Selected: ',
+								_elm_lang$core$Basics$toString(musicGenre))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _bluedogtraining$bdt_elm$View$view = function (model) {
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
@@ -40647,7 +40957,50 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																					_1: {ctor: '[]'}
 																				},
 																				_bluedogtraining$bdt_elm$Card$view)))),
-																_1: {ctor: '[]'}
+																_1: {
+																	ctor: '::',
+																	_0: _bluedogtraining$bdt_elm$Card$render(
+																		A2(
+																			_bluedogtraining$bdt_elm$Card$body,
+																			{
+																				ctor: '::',
+																				_0: A2(
+																					_bluedogtraining$bdt_elm$Card$block,
+																					_bluedogtraining$bdt_elm$Grid_Size$Six,
+																					{
+																						ctor: '::',
+																						_0: _bluedogtraining$bdt_elm$Form_Label$render(
+																							_bluedogtraining$bdt_elm$Form_Label$view('Preferred Music Genre')),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(
+																								_rtfeldman$elm_css$Html_Styled$map,
+																								_bluedogtraining$bdt_elm$Msg$UpdateMaybeBLockSelect,
+																								_bluedogtraining$bdt_elm$Form_Select$render(
+																									A2(
+																										_bluedogtraining$bdt_elm$Form_Select$setIsClearable,
+																										true,
+																										_bluedogtraining$bdt_elm$Form_Select$view(model.maybeBlockSelect)))),
+																							_1: {ctor: '[]'}
+																						}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: A3(
+																						_bluedogtraining$bdt_elm$Card$maybeBlock,
+																						_bluedogtraining$bdt_elm$Grid_Size$Six,
+																						_bluedogtraining$bdt_elm$Form_Select$getSelectedOption(model.maybeBlockSelect),
+																						_bluedogtraining$bdt_elm$View$maybeBlockView),
+																					_1: {ctor: '[]'}
+																				}
+																			},
+																			A3(
+																				_bluedogtraining$bdt_elm$Card$header,
+																				'Conditional Blocks',
+																				{ctor: '[]'},
+																				_bluedogtraining$bdt_elm$Card$view))),
+																	_1: {ctor: '[]'}
+																}
 															}),
 														_1: {ctor: '[]'}
 													}
@@ -40690,7 +41043,7 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _bluedogtraining$bdt_elm$Main$main !== 'undefined') {
-    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"DropZone":["Form.DropZone.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"FileReader.DataFormat":{"args":[],"tags":{"Text":["String"],"DataURL":[],"Base64":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.DropZone.Msg":{"args":[],"tags":{"Enter":[],"Remove":["Form.DropZone.File"],"Files":["List Form.DropZone.File"],"Leave":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"Form.DropZone.File":{"args":[],"type":"FileReader.File"},"FileReader.Error":{"args":[],"type":"{ code : Int, name : String, message : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"FileReader.File":{"args":[],"type":"{ lastModified : Time.Time , name : String , size : Int , mimeType : String , dataFormat : FileReader.DataFormat , data : Result.Result FileReader.Error String }"},"Time.Time":{"args":[],"type":"Float"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"DropZone":["Form.DropZone.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"FileReader.DataFormat":{"args":[],"tags":{"Text":["String"],"DataURL":[],"Base64":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.DropZone.Msg":{"args":[],"tags":{"Enter":[],"Remove":["FileReader.File"],"Add":["List FileReader.File"],"Leave":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"FileReader.Error":{"args":[],"type":"{ code : Int, name : String, message : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"FileReader.File":{"args":[],"type":"{ lastModified : Time.Time , name : String , size : Int , mimeType : String , dataFormat : FileReader.DataFormat , data : Result.Result FileReader.Error String }"},"Time.Time":{"args":[],"type":"Float"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

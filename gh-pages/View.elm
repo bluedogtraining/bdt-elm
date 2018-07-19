@@ -7,6 +7,8 @@ import Html.Styled.Attributes exposing (..)
 import Date
 import Time
 
+import MusicGenre exposing (MusicGenre)
+
 import Toasters
 
 import Form.Label as Label
@@ -425,7 +427,34 @@ view model =
                             , Button.view |> Button.green |> Button.text "save"
                             ]
                         |> Card.render
+                    , Card.view
+                        |> Card.header "Conditional Blocks" []
+                        |> Card.body
+                            [ Card.block Six
+                                [ Label.view "Preferred Music Genre"
+                                    |> Label.render
+                                , Select.view model.maybeBlockSelect
+                                    |> Select.setIsClearable True
+                                    |> Select.render
+                                    |> Html.map UpdateMaybeBLockSelect
+                                ]
+                            , Card.maybeBlock Six (Select.getSelectedOption model.maybeBlockSelect) maybeBlockView
+                            ]
+                        |> Card.render
                     ]
                 ]
             ]
+        ]
+
+
+maybeBlockView : MusicGenre -> Html Msg
+maybeBlockView musicGenre =
+    div
+        []
+        [ p
+            []
+            [ text <| "This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear)." ]
+        , p
+            []
+            [ text <| "Selected: " ++ toString musicGenre ]
         ]

@@ -1,4 +1,4 @@
-module Card exposing (view, viewIf, header, body, footer, block, blockSizes, render)
+module Card exposing (view, viewIf, header, body, footer, block, blockIf, maybeBlock, blockSizes, render)
 
 {-| Module to create Cards with Headers, CardBlocks and Footers
 
@@ -6,7 +6,7 @@ module Card exposing (view, viewIf, header, body, footer, block, blockSizes, ren
 @docs view, viewIf
 
 # Create blocks
-@docs header, body, footer, block, blockSizes
+@docs header, body, footer, block, blockIf, maybeBlock, blockSizes
 
 # Render
 @docs render
@@ -104,6 +104,30 @@ block cols children =
     CardBlock <| CardBlockConfig cols [] children
 
 
+{-| Add a block conditionally
+-}
+blockIf : Cols -> Bool -> Html msg -> CardBlock msg
+blockIf cols isShown child =
+    case isShown of
+        False ->
+            CardBlock <| CardBlockConfig cols [] []
+
+        True ->
+            CardBlock <| CardBlockConfig cols [] [ child ]
+
+
+{-| Add a block and apply Just
+-}
+maybeBlock : Cols -> Maybe a -> (a -> Html msg) -> CardBlock msg
+maybeBlock cols maybe child =
+    case maybe of
+        Nothing ->
+            CardBlock <| CardBlockConfig cols [] []
+
+        Just a ->
+            CardBlock <| CardBlockConfig cols [] [ child a ]
+
+
 {-| Add a block of varying sizes
 -}
 blockSizes : Cols -> List (Size, Cols) -> List (Html msg) -> CardBlock msg
@@ -139,6 +163,6 @@ render (Config viewConfig) =
 renderCardBlock : CardBlock msg -> Html msg
 renderCardBlock (CardBlock cardBlockConfig) =
 
-    div
+    Html.divIf (not <| List.isEmpty cardBlockConfig.children)
         [ Css.block cardBlockConfig.defaultCols cardBlockConfig.sizes ]
         cardBlockConfig.children

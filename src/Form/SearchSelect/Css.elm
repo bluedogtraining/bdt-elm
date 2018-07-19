@@ -33,7 +33,7 @@ optionList =
     css <|
         Css.selectOptionList
         ++
-        [ top <| px 41
+        [ top <| px 39
         ]
 
 
@@ -54,7 +54,7 @@ infoMessage =
         , alignItems center
         , justifyContent center
         , position absolute
-        , top <| px 41
+        , top <| px 39
         , left <| px 0
         , right <| px 0
         , zIndex <| int 10

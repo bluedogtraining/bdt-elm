@@ -26,6 +26,7 @@ import Material.Icons.Action as MaterialIcon
 import Material.Icons.Image as MaterialIcon
 import Material.Icons.File as MaterialIcon
 import Material.Icons.Av as MaterialIcon
+import Material.Icons.Alert as MaterialIcon
 
 
 {-| Available Icons
@@ -49,6 +50,7 @@ type Icon
     | Lock
     | LockOpen
     | Add
+    | Warning
 
 
 {-| Render an icon
@@ -112,6 +114,9 @@ render icon size color =
 
         Add ->
             renderIcon size color MaterialIcon.add
+
+        Warning ->
+            renderIcon size color MaterialIcon.warning
 
 
 renderIcon : Int -> Color -> (Color -> Int -> Svg msg) -> Html msg

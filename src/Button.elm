@@ -174,7 +174,7 @@ render (Button config) =
 
     a
         [ Css.button config.size config.content config.color config.isDisabled config.isLoading
-        , maybeAttribute Html.onClick config.onClick
+        , maybeAttribute Html.onClick config.onClick ? not config.isDisabled
         , Html.href config.url ? not (String.isEmpty config.url)
         , target "_blank" ? not (String.isEmpty config.url)
         ]

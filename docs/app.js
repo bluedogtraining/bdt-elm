@@ -24037,7 +24037,10 @@ var _bluedogtraining$bdt_elm$Button$render = function (_p2) {
 			_0: A5(_bluedogtraining$bdt_elm$Button_Css$button, _p4.size, _p4.content, _p4.color, _p4.isDisabled, _p4.isLoading),
 			_1: {
 				ctor: '::',
-				_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Events$onClick, _p4.onClick),
+				_0: A2(
+					_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+					A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Events$onClick, _p4.onClick),
+					!_p4.isDisabled),
 				_1: {
 					ctor: '::',
 					_0: A2(

@@ -11,6 +11,7 @@ input isError isLocked =
     [ boxSizing borderBox
     , border3 (px 1) solid (hex <| if isError && not isLocked then "d9534f" else "cccccc")
     , width <| pct 100
+    , maxWidth <| pct 100
     , height <| Css.rem 2
     , padding2 (Css.rem 0) (Css.rem 0.4)
     , margin2 (Css.rem 0.5) (Css.rem 0)

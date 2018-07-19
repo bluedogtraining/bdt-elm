@@ -27,6 +27,8 @@ import String.Extra as String
 import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
+import Form.Css as Css
+
 
 -- MODEL --
 
@@ -103,8 +105,7 @@ inputField : State -> ViewState -> VirtualDom.Node Msg
 inputField state viewState =
 
     textarea
-        [ class "bdt-elm input"
-        , classList [("locked", viewState.isLocked), ("error", viewState.isError)]
+        [ css <| Css.input viewState.isError viewState.isLocked
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input

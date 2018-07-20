@@ -19467,7 +19467,7 @@ var _bluedogtraining$bdt_elm$InfixPrecedence$InfixPrecedence = function (a) {
 };
 
 var _bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeView = F2(
-	function (f, maybe) {
+	function (maybe, f) {
 		var _p0 = maybe;
 		if (_p0.ctor === 'Nothing') {
 			return _rtfeldman$elm_css$Html_Styled$text('');
@@ -23877,49 +23877,54 @@ var _bluedogtraining$bdt_elm$Button_Css$button = F5(
 														(isDisabled || isLoading) ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$height(
-															_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
+														_0: _rtfeldman$elm_css$Css$opacity(
+															isDisabled ? _rtfeldman$elm_css$Css$num(0.4) : _rtfeldman$elm_css$Css$num(1)),
 														_1: {
 															ctor: '::',
-															_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
+															_0: _rtfeldman$elm_css$Css$height(
+																_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_rtfeldman$elm_css$Css$padding2,
-																	_rtfeldman$elm_css$Css$px(0),
-																	A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
+																_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
 																_1: {
 																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+																	_0: A2(
+																		_rtfeldman$elm_css$Css$padding2,
+																		_rtfeldman$elm_css$Css$px(0),
+																		A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
 																	_1: {
 																		ctor: '::',
-																		_0: A2(
-																			_rtfeldman$elm_css$Css$margin2,
-																			_rtfeldman$elm_css$Css$px(0),
-																			_rtfeldman$elm_css$Css$rem(0.2)),
+																		_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
 																		_1: {
 																			ctor: '::',
-																			_0: _rtfeldman$elm_css$Css$fontSize(
-																				_rtfeldman$elm_css$Css$rem(0.8)),
+																			_0: A2(
+																				_rtfeldman$elm_css$Css$margin2,
+																				_rtfeldman$elm_css$Css$px(0),
+																				_rtfeldman$elm_css$Css$rem(0.2)),
 																			_1: {
 																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
+																				_0: _rtfeldman$elm_css$Css$fontSize(
+																					_rtfeldman$elm_css$Css$rem(0.8)),
 																				_1: {
 																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Css$textDecoration(_rtfeldman$elm_css$Css$none),
+																					_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
 																					_1: {
 																						ctor: '::',
-																						_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
+																						_0: _rtfeldman$elm_css$Css$textDecoration(_rtfeldman$elm_css$Css$none),
 																						_1: {
 																							ctor: '::',
-																							_0: _rtfeldman$elm_css$Css$hover(
-																								{
-																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Css$backgroundColor(
-																										_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
-																									_1: {ctor: '[]'}
-																								}),
-																							_1: {ctor: '[]'}
+																							_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
+																							_1: {
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Css$hover(
+																									{
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Css$backgroundColor(
+																											_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							}
 																						}
 																					}
 																				}
@@ -24959,7 +24964,7 @@ var _bluedogtraining$bdt_elm$Card$block = F2(
 				children));
 	});
 var _bluedogtraining$bdt_elm$Card$blockIf = F3(
-	function (cols, isShown, child) {
+	function (cols, isShown, children) {
 		var _p12 = isShown;
 		if (_p12 === false) {
 			return _bluedogtraining$bdt_elm$Card$CardBlock(
@@ -24974,15 +24979,11 @@ var _bluedogtraining$bdt_elm$Card$blockIf = F3(
 					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
 					cols,
 					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: child,
-						_1: {ctor: '[]'}
-					}));
+					children));
 		}
 	});
 var _bluedogtraining$bdt_elm$Card$maybeBlock = F3(
-	function (cols, maybe, child) {
+	function (cols, maybe, children) {
 		var _p13 = maybe;
 		if (_p13.ctor === 'Nothing') {
 			return _bluedogtraining$bdt_elm$Card$CardBlock(
@@ -24997,11 +24998,7 @@ var _bluedogtraining$bdt_elm$Card$maybeBlock = F3(
 					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
 					cols,
 					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: child(_p13._0),
-						_1: {ctor: '[]'}
-					}));
+					children(_p13._0)));
 		}
 	});
 var _bluedogtraining$bdt_elm$Card$blockSizes = F3(
@@ -39527,36 +39524,33 @@ var _bluedogtraining$bdt_elm$Toggle$viewWithLabel = F3(
 	});
 
 var _bluedogtraining$bdt_elm$View$maybeBlockView = function (musicGenre) {
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
-		{ctor: '[]'},
-		{
+	return {
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Html_Styled$p,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear).'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Html_Styled$p,
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled$text('This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear).'),
+					_0: _rtfeldman$elm_css$Html_Styled$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Selected: ',
+							_elm_lang$core$Basics$toString(musicGenre))),
 					_1: {ctor: '[]'}
 				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$p,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'Selected: ',
-								_elm_lang$core$Basics$toString(musicGenre))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
+			_1: {ctor: '[]'}
+		}
+	};
 };
 var _bluedogtraining$bdt_elm$View$view = function (model) {
 	return A2(

@@ -447,14 +447,12 @@ view model =
         ]
 
 
-maybeBlockView : MusicGenre -> Html Msg
+maybeBlockView : MusicGenre -> List (Html Msg)
 maybeBlockView musicGenre =
-    div
+    [ p
         []
-        [ p
-            []
-            [ text <| "This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear)." ]
-        , p
-            []
-            [ text <| "Selected: " ++ toString musicGenre ]
-        ]
+        [ text <| "This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear)." ]
+    , p
+        []
+        [ text <| "Selected: " ++ toString musicGenre ]
+    ]

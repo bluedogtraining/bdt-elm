@@ -72,8 +72,8 @@ divIf show attributes children =
 
     maybeView view model.myMaybe
 -}
-maybeView : (a -> Html msg) -> Maybe a -> Html msg
-maybeView f maybe =
+maybeView : Maybe a -> (a -> Html msg) -> Html msg
+maybeView maybe f =
 
     case maybe of
         Nothing ->

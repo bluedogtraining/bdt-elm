@@ -363,7 +363,7 @@ closed state viewState =
    div
         [ Css.container ]
         [ div
-            [ Css.input viewState.isLocked viewState.isError
+            [ Css.input viewState.isError viewState.isLocked
             , tabindex 0 ? not viewState.isLocked
             , onFocus (Open viewState.minDate viewState.maxDate viewState.includeTime) ? not viewState.isLocked
             , onClick (Open viewState.minDate viewState.maxDate viewState.includeTime) ? not viewState.isLocked

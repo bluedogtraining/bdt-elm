@@ -31490,7 +31490,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$closed = F2(
 						_rtfeldman$elm_css$Html_Styled$div,
 						{
 							ctor: '::',
-							_0: A2(_bluedogtraining$bdt_elm$Form_DatePicker_Css$input, viewState.isLocked, viewState.isError),
+							_0: A2(_bluedogtraining$bdt_elm$Form_DatePicker_Css$input, viewState.isError, viewState.isLocked),
 							_1: {
 								ctor: '::',
 								_0: A2(
@@ -37213,7 +37213,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$closed = F2(
 						_rtfeldman$elm_css$Html_Styled$input,
 						{
 							ctor: '::',
-							_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Css$input, viewState.isLocked, viewState.isError),
+							_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Css$input, viewState.isError, viewState.isLocked),
 							_1: {
 								ctor: '::',
 								_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Css$title(

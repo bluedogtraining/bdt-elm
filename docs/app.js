@@ -34171,7 +34171,9 @@ var _bluedogtraining$bdt_elm$Form_Input_Internal$setPlaceholder = F2(
 	function (placeholder, viewState) {
 		return _elm_lang$core$Native_Utils.update(
 			viewState,
-			{placeholder: placeholder});
+			{
+				placeholder: _elm_lang$core$Maybe$Just(placeholder)
+			});
 	});
 var _bluedogtraining$bdt_elm$Form_Input_Internal$setMaxLength = F2(
 	function (maxLength, viewState) {
@@ -34271,7 +34273,7 @@ var _bluedogtraining$bdt_elm$Form_Input_Internal$setEmailType = function (viewSt
 		{inputType: _bluedogtraining$bdt_elm$Form_Input_Internal$Email});
 };
 var _bluedogtraining$bdt_elm$Form_Input_Internal$Text = {ctor: 'Text'};
-var _bluedogtraining$bdt_elm$Form_Input_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: '', isLocked: false, isError: false, inputType: _bluedogtraining$bdt_elm$Form_Input_Internal$Text, id: _elm_lang$core$Maybe$Nothing};
+var _bluedogtraining$bdt_elm$Form_Input_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: _elm_lang$core$Maybe$Nothing, isLocked: false, isError: false, inputType: _bluedogtraining$bdt_elm$Form_Input_Internal$Text, id: _elm_lang$core$Maybe$Nothing};
 var _bluedogtraining$bdt_elm$Form_Input_Internal$setTextType = function (viewState) {
 	return _elm_lang$core$Native_Utils.update(
 		viewState,
@@ -34300,7 +34302,7 @@ var _bluedogtraining$bdt_elm$Form_Input_Internal$inputField = F2(
 								_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_Input_Internal$Input),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
+									_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$placeholder, viewState.placeholder),
 									_1: {
 										ctor: '::',
 										_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
@@ -34532,7 +34534,9 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$setPlaceholder = F2(
 	function (placeholder, viewState) {
 		return _elm_lang$core$Native_Utils.update(
 			viewState,
-			{placeholder: placeholder});
+			{
+				placeholder: _elm_lang$core$Maybe$Just(placeholder)
+			});
 	});
 var _bluedogtraining$bdt_elm$Form_IntInput_Internal$setMaxLength = F2(
 	function (maxLength, viewState) {
@@ -34597,7 +34601,7 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$update = F2(
 				{bypassLazy: state.bypassLazy + 1});
 		}
 	});
-var _bluedogtraining$bdt_elm$Form_IntInput_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: '', isLocked: false, isError: false, id: _elm_lang$core$Maybe$Nothing};
+var _bluedogtraining$bdt_elm$Form_IntInput_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: _elm_lang$core$Maybe$Nothing, isLocked: false, isError: false, id: _elm_lang$core$Maybe$Nothing};
 var _bluedogtraining$bdt_elm$Form_IntInput_Internal$init = {
 	value: _bluedogtraining$bdt_elm$Resettable$init(''),
 	bypassLazy: 0
@@ -34633,7 +34637,7 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$inputField = F2(
 								_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_IntInput_Internal$Input),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
+									_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$placeholder, viewState.placeholder),
 									_1: {
 										ctor: '::',
 										_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),

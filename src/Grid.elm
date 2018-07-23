@@ -10,6 +10,8 @@ module Grid exposing (container, row, col, colSizes)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 
+import Html.Styled.Bdt as Html
+
 import Grid.Css as Css
 import Grid.Size exposing (Size, Cols)
 
@@ -67,6 +69,6 @@ colSizes cols sizes children =
 renderCol : Col msg -> Html msg
 renderCol (Col colConfig) =
 
-    div
+    Html.divIf (not <| List.isEmpty colConfig.children)
         [ Css.col colConfig.defaultCols colConfig.sizes ]
         colConfig.children

@@ -38,8 +38,10 @@ button size content color isDisabled isLoading =
         , verticalAlign middle
         , textDecoration none
         , property "user-select" "none"
+        , whiteSpace noWrap
+        , overflow hidden
         , hover
-            [ backgroundColor (lightenColor color)
+            [ backgroundColor <| lightenColor color
             ]
         ]
 
@@ -65,7 +67,7 @@ buttonPadding : Content -> Size -> Rem
 buttonPadding content size =
 
     case (content, size) of
-        (Text _, Small) -> Css.rem 0.3
+        (Text _, Small) -> Css.rem 0.5
         (Text _, Normal) -> Css.rem 0.8
         _ -> Css.rem 0
 

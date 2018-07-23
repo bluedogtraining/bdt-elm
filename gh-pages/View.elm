@@ -95,6 +95,7 @@ view model =
                                     |> Label.render
                                 , Select.view model.select
                                     |> Select.setIsClearable True
+                                    |> Select.setToLabel MusicGenre.toLabel
                                     |> Select.render
                                     |> Html.map SelectMsg
                                 , div

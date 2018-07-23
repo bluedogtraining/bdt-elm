@@ -1,4 +1,4 @@
-module MusicGenre exposing (MusicGenre (..), asList, asNonempty)
+module MusicGenre exposing (MusicGenre (..), asList, toLabel, asNonempty)
 
 import List.Nonempty as Nonempty exposing (Nonempty)
 
@@ -9,6 +9,7 @@ type MusicGenre
     | Blues
     | Jazz
     | Pop
+    | BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop
 
 
 asList : List MusicGenre
@@ -18,7 +19,20 @@ asList =
     , Blues
     , Jazz
     , Pop
+    , BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop
     ]
+
+
+toLabel : MusicGenre -> String
+toLabel genre =
+
+    case genre of
+
+        BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop ->
+            "Blackened Heavy progressive Alternative New-age Rockabilly Glam-core Retro-folk Neo-soul Acid-funk Doo-wop Electrical Dream-pop"
+
+        _ ->
+            toString genre
 
 
 asNonempty : Nonempty MusicGenre

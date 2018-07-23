@@ -43,6 +43,10 @@ title isFaded =
     , fontWeight (int 200) ? isFaded
     , fontFamilies
         [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
+    , whiteSpace noWrap
+    , textOverflow ellipsis
+    , overflowX hidden
+    , maxWidth <| pct 100
     ]
 
 

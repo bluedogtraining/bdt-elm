@@ -1,4 +1,4 @@
-module Card exposing (view, viewIf, header, body, footer, block, blockIf, maybeBlock, blockSizes, render)
+module Card exposing (view, viewIf, header, body, footer, CardBlock, block, blockIf, maybeBlock, blockSizes, render)
 
 {-| Module to create Cards with Headers, CardBlocks and Footers
 
@@ -6,7 +6,7 @@ module Card exposing (view, viewIf, header, body, footer, block, blockIf, maybeB
 @docs view, viewIf
 
 # Create blocks
-@docs header, body, footer, block, blockIf, maybeBlock, blockSizes
+@docs header, body, footer, CardBlock, block, blockIf, maybeBlock, blockSizes
 
 # Render
 @docs render
@@ -86,6 +86,8 @@ footer buttons (Config viewConfig) =
     Config { viewConfig | footerButtons = buttons }
 
 
+{-| Type hint a function that returns a card block
+-}
 type CardBlock msg
     = CardBlock (CardBlockConfig msg)
 

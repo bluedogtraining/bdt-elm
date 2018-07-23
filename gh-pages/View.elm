@@ -263,7 +263,7 @@ view model =
                                             ]
                                         |> Modal.footer
                                             [ Button.view
-                                                |> Button.text "Cancel"
+                                                |> Button.text "Cancel"c
                                                 |> Button.onClick CloseLgModal
                                                 |> Button.red
                                             , Button.view

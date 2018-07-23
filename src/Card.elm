@@ -6,7 +6,7 @@ module Card exposing (view, viewIf, header, body, footer, CardBlock, block, bloc
 @docs view, viewIf
 
 # Create blocks
-@docs header, body, footer, block, blockIf, maybeBlock, blockSizes
+@docs header, body, footer, CardBlock, block, blockIf, maybeBlock, blockSizes
 
 # Render
 @docs render

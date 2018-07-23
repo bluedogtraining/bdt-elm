@@ -281,7 +281,14 @@ view model =
                                 [ Grid.row
                                     [ Grid.col Six
                                         [ Toggle.view model.toggle1 Toggle1
-                                        , Toggle.viewWithLabel "Toggle Me" model.toggle2 Toggle2
+                                            |> Toggle.render
+                                        , Toggle.view model.toggle2 Toggle2
+                                            |> Toggle.label "Toggle Me"
+                                            |> Toggle.render
+                                        , Toggle.view model.toggle3 DisabledToggle
+                                            |> Toggle.isDisabled True
+                                            |> Toggle.label "Disabled"
+                                            |> Toggle.render
                                         ]
                                     , Grid.col Six
                                         [ Button.view

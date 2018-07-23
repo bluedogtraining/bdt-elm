@@ -30,6 +30,7 @@ type alias Model =
     , textArea : TextArea.Model
     , toggle1 : Bool
     , toggle2 : Bool
+    , toggle3 : Bool
     , dropZone : DropZone.Model
     , name : Input.Model
     , startDate : DatePicker.Model
@@ -57,6 +58,7 @@ initialModel =
     , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [("[]", "☐")]
     , toggle1 = False
     , toggle2 = False
+    , toggle3 = False
     , dropZone = DropZone.init
     , name = Input.init
     , startDate = DatePicker.init

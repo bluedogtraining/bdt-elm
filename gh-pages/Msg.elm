@@ -37,6 +37,7 @@ type Msg
     | UpdateCountryOfBirth (SearchSelect.Msg Country)
     | Toggle1
     | Toggle2
+    | DisabledToggle
     | OpenSmModal
     | CloseSmModal
     | OpenLgModal

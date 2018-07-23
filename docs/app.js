@@ -23776,7 +23776,7 @@ var _bluedogtraining$bdt_elm$Button_Css$buttonPadding = F2(
 		var _p0 = {ctor: '_Tuple2', _0: content, _1: size};
 		if ((_p0.ctor === '_Tuple2') && (_p0._0.ctor === 'Text')) {
 			if (_p0._1.ctor === 'Small') {
-				return _rtfeldman$elm_css$Css$rem(0.3);
+				return _rtfeldman$elm_css$Css$rem(0.5);
 			} else {
 				return _rtfeldman$elm_css$Css$rem(0.8);
 			}
@@ -23916,14 +23916,22 @@ var _bluedogtraining$bdt_elm$Button_Css$button = F5(
 																							_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
 																							_1: {
 																								ctor: '::',
-																								_0: _rtfeldman$elm_css$Css$hover(
-																									{
+																								_0: _rtfeldman$elm_css$Css$whiteSpace(_rtfeldman$elm_css$Css$noWrap),
+																								_1: {
+																									ctor: '::',
+																									_0: _rtfeldman$elm_css$Css$overflow(_rtfeldman$elm_css$Css$hidden),
+																									_1: {
 																										ctor: '::',
-																										_0: _rtfeldman$elm_css$Css$backgroundColor(
-																											_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
+																										_0: _rtfeldman$elm_css$Css$hover(
+																											{
+																												ctor: '::',
+																												_0: _rtfeldman$elm_css$Css$backgroundColor(
+																													_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
+																												_1: {ctor: '[]'}
+																											}),
 																										_1: {ctor: '[]'}
-																									}),
-																								_1: {ctor: '[]'}
+																									}
+																								}
 																							}
 																						}
 																					}
@@ -25290,14 +25298,22 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 													_rtfeldman$elm_css$Css$rem(0.8)),
 												_1: {
 													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$focus(
-														{
+													_0: _rtfeldman$elm_css$Css$whiteSpace(_rtfeldman$elm_css$Css$noWrap),
+													_1: {
+														ctor: '::',
+														_0: _rtfeldman$elm_css$Css$overflow(_rtfeldman$elm_css$Css$hidden),
+														_1: {
 															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$outlineWidth(
-																_rtfeldman$elm_css$Css$rem(0)),
+															_0: _rtfeldman$elm_css$Css$focus(
+																{
+																	ctor: '::',
+																	_0: _rtfeldman$elm_css$Css$outlineWidth(
+																		_rtfeldman$elm_css$Css$rem(0)),
+																	_1: {ctor: '[]'}
+																}),
 															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
+														}
+													}
 												}
 											}
 										}
@@ -37947,8 +37963,9 @@ var _bluedogtraining$bdt_elm$Form_TextArea$setId = F2(
 var _bluedogtraining$bdt_elm$Grid$renderCol = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1._0;
-	return A2(
-		_rtfeldman$elm_css$Html_Styled$div,
+	return A3(
+		_bluedogtraining$bdt_elm$Html_Styled_Bdt$divIf,
+		!_elm_lang$core$List$isEmpty(_p2.children),
 		{
 			ctor: '::',
 			_0: A2(_bluedogtraining$bdt_elm$Grid_Css$col, _p2.defaultCols, _p2.sizes),

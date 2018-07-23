@@ -106,26 +106,26 @@ block cols children =
 
 {-| Add a block conditionally
 -}
-blockIf : Cols -> Bool -> Html msg -> CardBlock msg
-blockIf cols isShown child =
+blockIf : Cols -> Bool -> List (Html msg) -> CardBlock msg
+blockIf cols isShown children =
     case isShown of
         False ->
             CardBlock <| CardBlockConfig cols [] []
 
         True ->
-            CardBlock <| CardBlockConfig cols [] [ child ]
+            CardBlock <| CardBlockConfig cols [] children
 
 
 {-| Add a block and apply Just
 -}
-maybeBlock : Cols -> Maybe a -> (a -> Html msg) -> CardBlock msg
-maybeBlock cols maybe child =
+maybeBlock : Cols -> Maybe a -> (a -> List (Html msg)) -> CardBlock msg
+maybeBlock cols maybe children =
     case maybe of
         Nothing ->
             CardBlock <| CardBlockConfig cols [] []
 
         Just a ->
-            CardBlock <| CardBlockConfig cols [] [ child a ]
+            CardBlock <| CardBlockConfig cols [] ( children a )
 
 
 {-| Add a block of varying sizes

@@ -19467,7 +19467,7 @@ var _bluedogtraining$bdt_elm$InfixPrecedence$InfixPrecedence = function (a) {
 };
 
 var _bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeView = F2(
-	function (f, maybe) {
+	function (maybe, f) {
 		var _p0 = maybe;
 		if (_p0.ctor === 'Nothing') {
 			return _rtfeldman$elm_css$Html_Styled$text('');
@@ -23877,49 +23877,54 @@ var _bluedogtraining$bdt_elm$Button_Css$button = F5(
 														(isDisabled || isLoading) ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$height(
-															_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
+														_0: _rtfeldman$elm_css$Css$opacity(
+															isDisabled ? _rtfeldman$elm_css$Css$num(0.4) : _rtfeldman$elm_css$Css$num(1)),
 														_1: {
 															ctor: '::',
-															_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
+															_0: _rtfeldman$elm_css$Css$height(
+																_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_rtfeldman$elm_css$Css$padding2,
-																	_rtfeldman$elm_css$Css$px(0),
-																	A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
+																_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
 																_1: {
 																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+																	_0: A2(
+																		_rtfeldman$elm_css$Css$padding2,
+																		_rtfeldman$elm_css$Css$px(0),
+																		A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
 																	_1: {
 																		ctor: '::',
-																		_0: A2(
-																			_rtfeldman$elm_css$Css$margin2,
-																			_rtfeldman$elm_css$Css$px(0),
-																			_rtfeldman$elm_css$Css$rem(0.2)),
+																		_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
 																		_1: {
 																			ctor: '::',
-																			_0: _rtfeldman$elm_css$Css$fontSize(
-																				_rtfeldman$elm_css$Css$rem(0.8)),
+																			_0: A2(
+																				_rtfeldman$elm_css$Css$margin2,
+																				_rtfeldman$elm_css$Css$px(0),
+																				_rtfeldman$elm_css$Css$rem(0.2)),
 																			_1: {
 																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
+																				_0: _rtfeldman$elm_css$Css$fontSize(
+																					_rtfeldman$elm_css$Css$rem(0.8)),
 																				_1: {
 																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Css$textDecoration(_rtfeldman$elm_css$Css$none),
+																					_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
 																					_1: {
 																						ctor: '::',
-																						_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
+																						_0: _rtfeldman$elm_css$Css$textDecoration(_rtfeldman$elm_css$Css$none),
 																						_1: {
 																							ctor: '::',
-																							_0: _rtfeldman$elm_css$Css$hover(
-																								{
-																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Css$backgroundColor(
-																										_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
-																									_1: {ctor: '[]'}
-																								}),
-																							_1: {ctor: '[]'}
+																							_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
+																							_1: {
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Css$hover(
+																									{
+																										ctor: '::',
+																										_0: _rtfeldman$elm_css$Css$backgroundColor(
+																											_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {ctor: '[]'}
+																							}
 																						}
 																					}
 																				}
@@ -24959,7 +24964,7 @@ var _bluedogtraining$bdt_elm$Card$block = F2(
 				children));
 	});
 var _bluedogtraining$bdt_elm$Card$blockIf = F3(
-	function (cols, isShown, child) {
+	function (cols, isShown, children) {
 		var _p12 = isShown;
 		if (_p12 === false) {
 			return _bluedogtraining$bdt_elm$Card$CardBlock(
@@ -24974,15 +24979,11 @@ var _bluedogtraining$bdt_elm$Card$blockIf = F3(
 					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
 					cols,
 					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: child,
-						_1: {ctor: '[]'}
-					}));
+					children));
 		}
 	});
 var _bluedogtraining$bdt_elm$Card$maybeBlock = F3(
-	function (cols, maybe, child) {
+	function (cols, maybe, children) {
 		var _p13 = maybe;
 		if (_p13.ctor === 'Nothing') {
 			return _bluedogtraining$bdt_elm$Card$CardBlock(
@@ -24997,11 +24998,7 @@ var _bluedogtraining$bdt_elm$Card$maybeBlock = F3(
 					_bluedogtraining$bdt_elm$Card$CardBlockConfig,
 					cols,
 					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: child(_p13._0),
-						_1: {ctor: '[]'}
-					}));
+					children(_p13._0)));
 		}
 	});
 var _bluedogtraining$bdt_elm$Card$blockSizes = F3(
@@ -31490,7 +31487,7 @@ var _bluedogtraining$bdt_elm$Form_DatePicker_Internal$closed = F2(
 						_rtfeldman$elm_css$Html_Styled$div,
 						{
 							ctor: '::',
-							_0: A2(_bluedogtraining$bdt_elm$Form_DatePicker_Css$input, viewState.isLocked, viewState.isError),
+							_0: A2(_bluedogtraining$bdt_elm$Form_DatePicker_Css$input, viewState.isError, viewState.isLocked),
 							_1: {
 								ctor: '::',
 								_0: A2(
@@ -34174,7 +34171,9 @@ var _bluedogtraining$bdt_elm$Form_Input_Internal$setPlaceholder = F2(
 	function (placeholder, viewState) {
 		return _elm_lang$core$Native_Utils.update(
 			viewState,
-			{placeholder: placeholder});
+			{
+				placeholder: _elm_lang$core$Maybe$Just(placeholder)
+			});
 	});
 var _bluedogtraining$bdt_elm$Form_Input_Internal$setMaxLength = F2(
 	function (maxLength, viewState) {
@@ -34274,7 +34273,7 @@ var _bluedogtraining$bdt_elm$Form_Input_Internal$setEmailType = function (viewSt
 		{inputType: _bluedogtraining$bdt_elm$Form_Input_Internal$Email});
 };
 var _bluedogtraining$bdt_elm$Form_Input_Internal$Text = {ctor: 'Text'};
-var _bluedogtraining$bdt_elm$Form_Input_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: '', isLocked: false, isError: false, inputType: _bluedogtraining$bdt_elm$Form_Input_Internal$Text, id: _elm_lang$core$Maybe$Nothing};
+var _bluedogtraining$bdt_elm$Form_Input_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: _elm_lang$core$Maybe$Nothing, isLocked: false, isError: false, inputType: _bluedogtraining$bdt_elm$Form_Input_Internal$Text, id: _elm_lang$core$Maybe$Nothing};
 var _bluedogtraining$bdt_elm$Form_Input_Internal$setTextType = function (viewState) {
 	return _elm_lang$core$Native_Utils.update(
 		viewState,
@@ -34303,7 +34302,7 @@ var _bluedogtraining$bdt_elm$Form_Input_Internal$inputField = F2(
 								_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_Input_Internal$Input),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
+									_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$placeholder, viewState.placeholder),
 									_1: {
 										ctor: '::',
 										_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
@@ -34535,7 +34534,9 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$setPlaceholder = F2(
 	function (placeholder, viewState) {
 		return _elm_lang$core$Native_Utils.update(
 			viewState,
-			{placeholder: placeholder});
+			{
+				placeholder: _elm_lang$core$Maybe$Just(placeholder)
+			});
 	});
 var _bluedogtraining$bdt_elm$Form_IntInput_Internal$setMaxLength = F2(
 	function (maxLength, viewState) {
@@ -34600,7 +34601,7 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$update = F2(
 				{bypassLazy: state.bypassLazy + 1});
 		}
 	});
-var _bluedogtraining$bdt_elm$Form_IntInput_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: '', isLocked: false, isError: false, id: _elm_lang$core$Maybe$Nothing};
+var _bluedogtraining$bdt_elm$Form_IntInput_Internal$initialViewState = {maxLength: _elm_lang$core$Maybe$Nothing, placeholder: _elm_lang$core$Maybe$Nothing, isLocked: false, isError: false, id: _elm_lang$core$Maybe$Nothing};
 var _bluedogtraining$bdt_elm$Form_IntInput_Internal$init = {
 	value: _bluedogtraining$bdt_elm$Resettable$init(''),
 	bypassLazy: 0
@@ -34636,7 +34637,7 @@ var _bluedogtraining$bdt_elm$Form_IntInput_Internal$inputField = F2(
 								_0: _rtfeldman$elm_css$Html_Styled_Events$onInput(_bluedogtraining$bdt_elm$Form_IntInput_Internal$Input),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Html_Styled_Attributes$placeholder(viewState.placeholder),
+									_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$placeholder, viewState.placeholder),
 									_1: {
 										ctor: '::',
 										_0: A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Attributes$maxlength, viewState.maxLength),
@@ -37213,7 +37214,7 @@ var _bluedogtraining$bdt_elm$Form_SearchSelect_Internal$closed = F2(
 						_rtfeldman$elm_css$Html_Styled$input,
 						{
 							ctor: '::',
-							_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Css$input, viewState.isLocked, viewState.isError),
+							_0: A2(_bluedogtraining$bdt_elm$Form_SearchSelect_Css$input, viewState.isError, viewState.isLocked),
 							_1: {
 								ctor: '::',
 								_0: _bluedogtraining$bdt_elm$Form_SearchSelect_Css$title(
@@ -38369,6 +38370,7 @@ var _bluedogtraining$bdt_elm$Msg$CloseLgModal = {ctor: 'CloseLgModal'};
 var _bluedogtraining$bdt_elm$Msg$OpenLgModal = {ctor: 'OpenLgModal'};
 var _bluedogtraining$bdt_elm$Msg$CloseSmModal = {ctor: 'CloseSmModal'};
 var _bluedogtraining$bdt_elm$Msg$OpenSmModal = {ctor: 'OpenSmModal'};
+var _bluedogtraining$bdt_elm$Msg$DisabledToggle = {ctor: 'DisabledToggle'};
 var _bluedogtraining$bdt_elm$Msg$Toggle2 = {ctor: 'Toggle2'};
 var _bluedogtraining$bdt_elm$Msg$Toggle1 = {ctor: 'Toggle1'};
 var _bluedogtraining$bdt_elm$Msg$UpdateCountryOfBirth = function (a) {
@@ -38443,6 +38445,7 @@ var _bluedogtraining$bdt_elm$Model$initialModel = {
 		A2(_bluedogtraining$bdt_elm$Form_TextArea$setSubstituteTabs, true, _bluedogtraining$bdt_elm$Form_TextArea$init)),
 	toggle1: false,
 	toggle2: false,
+	toggle3: false,
 	dropZone: _bluedogtraining$bdt_elm$Form_DropZone$init,
 	name: _bluedogtraining$bdt_elm$Form_Input$init,
 	startDate: _bluedogtraining$bdt_elm$Form_DatePicker$init,
@@ -38475,7 +38478,9 @@ var _bluedogtraining$bdt_elm$Model$Model = function (a) {
 																			return function (t) {
 																				return function (u) {
 																					return function (v) {
-																						return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, dropZone: n, name: o, startDate: p, email: q, preferredGenre: r, countryOfBirth: s, modalSmOpen: t, modalLgOpen: u, maybeBlockSelect: v};
+																						return function (w) {
+																							return {toasters: a, input: b, intInput: c, floatInput: d, select: e, multiSelect: f, searchSelect: g, datePicker: h, datePicker2: i, datePicker3: j, textArea: k, toggle1: l, toggle2: m, toggle3: n, dropZone: o, name: p, startDate: q, email: r, preferredGenre: s, countryOfBirth: t, modalSmOpen: u, modalLgOpen: v, maybeBlockSelect: w};
+																						};
 																					};
 																				};
 																			};
@@ -38663,6 +38668,13 @@ var _bluedogtraining$bdt_elm$Update$update = F2(
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{toggle2: !model.toggle2}),
+					{ctor: '[]'});
+			case 'DisabledToggle':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{toggle3: !model.toggle3}),
 					{ctor: '[]'});
 			case 'DropZone':
 				return A2(
@@ -39287,9 +39299,56 @@ var _bluedogtraining$bdt_elm$Modal$blockSizes = F3(
 var _bluedogtraining$bdt_elm$Toggle_Css$label = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
 		ctor: '::',
-		_0: _rtfeldman$elm_css$Css$marginLeft(
-			_rtfeldman$elm_css$Css$px(5)),
-		_1: {ctor: '[]'}
+		_0: _rtfeldman$elm_css$Css$fontFamilies(
+			{
+				ctor: '::',
+				_0: '-apple-system',
+				_1: {
+					ctor: '::',
+					_0: 'system-ui',
+					_1: {
+						ctor: '::',
+						_0: 'BlinkMacSystemFont',
+						_1: {
+							ctor: '::',
+							_0: 'Segoe UI',
+							_1: {
+								ctor: '::',
+								_0: 'Roboto',
+								_1: {
+									ctor: '::',
+									_0: 'Helvetica Neue',
+									_1: {
+										ctor: '::',
+										_0: 'Arial',
+										_1: {
+											ctor: '::',
+											_0: 'sans-serif',
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}),
+		_1: {
+			ctor: '::',
+			_0: _rtfeldman$elm_css$Css$fontWeight(
+				_rtfeldman$elm_css$Css$int(100)),
+			_1: {
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Css$color(
+					A3(_rtfeldman$elm_css$Css$rgb, 111, 111, 111)),
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$marginLeft(
+						_rtfeldman$elm_css$Css$px(5)),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
 	});
 var _bluedogtraining$bdt_elm$Toggle_Css$labelContainer = _rtfeldman$elm_css$Html_Styled_Attributes$css(
 	{
@@ -39301,104 +39360,77 @@ var _bluedogtraining$bdt_elm$Toggle_Css$labelContainer = _rtfeldman$elm_css$Html
 			_1: {ctor: '[]'}
 		}
 	});
-var _bluedogtraining$bdt_elm$Toggle_Css$toggle = function (toggle) {
-	return _rtfeldman$elm_css$Html_Styled_Attributes$css(
-		{
-			ctor: '::',
-			_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
-			_1: {
+var _bluedogtraining$bdt_elm$Toggle_Css$toggleColor = F3(
+	function (toggle, isDisabled, isError) {
+		var _p0 = {ctor: '_Tuple3', _0: toggle, _1: isDisabled, _2: isError};
+		if (_p0._1 === false) {
+			if (_p0._2 === false) {
+				if (_p0._0 === true) {
+					return A3(_rtfeldman$elm_css$Css$rgb, 81, 163, 81);
+				} else {
+					return _rtfeldman$elm_css$Css$hex('ddd');
+				}
+			} else {
+				return A3(_rtfeldman$elm_css$Css$rgb, 163, 81, 81);
+			}
+		} else {
+			return _rtfeldman$elm_css$Css$hex('efefef');
+		}
+	});
+var _bluedogtraining$bdt_elm$Toggle_Css$toggle = F3(
+	function (toggle, isDisabled, isError) {
+		return _rtfeldman$elm_css$Html_Styled_Attributes$css(
+			{
 				ctor: '::',
-				_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineBlock),
+				_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$relative),
 				_1: {
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Css$cursor(_rtfeldman$elm_css$Css$pointer),
+					_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineBlock),
 					_1: {
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$width(
-							_rtfeldman$elm_css$Css$rem(3)),
+						_0: _rtfeldman$elm_css$Css$cursor(
+							isDisabled ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$height(
-								_rtfeldman$elm_css$Css$rem(1.5)),
+							_0: _rtfeldman$elm_css$Css$width(
+								_rtfeldman$elm_css$Css$rem(3)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+								_0: _rtfeldman$elm_css$Css$height(
+									_rtfeldman$elm_css$Css$rem(1.5)),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$backgroundColor(
-										toggle ? A3(_rtfeldman$elm_css$Css$rgb, 81, 163, 81) : _rtfeldman$elm_css$Css$hex('ddd')),
+									_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
 									_1: {
 										ctor: '::',
-										_0: A3(
-											_rtfeldman$elm_css$Css$border3,
-											_rtfeldman$elm_css$Css$px(1),
-											_rtfeldman$elm_css$Css$solid,
-											toggle ? A3(_rtfeldman$elm_css$Css$rgb, 81, 163, 81) : _rtfeldman$elm_css$Css$hex('ddd')),
+										_0: _rtfeldman$elm_css$Css$backgroundColor(
+											A3(_bluedogtraining$bdt_elm$Toggle_Css$toggleColor, toggle, isDisabled, isError)),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$borderRadius(
-												_rtfeldman$elm_css$Css$rem(1.5)),
+											_0: A3(
+												_rtfeldman$elm_css$Css$border3,
+												_rtfeldman$elm_css$Css$px(1),
+												_rtfeldman$elm_css$Css$solid,
+												A3(_bluedogtraining$bdt_elm$Toggle_Css$toggleColor, toggle, isDisabled, isError)),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Css_Transitions$transition(
-													{
-														ctor: '::',
-														_0: _rtfeldman$elm_css$Css_Transitions$backgroundColor(400),
-														_1: {
-															ctor: '::',
-															_0: _rtfeldman$elm_css$Css_Transitions$borderColor(400),
-															_1: {ctor: '[]'}
-														}
-													}),
+												_0: _rtfeldman$elm_css$Css$borderRadius(
+													_rtfeldman$elm_css$Css$rem(1.5)),
 												_1: {
 													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$before(
+													_0: _rtfeldman$elm_css$Css_Transitions$transition(
 														{
 															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$block),
+															_0: _rtfeldman$elm_css$Css_Transitions$backgroundColor(400),
 															_1: {
 																ctor: '::',
-																_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
-																_1: {
-																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Css$top(
-																		_rtfeldman$elm_css$Css$px(1)),
-																	_1: {
-																		ctor: '::',
-																		_0: _rtfeldman$elm_css$Css$right(
-																			_rtfeldman$elm_css$Css$px(1)),
-																		_1: {
-																			ctor: '::',
-																			_0: _rtfeldman$elm_css$Css$left(
-																				_rtfeldman$elm_css$Css$px(1)),
-																			_1: {
-																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Css$bottom(
-																					_rtfeldman$elm_css$Css$px(1)),
-																				_1: {
-																					ctor: '::',
-																					_0: A2(_rtfeldman$elm_css$Css$property, 'content', ''),
-																					_1: {
-																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Css$backgroundColor(
-																							toggle ? _rtfeldman$elm_css$Css$hex('8ce196') : _rtfeldman$elm_css$Css$hex('f1f1f1')),
-																						_1: {
-																							ctor: '::',
-																							_0: _rtfeldman$elm_css$Css$borderRadius(
-																								_rtfeldman$elm_css$Css$rem(1.3)),
-																							_1: {ctor: '[]'}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
+																_0: _rtfeldman$elm_css$Css_Transitions$borderColor(400),
+																_1: {ctor: '[]'}
 															}
 														}),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$after(
+														_0: _rtfeldman$elm_css$Css$before(
 															{
 																ctor: '::',
 																_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$block),
@@ -39411,48 +39443,95 @@ var _bluedogtraining$bdt_elm$Toggle_Css$toggle = function (toggle) {
 																			_rtfeldman$elm_css$Css$px(1)),
 																		_1: {
 																			ctor: '::',
-																			_0: _rtfeldman$elm_css$Css$left(
+																			_0: _rtfeldman$elm_css$Css$right(
 																				_rtfeldman$elm_css$Css$px(1)),
 																			_1: {
 																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Css$bottom(
+																				_0: _rtfeldman$elm_css$Css$left(
 																					_rtfeldman$elm_css$Css$px(1)),
 																				_1: {
 																					ctor: '::',
-																					_0: A2(_rtfeldman$elm_css$Css$property, 'content', '\'\''),
+																					_0: _rtfeldman$elm_css$Css$bottom(
+																						_rtfeldman$elm_css$Css$px(1)),
 																					_1: {
 																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Css$width(
-																							_rtfeldman$elm_css$Css$rem(1.3)),
+																						_0: A2(_rtfeldman$elm_css$Css$property, 'content', ''),
 																						_1: {
 																							ctor: '::',
 																							_0: _rtfeldman$elm_css$Css$backgroundColor(
-																								_rtfeldman$elm_css$Css$hex('fff')),
+																								toggle ? _rtfeldman$elm_css$Css$hex('8ce196') : _rtfeldman$elm_css$Css$hex('f1f1f1')),
 																							_1: {
 																								ctor: '::',
 																								_0: _rtfeldman$elm_css$Css$borderRadius(
 																									_rtfeldman$elm_css$Css$rem(1.3)),
+																								_1: {ctor: '[]'}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}),
+														_1: {
+															ctor: '::',
+															_0: _rtfeldman$elm_css$Css$after(
+																{
+																	ctor: '::',
+																	_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$block),
+																	_1: {
+																		ctor: '::',
+																		_0: _rtfeldman$elm_css$Css$position(_rtfeldman$elm_css$Css$absolute),
+																		_1: {
+																			ctor: '::',
+																			_0: _rtfeldman$elm_css$Css$top(
+																				_rtfeldman$elm_css$Css$px(1)),
+																			_1: {
+																				ctor: '::',
+																				_0: _rtfeldman$elm_css$Css$left(
+																					_rtfeldman$elm_css$Css$px(1)),
+																				_1: {
+																					ctor: '::',
+																					_0: _rtfeldman$elm_css$Css$bottom(
+																						_rtfeldman$elm_css$Css$px(1)),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(_rtfeldman$elm_css$Css$property, 'content', '\'\''),
+																						_1: {
+																							ctor: '::',
+																							_0: _rtfeldman$elm_css$Css$width(
+																								_rtfeldman$elm_css$Css$rem(1.3)),
+																							_1: {
+																								ctor: '::',
+																								_0: _rtfeldman$elm_css$Css$backgroundColor(
+																									isDisabled ? _rtfeldman$elm_css$Css$hex('eee') : _rtfeldman$elm_css$Css$hex('fff')),
 																								_1: {
 																									ctor: '::',
-																									_0: A4(
-																										_rtfeldman$elm_css$Css$boxShadow4,
-																										_rtfeldman$elm_css$Css$px(0),
-																										_rtfeldman$elm_css$Css$px(2),
-																										_rtfeldman$elm_css$Css$px(5),
-																										A4(_rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.3)),
+																									_0: _rtfeldman$elm_css$Css$borderRadius(
+																										_rtfeldman$elm_css$Css$rem(1.3)),
 																									_1: {
 																										ctor: '::',
-																										_0: _rtfeldman$elm_css$Css_Transitions$transition(
-																											{
-																												ctor: '::',
-																												_0: _rtfeldman$elm_css$Css_Transitions$margin(400),
-																												_1: {ctor: '[]'}
-																											}),
+																										_0: A4(
+																											_rtfeldman$elm_css$Css$boxShadow4,
+																											_rtfeldman$elm_css$Css$px(0),
+																											_rtfeldman$elm_css$Css$px(2),
+																											_rtfeldman$elm_css$Css$px(5),
+																											A4(_rtfeldman$elm_css$Css$rgba, 0, 0, 0, 0.3)),
 																										_1: {
 																											ctor: '::',
-																											_0: _rtfeldman$elm_css$Css$marginLeft(
-																												toggle ? _rtfeldman$elm_css$Css$rem(1.45) : _rtfeldman$elm_css$Css$rem(0)),
-																											_1: {ctor: '[]'}
+																											_0: _rtfeldman$elm_css$Css_Transitions$transition(
+																												{
+																													ctor: '::',
+																													_0: _rtfeldman$elm_css$Css_Transitions$margin(400),
+																													_1: {ctor: '[]'}
+																												}),
+																											_1: {
+																												ctor: '::',
+																												_0: _rtfeldman$elm_css$Css$marginLeft(
+																													toggle ? _rtfeldman$elm_css$Css$rem(1.45) : _rtfeldman$elm_css$Css$rem(0)),
+																												_1: {ctor: '[]'}
+																											}
 																										}
 																									}
 																								}
@@ -39463,9 +39542,9 @@ var _bluedogtraining$bdt_elm$Toggle_Css$toggle = function (toggle) {
 																			}
 																		}
 																	}
-																}
-															}),
-														_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
 													}
 												}
 											}
@@ -39476,87 +39555,123 @@ var _bluedogtraining$bdt_elm$Toggle_Css$toggle = function (toggle) {
 						}
 					}
 				}
-			}
-		});
-};
-
-var _bluedogtraining$bdt_elm$Toggle$view = F2(
-	function (state, msg) {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{
-				ctor: '::',
-				_0: _bluedogtraining$bdt_elm$Toggle_Css$toggle(state),
-				_1: {
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Events$onClick(msg),
-					_1: {ctor: '[]'}
-				}
-			},
-			{ctor: '[]'});
-	});
-var _bluedogtraining$bdt_elm$Toggle$viewWithLabel = F3(
-	function (string, toggle, msg) {
-		return A2(
-			_rtfeldman$elm_css$Html_Styled$div,
-			{
-				ctor: '::',
-				_0: _bluedogtraining$bdt_elm$Toggle_Css$labelContainer,
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(_bluedogtraining$bdt_elm$Toggle$view, toggle, msg),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_rtfeldman$elm_css$Html_Styled$span,
-						{
-							ctor: '::',
-							_0: _bluedogtraining$bdt_elm$Toggle_Css$label,
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Html_Styled$text(string),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
 			});
 	});
 
-var _bluedogtraining$bdt_elm$View$maybeBlockView = function (musicGenre) {
+var _bluedogtraining$bdt_elm$Toggle$render = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1._0;
 	return A2(
 		_rtfeldman$elm_css$Html_Styled$div,
-		{ctor: '[]'},
 		{
+			ctor: '::',
+			_0: _bluedogtraining$bdt_elm$Toggle_Css$labelContainer,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_rtfeldman$elm_css$Html_Styled$div,
+				{
+					ctor: '::',
+					_0: A3(_bluedogtraining$bdt_elm$Toggle_Css$toggle, _p2.isToggled, _p2.isDisabled, _p2.isError),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+							_rtfeldman$elm_css$Html_Styled_Events$onClick(_p2.toggleMsg),
+							!_p2.isDisabled),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_rtfeldman$elm_css$Html_Styled$span,
+					{
+						ctor: '::',
+						_0: _bluedogtraining$bdt_elm$Toggle_Css$label,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _rtfeldman$elm_css$Html_Styled$text(_p2.label),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _bluedogtraining$bdt_elm$Toggle$initialConfig = F2(
+	function (toggled, toggleMsg) {
+		return {isError: false, isDisabled: false, label: '', isToggled: toggled, toggleMsg: toggleMsg};
+	});
+var _bluedogtraining$bdt_elm$Toggle$Config = F5(
+	function (a, b, c, d, e) {
+		return {isError: a, isDisabled: b, label: c, isToggled: d, toggleMsg: e};
+	});
+var _bluedogtraining$bdt_elm$Toggle$Toggle = function (a) {
+	return {ctor: 'Toggle', _0: a};
+};
+var _bluedogtraining$bdt_elm$Toggle$view = F2(
+	function (toggled, msg) {
+		return _bluedogtraining$bdt_elm$Toggle$Toggle(
+			A2(_bluedogtraining$bdt_elm$Toggle$initialConfig, toggled, msg));
+	});
+var _bluedogtraining$bdt_elm$Toggle$isError = F2(
+	function (isError, _p3) {
+		var _p4 = _p3;
+		return _bluedogtraining$bdt_elm$Toggle$Toggle(
+			_elm_lang$core$Native_Utils.update(
+				_p4._0,
+				{isError: isError}));
+	});
+var _bluedogtraining$bdt_elm$Toggle$isDisabled = F2(
+	function (isDisabled, _p5) {
+		var _p6 = _p5;
+		return _bluedogtraining$bdt_elm$Toggle$Toggle(
+			_elm_lang$core$Native_Utils.update(
+				_p6._0,
+				{isDisabled: isDisabled}));
+	});
+var _bluedogtraining$bdt_elm$Toggle$label = F2(
+	function (label, _p7) {
+		var _p8 = _p7;
+		return _bluedogtraining$bdt_elm$Toggle$Toggle(
+			_elm_lang$core$Native_Utils.update(
+				_p8._0,
+				{label: label}));
+	});
+
+var _bluedogtraining$bdt_elm$View$maybeBlockView = function (musicGenre) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_rtfeldman$elm_css$Html_Styled$p,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _rtfeldman$elm_css$Html_Styled$text('This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear).'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
 			ctor: '::',
 			_0: A2(
 				_rtfeldman$elm_css$Html_Styled$p,
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled$text('This Block only appears if the Select is Just. It is hidden of the select is Nothing (clear select to make it disapear).'),
+					_0: _rtfeldman$elm_css$Html_Styled$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Selected: ',
+							_elm_lang$core$Basics$toString(musicGenre))),
 					_1: {ctor: '[]'}
 				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_rtfeldman$elm_css$Html_Styled$p,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _rtfeldman$elm_css$Html_Styled$text(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'Selected: ',
-								_elm_lang$core$Basics$toString(musicGenre))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
+			_1: {ctor: '[]'}
+		}
+	};
 };
 var _bluedogtraining$bdt_elm$View$view = function (model) {
 	return A2(
@@ -40598,11 +40713,27 @@ var _bluedogtraining$bdt_elm$View$view = function (model) {
 																									_bluedogtraining$bdt_elm$Grid_Size$Six,
 																									{
 																										ctor: '::',
-																										_0: A2(_bluedogtraining$bdt_elm$Toggle$view, model.toggle1, _bluedogtraining$bdt_elm$Msg$Toggle1),
+																										_0: _bluedogtraining$bdt_elm$Toggle$render(
+																											A2(_bluedogtraining$bdt_elm$Toggle$view, model.toggle1, _bluedogtraining$bdt_elm$Msg$Toggle1)),
 																										_1: {
 																											ctor: '::',
-																											_0: A3(_bluedogtraining$bdt_elm$Toggle$viewWithLabel, 'Toggle Me', model.toggle2, _bluedogtraining$bdt_elm$Msg$Toggle2),
-																											_1: {ctor: '[]'}
+																											_0: _bluedogtraining$bdt_elm$Toggle$render(
+																												A2(
+																													_bluedogtraining$bdt_elm$Toggle$label,
+																													'Toggle Me',
+																													A2(_bluedogtraining$bdt_elm$Toggle$view, model.toggle2, _bluedogtraining$bdt_elm$Msg$Toggle2))),
+																											_1: {
+																												ctor: '::',
+																												_0: _bluedogtraining$bdt_elm$Toggle$render(
+																													A2(
+																														_bluedogtraining$bdt_elm$Toggle$label,
+																														'Disabled',
+																														A2(
+																															_bluedogtraining$bdt_elm$Toggle$isDisabled,
+																															true,
+																															A2(_bluedogtraining$bdt_elm$Toggle$view, model.toggle3, _bluedogtraining$bdt_elm$Msg$DisabledToggle)))),
+																												_1: {ctor: '[]'}
+																											}
 																										}
 																									}),
 																								_1: {
@@ -41066,7 +41197,7 @@ var _bluedogtraining$bdt_elm$Main$main = _rtfeldman$elm_css$Html_Styled$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _bluedogtraining$bdt_elm$Main$main !== 'undefined') {
-    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"DropZone":["Form.DropZone.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"FileReader.DataFormat":{"args":[],"tags":{"Text":["String"],"DataURL":[],"Base64":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.DropZone.Msg":{"args":[],"tags":{"Enter":[],"Remove":["FileReader.File"],"Add":["List FileReader.File"],"Leave":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"FileReader.Error":{"args":[],"type":"{ code : Int, name : String, message : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"FileReader.File":{"args":[],"type":"{ lastModified : Time.Time , name : String , size : Int , mimeType : String , dataFormat : FileReader.DataFormat , data : Result.Result FileReader.Error String }"},"Time.Time":{"args":[],"type":"Float"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
+    _bluedogtraining$bdt_elm$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"SelectDay":["Date.Date","Bool"],"NextMonth":[],"Clear":[],"Blur":[],"Apply":[],"Open":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Bool"],"TimeMsg":["Form.DatePicker.Internal.TimeMsg"],"DomFocus":["Result.Result Dom.Error ()"],"InitWithCurrentDate":["Maybe.Maybe Date.Date","Maybe.Maybe Date.Date","Date.Date"],"NextYear":["Maybe.Maybe Date.Date"],"NoOp":[],"PreviousYear":["Maybe.Maybe Date.Date"],"PreviousMonth":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Form.MultiSelect.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dom.Error":{"args":[],"tags":{"NotFound":["String"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"SelectOption":["option"],"Response":["Result.Result Http.Error (List option)"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"KeyboardInput":["Form.SearchSelect.Internal.KeyboardInput"],"UpdateSearchInput":["Int","String"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Pop":[],"Rock":[],"Jazz":[],"Metal":[],"Blues":[]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Msg.Msg":{"args":[],"tags":{"OpenLgModal":[],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"],"DisabledToggle":[],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"UpdateEmail":["Form.Input.Msg"],"AddRedToaster":[],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"Toggle1":[],"TextAreaMsg":["Form.TextArea.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"InputMsg":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"DropZone":["Form.DropZone.Msg"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"UpdateStartDate":["Form.DatePicker.Msg"],"Toggle2":[],"AddGreenToaster":[],"ToastersMsg":["Toasters.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"CloseSmModal":[],"DatePickerMsg":["Form.DatePicker.Msg"],"UpdateName":["Form.Input.Msg"],"CloseLgModal":[],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"OpenSmModal":[]}},"FileReader.DataFormat":{"args":[],"tags":{"Text":["String"],"DataURL":[],"Base64":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Red":[],"Green":[]}},"Form.Select.Internal.KeyboardInput":{"args":[],"tags":{"Space":[],"Down":[],"Up":[],"Enter":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String"],"Tab":["String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Unselect":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.MultiSelect.Internal.KeyboardInput"]}},"Form.SearchSelect.Internal.KeyboardInput":{"args":[],"tags":{"Down":[],"Up":[],"Enter":[]}},"Form.DropZone.Msg":{"args":[],"tags":{"Enter":[],"Remove":["FileReader.File"],"Add":["List FileReader.File"],"Leave":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Focus":["option"],"Clear":[],"Blur":[],"Open":[],"BlurOption":["option"],"DomFocus":["Result.Result Dom.Error ()"],"Select":["option"],"KeyboardInput":["Bool","Form.Select.Internal.KeyboardInput"]}},"Form.DatePicker.Internal.TimeMsg":{"args":[],"tags":{"UpdateHours":["Form.Select.Msg String"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateMinutes":["Form.Select.Msg String"],"UpdateSeconds":["Form.Select.Msg String"]}}},"aliases":{"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String, ticks : Int }"},"FileReader.Error":{"args":[],"type":"{ code : Int, name : String, message : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Countries.Country":{"args":[],"type":"{ name : String , altSpellings : List String , capital : String , region : String , population : Int }"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"FileReader.File":{"args":[],"type":"{ lastModified : Time.Time , name : String , size : Int , mimeType : String , dataFormat : FileReader.DataFormat , data : Result.Result FileReader.Error String }"},"Time.Time":{"args":[],"type":"Float"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"}},"message":"Msg.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

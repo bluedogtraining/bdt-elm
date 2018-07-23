@@ -278,7 +278,7 @@ closed state viewState =
     div
         [ Css.container ]
         [ input
-            [ Css.input viewState.isLocked viewState.isError
+            [ Css.input viewState.isError viewState.isLocked
             , Css.title (Resettable.getValue state.selectedOption == Nothing)
             , Html.maybeAttribute id viewState.id
             , type_ "text"

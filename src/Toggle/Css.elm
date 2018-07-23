@@ -7,17 +7,17 @@ import Css exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 
 
-toggle : Bool -> Attribute msg
-toggle toggle =
+toggle : Bool -> Bool -> Bool -> Attribute msg
+toggle toggle isDisabled isError =
     css
         [ position relative
         , display inlineBlock
-        , cursor pointer
+        , cursor <| if isDisabled then notAllowed else pointer
         , width <| Css.rem 3
         , height <| Css.rem 1.5
         , boxSizing borderBox
-        , backgroundColor (if toggle then rgb 81 163 81 else hex "ddd")
-        , border3 (px 1) solid (if toggle then rgb 81 163 81 else hex "ddd")
+        , backgroundColor <| toggleColor toggle isDisabled isError
+        , border3 (px 1) solid (toggleColor toggle isDisabled isError)
         , borderRadius <| Css.rem 1.5
         , transition
             [ Transitions.backgroundColor 400
@@ -42,7 +42,7 @@ toggle toggle =
             , bottom <| px 1
             , property "content" "''"
             , width <| Css.rem 1.3
-            , backgroundColor <| hex "fff"
+            , backgroundColor <| if isDisabled then hex "eee" else hex "fff"
             , borderRadius <| Css.rem 1.3
             , boxShadow4 (px 0) (px 2) (px 5) (rgba 0 0 0 0.3)
             , transition
@@ -51,6 +51,24 @@ toggle toggle =
             , marginLeft (if toggle then Css.rem 1.45 else Css.rem 0)
             ]
         ]
+
+
+toggleColor : Bool -> Bool -> Bool -> Color
+toggleColor toggle isDisabled isError =
+
+    case (toggle, isDisabled, isError) of
+
+        (True, False, False) ->
+            rgb 81 163 81
+
+        (False, False, False) ->
+            hex "ddd"
+
+        (_, False, True) ->
+            rgb 163 81 81
+
+        (_, True, _) ->
+            hex "efefef"
 
 
 labelContainer : Attribute msg
@@ -64,4 +82,9 @@ labelContainer =
 label : Attribute msg
 label =
     css
-        [ marginLeft <| px 5 ]
+        [ fontFamilies
+            [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
+        , fontWeight <| int 100
+        , color <| Css.rgb 111 111 111
+        , marginLeft <| px 5
+        ]

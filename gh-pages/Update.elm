@@ -95,6 +95,9 @@ update msg model =
         Toggle2 ->
             { model | toggle2 = not model.toggle2 } ! []
 
+        DisabledToggle ->
+            { model | toggle3 = not model.toggle3 } ! []
+
         DropZone dropZoneMsg ->
             { model | dropZone = DropZone.update dropZoneMsg model.dropZone} ! []
 

@@ -44,7 +44,7 @@ init =
 
 type alias ViewState =
     { maxLength : Maybe Int
-    , placeholder : String
+    , placeholder : Maybe String
     , isLocked : Bool
     , isError : Bool
     , id : Maybe String
@@ -54,7 +54,7 @@ type alias ViewState =
 initialViewState : ViewState
 initialViewState =
     { maxLength = Nothing
-    , placeholder = ""
+    , placeholder = Nothing
     , isLocked = False
     , isError = False
     , id = Nothing
@@ -97,7 +97,7 @@ inputField state viewState =
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input
-        , placeholder viewState.placeholder
+        , Html.maybeAttribute placeholder viewState.placeholder
         , Html.maybeAttribute maxlength viewState.maxLength
         , Html.maybeAttribute id viewState.id
         ]
@@ -144,7 +144,7 @@ setMaxLength maxLength viewState =
 setPlaceholder : String -> ViewState -> ViewState
 setPlaceholder placeholder viewState =
 
-    { viewState | placeholder = placeholder }
+    { viewState | placeholder = Just placeholder }
 
 
 setIsLocked : Bool -> ViewState -> ViewState

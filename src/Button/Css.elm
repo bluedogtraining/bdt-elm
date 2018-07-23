@@ -29,6 +29,7 @@ button size content color isDisabled isLoading =
         , alignItems center
         , outlineWidth <| px 0
         , cursor <| if isDisabled || isLoading then notAllowed else pointer
+        , opacity <| if isDisabled then (num 0.4) else (num 1)
         , height <| buttonHeight size
         , buttonWidth content size
         , padding2 (px 0) (buttonPadding content size)

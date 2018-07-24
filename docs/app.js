@@ -34866,7 +34866,12 @@ var _bluedogtraining$bdt_elm$Form_Label_Css$label = _rtfeldman$elm_css$Html_Styl
 				ctor: '::',
 				_0: _rtfeldman$elm_css$Css$color(
 					A3(_rtfeldman$elm_css$Css$rgb, 111, 111, 111)),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _rtfeldman$elm_css$Css$marginBottom(
+						_rtfeldman$elm_css$Css$px(0)),
+					_1: {ctor: '[]'}
+				}
 			}
 		}
 	});

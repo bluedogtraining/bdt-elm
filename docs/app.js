@@ -23840,96 +23840,101 @@ var _bluedogtraining$bdt_elm$Button_Css$button = F5(
 						_0: _rtfeldman$elm_css$Css$backgroundColor(_rtfeldman$elm_css$Css$transparent),
 						_1: {
 							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$fontWeight(_rtfeldman$elm_css$Css$bold),
+							_0: _rtfeldman$elm_css$Css$fontWeight(
+								_rtfeldman$elm_css$Css$int(400)),
 							_1: {
 								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$color(
-									A3(
-										_rtfeldman$elm_css$Css$rgb,
-										function (_) {
-											return _.red;
-										}(
-											_elm_lang$core$Color$toRgb(color)),
-										function (_) {
-											return _.green;
-										}(
-											_elm_lang$core$Color$toRgb(color)),
-										function (_) {
-											return _.blue;
-										}(
-											_elm_lang$core$Color$toRgb(color)))),
+								_0: _rtfeldman$elm_css$Css$textTransform(_rtfeldman$elm_css$Css$capitalize),
 								_1: {
 									ctor: '::',
-									_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineFlex),
+									_0: _rtfeldman$elm_css$Css$color(
+										A3(
+											_rtfeldman$elm_css$Css$rgb,
+											function (_) {
+												return _.red;
+											}(
+												_elm_lang$core$Color$toRgb(color)),
+											function (_) {
+												return _.green;
+											}(
+												_elm_lang$core$Color$toRgb(color)),
+											function (_) {
+												return _.blue;
+											}(
+												_elm_lang$core$Color$toRgb(color)))),
 									_1: {
 										ctor: '::',
-										_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
+										_0: _rtfeldman$elm_css$Css$display(_rtfeldman$elm_css$Css$inlineFlex),
 										_1: {
 											ctor: '::',
-											_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
+											_0: _rtfeldman$elm_css$Css$justifyContent(_rtfeldman$elm_css$Css$center),
 											_1: {
 												ctor: '::',
-												_0: _rtfeldman$elm_css$Css$outlineWidth(
-													_rtfeldman$elm_css$Css$px(0)),
+												_0: _rtfeldman$elm_css$Css$alignItems(_rtfeldman$elm_css$Css$center),
 												_1: {
 													ctor: '::',
-													_0: _rtfeldman$elm_css$Css$cursor(
-														(isDisabled || isLoading) ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
+													_0: _rtfeldman$elm_css$Css$outlineWidth(
+														_rtfeldman$elm_css$Css$px(0)),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$opacity(
-															isDisabled ? _rtfeldman$elm_css$Css$num(0.4) : _rtfeldman$elm_css$Css$num(1)),
+														_0: _rtfeldman$elm_css$Css$cursor(
+															(isDisabled || isLoading) ? _rtfeldman$elm_css$Css$notAllowed : _rtfeldman$elm_css$Css$pointer),
 														_1: {
 															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$height(
-																_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
+															_0: _rtfeldman$elm_css$Css$opacity(
+																isDisabled ? _rtfeldman$elm_css$Css$num(0.4) : _rtfeldman$elm_css$Css$num(1)),
 															_1: {
 																ctor: '::',
-																_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
+																_0: _rtfeldman$elm_css$Css$height(
+																	_bluedogtraining$bdt_elm$Button_Css$buttonHeight(size)),
 																_1: {
 																	ctor: '::',
-																	_0: A2(
-																		_rtfeldman$elm_css$Css$padding2,
-																		_rtfeldman$elm_css$Css$px(0),
-																		A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
+																	_0: A2(_bluedogtraining$bdt_elm$Button_Css$buttonWidth, content, size),
 																	_1: {
 																		ctor: '::',
-																		_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
+																		_0: A2(
+																			_rtfeldman$elm_css$Css$padding2,
+																			_rtfeldman$elm_css$Css$px(0),
+																			A2(_bluedogtraining$bdt_elm$Button_Css$buttonPadding, content, size)),
 																		_1: {
 																			ctor: '::',
-																			_0: A2(
-																				_rtfeldman$elm_css$Css$margin2,
-																				_rtfeldman$elm_css$Css$px(0),
-																				_rtfeldman$elm_css$Css$rem(0.2)),
+																			_0: _rtfeldman$elm_css$Css$boxSizing(_rtfeldman$elm_css$Css$borderBox),
 																			_1: {
 																				ctor: '::',
-																				_0: _rtfeldman$elm_css$Css$fontSize(
-																					_rtfeldman$elm_css$Css$rem(0.8)),
+																				_0: A2(
+																					_rtfeldman$elm_css$Css$margin2,
+																					_rtfeldman$elm_css$Css$px(0),
+																					_rtfeldman$elm_css$Css$rem(0.2)),
 																				_1: {
 																					ctor: '::',
-																					_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
+																					_0: _rtfeldman$elm_css$Css$fontSize(
+																						_rtfeldman$elm_css$Css$rem(0.8)),
 																					_1: {
 																						ctor: '::',
-																						_0: _rtfeldman$elm_css$Css$textDecoration(_rtfeldman$elm_css$Css$none),
+																						_0: _rtfeldman$elm_css$Css$verticalAlign(_rtfeldman$elm_css$Css$middle),
 																						_1: {
 																							ctor: '::',
-																							_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
+																							_0: _rtfeldman$elm_css$Css$textDecoration(_rtfeldman$elm_css$Css$none),
 																							_1: {
 																								ctor: '::',
-																								_0: _rtfeldman$elm_css$Css$whiteSpace(_rtfeldman$elm_css$Css$noWrap),
+																								_0: A2(_rtfeldman$elm_css$Css$property, 'user-select', 'none'),
 																								_1: {
 																									ctor: '::',
-																									_0: _rtfeldman$elm_css$Css$overflow(_rtfeldman$elm_css$Css$hidden),
+																									_0: _rtfeldman$elm_css$Css$whiteSpace(_rtfeldman$elm_css$Css$noWrap),
 																									_1: {
 																										ctor: '::',
-																										_0: _rtfeldman$elm_css$Css$hover(
-																											{
-																												ctor: '::',
-																												_0: _rtfeldman$elm_css$Css$backgroundColor(
-																													_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
-																												_1: {ctor: '[]'}
-																											}),
-																										_1: {ctor: '[]'}
+																										_0: _rtfeldman$elm_css$Css$overflow(_rtfeldman$elm_css$Css$hidden),
+																										_1: {
+																											ctor: '::',
+																											_0: _rtfeldman$elm_css$Css$hover(
+																												{
+																													ctor: '::',
+																													_0: _rtfeldman$elm_css$Css$backgroundColor(
+																														_bluedogtraining$bdt_elm$Button_Css$lightenColor(color)),
+																													_1: {ctor: '[]'}
+																												}),
+																											_1: {ctor: '[]'}
+																										}
 																									}
 																								}
 																							}
@@ -24044,42 +24049,45 @@ var _bluedogtraining$bdt_elm$Button$render = function (_p2) {
 	var _p3 = _p2;
 	var _p4 = _p3._0;
 	return A2(
-		_rtfeldman$elm_css$Html_Styled$a,
-		{
-			ctor: '::',
-			_0: A5(_bluedogtraining$bdt_elm$Button_Css$button, _p4.size, _p4.content, _p4.color, _p4.isDisabled, _p4.isLoading),
-			_1: {
+		_bluedogtraining$bdt_elm$Html_Styled_Bdt$viewIf,
+		_p4.isShown,
+		A2(
+			_rtfeldman$elm_css$Html_Styled$a,
+			{
 				ctor: '::',
-				_0: A2(
-					_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-					A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Events$onClick, _p4.onClick),
-					!_p4.isDisabled),
+				_0: A5(_bluedogtraining$bdt_elm$Button_Css$button, _p4.size, _p4.content, _p4.color, _p4.isDisabled, _p4.isLoading),
 				_1: {
 					ctor: '::',
 					_0: A2(
 						_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-						_rtfeldman$elm_css$Html_Styled_Attributes$href(_p4.url),
-						!_elm_lang$core$String$isEmpty(_p4.url)),
+						A2(_bluedogtraining$bdt_elm$Html_Styled_Bdt$maybeAttribute, _rtfeldman$elm_css$Html_Styled_Events$onClick, _p4.onClick),
+						!_p4.isDisabled),
 					_1: {
 						ctor: '::',
 						_0: A2(
 							_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
-							_rtfeldman$elm_css$Html_Styled_Attributes$target('_blank'),
+							_rtfeldman$elm_css$Html_Styled_Attributes$href(_p4.url),
 							!_elm_lang$core$String$isEmpty(_p4.url)),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_bluedogtraining$bdt_elm$Html_Styled_Bdt_ops['?'],
+								_rtfeldman$elm_css$Html_Styled_Attributes$target('_blank'),
+								!_elm_lang$core$String$isEmpty(_p4.url)),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _bluedogtraining$bdt_elm$Button_Css$spinKeyFrames,
-			_1: {
+			},
+			{
 				ctor: '::',
-				_0: A4(_bluedogtraining$bdt_elm$Button$content, _p4.content, _p4.size, _p4.color, _p4.isLoading),
-				_1: {ctor: '[]'}
-			}
-		});
+				_0: _bluedogtraining$bdt_elm$Button_Css$spinKeyFrames,
+				_1: {
+					ctor: '::',
+					_0: A4(_bluedogtraining$bdt_elm$Button$content, _p4.content, _p4.size, _p4.color, _p4.isLoading),
+					_1: {ctor: '[]'}
+				}
+			}));
 };
 var _bluedogtraining$bdt_elm$Button$initialConfig = {
 	isShown: true,
@@ -25291,7 +25299,7 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 											ctor: '::',
 											_0: _rtfeldman$elm_css$Css$backgroundColor(
 												_rtfeldman$elm_css$Css$hex(
-													isLocked ? 'dddddd' : 'ffffff')),
+													isLocked ? 'eeeeee' : 'ffffff')),
 											_1: {
 												ctor: '::',
 												_0: _rtfeldman$elm_css$Css$fontSize(
@@ -25301,17 +25309,21 @@ var _bluedogtraining$bdt_elm$Form_Css$input = F2(
 													_0: _rtfeldman$elm_css$Css$whiteSpace(_rtfeldman$elm_css$Css$noWrap),
 													_1: {
 														ctor: '::',
-														_0: _rtfeldman$elm_css$Css$overflow(_rtfeldman$elm_css$Css$hidden),
+														_0: _rtfeldman$elm_css$Css$textOverflow(_rtfeldman$elm_css$Css$ellipsis),
 														_1: {
 															ctor: '::',
-															_0: _rtfeldman$elm_css$Css$focus(
-																{
-																	ctor: '::',
-																	_0: _rtfeldman$elm_css$Css$outlineWidth(
-																		_rtfeldman$elm_css$Css$rem(0)),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {ctor: '[]'}
+															_0: _rtfeldman$elm_css$Css$overflowX(_rtfeldman$elm_css$Css$hidden),
+															_1: {
+																ctor: '::',
+																_0: _rtfeldman$elm_css$Css$focus(
+																	{
+																		ctor: '::',
+																		_0: _rtfeldman$elm_css$Css$outlineWidth(
+																			_rtfeldman$elm_css$Css$rem(0)),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {ctor: '[]'}
+															}
 														}
 													}
 												}

@@ -16,7 +16,7 @@ input isError isLocked =
     , padding2 (Css.rem 0) (Css.rem 0.4)
     , margin2 (Css.rem 0.5) (Css.rem 0)
     , color <| hex "555555"
-    , backgroundColor <| hex <| if isLocked then "dddddd" else "ffffff"
+    , backgroundColor <| hex <| if isLocked then "eeeeee" else "ffffff"
     , fontSize <| Css.rem 0.8
     , whiteSpace noWrap
     , textOverflow ellipsis

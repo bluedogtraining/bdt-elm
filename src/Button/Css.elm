@@ -22,7 +22,8 @@ button size content color isDisabled isLoading =
         [ border3 (px 1) solid (Css.rgba (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue) 0.2)
         , borderRadius (px 2)
         , backgroundColor transparent
-        , fontWeight bold
+        , fontWeight <| int 400
+        , textTransform capitalize
         , Css.color <| Css.rgb (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue)
         , display inlineFlex
         , justifyContent center

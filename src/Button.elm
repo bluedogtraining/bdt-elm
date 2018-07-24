@@ -26,7 +26,7 @@ import Html.Styled as Html exposing (..)
 import Html.Styled.Events as Html exposing (..)
 import Html.Styled.Attributes as Html exposing (..)
 
-import Html.Styled.Bdt exposing (..)
+import Html.Styled.Bdt as Html exposing (..)
 
 import Color exposing (Color)
 
@@ -172,15 +172,16 @@ red (Button config) =
 render : Button msg -> Html msg
 render (Button config) =
 
-    a
-        [ Css.button config.size config.content config.color config.isDisabled config.isLoading
-        , maybeAttribute Html.onClick config.onClick ? not config.isDisabled
-        , Html.href config.url ? not (String.isEmpty config.url)
-        , target "_blank" ? not (String.isEmpty config.url)
-        ]
-        [ Css.spinKeyFrames
-        , content config.content config.size config.color config.isLoading
-        ]
+    Html.viewIf config.isShown <|
+        a
+            [ Css.button config.size config.content config.color config.isDisabled config.isLoading
+            , maybeAttribute Html.onClick config.onClick ? not config.isDisabled
+            , Html.href config.url ? not (String.isEmpty config.url)
+            , target "_blank" ? not (String.isEmpty config.url)
+            ]
+            [ Css.spinKeyFrames
+            , content config.content config.size config.color config.isLoading
+            ]
 
 
 content : Content -> Size -> Color -> Bool -> Html msg

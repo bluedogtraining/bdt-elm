@@ -19,7 +19,8 @@ input isError isLocked =
     , backgroundColor <| hex <| if isLocked then "dddddd" else "ffffff"
     , fontSize <| Css.rem 0.8
     , whiteSpace noWrap
-    , overflow hidden
+    , textOverflow ellipsis
+    , overflowX hidden
     , focus
         [ outlineWidth (Css.rem 0)
         ]

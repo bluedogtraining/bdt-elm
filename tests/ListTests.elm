@@ -6,7 +6,7 @@ import Expect exposing (Expectation)
 import Time
 import Date
 
-import List.Nonempty exposing (Nonempty (Nonempty))
+import List.Nonempty exposing (Nonempty (..))
 
 import Date.Bdt as Date
 import List.Bdt as List

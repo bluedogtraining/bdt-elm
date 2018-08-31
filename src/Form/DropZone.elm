@@ -44,7 +44,7 @@ import FileReader exposing (File)
 
 import Resettable exposing (Resettable)
 
-import Icon
+import FeatherIcons
 import Button
 
 import Form.DropZone.Css as Css
@@ -241,7 +241,7 @@ okFile file =
             []
             [ text file.name ]
         , Button.view
-            |> Button.icon Icon.Clear
+            |> Button.icon FeatherIcons.x
             |> Button.red
             |> Button.small
             |> Button.onClick (Remove file)
@@ -258,7 +258,7 @@ errFile (file, error) =
             []
             [ text <| file.name ++ " - " ++ error.message ]
         , Button.view
-            |> Button.icon Icon.Clear
+            |> Button.icon FeatherIcons.x
             |> Button.red
             |> Button.small
             |> Button.onClick (Remove file)

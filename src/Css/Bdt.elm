@@ -1,4 +1,4 @@
-module Css.Bdt exposing ((?))
+module Css.Bdt exposing (styleIf)
 
 {-| Helpers on top of Html.Styled to show/hide things
 
@@ -9,8 +9,6 @@ module Css.Bdt exposing ((?))
 
 import Css exposing (Style, indeterminate)
 
-import InfixPrecedence
-
 
 {-| Optionally add a Style.
 
@@ -18,7 +16,7 @@ import InfixPrecedence
         [ cursor pointer ? canToggle
         ]
 -}
-(?) : Style -> Bool -> Style
-(?) style bool =
+styleIf : Style -> Bool -> Style
+styleIf style bool =
 
     if bool then style else indeterminate []

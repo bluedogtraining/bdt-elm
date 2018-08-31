@@ -15,7 +15,7 @@ import List.Nonempty as Nonempty exposing (Nonempty (Nonempty))
 
 import Basics.Bdt exposing (..)
 
-import Date exposing (Date)
+import Time exposing (Posix)
 import Date.Bdt as Date
 
 

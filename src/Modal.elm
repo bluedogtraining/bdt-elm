@@ -20,7 +20,7 @@ import Html.Styled.Bdt as Html
 
 import Color
 
-import Icon
+import FeatherIcons
 import Button exposing (Button)
 import Grid.Size exposing (..)
 
@@ -174,4 +174,4 @@ closeIcon closeMsg =
 
     div
         [ Css.closeIcon, onClick closeMsg ]
-        [ Icon.render Icon.Clear 12 Color.black ]
+        [ FeatherIcons.x |> FeatherIcons.toHtml ]

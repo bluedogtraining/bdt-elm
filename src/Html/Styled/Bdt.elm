@@ -1,26 +1,24 @@
-module Html.Styled.Bdt exposing ((?), maybeAttribute, viewIf, divIf, maybeView)
+module Html.Styled.Bdt exposing (attributeIf, maybeAttribute, viewIf, divIf, maybeView)
 
 {-| Helpers on top of Html.Styled to show/hide things
 
-# Show Hide Elements
-@docs (?), maybeAttribute, viewIf, divIf, maybeView
+# Show/Hide Elements
+@docs attributeIf, maybeAttribute, viewIf, divIf, maybeView
 
 -}
 
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (class)
 
-import InfixPrecedence
-
 
 {-| Optionally add an attribute.
 
     button
-        [ onClick MyMessage ? model.isButtonEnabled ]
+        [ onClick MyMessage |> attributeIf model.isButtonEnabled ]
         [ text "Clickety Click" ]
 -}
-(?) : Attribute msg -> Bool -> Attribute msg
-(?) attribute bool =
+attributeIf : Bool -> Attribute msg -> Attribute msg
+attributeIf bool attribute =
 
     if bool then attribute else class ""
 

@@ -35,7 +35,7 @@ module Form.DatePicker exposing
 import Html.Styled exposing (Html)
 
 import Tuple
-import Date exposing (Date)
+import Time exposing (Posix)
 
 import Form.DatePicker.Internal as Internal
 

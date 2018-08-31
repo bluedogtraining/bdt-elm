@@ -33,7 +33,7 @@ import Form.Helpers as Form
 import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
-import Icon
+import FeatherIcons
 
 import Form.Select.Css as Css
 
@@ -315,7 +315,7 @@ clearButton state viewState =
 
     Html.divIf (viewState.isClearable && Resettable.getValue state.selectedOption /= Nothing)
         [ onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear) ]
-        [ Icon.render Icon.Clear 12 Color.black ]
+        [ FeatherIcons.x |> FeatherIcons.toHtml ]
 
 
 optionList : State option -> ViewState option -> Html (Msg option)

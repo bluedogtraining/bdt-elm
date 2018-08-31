@@ -34,7 +34,7 @@ import Form.Helpers as Form
 import Html.Styled.Bdt as Html exposing ((?))
 import Resettable exposing (Resettable)
 
-import Icon
+import FeatherIcons
 
 import Form.MultiSelect.Css as Css
 
@@ -344,7 +344,7 @@ clearButton state viewState =
 
     Html.divIf (viewState.isClearable && List.isEmpty (Resettable.getValue state.selectedOptions))
         [ onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear) ]
-        [ Icon.render Icon.Clear 12 Color.black ]
+        [ FeatherIcons.x |> FeatherIcons.toHtml ]
 
 
 optionText : String -> (option -> String) -> Resettable (List option) -> String

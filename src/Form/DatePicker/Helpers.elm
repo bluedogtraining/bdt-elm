@@ -1,6 +1,6 @@
 module Form.DatePicker.Helpers exposing (..)
 
-import Date exposing (Date, Month (..))
+import Time exposing (Posix, Month (..))
 
 import Date.Extra.Core as Date
 import Date.Extra.Create as Date
@@ -12,33 +12,33 @@ import List.Extra as List
 import Form.Select as Select
 
 
-toLabel : Date -> String
+toLabel : Posix -> String
 toLabel =
     dateToString
 
 
-toTimeLabel : Date -> String
+toTimeLabel : Posix -> String
 toTimeLabel date =
     dateToString date ++ " " ++ timeToString date
 
 
-timeToString : Date -> String
+timeToString : Posix -> String
 timeToString date =
 
     [ Date.hour date, Date.minute date, Date.second date ]
-        |> List.map (toString >> String.padLeft 2 '0')
+        |> List.map (String.fromInt >> String.padLeft 2 '0')
         |> List.intersperse ":"
         |> String.concat
 
 
-dateToString : Date -> String
+dateToString : Posix -> String
 dateToString date =
 
     let
         day =
             date
                 |> Date.day
-                |> toString
+                |> String.fromInt
                 |> String.pad 2 '0'
 
         month =
@@ -49,7 +49,7 @@ dateToString date =
         year =
             date
                 |> Date.year
-                |> toString
+                |> String.fromInt
 
     in
         day ++ "/" ++ month ++ "/" ++ year
@@ -91,7 +91,7 @@ monthToStringNumber month =
         Dec -> "12"
 
 
-maybeClamp : Maybe Date -> Maybe Date -> Date -> Date
+maybeClamp : Maybe Posix -> Maybe Posix -> Posix -> Posix
 maybeClamp maybeMinDate maybeMaxDate date =
 
     case (maybeMinDate, maybeMaxDate) of
@@ -109,7 +109,7 @@ maybeClamp maybeMinDate maybeMaxDate date =
             date
 
 
-clamp : Date -> Date -> Date -> Date
+clamp : Posix -> Posix -> Posix -> Posix
 clamp minDate maxDate date =
 
     if Date.is Date.Before date minDate then
@@ -120,31 +120,31 @@ clamp minDate maxDate date =
         date
 
 
-previousYear : Date -> Date
+previousYear : Posix -> Posix
 previousYear date =
 
     Date.add Date.Month -12 date
 
 
-previousMonth : Date -> Date
+previousMonth : Posix -> Posix
 previousMonth date =
 
     Date.add Date.Month -1 date
 
 
-nextMonth : Date -> Date
+nextMonth : Posix -> Posix
 nextMonth date =
 
     Date.add Date.Month 1 date
 
 
-nextYear : Date -> Date
+nextYear : Posix -> Posix
 nextYear date =
 
     Date.add Date.Month 12 date
 
 
-dateAtDayNumber : Int -> Date -> Date
+dateAtDayNumber : Int -> Posix -> Posix
 dateAtDayNumber dayNumber date =
 
     Date.add Date.Day (dayNumber - 1) date
@@ -161,13 +161,13 @@ dateFromTime time =
         Just selectedDate ->
             let
                 year =
-                    Date.year selectedDate
+                    Time.toYear Time.utc selectedDate
 
                 month =
-                    Date.month selectedDate
+                    Time.toMonth Time.utc selectedDate
 
                 day =
-                    Date.day selectedDate
+                    Time.toDay Time.utc selectedDate
 
                 hour =
                     time.hours
@@ -194,7 +194,7 @@ dateFromTime time =
                 Just (Date.dateFromFields year month day hour minute second 0)
 
 
-visibleDays : Date -> List (List (Bool, Int))
+visibleDays : Posix -> List (List (Bool, Int))
 visibleDays navigationDate =
 
     let
@@ -238,7 +238,7 @@ visibleDays navigationDate =
 
 intsToStrings : List Int -> List String
 intsToStrings ints =
-    List.map (toString >> String.padLeft 2 '0') ints
+    List.map (String.fromInt >> String.padLeft 2 '0') ints
 
 
 isSelectOpen : { time | hours : Select.Model String, minutes : Select.Model String, seconds : Select.Model String } -> Bool

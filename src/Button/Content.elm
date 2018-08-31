@@ -1,6 +1,6 @@
 module Button.Content exposing (Content (..))
 
-import Icon exposing (Icon)
+import FeatherIcons exposing (Icon)
 
 
 type Content

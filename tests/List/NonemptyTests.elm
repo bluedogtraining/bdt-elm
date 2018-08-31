@@ -5,7 +5,7 @@ import Expect exposing (Expectation)
 
 import Json.Decode as Decode
 
-import List.Nonempty exposing (Nonempty (Nonempty))
+import List.Nonempty exposing (Nonempty (..))
 import List.Nonempty.Bdt as Nonempty
 
 

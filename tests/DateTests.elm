@@ -5,7 +5,7 @@ import Expect exposing (Expectation)
 
 import Time
 
-import Date exposing (Date)
+import Time exposing (Posix)
 import Date.Bdt as Date
 
 

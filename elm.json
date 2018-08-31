@@ -1,0 +1,49 @@
+{
+    "type": "package",
+    "name": "bluedogtraining/bdt-elm",
+    "summary": "Elm modules commonly used at BDT",
+    "license": "BSD-3-Clause",
+    "version": "15.1.1",
+    "exposed-modules": [
+        "Resettable",
+        "Form.Label",
+        "Form.Input",
+        "Form.IntInput",
+        "Form.FloatInput",
+        "Form.Select",
+        "Form.MultiSelect",
+        "Form.SearchSelect",
+        "Form.DatePicker",
+        "Form.TextArea",
+        "Form.DropZone",
+        "Toasters",
+        "Grid",
+        "Grid.Size",
+        "Card",
+        "Modal",
+        "Icon",
+        "Button",
+        "Toggle",
+        "Basics.Bdt",
+        "Css.Bdt",
+        "Tuple.Bdt",
+        "Html.Styled.Bdt",
+        "List.Bdt",
+        "List.Nonempty.Bdt",
+        "Date.Bdt",
+        "EverySet.Bdt",
+        "Dom.Scroll.Bdt",
+        "StringFormatting",
+        "InfixPrecedence"
+    ],
+    "elm-version": "0.19.0 <= v < 0.20.0",
+    "dependencies": {
+        "1602/elm-feather": "2.3.2 <= v < 3.0.0",
+        "elm/core": "1.0.0 <= v < 2.0.0",
+        "elm/time": "1.0.0 <= v < 2.0.0",
+        "rtfeldman/elm-css": "15.1.0 <= v < 16.0.0"
+    },
+    "test-dependencies": {
+        "elm-explorations/test": "1.0.0 <= v < 2.0.0"
+    }
+}

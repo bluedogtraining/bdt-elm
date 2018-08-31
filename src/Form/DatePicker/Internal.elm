@@ -19,15 +19,11 @@ import Html.Styled.Lazy exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes as Attributes exposing (..)
 
-import VirtualDom
-
-import Dom
+import Browser.Dom as Dom
 import Dict
 import Task
 import Time exposing (Posix)
 
-import Date.Extra.Core as Date
-import Date.Extra.Compare as Date
 import List.Extra as List
 
 import Json.Decode as Decode exposing (Decoder)
@@ -359,7 +355,7 @@ render state viewState =
             lazy2 open state viewState
 
 
-closed : State -> ViewState -> VirtualDom.Node Msg
+closed : State -> ViewState -> Html Msg
 closed state viewState =
 
    div
@@ -378,10 +374,9 @@ closed state viewState =
                 [ FeatherIcons.calendar |> FeatherIcons.toHtml ]
             ]
         ]
-        |> Html.toUnstyled
 
 
-open : State -> ViewState -> VirtualDom.Node Msg
+open : State -> ViewState -> Html Msg
 open state viewState =
 
    div
@@ -401,7 +396,6 @@ open state viewState =
             ]
         , calendar state viewState
         ]
-        |> Html.toUnstyled
 
 
 calendar : State -> ViewState -> Html Msg
@@ -429,7 +423,7 @@ calendar state viewState =
 
 disableMouseDown : Attribute Msg
 disableMouseDown =
-    onWithOptions "mousedown" { stopPropagation = False, preventDefault = True } (Decode.succeed NoOp)
+    preventDefaultOn "mousedown" (Decode.succeed NoOp)
 
 
 calendarNavigation : State -> ViewState -> Posix -> Html Msg

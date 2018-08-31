@@ -17,8 +17,6 @@ import Html.Styled.Lazy exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 
-import VirtualDom
-
 import Regex exposing (Regex)
 
 import Html.Styled.Bdt as Html
@@ -71,7 +69,7 @@ type Msg
 update : Msg -> State -> State
 update (Input string) state =
 
-    case Regex.contains (Regex.regex "^[-]?[0-9]*$") string of
+    case Regex.contains (Regex.fromString "^[-]?[0-9]*$" |> Maybe.withDefault Regex.never) string of
 
         True ->
             { state | value = Resettable.update string state.value }
@@ -89,7 +87,7 @@ render state viewState =
     lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> VirtualDom.Node Msg
+inputField : State -> ViewState -> Html Msg
 inputField state viewState =
 
     input
@@ -102,7 +100,6 @@ inputField state viewState =
         , Html.maybeAttribute id viewState.id
         ]
         []
-        |> Html.toUnstyled
 
 
 -- STATE SETTERS --
@@ -123,13 +120,13 @@ reset state =
 setInitialValue : Int -> State -> State
 setInitialValue value state =
 
-    { state | value = Resettable.init (toString value) }
+    { state | value = Resettable.init (String.fromInt value) }
 
 
 setValue : Int -> State -> State
 setValue value state =
 
-    { state | value = Resettable.update (toString value) state.value }
+    { state | value = Resettable.update (String.fromInt value) state.value }
 
 
 -- VIEW STATE SETTERS --
@@ -177,32 +174,13 @@ getIsChanged state =
 getInitialValue : State -> Maybe Int
 getInitialValue =
 
-    .value >> Resettable.getInitialValue >> stringToMaybeInt
+    .value >> Resettable.getInitialValue >> String.toInt
 
 
 getValue : State -> Maybe Int
 getValue =
 
-    .value >> Resettable.getValue >> stringToMaybeInt
-
-
-stringToMaybeInt : String -> Maybe Int
-stringToMaybeInt string =
-
-    case string of
-
-        "" ->
-            Nothing
-
-        value ->
-            -- Don't use withDefault or mapError here, Debug.crash STILL gets called even if successful (compiler bug)
-            case String.toInt value of
-
-                Err _ ->
-                    Debug.crash "Failed to parse IntInput String to Int"
-
-                Ok int ->
-                    Just int
+    .value >> Resettable.getValue >> String.toInt
 
 
 getId : ViewState -> Maybe String

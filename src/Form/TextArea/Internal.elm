@@ -18,13 +18,9 @@ import Html.Styled.Lazy exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 
-import VirtualDom
-
 import Json.Decode as Decode exposing (Decoder)
 
-import String.Extra as String
-
-import Html.Styled.Bdt as Html exposing ((?))
+import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
 import Form.Css as Css
@@ -101,7 +97,7 @@ render state viewState =
     lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> VirtualDom.Node Msg
+inputField : State -> ViewState -> Html Msg
 inputField state viewState =
 
     textarea
@@ -113,12 +109,11 @@ inputField state viewState =
         , Html.maybeAttribute maxlength viewState.maxLength
         , Html.maybeAttribute id viewState.id
         -- Hack it in js, as elm currently has no notion of cursor position. Best we could do is add spaces at the end of the textarea, not where the cursor is.
-        , attribute "onkeydown" "if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" ? state.substituteTabs
+        , attribute "onkeydown" "if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" |> Html.attributeIf state.substituteTabs
         -- Since we use the above js hack, our model doesn't get updated the conventional way. We need to grab the new value after the tab was pressed, and update our state accordingly.
-        , on "keyup" (Decode.andThen shouldUpdateTab keyCode) ? state.substituteTabs
+        , on "keyup" (Decode.andThen shouldUpdateTab keyCode) |> Html.attributeIf state.substituteTabs
         ]
         []
-        |> Html.toUnstyled
 
 
 shouldUpdateTab : Int -> Decoder Msg

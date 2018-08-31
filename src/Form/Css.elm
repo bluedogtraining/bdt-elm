@@ -2,7 +2,7 @@ module Form.Css exposing (..)
 
 import Css exposing (..)
 
-import Css.Bdt exposing ((?))
+import Css.Bdt as Css
 
 
 input : Bool -> Bool -> List Style
@@ -42,8 +42,8 @@ title : Bool -> List Style
 title isFaded =
 
     [ flexGrow <| int 1
-    , color (rgb 111 111 111) ? isFaded
-    , fontWeight (int 200) ? isFaded
+    , color (rgb 111 111 111) |> Css.styleIf (isFaded)
+    , fontWeight (int 200) |> Css.styleIf (isFaded)
     , fontFamilies
         [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
     , whiteSpace noWrap
@@ -79,10 +79,10 @@ selectOptionItem isDisabled isFocused =
     , height <| Css.rem 2
     , displayFlex
     , alignItems center
-    , backgroundColor (hex "f2f9fc") ? isDisabled || isFocused
+    , backgroundColor (hex "f2f9fc") |> Css.styleIf (isDisabled || isFocused)
     , cursor pointer
     , outlineWidth <| px 0
     , hover
-        [ backgroundColor (hex "f2f9fc") ? not isDisabled
+        [ backgroundColor (hex "f2f9fc") |> Css.styleIf (not isDisabled)
         ]
     ]

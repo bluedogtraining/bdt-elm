@@ -18,8 +18,6 @@ import Html.Styled.Lazy exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 
-import VirtualDom
-
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
@@ -91,7 +89,7 @@ render state viewState =
     lazy2 inputField state viewState
 
 
-inputField : State -> ViewState -> VirtualDom.Node Msg
+inputField : State -> ViewState -> Html Msg
 inputField state viewState =
 
     input
@@ -105,7 +103,6 @@ inputField state viewState =
         , type_ (typeToString viewState.inputType)
         ]
         []
-        |> Html.toUnstyled
 
 
 typeToString : Type -> String

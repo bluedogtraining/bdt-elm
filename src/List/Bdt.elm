@@ -11,7 +11,7 @@ module List.Bdt exposing (sortByDate, groupWhile)
 -}
 
 import List.Extra as List
-import List.Nonempty as Nonempty exposing (Nonempty (Nonempty))
+import List.Nonempty as Nonempty exposing (Nonempty (..))
 
 import Basics.Bdt exposing (..)
 
@@ -21,7 +21,7 @@ import Date.Bdt as Date
 
 {-| Sort a list by date
 -}
-sortByDate : (a -> Date) -> List a -> List a
+sortByDate : (a -> Posix) -> List a -> List a
 sortByDate f list =
     List.sortWith (lift2 f Date.order) list
 

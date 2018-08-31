@@ -18,22 +18,19 @@ import Html.Styled.Lazy exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes as Attributes exposing (..)
 
-import VirtualDom
-
-import Dom
+import Browser.Dom as Dom
 import Dict
 import Task
-import Color
 
 import List.Extra as List
 
 import Json.Decode as Decode exposing (Decoder)
 
-import Form.Helpers as Form
-import Html.Styled.Bdt as Html exposing ((?))
-import Resettable exposing (Resettable)
-
 import FeatherIcons
+
+import Form.Helpers as Form
+import Html.Styled.Bdt as Html
+import Resettable exposing (Resettable)
 
 import Form.Select.Css as Css
 
@@ -69,13 +66,13 @@ type alias ViewState option =
     }
 
 
-initialViewState : ViewState option
-initialViewState =
+initialViewState : (option -> String) -> ViewState option
+initialViewState toLabel =
     { isLocked = False
     , isClearable = False
     , isError = False
     , isOptionDisabled = always False
-    , toLabel = toString
+    , toLabel = toLabel
     , defaultLabel = "-- Nothing Selected --"
     , id = Nothing
     }
@@ -100,42 +97,42 @@ update msg state =
 
     case msg of
         Open ->
-            { state | isOpen = True } ! []
+            ({ state | isOpen = True }, Cmd.none)
 
         Blur ->
             case state.focusedOption of
                 Nothing ->
-                    { state | isOpen = False, focusedOption = Nothing } ! []
+                    ({ state | isOpen = False, focusedOption = Nothing }, Cmd.none)
 
                 _ ->
-                    state ! []
+                    (state, Cmd.none)
 
         Select option ->
-            { state
+            ({ state
                 | selectedOption = Resettable.update (Just option) state.selectedOption
                 , isOpen = False
                 , focusedOption = Nothing
-            } ! []
+            }, Cmd.none)
 
         Clear ->
-            { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
+            ({ state | selectedOption = Resettable.update Nothing state.selectedOption }, Cmd.none)
 
         KeyboardInput isOptionDisabled keyboardInput ->
             handleKeyboardInput state isOptionDisabled keyboardInput
 
         Focus option ->
-            { state | focusedOption = Just (focusOption state.options option) } ! []
+            ({ state | focusedOption = Just (focusOption state.options option) }, Cmd.none)
 
         BlurOption option ->
             case state.focusedOption == Just option of
                 True ->
-                    { state | focusedOption = Nothing, isOpen = False } ! []
+                    ({ state | focusedOption = Nothing, isOpen = False }, Cmd.none)
 
                 False ->
-                    state ! []
+                    (state, Cmd.none)
 
         DomFocus _ ->
-            state ! []
+            (state, Cmd.none)
 
 
 type KeyboardInput
@@ -148,7 +145,7 @@ type KeyboardInput
 onKeyboardInput : (KeyboardInput -> msg) -> Attribute msg
 onKeyboardInput msg =
 
-    onWithOptions
+    preventDefaultOn
         "keydown"
         { preventDefault = True, stopPropagation = True }
         (Decode.andThen (isSelectInputKey msg) keyCode)
@@ -176,31 +173,31 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
     case state.focusedOption of
 
         Nothing ->
-            { state | focusedOption = List.head state.options } ! []
+            ({ state | focusedOption = List.head state.options }, Cmd.none)
 
         Just focusedOption ->
             case keyboardInput of
                 Enter ->
                     case isOptionDisabled of
                         True ->
-                            state ! []
+                            (state, Cmd.none)
 
                         False ->
-                            { state
+                            ({ state
                                 | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
                                 , isOpen = False
-                            } ! []
+                            }, Cmd.none)
 
                 Space ->
                     case isOptionDisabled of
                         True ->
-                            state ! []
+                            (state, Cmd.none)
 
                         False ->
-                            { state
+                            ({ state
                                 | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
                                 , isOpen = False
-                            } ! []
+                            }, Cmd.none)
 
                 Up ->
                     let
@@ -208,8 +205,8 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
                             focusPreviousOption state.options focusedOption
 
                     in
-                        { state | focusedOption = Just newFocusedOption }
-                            ! [ Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus) ]
+                        ({ state | focusedOption = Just newFocusedOption
+                        }, Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
 
                 Down ->
                     let
@@ -217,8 +214,8 @@ handleKeyboardInput state isOptionDisabled keyboardInput =
                             focusNextOption state.options focusedOption
 
                     in
-                        { state | focusedOption = Just newFocusedOption }
-                            ! [ Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus) ]
+                        ({ state | focusedOption = Just newFocusedOption
+                        }, Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
 
 
 focusOption : List option -> option -> option
@@ -229,7 +226,7 @@ focusOption options option =
             option
 
         False ->
-            Debug.crash ("SELECT ERROR - can't focus" ++ Form.toHtmlId option ++ " it is not a valid option for this select.")
+            Debug.todo ("SELECT ERROR - can't focus" ++ Form.toHtmlId option ++ " it is not a valid option for this select.")
 
 
 focusPreviousOption : List option -> option -> option
@@ -262,7 +259,7 @@ render state viewState =
             lazy2 open state viewState
 
 
-closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
+closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
 
     div
@@ -271,9 +268,9 @@ closed state viewState =
             [ Css.input viewState.isError viewState.isLocked
             , Html.maybeAttribute id viewState.id
             , disabled viewState.isLocked
-            , tabindex 0 ? not viewState.isLocked
-            , onFocus Open ? not viewState.isLocked
-            , onClick Open ? not viewState.isLocked
+            , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
+            , onFocus Open |> Html.attributeIf (not viewState.isLocked)
+            , onClick Open |> Html.attributeIf (not viewState.isLocked)
             ]
             [ div
                 [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
@@ -281,13 +278,12 @@ closed state viewState =
                 ]
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
             , clearButton state viewState
-            , Icon.render Icon.ExpandMore 16 Color.black
+            , FeatherIcons.chevronDown |> FeatherIcons.toHtml
             ]
         ]
-        |> Html.toUnstyled
 
 
-open : State option -> ViewState option -> VirtualDom.Node (Msg option)
+open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
 
     div
@@ -307,14 +303,13 @@ open state viewState =
             ]
         , optionList state viewState
         ]
-        |> Html.toUnstyled
 
 
 clearButton : State option -> ViewState option -> Html (Msg option)
 clearButton state viewState =
 
     Html.divIf (viewState.isClearable && Resettable.getValue state.selectedOption /= Nothing)
-        [ onWithOptions "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear) ]
+        [ preventDefaultOn "mousedown" { preventDefault = True, stopPropagation = True } (Decode.succeed Clear) ]
         [ FeatherIcons.x |> FeatherIcons.toHtml ]
 
 
@@ -336,7 +331,7 @@ optionItem state viewState option =
         , onBlur <| BlurOption option
         , onKeyboardInput <| KeyboardInput (viewState.isOptionDisabled option)
         , tabindex -1
-        , onMouseDown (Select option) ? not (viewState.isOptionDisabled option)
+        , onMouseDown (Select option) |> Html.attributeIf (not (viewState.isOptionDisabled option))
         ]
         [ text (viewState.toLabel option) ]
 

@@ -36,7 +36,6 @@ import Html.Styled.Events exposing (onClick)
 import Html.Styled.Bdt as Html
 
 import Time exposing (Time)
-import Color
 
 import EverySet exposing (EverySet)
 

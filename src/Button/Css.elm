@@ -7,7 +7,6 @@ import Css.Transitions as Transitions exposing (transition)
 import Html.Styled exposing (Html, Attribute)
 import Html.Styled.Attributes exposing (css)
 
-import Color
 
 import Html.Styled.Bdt exposing ((?))
 

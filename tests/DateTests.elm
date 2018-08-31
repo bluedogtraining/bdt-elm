@@ -3,9 +3,8 @@ module DateTests exposing (suite)
 import Test exposing (..)
 import Expect exposing (Expectation)
 
-import Time
-
 import Time exposing (Posix)
+
 import Date.Bdt as Date
 
 
@@ -25,13 +24,13 @@ suite =
 
 test1 : () -> Expectation
 test1 _ =
-    Date.toString (Date.fromTime <| Time.second * 1531122187)
+    Date.toString (Time.millisToPosix <| 1531122187 * 1000)
         |> Expect.equal "09/07/2018"
 
 
 test2 : () -> Expectation
 test2 _ =
-    Date.maybeDateToString (Just <| Date.fromTime <| Time.second * 1531122187)
+    Date.maybeDateToString (Just <| Time.millisToPosix <| 1531122187 * 1000)
         |> Expect.equal "09/07/2018"
 
 
@@ -43,7 +42,7 @@ test3 _ =
 
 test4 : () -> Expectation
 test4 _ =
-    Date.maybeDateToTimeString (Just <| Date.fromTime <| Time.second * 1531122187)
+    Date.maybeDateToTimeString (Just <| Time.millisToPosix <| 1531122187 * 1000)
         |> Expect.equal "17:43:07"
 
 
@@ -55,7 +54,7 @@ test5 _ =
 
 test6 : () -> Expectation
 test6 _ =
-    Date.maybeDateToDateTimeString (Just <| Date.fromTime <| Time.second * 1531122187)
+    Date.maybeDateToDateTimeString (Just <| Time.millisToPosix <| 1531122187 * 1000)
         |> Expect.equal "09/07/2018 17:43:07"
 
 
@@ -67,15 +66,15 @@ test7 _ =
 
 test8 : () -> Expectation
 test8 _ =
-    [ Date.fromTime <| Time.second * 1531122187
-    , Date.fromTime <| Time.second * 1431022187
-    , Date.fromTime <| Time.second * 1631522187
-    , Date.fromTime <| Time.second * 1501522187
+    [ Time.millisToPosix (1531122187 * 1000)
+    , Time.millisToPosix (1431022187 * 1000)
+    , Time.millisToPosix (1631522187 * 1000)
+    , Time.millisToPosix (1501522187 * 1000)
     ]
         |> List.sortWith Date.order
         |> Expect.equal
-            [ Date.fromTime <| Time.second * 1431022187
-            , Date.fromTime <| Time.second * 1501522187
-            , Date.fromTime <| Time.second * 1531122187
-            , Date.fromTime <| Time.second * 1631522187
+            [ Time.millisToPosix (1431022187 * 1000)
+            , Time.millisToPosix (1501522187 * 1000)
+            , Time.millisToPosix (1531122187 * 1000)
+            , Time.millisToPosix (1631522187 * 1000)
             ]

@@ -18,9 +18,7 @@ import Html.Styled.Lazy exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 
-import VirtualDom
-
-import Dom
+import Browser.Dom as Dom
 import Dict
 import Task
 import Http
@@ -31,7 +29,7 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
 
 import Form.Helpers as Form
-import Html.Styled.Bdt as Html exposing ((?))
+import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
 import Form.SearchSelect.Css as Css
@@ -77,14 +75,14 @@ type alias ViewState option =
     }
 
 
-initialViewState : ViewState option
-initialViewState =
+initialViewState : (option -> String) -> ViewState option
+initialViewState toLabel =
     { inputMinimum = 2
     , isLocked = False
     , isClearable = False
     , isError = False
     , isOptionDisabled = always False
-    , toLabel = toString
+    , toLabel = toLabel
     , defaultLabel = "-- Nothing Selected --"
     , id = Nothing
     }
@@ -111,45 +109,45 @@ update msg state =
 
     case msg of
         Open ->
-            { state | isOpen = True } ! []
+            ({ state | isOpen = True }, Cmd.none)
 
         Blur ->
-            { state | isOpen = False, input = "", focusedOption = Nothing } ! []
+            ({ state | isOpen = False, input = "", focusedOption = Nothing }, Cmd.none)
 
         UpdateSearchInput inputMinimum value ->
-            { state | input = value, isSearching = shouldSearch inputMinimum value }
-                ! [ if shouldSearch inputMinimum value then searchRequest state.searchUrl value state.optionDecoder else Cmd.none ]
+            ({ state | input = value, isSearching = shouldSearch inputMinimum value
+            }, if shouldSearch inputMinimum value then searchRequest state.searchUrl value state.optionDecoder else Cmd.none)
 
         Response result ->
             case result of
                 Err error ->
-                    { state | isSearching = False } ! []
+                    ({ state | isSearching = False }, Cmd.none)
 
                 Ok options ->
-                    { state | isSearching = False, options = options, focusedOption = Nothing } ! []
+                    ({ state | isSearching = False, options = options, focusedOption = Nothing }, Cmd.none)
 
         Clear ->
-            { state | selectedOption = Resettable.update Nothing state.selectedOption } ! []
+            ({ state | selectedOption = Resettable.update Nothing state.selectedOption }, Cmd.none)
 
         SelectOption selectedOption ->
-            { state
+            ({ state
                 | input = ""
                 , selectedOption = Resettable.update (Just selectedOption) state.selectedOption
-            } ! []
+            }, Cmd.none)
 
         KeyboardInput keyboardInput ->
             handleKeyboardInput state keyboardInput
 
         Focus option ->
-            { state | focusedOption = Just (focusOption state.options option) } ! []
+            ({ state | focusedOption = Just (focusOption state.options option) }, Cmd.none)
 
         BlurOption option ->
             if Just option == state.focusedOption
-            then { state | focusedOption = Nothing, isOpen = False } ! []
-            else state ! []
+            then ({ state | focusedOption = Nothing, isOpen = False }, Cmd.none)
+            else (state, Cmd.none)
 
         DomFocus _ ->
-            state ! []
+            (state, Cmd.none)
 
 
 type KeyboardInput
@@ -161,9 +159,8 @@ type KeyboardInput
 onKeyboardInput : (KeyboardInput -> msg) -> Attribute msg
 onKeyboardInput msg =
 
-    onWithOptions
+    preventDefaultOn
         "keydown"
-        { preventDefault = True, stopPropagation = True }
         (Decode.andThen (isSelectInputKey msg) keyCode)
 
 
@@ -176,7 +173,6 @@ isSelectInputKey msg code =
 
     in
         case Dict.get code dict of
-
             Just selectKeyboardInput ->
                 Decode.succeed (msg selectKeyboardInput)
 
@@ -190,13 +186,13 @@ handleKeyboardInput state keyboardInput =
     case state.focusedOption of
 
         Nothing ->
-            { state | focusedOption = List.head state.options } ! []
+            ({ state | focusedOption = List.head state.options }, Cmd.none)
 
         Just focusedOption ->
             case keyboardInput of
                 Enter ->
-                    { state | selectedOption = Resettable.update (Just focusedOption) state.selectedOption }
-                        ! [ Task.attempt DomFocus (Dom.blur "OPEN_SEARCH_SELECT") ]
+                    ({ state | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
+                    }, Task.attempt DomFocus (Dom.blur "OPEN_SEARCH_SELECT"))
 
                 Up ->
                     let
@@ -204,16 +200,17 @@ handleKeyboardInput state keyboardInput =
                             focusPreviousOption state.options focusedOption
 
                     in
-                        { state | focusedOption = Just newFocusedOption }
-                            ! [ Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus) ]
+                        ({ state | focusedOption = Just newFocusedOption
+                        }, Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
 
                 Down ->
                     let
-                        newFocusedOption = focusNextOption state.options focusedOption
+                        newFocusedOption =
+                            focusNextOption state.options focusedOption
 
                     in
-                        { state | focusedOption = Just newFocusedOption }
-                            ! [ Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus) ]
+                        ({ state | focusedOption = Just newFocusedOption
+                        }, Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
 
 
 focusOption : List option -> option -> option
@@ -224,7 +221,7 @@ focusOption options option =
             option
 
         False ->
-            Debug.crash ("MULTISELECT ERROR - can't focus" ++ Form.toHtmlId option ++ " it is not a valid option for this select.")
+            Debug.todo ("MULTISELECT ERROR - can't focus" ++ Form.toHtmlId option ++ " it is not a valid option for this select.")
 
 
 focusPreviousOption : List option -> option -> option
@@ -272,7 +269,7 @@ render state viewState =
             lazy2 open state viewState
 
 
-closed : State option -> ViewState option -> VirtualDom.Node (Msg option)
+closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
 
     div
@@ -283,17 +280,16 @@ closed state viewState =
             , Html.maybeAttribute id viewState.id
             , type_ "text"
             , disabled viewState.isLocked
-            , tabindex 0 ? not viewState.isLocked
-            , onFocus Open ? not viewState.isLocked
-            , onClick Open ? not viewState.isLocked
+            , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
+            , onFocus Open |> Html.attributeIf (not viewState.isLocked)
+            , onClick Open |> Html.attributeIf (not viewState.isLocked)
             , value (state.selectedOption |> Resettable.getValue |> Maybe.map viewState.toLabel |> Maybe.withDefault "" )
             ]
             []
         ]
-        |> Html.toUnstyled
 
 
-open : State option -> ViewState option -> VirtualDom.Node (Msg option)
+open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
 
     div
@@ -314,7 +310,6 @@ open state viewState =
             []
         , searchResults state viewState
         ]
-        |> Html.toUnstyled
 
 
 searchResults : State option -> ViewState option -> Html (Msg option)
@@ -349,7 +344,7 @@ infoMessage message =
 
     case message of
         InputMinimum int ->
-            infoMessageContainer ("please type at least " ++ toString int ++ " characters to search")
+            infoMessageContainer ("please type at least " ++ String.fromInt int ++ " characters to search")
 
         Searching ->
             infoMessageContainer "searching .."

@@ -2,11 +2,6 @@ module Form.DatePicker.Helpers exposing (..)
 
 import Time exposing (Posix, Month (..))
 
-import Date.Extra.Core as Date
-import Date.Extra.Create as Date
-import Date.Extra.Duration as Date
-import Date.Extra.Compare as Date
-
 import List.Extra as List
 
 import Form.Select as Select
@@ -25,7 +20,7 @@ toTimeLabel date =
 timeToString : Posix -> String
 timeToString date =
 
-    [ Date.hour date, Date.minute date, Date.second date ]
+    [ Time.toHour Time.utc date, Time.toMinute Time.utc date, Time.toSecond Time.utc date ]
         |> List.map (String.fromInt >> String.padLeft 2 '0')
         |> List.intersperse ":"
         |> String.concat
@@ -37,18 +32,18 @@ dateToString date =
     let
         day =
             date
-                |> Date.day
+                |> Time.toDay Time.utc
                 |> String.fromInt
                 |> String.pad 2 '0'
 
         month =
             date
-                |> Date.month
+                |> Time.toMonth Time.utc
                 |> monthToStringNumber
 
         year =
             date
-                |> Date.year
+                |> Time.toYear Time.utc
                 |> String.fromInt
 
     in
@@ -112,12 +107,13 @@ maybeClamp maybeMinDate maybeMaxDate date =
 clamp : Posix -> Posix -> Posix -> Posix
 clamp minDate maxDate date =
 
-    if Date.is Date.Before date minDate then
+    if Time.posixToMillis date < Time.posixToMillis minDate then
         minDate
-    else if Date.is Date.After date maxDate then
+    else if Time.posixToMillis date > Time.posixToMillis maxDate then
         maxDate
     else
         date
+
 
 
 previousYear : Posix -> Posix

@@ -86,6 +86,7 @@ type alias Msg option =
                 let
                     (newSelect, cmd) =
                         SearchSelect.update selectMsg mode.mySearchSelect
+
                 in
                     { model | mySearchSelect = newSelect } ! [ cmd ]
 -}
@@ -101,13 +102,14 @@ update msg (Model state) =
     myView model =
         div
             []
-            [ SearchSelect.view model.mySearchSelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
+            [ SearchSelect.view model.mySearchSelect .name
+                -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
 -}
-view : Model option -> View option
-view (Model state) =
+view : Model option -> (option -> String) ->  View option
+view (Model state) toLabel =
 
-    View state Internal.initialViewState
+    View state (Internal.initialViewState toLabel)
 
 
 {-| Transforms an SearchSelect.View into Html SearchSelect.Msg
@@ -116,7 +118,7 @@ view (Model state) =
     myView model =
         div
             []
-            [ SearchSelect.view model.mySearchSelect
+            [ SearchSelect.view model.mySearchSelect .name
                 |> SearchSelect.render
                 |> Html.map UpdateMySearchSelect
             ]

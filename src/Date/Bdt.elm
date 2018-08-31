@@ -17,34 +17,32 @@ module Date.Bdt exposing
 
 -}
 
-import Date exposing (Date, Month (..), month)
-import Date.Extra.Compare
-import Date.Extra.Format exposing (isoString)
+import Time exposing (Posix, Month (..))
 
 import Json.Encode as Encode exposing (Value)
 
 
 {-| Returns a string as dd/mm/yyyy
 -}
-toString : Date -> String
+toString : Posix -> String
 toString date =
 
     let
         day =
             date
-                |> Date.day
-                |> Basics.toString
+                |> Time.toDay Time.utc
+                |> String.fromInt
                 |> String.pad 2 '0'
 
         month =
             date
-                |> Date.month
+                |> Time.toMonth Time.utc
                 |> monthToString
 
         year =
             date
-                |> Date.year
-                |> Basics.toString
+                |> Time.toYear Time.utc
+                |> String.fromInt
 
     in
         [ day, month, year ]
@@ -53,7 +51,7 @@ toString date =
 
 {-| Returns a string as `dd/mm/yyyy`, defaulted to `––/––/––––`
 -}
-maybeDateToString : Maybe Date -> String
+maybeDateToString : Maybe Posix -> String
 maybeDateToString date =
 
     date
@@ -63,24 +61,24 @@ maybeDateToString date =
 
 {-| Returns a string as `ss:mm:hh`, defaulted to `00:00:00`
 -}
-maybeDateToTimeString : Maybe Date -> String
-maybeDateToTimeString date =
+maybeDateToTimeString : Maybe Posix -> String
+maybeDateToTimeString mDate =
 
-    case date of
+    case mDate of
+        Nothing ->
+            "00:00:00"
 
-            Nothing ->
-                "00:00:00"
-
-            Just date ->
-                [ Date.hour, Date.minute, Date.second ]
-                    |> List.map (((|>) date) >> Basics.toString >> String.pad 2 '0')
-                    |> List.intersperse ":"
-                    |> String.concat
+        Just date ->
+            [ Time.toHour, Time.toMinute, Time.toSecond ]
+                |> List.map (\f -> f Time.utc)
+                |> List.map (((|>) date) >> String.fromInt >> String.pad 2 '0')
+                |> List.intersperse ":"
+                |> String.concat
 
 
 {-| Returns a string as `ss:mm:hh dd/mm/yyyy`, defaulted to `00:00:00 ––/––/––––`
 -}
-maybeDateToDateTimeString : Maybe Date -> String
+maybeDateToDateTimeString : Maybe Posix -> String
 maybeDateToDateTimeString date =
 
     maybeDateToString date ++ " " ++ maybeDateToTimeString date
@@ -123,12 +121,12 @@ monthToString month =
 
     List.sortWith Date.order [date1, date2, date3]
 -}
-order : Date -> Date -> Order
+order : Posix -> Posix -> Order
 order date1 date2 =
 
-    if Date.Extra.Compare.is Date.Extra.Compare.Before date1 date2 then
+    if Time.posixToMillis date1 > Time.posixToMillis date2 then
         LT
-    else if Date.Extra.Compare.is Date.Extra.Compare.After date1 date2 then
+    else if Time.posixToMillis date1 < Time.posixToMillis date2 then
         GT
     else
         EQ
@@ -136,14 +134,14 @@ order date1 date2 =
 
 {-| Encode a Date
 -}
-encode : Date -> Value
+encode : Posix -> Value
 encode =
-    isoString >> Encode.string
+    Time.posixToMillis >> Encode.int
 
 
 {-| Encode a Maybe Date
 -}
-encodeMaybe : Maybe Date -> Value
+encodeMaybe : Maybe Posix -> Value
 encodeMaybe maybeDate =
 
     maybeDate

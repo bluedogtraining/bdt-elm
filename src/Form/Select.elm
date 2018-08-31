@@ -105,10 +105,10 @@ update msg (Model state) =
             [ Select.view model.mySelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
 -}
-view : Model option -> View option
-view (Model state) =
+view : Model option -> (option -> String) -> View option
+view (Model state) toLabel =
 
-    View state Internal.initialViewState
+    View state (Internal.initialViewState toLabel)
 
 
 {-| Transforms an Select.View into Html Select.Msg

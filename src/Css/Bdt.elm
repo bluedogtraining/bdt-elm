@@ -13,10 +13,10 @@ import Css exposing (Style, indeterminate)
 {-| Optionally add a Style.
 
     css
-        [ cursor pointer ? canToggle
+        [ cursor pointer |> Css.styleIf canToggle
         ]
 -}
-styleIf : Style -> Bool -> Style
-styleIf style bool =
+styleIf : Bool -> Style -> Style
+styleIf bool style =
 
     if bool then style else indeterminate []

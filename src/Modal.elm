@@ -18,7 +18,6 @@ import Html.Styled.Attributes exposing (..)
 
 import Html.Styled.Bdt as Html
 
-import Color
 
 import FeatherIcons
 import Button exposing (Button)

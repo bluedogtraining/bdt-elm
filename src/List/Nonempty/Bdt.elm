@@ -29,9 +29,8 @@ import List.Nonempty as Nonempty exposing (Nonempty)
 
 -}
 decoder : Decoder a -> Decoder (Nonempty a)
-decoder decoder =
-
-    decoder
+decoder decoder_ =
+    decoder_
         |> Decode.list
         |> Decode.map (Nonempty.fromList >> (Result.fromMaybe "A nonempty result contained an empty list"))
         |> Decode.andThen Decode.fromResult

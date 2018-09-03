@@ -371,7 +371,7 @@ closed state viewState =
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel) ]
             , Html.divIf viewState.isInput
                 []
-                [ FeatherIcons.calendar |> FeatherIcons.toHtml ]
+                [ FeatherIcons.calendar |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
             ]
         ]
 
@@ -392,7 +392,7 @@ open state viewState =
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel)  ]
             , Html.divIf viewState.isInput
                 []
-                [ FeatherIcons.calendar |> FeatherIcons.toHtml ]
+                [ FeatherIcons.calendar |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
             ]
         , calendar state viewState
         ]
@@ -462,8 +462,8 @@ previousYearArrow viewState navigationDate =
             ]
             [ div
                 [ Css.offsetYearArrow ]
-                [ FeatherIcons.chevronLeft |> FeatherIcons.toHtml ]
-            , FeatherIcons.chevronLeft |> FeatherIcons.toHtml
+                [ FeatherIcons.chevronLeft |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            , FeatherIcons.chevronLeft |> FeatherIcons.toHtml [] |> Html.fromUnstyled
             ]
 
 
@@ -480,7 +480,7 @@ previousMonthArrow viewState navigationDate =
             [ Css.monthArrows isDisabled
             , onClick PreviousMonth |> Html.attributeIf (not isDisabled)
             ]
-            [ FeatherIcons.chevronLeft |> FeatherIcons.toHtml ]
+            [ FeatherIcons.chevronLeft |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 nextYearArrow : ViewState -> Posix -> Html Msg
@@ -498,8 +498,8 @@ nextYearArrow viewState navigationDate =
             ]
             [ div
                 [ Css.offsetYearArrow ]
-                [ FeatherIcons.chevronRight |> FeatherIcons.toHtml ]
-            , FeatherIcons.chevronRight |> FeatherIcons.toHtml
+                [ FeatherIcons.chevronRight |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            , FeatherIcons.chevronRight |> FeatherIcons.toHtml [] |> Html.fromUnstyled
             ]
 
 
@@ -516,7 +516,7 @@ nextMonthArrow viewState navigationDate =
             [ Css.monthArrows isDisabled
             , onClick NextMonth |> Html.attributeIf (not isDisabled)
             ]
-            [ FeatherIcons.chevronRight |> FeatherIcons.toHtml ]
+            [ FeatherIcons.chevronRight |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 calendarWeekDay : String -> Html Msg

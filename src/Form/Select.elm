@@ -35,6 +35,8 @@ import Html.Styled exposing (Html)
 
 import Tuple
 
+import List.Nonempty as Nonempty exposing (Nonempty)
+
 import Form.Select.Internal as Internal
 
 
@@ -64,7 +66,7 @@ type View option
         { mySelect = Select.init [Mr, Ms, Dr]
         }
 -}
-init : List option -> Model option
+init : Nonempty option -> Model option
 init =
     Internal.init >> Model
 

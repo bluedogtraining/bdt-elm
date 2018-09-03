@@ -147,3 +147,11 @@ encodeMaybe maybeDate =
     maybeDate
         |> Maybe.map encode
         |> Maybe.withDefault Encode.null
+
+
+fromPosix : Time.Zone -> Time.Posix -> Date
+fromPosix zone posix =
+    Date.fromCalendarDate
+        (Time.toYear zone posix)
+        (Time.toMonth zone posix)
+        (Time.toDay zone posix)

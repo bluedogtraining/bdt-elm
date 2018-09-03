@@ -3,6 +3,8 @@ module Form.SelectTests exposing (suite)
 import Test exposing (..)
 import Expect exposing (Expectation)
 
+import List.Nonempty exposing (Nonempty (..))
+
 import Form.Select as Select
 
 
@@ -15,5 +17,5 @@ suite =
 
 test1 : () -> Expectation
 test1 _ =
-    Select.init []
-        |> Expect.equal (Select.init [])
+    Select.init (Nonempty "hi" ["ho", "haha"])
+        |> Expect.equal (Select.init <| Nonempty "hi" ["ho", "haha"])

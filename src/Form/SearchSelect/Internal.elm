@@ -28,7 +28,11 @@ import List.Extra as List
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
 
-import Form.Helpers as Form
+import Form.Helpers as Form exposing
+    ( UpDown (..), onUpDown, onEnter
+    , getNextOption, getPreviousOption
+    , focusOption
+    )
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
@@ -96,9 +100,9 @@ type Msg option
     | Blur
     | UpdateSearchInput Int String
     | Response (Result Http.Error (List option))
-    | SelectOption option
+    | Select option
     | Clear
-    | KeyboardInput KeyboardInput
+    | UpDown (option -> String) UpDown
     | Focus option
     | BlurOption option
     | DomFocus (Result Dom.Error ())
@@ -129,17 +133,30 @@ update msg state =
         Clear ->
             ({ state | selectedOption = Resettable.update Nothing state.selectedOption }, Cmd.none)
 
-        SelectOption selectedOption ->
+        Select selectedOption ->
             ({ state
                 | input = ""
                 , selectedOption = Resettable.update (Just selectedOption) state.selectedOption
             }, Cmd.none)
 
-        KeyboardInput keyboardInput ->
-            handleKeyboardInput state keyboardInput
+        UpDown toLabel Up ->
+            let
+                newFocusedOption =
+                    getPreviousOption state.options state.focusedOption
+
+            in
+                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
+
+        UpDown toLabel Down ->
+            let
+                newFocusedOption =
+                    getNextOption state.options state.focusedOption
+
+            in
+                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
 
         Focus option ->
-            ({ state | focusedOption = Just (focusOption state.options option) }, Cmd.none)
+            ({ state | focusedOption = Just option }, Cmd.none)
 
         BlurOption option ->
             if Just option == state.focusedOption
@@ -148,96 +165,6 @@ update msg state =
 
         DomFocus _ ->
             (state, Cmd.none)
-
-
-type KeyboardInput
-    = Enter
-    | Up
-    | Down
-
-
-onKeyboardInput : (KeyboardInput -> msg) -> Attribute msg
-onKeyboardInput msg =
-
-    preventDefaultOn
-        "keydown"
-        (Decode.andThen (isSelectInputKey msg) keyCode)
-
-
-isSelectInputKey : (KeyboardInput -> msg) -> Int -> Decoder msg
-isSelectInputKey msg code =
-
-    let
-        dict =
-            Dict.fromList [(13, Enter), (38, Up), (40, Down)]
-
-    in
-        case Dict.get code dict of
-            Just selectKeyboardInput ->
-                Decode.succeed (msg selectKeyboardInput)
-
-            Nothing ->
-                Decode.fail "Not a search-select input key"
-
-
-handleKeyboardInput: State option -> KeyboardInput -> (State option, Cmd (Msg option))
-handleKeyboardInput state keyboardInput =
-
-    case state.focusedOption of
-
-        Nothing ->
-            ({ state | focusedOption = List.head state.options }, Cmd.none)
-
-        Just focusedOption ->
-            case keyboardInput of
-                Enter ->
-                    ({ state | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
-                    }, Task.attempt DomFocus (Dom.blur "OPEN_SEARCH_SELECT"))
-
-                Up ->
-                    let
-                        newFocusedOption =
-                            focusPreviousOption state.options focusedOption
-
-                    in
-                        ({ state | focusedOption = Just newFocusedOption
-                        }, Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
-
-                Down ->
-                    let
-                        newFocusedOption =
-                            focusNextOption state.options focusedOption
-
-                    in
-                        ({ state | focusedOption = Just newFocusedOption
-                        }, Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
-
-
-focusOption : List option -> option -> option
-focusOption options option =
-
-    case List.member option options of
-        True ->
-            option
-
-        False ->
-            Debug.todo ("MULTISELECT ERROR - can't focus" ++ Form.toHtmlId option ++ " it is not a valid option for this select.")
-
-
-focusPreviousOption : List option -> option -> option
-focusPreviousOption options option =
-
-    focusNextOption (List.reverse options) option
-
-
-focusNextOption : List option -> option -> option
-focusNextOption options option =
-
-    options
-        |> List.dropWhile ((/=) option)
-        |> List.drop 1
-        |> List.head
-        |> Maybe.withDefault option
 
 
 -- SEARCH REQUEST --
@@ -304,7 +231,7 @@ open state viewState =
             , disabled viewState.isLocked
             , onInput <| UpdateSearchInput viewState.inputMinimum
             , onBlur Blur
-            , onKeyboardInput KeyboardInput
+            , onUpDown <| UpDown viewState.toLabel
             , value state.input
             ]
             []
@@ -374,14 +301,14 @@ searchResultItem focusedOption toLabel option =
 
     div
         [ Css.optionItem (Just option == focusedOption)
-        , id (Form.toHtmlId option)
+        , id <| Form.toHtmlId toLabel option
         -- use onMouseDown over onClick so that it triggers before the onBlur on the input
-        , onMouseDown (SelectOption option)
-        , onFocus (Focus option)
-        , onBlur (BlurOption option)
-        , onKeyboardInput KeyboardInput
+        , onMouseDown <| Select option
+        , onFocus <| Focus option
+        , onBlur <| BlurOption option
+        , onEnter <| Select option
         ]
-        [ text (toLabel option) ]
+        [ text <| toLabel option ]
 
 
 -- STATE SETTERS --

@@ -22,16 +22,19 @@ import Browser.Dom as Dom
 import Dict
 import Task
 
-import List.Extra as List
 import List.Nonempty as Nonempty exposing (Nonempty)
 
 import Json.Decode as Decode exposing (Decoder)
 
-import Form.Helpers as Form
+import FeatherIcons
+
+import Form.Helpers as Form exposing
+    ( UpDown (..), onUpDown, onSpaceEnter
+    , getNextOption, getPreviousOption
+    , focusOption
+    )
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
-
-import FeatherIcons
 
 import Form.MultiSelect.Css as Css
 
@@ -86,9 +89,8 @@ type Msg option
     = Open
     | Blur
     | Select option
-    | Unselect option
     | Clear
-    | KeyboardInput Bool KeyboardInput
+    | UpDown (option -> String) UpDown
     | Focus option
     | BlurOption option
     | DomFocus (Result Dom.Error ())
@@ -118,164 +120,50 @@ update msg state =
                      (state, Cmd.none)
 
         Select option ->
-            ({ state | selectedOptions = Resettable.update (selectOption state option) state.selectedOptions }, Cmd.none)
-
-        Unselect option ->
-            ({ state | selectedOptions = Resettable.update (unselectOption state.selectedOptions option) state.selectedOptions }, Cmd.none)
+            ({ state | selectedOptions = toggleOption option state.selectedOptions }, Cmd.none)
 
         Clear ->
             ({ state | selectedOptions = Resettable.update [] state.selectedOptions }, Cmd.none)
 
-        KeyboardInput isOptionDisabled keyboardInput ->
-            handleKeyboardInput state isOptionDisabled keyboardInput
+        UpDown toLabel Up ->
+            let
+                newFocusedOption =
+                    getPreviousOption (Nonempty.toList state.options) state.focusedOption
+
+            in
+                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
+
+        UpDown toLabel Down ->
+            let
+                newFocusedOption =
+                    getNextOption (Nonempty.toList state.options) state.focusedOption
+
+            in
+                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
 
         Focus option ->
-            ({ state | focusedOption = Just (focusOption state.options option) }, Cmd.none)
+            ({ state | focusedOption = Just option }, Cmd.none)
 
         DomFocus result ->
             (state, Cmd.none)
 
 
-selectOption : State option -> option -> (option -> String) -> List option
-selectOption state option toLabel =
-
-    case Nonempty.member option state.options of
-        True ->
-            option :: Resettable.getValue state.selectedOptions
-
-        False ->
-            Debug.todo ("MULTISELECT ERROR - can't select " ++ toLabel option ++ " is not a valid option for this select.")
-
-
-unselectOption : Resettable (List option) -> option -> (option -> String) -> List option
-unselectOption selectedOptions option toLabel =
-
-    case List.member option (Resettable.getValue selectedOptions) of
-        True ->
-            List.filter ((/=) option) (Resettable.getValue selectedOptions)
-
-        False ->
-            Debug.todo ("MULTISELECT ERROR - can't unselect " ++ toLabel option ++ " it isn't selected")
-
-
-focusOption : Nonempty option -> option -> (option -> String) -> option
-focusOption options option toLabel =
-
-    case Nonempty.member option options of
-        True ->
-            option
-
-        False ->
-            Debug.todo ("MULTISELECT ERROR - can't focus " ++ toLabel option ++ " it is not a valid option for this select.")
-
-
-type KeyboardInput
-    = Enter
-    | Space
-    | Up
-    | Down
-
-
-onKeyboardInput : (KeyboardInput -> msg) -> Attribute msg
-onKeyboardInput msg =
-
-    preventDefaultOn
-        "keydown"
-        (Decode.andThen (isSelectInputKey msg) keyCode)
-
-
-isSelectInputKey : (KeyboardInput -> msg) -> Int -> Decoder msg
-isSelectInputKey msg code =
-
+toggleOption : option -> Resettable (List option) -> Resettable (List option)
+toggleOption option selectedOptions =
     let
-        dict =
-            Dict.fromList [(13, Enter), (32, Space), (38, Up), (40, Down)]
+        options =
+            Resettable.getValue selectedOptions
+
+        newOptions =
+            case List.member option options of
+                True ->
+                    List.filter ((/=) option) options
+
+                False ->
+                    option :: options
 
     in
-        case Dict.get code dict of
-
-            Just selectKeyboardInput ->
-                Decode.succeed (msg selectKeyboardInput)
-
-            Nothing ->
-                Decode.fail "Not a select input key"
-
-
-handleKeyboardInput: State option -> Bool -> KeyboardInput -> (State option, Cmd (Msg option))
-handleKeyboardInput state isOptionDisabled keyboardInput =
-
-    case state.focusedOption of
-
-        Nothing ->
-            ({ state | focusedOption = Just (Nonempty.head state.options) }, Cmd.none)
-
-        Just focusedOption ->
-            case keyboardInput of
-                Enter ->
-                    case isOptionDisabled of
-                        True ->
-                            (state, Cmd.none)
-
-                        False ->
-                            ({ state
-                                 | selectedOptions = Resettable.update (toggleOption focusedOption state.selectedOptions) state.selectedOptions
-                            }, Cmd.none)
-
-                Space ->
-                    case isOptionDisabled of
-                        True ->
-                            (state, Cmd.none)
-
-                        False ->
-                            ({ state
-                                | selectedOptions = Resettable.update (toggleOption focusedOption state.selectedOptions) state.selectedOptions
-                            }, Cmd.none)
-
-                Up ->
-                    let
-                        newFocusedOption =
-                            focusPreviousOption state.options focusedOption
-
-                    in
-                        ({ state | focusedOption = Just newFocusedOption }
-                        , Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
-
-                Down ->
-                    let
-                        newFocusedOption =
-                            focusNextOption state.options focusedOption
-
-                    in
-                        ({ state | focusedOption = Just newFocusedOption }
-                        , Task.attempt DomFocus (Form.toHtmlId newFocusedOption |> Dom.focus))
-
-
-toggleOption : option -> Resettable (List option) -> List option
-toggleOption option selectedOptions =
-
-    case List.member option (Resettable.getValue selectedOptions) of
-        True ->
-            List.filter ((/=) option) (Resettable.getValue selectedOptions)
-
-        False ->
-            option :: (Resettable.getValue selectedOptions)
-
-
-focusPreviousOption : Nonempty option -> option -> option
-focusPreviousOption options option =
-
-    focusNextOption (Nonempty.reverse options) option
-
-
-focusNextOption : Nonempty option -> option -> option
-focusNextOption options option =
-
-    options
-        |> Nonempty.toList
-        |> List.dropWhile ((/=) option)
-        |> List.drop 1
-        |> List.head
-        |> Maybe.withDefault option
+        Resettable.update newOptions selectedOptions
 
 
 -- VIEW --
@@ -310,7 +198,7 @@ closed state viewState =
                 ]
                 [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
             , clearButton state viewState
-            , Html.divIf (not viewState.isLocked) [] [ FeatherIcons.chevronDown |> FeatherIcons.toHtml ]
+            , Html.divIf (not viewState.isLocked) [] [ FeatherIcons.chevronDown |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
             ]
         ]
 
@@ -324,7 +212,7 @@ open state viewState =
             [ Css.input viewState.isError viewState.isLocked
             , tabindex -1
             , onBlur Blur
-            , onKeyboardInput <| KeyboardInput False
+            , onUpDown <| UpDown viewState.toLabel
             , Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)
             , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
             ]
@@ -337,8 +225,8 @@ clearButton : State option -> ViewState option -> Html (Msg option)
 clearButton state viewState =
 
     Html.divIf (viewState.isClearable && List.isEmpty (Resettable.getValue state.selectedOptions))
-        [ preventDefaultOn "mousedown" (Decode.succeed Clear) ]
-        [ FeatherIcons.x |> FeatherIcons.toHtml ]
+        [ preventDefaultOn "mousedown" <| Decode.succeed (Clear, True) ]
+        [ FeatherIcons.x |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 optionText : String -> (option -> String) -> Resettable (List option) -> String
@@ -367,19 +255,19 @@ optionItem state viewState option =
 
     div
         [ Css.optionItem (viewState.isOptionDisabled option) (state.focusedOption == Just option)
-        , id <| Form.toHtmlId option
-        , handleMouseDown state.selectedOptions option
+        , id <| Form.toHtmlId viewState.toLabel option
         , onFocus <| Focus option
         , onBlur <| BlurOption option
-        , onKeyboardInput <| KeyboardInput viewState.isLocked
+        , handleMouseDown state.selectedOptions option
+        , onSpaceEnter (Select option) |> Html.attributeIf (not (viewState.isOptionDisabled option))
         , tabindex -1
         ]
         [ div
             [ Css.checkBox ]
             [
                 if List.member option (Resettable.getValue state.selectedOptions)
-                then FeatherIcons.checkSquare |> FeatherIcons.toHtml
-                else FeatherIcons.square |> FeatherIcons.toHtml
+                then FeatherIcons.checkSquare |> FeatherIcons.toHtml [] |> Html.fromUnstyled
+                else FeatherIcons.square |> FeatherIcons.toHtml [] |> Html.fromUnstyled
             ]
         , text (viewState.toLabel option)
         ]
@@ -389,12 +277,7 @@ handleMouseDown : Resettable (List option) -> option -> Attribute (Msg option)
 handleMouseDown selectedOptions option =
 
     -- use onMouseDown over onClick so that it triggers before the onBlur on the input
-    case List.member option (Resettable.getValue selectedOptions) of
-        True ->
-            preventDefaultOn "mousedown" (Decode.succeed <| Unselect option)
-
-        False ->
-            preventDefaultOn "mousedown" (Decode.succeed <| Select option)
+    preventDefaultOn "mousedown" <| Decode.succeed (Select option, True)
 
 
 -- STATE SETTERS --

@@ -215,16 +215,16 @@ visibleDays navigationDate =
 
         currentMonth =
             List.range 1 daysInMonth
-                |> List.map ((,) True)
+                |> List.map (Tuple.pair True)
 
         tailOfPreviousMonth =
             List.range 1 daysInPreviousMonth
                 |> List.drop (daysInPreviousMonth - startNumber)
-                |> List.map ((,) False)
+                |> List.map (Tuple.pair False)
 
         headOfNextMonth =
             List.range 1 (6 * 7 - startNumber - daysInMonth)
-                |> List.map ((,) False)
+                |> List.map (Tuple.pair False)
 
     in
         -- bundle them up and split them in groups for each week

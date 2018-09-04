@@ -3,7 +3,7 @@ module ListTests exposing (suite)
 import Test exposing (..)
 import Expect exposing (Expectation)
 
-import Time
+import Date
 
 import List.Nonempty exposing (Nonempty (..))
 
@@ -50,27 +50,27 @@ test2 _ =
 
 test3 : () -> Expectation
 test3 _ =
-    [ { name = "One", date = Time.millisToPosix 1 }
-    , { name = "Two", date = Time.millisToPosix 2 }
-    , { name = "Three", date = Time.millisToPosix 1 }
+    [ { name = "One", date = Date.fromRataDie 1 }
+    , { name = "Two", date = Date.fromRataDie 2 }
+    , { name = "Three", date = Date.fromRataDie 1 }
     ]
         |> List.sortWith (\rec1 rec2 -> Date.order rec1.date rec2.date)
         |> List.groupWhile (\rec1 rec2 -> rec1.date == rec2.date)
         |> Expect.equal
-            [ Nonempty { name = "One", date = Time.millisToPosix 1 } [ { name = "Three", date = Time.millisToPosix 1 } ]
-            , Nonempty { name = "Two", date = Time.millisToPosix 2 } []
+            [ Nonempty { name = "One", date = Date.fromRataDie 1 } [ { name = "Three", date = Date.fromRataDie 1 } ]
+            , Nonempty { name = "Two", date = Date.fromRataDie 2 } []
             ]
 
 
 test4 : () -> Expectation
 test4 _ =
-    [ { name = "One", date = Time.millisToPosix 1 }
-    , { name = "Two", date = Time.millisToPosix 2 }
-    , { name = "Three", date = Time.millisToPosix 1 }
+    [ { name = "One", date = Date.fromRataDie 1 }
+    , { name = "Two", date = Date.fromRataDie 2 }
+    , { name = "Three", date = Date.fromRataDie 1 }
     ]
         |> List.sortByDate .date
         |> Expect.equal
-            [ { name = "One", date = Time.millisToPosix 1 }
-            , { name = "Three", date = Time.millisToPosix 1 }
-            , { name = "Two", date = Time.millisToPosix 2 }
+            [ { name = "One", date = Date.fromRataDie 1 }
+            , { name = "Three", date = Date.fromRataDie 1 }
+            , { name = "Two", date = Date.fromRataDie 2 }
             ]

@@ -15,13 +15,13 @@ import List.Nonempty as Nonempty exposing (Nonempty (..))
 
 import Basics.Bdt exposing (..)
 
-import Time exposing (Posix)
+import Date exposing (Date)
 import Date.Bdt as Date
 
 
 {-| Sort a list by date
 -}
-sortByDate : (a -> Posix) -> List a -> List a
+sortByDate : (a -> Date) -> List a -> List a
 sortByDate f list =
     List.sortWith (lift2 f Date.order) list
 

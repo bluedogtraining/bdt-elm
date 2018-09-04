@@ -3,8 +3,7 @@ module DateTests exposing (suite)
 import Test exposing (..)
 import Expect exposing (Expectation)
 
-import Time exposing (Posix)
-
+import Date
 import Date.Bdt as Date
 
 
@@ -14,24 +13,24 @@ suite =
         [ test "test toString" test1
         , test "test maybeDateToString with Just" test2
         , test "test maybeDateToString with Nothing" test3
-        , test "test maybeDateToTimeString with Just" test4
-        , test "test maybeDateToTimeString with Nothing" test5
-        , test "test maybeDateToDateTimeString with Just" test6
-        , test "test maybeDateToDateTimeString with Nothing" test7
+--        , test "test maybeDateToTimeString with Just" test4
+--        , test "test maybeDateToTimeString with Nothing" test5
+--        , test "test maybeDateToDateTimeString with Just" test6
+--        , test "test maybeDateToDateTimeString with Nothing" test7
         , test "test order" test8
         ]
 
 
 test1 : () -> Expectation
 test1 _ =
-    Date.toString (Time.millisToPosix <| 1531122187 * 1000)
-        |> Expect.equal "09/07/2018"
+    Date.toString (Date.fromRataDie <| 736194)
+        |> Expect.equal "18/08/2016"
 
 
 test2 : () -> Expectation
 test2 _ =
-    Date.maybeDateToString (Just <| Time.millisToPosix <| 1531122187 * 1000)
-        |> Expect.equal "09/07/2018"
+    Date.maybeDateToString (Just <| Date.fromRataDie <| 736296)
+        |> Expect.equal "28/11/2016"
 
 
 test3 : () -> Expectation
@@ -40,41 +39,41 @@ test3 _ =
         |> Expect.equal "––/––/––––"
 
 
-test4 : () -> Expectation
-test4 _ =
-    Date.maybeDateToTimeString (Just <| Time.millisToPosix <| 1531122187 * 1000)
-        |> Expect.equal "17:43:07"
-
-
-test5 : () -> Expectation
-test5 _ =
-    Date.maybeDateToTimeString Nothing
-        |> Expect.equal "00:00:00"
-
-
-test6 : () -> Expectation
-test6 _ =
-    Date.maybeDateToDateTimeString (Just <| Time.millisToPosix <| 1531122187 * 1000)
-        |> Expect.equal "09/07/2018 17:43:07"
-
-
-test7 : () -> Expectation
-test7 _ =
-    Date.maybeDateToDateTimeString Nothing
-        |> Expect.equal "––/––/–––– 00:00:00"
+--test4 : () -> Expectation
+--test4 _ =
+--    Date.maybeDateToTimeString (Just <| Date.fromRataDie <| 1531)
+--        |> Expect.equal "17:43:07"
+--
+--
+--test5 : () -> Expectation
+--test5 _ =
+--    Date.maybeDateToTimeString Nothing
+--        |> Expect.equal "00:00:00"
+--
+--
+--test6 : () -> Expectation
+--test6 _ =
+--    Date.maybeDateToDateTimeString (Just <| Date.fromRataDie <| 1531 )
+--        |> Expect.equal "09/07/2018 17:43:07"
+--
+--
+--test7 : () -> Expectation
+--test7 _ =
+--    Date.maybeDateToDateTimeString Nothing
+--        |> Expect.equal "––/––/–––– 00:00:00"
 
 
 test8 : () -> Expectation
 test8 _ =
-    [ Time.millisToPosix (1531122187 * 1000)
-    , Time.millisToPosix (1431022187 * 1000)
-    , Time.millisToPosix (1631522187 * 1000)
-    , Time.millisToPosix (1501522187 * 1000)
+    [ Date.fromRataDie 1531
+    , Date.fromRataDie 1431
+    , Date.fromRataDie 1631
+    , Date.fromRataDie 1501
     ]
         |> List.sortWith Date.order
         |> Expect.equal
-            [ Time.millisToPosix (1431022187 * 1000)
-            , Time.millisToPosix (1501522187 * 1000)
-            , Time.millisToPosix (1531122187 * 1000)
-            , Time.millisToPosix (1631522187 * 1000)
+            [ Date.fromRataDie 1431
+            , Date.fromRataDie 1501
+            , Date.fromRataDie 1531
+            , Date.fromRataDie 1631
             ]

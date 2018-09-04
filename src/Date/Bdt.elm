@@ -1,157 +1,85 @@
-module Date.Bdt exposing
-    ( toString, maybeDateToString, maybeDateToTimeString, maybeDateToDateTimeString, monthToString
-    , order
-    , encode, encodeMaybe
-    )
+module Date.Bdt exposing (..)
 
 {-| Date Helpers
 
-# Print Dates
-@docs toString, maybeDateToString, maybeDateToTimeString, maybeDateToDateTimeString, monthToString
-
-# Sort Dates
-@docs order
-
-# Encode Dates
-@docs encode, encodeMaybe
+# Init Dates
+@docs fromPosix
 
 -}
 
-import Time exposing (Posix, Month (..))
-
-import Json.Encode as Encode exposing (Value)
-
-
-{-| Returns a string as dd/mm/yyyy
--}
-toString : Posix -> String
-toString date =
-
-    let
-        day =
-            date
-                |> Time.toDay Time.utc
-                |> String.fromInt
-                |> String.pad 2 '0'
-
-        month =
-            date
-                |> Time.toMonth Time.utc
-                |> monthToString
-
-        year =
-            date
-                |> Time.toYear Time.utc
-                |> String.fromInt
-
-    in
-        [ day, month, year ]
-            |> String.join "/"
+import Time exposing (Posix)
+import Date exposing (Date)
 
 
-{-| Returns a string as `dd/mm/yyyy`, defaulted to `––/––/––––`
--}
-maybeDateToString : Maybe Posix -> String
-maybeDateToString date =
+fromPosix : Posix -> Date
+fromPosix posix =
+    Date.fromCalendarDate
+        (Time.toYear Time.utc posix)
+        (Time.toMonth Time.utc posix)
+        (Time.toDay Time.utc posix)
 
+
+firstOfMonth : Date -> Date
+firstOfMonth date =
+    Date.add Date.Months -(Date.monthNumber date + 1) date
+
+
+daysInMonth : Date -> Int
+daysInMonth date =
     date
-        |> Maybe.map toString
-        |> Maybe.withDefault "––/––/––––"
-
-
-{-| Returns a string as `ss:mm:hh`, defaulted to `00:00:00`
--}
-maybeDateToTimeString : Maybe Posix -> String
-maybeDateToTimeString mDate =
-
-    case mDate of
-        Nothing ->
-            "00:00:00"
-
-        Just date ->
-            [ Time.toHour, Time.toMinute, Time.toSecond ]
-                |> List.map (\f -> f Time.utc)
-                |> List.map (((|>) date) >> String.fromInt >> String.pad 2 '0')
-                |> List.intersperse ":"
-                |> String.concat
-
-
-{-| Returns a string as `ss:mm:hh dd/mm/yyyy`, defaulted to `00:00:00 ––/––/––––`
--}
-maybeDateToDateTimeString : Maybe Posix -> String
-maybeDateToDateTimeString date =
-
-    maybeDateToString date ++ " " ++ maybeDateToTimeString date
-
-
-{-| Returns a padded Int representation of the month
-
-    Jan -> "01"
-    Feb -> "02"
-    Mar -> "03"
-    Apr -> "04"
-    May -> "05"
-    Jun -> "06"
-    Jul -> "07"
-    Aug -> "08"
-    Sep -> "09"
-    Oct -> "10"
-    Nov -> "11"
-    Dec -> "12"
--}
-monthToString : Month -> String
-monthToString month =
-
-    case month of
-        Jan -> "01"
-        Feb -> "02"
-        Mar -> "03"
-        Apr -> "04"
-        May -> "05"
-        Jun -> "06"
-        Jul -> "07"
-        Aug -> "08"
-        Sep -> "09"
-        Oct -> "10"
-        Nov -> "11"
-        Dec -> "12"
+        |> Date.add Date.Months 1
+        |> firstOfMonth
+        |> Date.add Date.Days -1
+        |> Date.day
 
 
 {-| Orders 2 dates. This comes in handy with List.sortWith:
 
-    List.sortWith Date.order [date1, date2, date3]
+    List.sortWith Time.order [date1, date2, date3]
 -}
-order : Posix -> Posix -> Order
+order : Date -> Date -> Order
 order date1 date2 =
 
-    if Time.posixToMillis date1 > Time.posixToMillis date2 then
+    if Date.toRataDie date1 < Date.toRataDie date2 then
         LT
-    else if Time.posixToMillis date1 < Time.posixToMillis date2 then
+    else if Date.toRataDie date1 > Date.toRataDie date2 then
         GT
     else
         EQ
 
 
-{-| Encode a Date
+{-| Returns a string as dd/mm/yyyy
 -}
-encode : Posix -> Value
-encode =
-    Time.posixToMillis >> Encode.int
+toString : Date -> String
+toString date =
+
+    let
+        day =
+            date
+                |> Date.day
+                |> String.fromInt
+                |> String.pad 2 '0'
+
+        month =
+            date
+                |> Date.monthNumber
+                |> String.fromInt
+                |> String.pad 2 '0'
+
+        year =
+            date
+                |> Date.year
+                |> String.fromInt
+
+    in
+        String.join "/" [day, month, year]
 
 
-{-| Encode a Maybe Date
+{-| Returns a string as `dd/mm/yyyy`, defaulted to `––/––/––––`
 -}
-encodeMaybe : Maybe Posix -> Value
-encodeMaybe maybeDate =
+maybeDateToString : Maybe Date -> String
+maybeDateToString date =
 
-    maybeDate
-        |> Maybe.map encode
-        |> Maybe.withDefault Encode.null
-
-
-fromPosix : Time.Zone -> Time.Posix -> Date
-fromPosix zone posix =
-    Date.fromCalendarDate
-        (Time.toYear zone posix)
-        (Time.toMonth zone posix)
-        (Time.toDay zone posix)
+    date
+        |> Maybe.map toString
+        |> Maybe.withDefault "––/––/––––"

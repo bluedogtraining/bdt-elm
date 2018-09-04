@@ -5,8 +5,8 @@ import Expect exposing (Expectation)
 
 suite : Test
 suite =
-    describe "Test List"
-        []
+    describe "Test EverySet"
+        [ Test.todo "Not migrated yet" ]
 
 --import EverySet
 --import EverySet.Bdt as EverySet

@@ -1,7 +1,7 @@
 module Modal.Css exposing (..)
 
 import Css exposing (..)
-import Css.Foreign as Foreign
+import Css.Global as Global
 import Html.Styled exposing (Html, Attribute)
 import Html.Styled.Attributes exposing (css)
 
@@ -13,8 +13,8 @@ import Grid.SizeHelpers as SizeHelpers
 removeBodyScroll : Html msg
 removeBodyScroll =
 
-    Foreign.global
-         [ Foreign.body
+    Global.global
+         [ Global.body
             [ overflow hidden
             ]
          ]

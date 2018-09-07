@@ -12,7 +12,7 @@ module Modal exposing (view, viewIf, setSize, header, body, footer, block, block
 @docs render
 -}
 
-import Html.Styled exposing (..)
+import Html.Styled as Html exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 

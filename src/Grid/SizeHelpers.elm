@@ -1,7 +1,5 @@
 module Grid.SizeHelpers exposing (..)
 
-import Ordering exposing (Ordering)
-
 import Grid.Size exposing (..)
 
 
@@ -59,4 +57,4 @@ containerPxWidth size =
 orderBySize : List (Size, Cols) -> List (Size, Cols)
 orderBySize sizes =
 
-    List.sortWith (Ordering.byFieldWith (sizeAsList |> List.reverse |> Ordering.explicit) Tuple.first) sizes
+    List.sortBy (Tuple.first >> containerPxWidth) sizes

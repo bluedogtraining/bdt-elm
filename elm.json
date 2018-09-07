@@ -1,5 +1,5 @@
 {
-    "type": "package",
+    "type": "application",
     "name": "bluedogtraining/bdt-elm",
     "summary": "Elm modules commonly used at BDT",
     "license": "BSD-3-Clause",

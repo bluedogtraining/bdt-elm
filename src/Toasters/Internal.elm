@@ -35,7 +35,6 @@ type Msg
     | Close Toaster
 
 
-
 init : List Toaster
 init  =
     []
@@ -69,7 +68,7 @@ subscription toasters =
     case List.isEmpty toasters of
 
         False ->
-            Time.every (Time.millisecond * 50) (always Tick)
+            Time.every 50 (always Tick)
 
         True ->
             Sub.none

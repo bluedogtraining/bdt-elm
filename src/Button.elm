@@ -22,13 +22,12 @@ module Button exposing
 
 -}
 
+import Css exposing (Color, rgb)
 import Html.Styled as Html exposing (..)
 import Html.Styled.Events as Html exposing (..)
-import Html.Styled.Attributes as Html exposing (..)
+import Html.Styled.Attributes as Attributes exposing (..)
 
-import Html.Styled.Bdt exposing (..)
-
-import Color exposing (Color)
+import Html.Styled.Bdt as Html
 
 import FeatherIcons exposing (Icon)
 
@@ -68,7 +67,7 @@ initialConfig =
     { isShown = True
     , size = Normal
     , content = Text ""
-    , color = Color.rgb 102 102 102
+    , color = rgb 102 102 102
     , onClick = Nothing
     , url = ""
     , isLoading = False
@@ -98,17 +97,17 @@ viewIf isShown =
 {-| Set the text
 -}
 text : String -> Button msg -> Button msg
-text text (Button config) =
+text text_ (Button config) =
 
-    Button { config | content = Text text }
+    Button { config | content = Text text_ }
 
 
 {-| Set an icon
 -}
 icon : Icon -> Button msg -> Button msg
-icon icon (Button config) =
+icon icon_ (Button config) =
 
-    Button { config | content = Icon icon }
+    Button { config | content = Icon icon_ }
 
 
 {-| Make the button small
@@ -138,17 +137,17 @@ href url (Button config) =
 {-| Display as loading, removing the click Msg
 -}
 isLoading : Bool -> Button msg -> Button msg
-isLoading isLoading (Button config) =
+isLoading isLoading_ (Button config) =
 
-    Button { config | isLoading = isLoading }
+    Button { config | isLoading = isLoading_ }
 
 
 {-| Display as disabled, removing the click Msg
 -}
 isDisabled : Bool -> Button msg -> Button msg
-isDisabled isDisabled (Button config) =
+isDisabled isDisabled_ (Button config) =
 
-    Button { config | isDisabled = isDisabled }
+    Button { config | isDisabled = isDisabled_ }
 
 
 {-| Style it green
@@ -156,7 +155,7 @@ isDisabled isDisabled (Button config) =
 green : Button msg -> Button msg
 green (Button config) =
 
-    Button { config | color = Color.rgb 81 163 81 }
+    Button { config | color = rgb 81 163 81 }
 
 
 {-| Style it red
@@ -164,7 +163,7 @@ green (Button config) =
 red : Button msg -> Button msg
 red (Button config) =
 
-    Button { config | color = Color.rgb 189 54 47 }
+    Button { config | color = rgb 189 54 47 }
 
 
 {-| Render the button
@@ -174,9 +173,9 @@ render (Button config) =
 
     a
         [ Css.button config.size config.content config.color config.isDisabled config.isLoading
-        , maybeAttribute Html.onClick config.onClick ? not config.isDisabled
-        , Html.href config.url ? not (String.isEmpty config.url)
-        , target "_blank" ? not (String.isEmpty config.url)
+        , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
+        , Attributes.href config.url |> Html.attributeIf (not <| String.isEmpty config.url)
+        , target "_blank" |> Html.attributeIf (not <| String.isEmpty config.url)
         ]
         [ Css.spinKeyFrames
         , content config.content config.size config.color config.isLoading
@@ -184,9 +183,9 @@ render (Button config) =
 
 
 content : Content -> Size -> Color -> Bool -> Html msg
-content content size color isLoading =
+content content_ size color isLoading_ =
 
-    case (content, isLoading) of
+    case (content_, isLoading_) of
         (Text string, False) ->
             Html.text string
 
@@ -195,19 +194,19 @@ content content size color isLoading =
                 [ Css.loadingTextContainer ]
                 [ div
                     [ Css.loading ]
-                    [ Icon.render Icon.Spinner (iconSize size) color ]
+                    [ FeatherIcons.loader |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
                 , div
                     [ Css.loadingText ]
                     [ Html.text string ]
                 ]
 
-        (Icon icon, False) ->
-            Icon.render icon (iconSize size) color
+        (Icon icon_, False) ->
+            icon_ |> FeatherIcons.toHtml [] |> Html.fromUnstyled
 
-        (Icon icon, True) ->
+        (Icon _, True) ->
             div
                 [ Css.loading ]
-                [ Icon.render Icon.Spinner (iconSize size) color ]
+                [ FeatherIcons.loader |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 iconSize : Size -> Int

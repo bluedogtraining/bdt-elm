@@ -1,28 +1,25 @@
 module Button.Css exposing (..)
 
 import Css exposing (..)
-import Css.Foreign exposing (..)
+import Css.Global exposing (..)
 import Css.Transitions as Transitions exposing (transition)
 
 import Html.Styled exposing (Html, Attribute)
 import Html.Styled.Attributes exposing (css)
 
-
-import Html.Styled.Bdt exposing ((?))
-
 import Button.Content exposing (Content (..))
 import Button.Size exposing (Size (..))
 
 
-button : Size -> Content -> Color.Color -> Bool -> Bool -> Attribute msg
+button : Size -> Content -> Color -> Bool -> Bool -> Attribute msg
 button size content color isDisabled isLoading =
 
     css
-        [ border3 (px 1) solid (Css.rgba (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue) 0.2)
+        [ border3 (px 1) solid (rgba color.red color.green color.blue 0.2)
         , borderRadius (px 2)
         , backgroundColor transparent
         , fontWeight bold
-        , Css.color <| Css.rgb (Color.toRgb color |> .red) (Color.toRgb color |> .green) (Color.toRgb color |> .blue)
+        , Css.color color
         , display inlineFlex
         , justifyContent center
         , alignItems center
@@ -72,13 +69,14 @@ buttonPadding content size =
         _ -> Css.rem 0
 
 
-lightenColor : Color.Color -> Css.Color
+lightenColor : Color -> Css.Color
 lightenColor color =
     color
-        |> Color.toHsl
-        |> (\color -> Color.hsl color.hue color.saturation (color.lightness + 0.45))
-        |> Color.toRgb
-        |> (\color -> Css.rgb color.red color.green color.blue)
+--    @todo: find a way to do this
+--        |> Color.toHsl
+--        |> (\color -> Color.hsl color.hue color.saturation (color.lightness + 0.45))
+--        |> Color.toRgb
+--        |> (\color -> Css.rgb color.red color.green color.blue)
 
 
 loadingTextContainer : Attribute msg

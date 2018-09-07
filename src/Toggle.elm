@@ -20,7 +20,7 @@ module Toggle exposing
 import Html.Styled exposing (..)
 import Html.Styled.Events exposing (onClick)
 
-import Html.Styled.Bdt exposing ((?))
+import Html.Styled.Bdt as Html
 
 import Toggle.Css as Css
 
@@ -62,25 +62,25 @@ view toggled msg =
 {-| Display as loading, removing the click Msg
 -}
 isError : Bool -> Toggle msg -> Toggle msg
-isError isError (Toggle config) =
+isError isError_ (Toggle config) =
 
-    Toggle { config | isError = isError }
+    Toggle { config | isError = isError_ }
 
 
 {-| Display as disabled, removing the click Msg
 -}
 isDisabled : Bool -> Toggle msg -> Toggle msg
-isDisabled isDisabled (Toggle config) =
+isDisabled isDisabled_ (Toggle config) =
 
-    Toggle { config | isDisabled = isDisabled }
+    Toggle { config | isDisabled = isDisabled_ }
 
 
 {-| Set the text
 -}
 label : String -> Toggle msg -> Toggle msg
-label label (Toggle config) =
+label label_ (Toggle config) =
 
-    Toggle { config | label = label }
+    Toggle { config | label = label_ }
 
 
 {-| Render the toggle
@@ -92,7 +92,7 @@ render (Toggle config) =
         [ Css.labelContainer ]
         [ div
             [ Css.toggle config.isToggled config.isDisabled config.isError
-            , onClick config.toggleMsg ? not config.isDisabled
+            , onClick config.toggleMsg |> Html.attributeIf (not config.isDisabled)
             ]
             []
         , span

@@ -8,7 +8,7 @@ import Css.Transitions as Transitions exposing (transition)
 
 
 toggle : Bool -> Bool -> Bool -> Attribute msg
-toggle toggle isDisabled isError =
+toggle toggle_ isDisabled isError =
     css
         [ position relative
         , display inlineBlock
@@ -16,8 +16,8 @@ toggle toggle isDisabled isError =
         , width <| Css.rem 3
         , height <| Css.rem 1.5
         , boxSizing borderBox
-        , backgroundColor <| toggleColor toggle isDisabled isError
-        , border3 (px 1) solid (toggleColor toggle isDisabled isError)
+        , backgroundColor <| toggleColor toggle_ isDisabled isError
+        , border3 (px 1) solid (toggleColor toggle_ isDisabled isError)
         , borderRadius <| Css.rem 1.5
         , transition
             [ Transitions.backgroundColor 400
@@ -31,7 +31,7 @@ toggle toggle isDisabled isError =
             , left <| px 1
             , bottom <| px 1
             , property "content" ""
-            , backgroundColor (if toggle then hex "8ce196" else hex "f1f1f1")
+            , backgroundColor (if toggle_ then hex "8ce196" else hex "f1f1f1")
             , borderRadius <| Css.rem 1.3
             ]
         , after
@@ -48,15 +48,15 @@ toggle toggle isDisabled isError =
             , transition
                 [ Transitions.margin 400
                 ]
-            , marginLeft (if toggle then Css.rem 1.45 else Css.rem 0)
+            , marginLeft (if toggle_ then Css.rem 1.45 else Css.rem 0)
             ]
         ]
 
 
 toggleColor : Bool -> Bool -> Bool -> Color
-toggleColor toggle isDisabled isError =
+toggleColor toggle_ isDisabled isError =
 
-    case (toggle, isDisabled, isError) of
+    case (toggle_, isDisabled, isError) of
 
         (True, False, False) ->
             rgb 81 163 81

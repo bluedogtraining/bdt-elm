@@ -4,7 +4,7 @@ module Form.SearchSelect.Internal exposing
     , Msg, update
     , render
     , reInitialise, reset
-    , setDefaultLabel, setToLabel
+    , setDefaultLabel
     , setInitialOption, setSelectedOption, setIsOptionDisabled
     , setIsError, setIsLocked, setIsClearable
     , setId
@@ -321,12 +321,6 @@ setSelectedOption selectedOption state =
 
 
 -- VIEW STATE SETTERS --
-
-
-setToLabel : (option -> String) -> ViewState option -> ViewState option
-setToLabel toLabel viewState =
-
-    { viewState | toLabel = toLabel }
 
 
 setDefaultLabel : String -> ViewState option -> ViewState option

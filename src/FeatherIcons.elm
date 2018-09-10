@@ -284,7 +284,7 @@ Using a feather icon in your view is as easy as:
 featherIcon : Html msg
 featherIcon =
     FeatherIcons.feather
-        |> FeatherIcons.toHtml []
+        |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml []
 ```
 
 Change `FeatherIcons.feather` by the icon you prefer, a list of all icons is visible here: https://1602.github.io/elm-feather-icons/

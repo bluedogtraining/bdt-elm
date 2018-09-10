@@ -194,22 +194,22 @@ content content_ size color isLoading_ =
                 [ Css.loadingTextContainer ]
                 [ div
                     [ Css.loading ]
-                    [ FeatherIcons.refreshCw |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                    [ FeatherIcons.refreshCw |> FeatherIcons.withSize (iconSize size) |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
                 , div
                     [ Css.loadingText ]
                     [ Html.text string ]
                 ]
 
         (Icon icon_, False) ->
-            icon_ |> FeatherIcons.toHtml [] |> Html.fromUnstyled
+            icon_ |> FeatherIcons.withSize (iconSize size) |> FeatherIcons.toHtml [] |> Html.fromUnstyled
 
         (Icon _, True) ->
             div
                 [ Css.loading ]
-                [ FeatherIcons.refreshCw |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                [ FeatherIcons.refreshCw |> FeatherIcons.withSize (iconSize size) |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
-iconSize : Size -> Int
+iconSize : Size -> Float
 iconSize size =
 
     case size of

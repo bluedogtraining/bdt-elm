@@ -5,7 +5,7 @@ module Form.MultiSelect exposing
     , reInitialise, reset
     , setInitialOptions, setSelectedOptions, setIsOptionDisabled
     , setIsError, setIsLocked, setIsClearable
-    , setDefaultLabel, setToLabel
+    , setDefaultLabel
     , setId
     , getIsChanged, getIsOpen
     , getInitialOptions, getSelectedOptions
@@ -193,14 +193,6 @@ setIsClearable : Bool -> View option -> View option
 setIsClearable isClearable (View state viewState) =
 
     View state (Internal.setIsClearable isClearable viewState)
-
-
-{-| Set how your options are printed to the screen.
--}
-setToLabel : (option -> String) -> View option -> View option
-setToLabel toLabel (View state viewState) =
-
-    View state (Internal.setToLabel toLabel viewState)
 
 
 {-| Set the default label, for example (-- NOTHING SELECTED --).

@@ -155,6 +155,7 @@ type Msg
     | Apply
     | Clear
     | DomFocus (Result Dom.Error ())
+    | NoOp
 
 
 update : Msg -> State -> (State, Cmd Msg)
@@ -162,16 +163,23 @@ update msg state =
 
     case msg of
         Open minDate maxDate includeTime ->
-            ({ state | isOpen = True, navigationDate = Nothing
+            ({ state
+                | isOpen = True
+                , hours = Select.reset state.hours
+                , minutes = Select.reset state.minutes
+                , seconds = Select.reset state.seconds
+                , navigationDate = Nothing
+                , desiredDate = Nothing
+                , focusedSelect = Nothing
             }, openCmd (Resettable.getValue state.selectedDate) minDate maxDate includeTime)
 
         Blur ->
-            case state.desiredDate /= Nothing of
+            case state.focusedSelect == Nothing of
                 True ->
-                    (state, Cmd.none)
+                    ({ state| isOpen = False }, Cmd.none)
 
                 False ->
-                    ({ state | isOpen = False }, Cmd.none)
+                    (state, Cmd.none)
 
         InitWithCurrentDate minDate maxDate date ->
             ({ state | navigationDate = initNavigationDate minDate maxDate date }, Cmd.none)
@@ -189,7 +197,6 @@ update msg state =
             ({ state | navigationDate = Maybe.map Helpers.nextMonth state.navigationDate }, Cmd.none)
 
         SelectDay date includeTime ->
-
             case includeTime of
                 False ->
                     ({ state | selectedDate = Resettable.update (Just date) state.selectedDate, isOpen = False }, Cmd.none)
@@ -249,6 +256,9 @@ update msg state =
         DomFocus _ ->
             (state, Cmd.none)
 
+        NoOp ->
+            (state, Cmd.none)
+
 
 openCmd : Maybe Date -> MinDate -> MaxDate -> IncludeTime -> Cmd Msg
 openCmd date minDate maxDate includeTime =
@@ -263,22 +273,20 @@ openCmd date minDate maxDate includeTime =
 
 initNavigationDate : MinDate -> MaxDate -> Date -> Maybe Date
 initNavigationDate minDate maxDate date =
-
     Just <| Helpers.maybeClamp minDate maxDate date
 
 
 openTimeSelect : TimeSelect -> Cmd Msg
 openTimeSelect timeSelect =
-
     case timeSelect of
         Hours ->
-            Task.attempt DomFocus ("FORM_DATEPICKER_HOURS" |> Dom.focus)
+            Task.attempt DomFocus (Dom.focus "FORM_DATEPICKER_HOURS")
 
         Minutes ->
-            Task.attempt DomFocus ("FORM_DATEPICKER_MINUTES" |> Dom.focus)
+            Task.attempt DomFocus (Dom.focus "FORM_DATEPICKER_MINUTES")
 
         Seconds ->
-            Task.attempt DomFocus ("FORM_DATEPICKER_SECONDS" |> Dom.focus)
+            Task.attempt DomFocus (Dom.focus "FORM_DATEPICKER_SECONDS")
 
 
 --apply : State -> Maybe Date
@@ -327,7 +335,7 @@ closed state viewState =
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel) ]
             , Html.divIf viewState.isInput
                 []
-                [ FeatherIcons.calendar |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                [ FeatherIcons.calendar |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
             ]
         ]
 
@@ -348,7 +356,7 @@ open state viewState =
                 [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel)  ]
             , Html.divIf viewState.isInput
                 []
-                [ FeatherIcons.calendar |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                [ FeatherIcons.calendar |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
             ]
         , calendar state viewState
         ]
@@ -364,7 +372,7 @@ calendar state viewState =
         Just date ->
             div
                 [ Css.calendar
-                , disableMouseDown |> Html.attributeIf (state.desiredDate == Nothing) ]
+                , disableMouseDown |> Html.attributeIf (state.focusedSelect == Nothing) ]
                 [ calendarNavigation state viewState date
                 , div
                     [ Css.weekDayList ]
@@ -379,7 +387,7 @@ calendar state viewState =
 
 disableMouseDown : Attribute Msg
 disableMouseDown =
-    preventDefaultOn "mousedown" <| Decode.fail "mouseDownDisabled"
+    preventDefaultOn "mousedown" <| Decode.succeed (NoOp, True)
 
 
 calendarNavigation : State -> ViewState -> Date -> Html Msg
@@ -391,7 +399,7 @@ calendarNavigation state viewState navigationDate =
         , previousMonthArrow viewState navigationDate
         , div
             [ Css.date ]
-            [ text (calendarNavigationTitle navigationDate) ]
+            [ text <| calendarNavigationTitle navigationDate ]
         , nextMonthArrow viewState navigationDate
         , nextYearArrow viewState navigationDate
         ]
@@ -400,7 +408,7 @@ calendarNavigation state viewState navigationDate =
 calendarNavigationTitle : Date -> String
 calendarNavigationTitle date =
 
-    (Date.year date |> String.fromInt) ++ " - " ++ (Date.monthNumber date |> String.fromInt |> String.pad 2 '0')
+    (Date.year date |> String.fromInt) ++ " - " ++ (Date.month date |> Date.monthToString)
 
 
 previousYearArrow : ViewState -> Date -> Html Msg
@@ -418,8 +426,8 @@ previousYearArrow viewState navigationDate =
             ]
             [ div
                 [ Css.offsetYearArrow ]
-                [ FeatherIcons.chevronLeft |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
-            , FeatherIcons.chevronLeft |> FeatherIcons.toHtml [] |> Html.fromUnstyled
+                [ FeatherIcons.chevronLeft |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            , FeatherIcons.chevronLeft |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled
             ]
 
 
@@ -436,7 +444,7 @@ previousMonthArrow viewState navigationDate =
             [ Css.monthArrows isDisabled
             , onClick PreviousMonth |> Html.attributeIf (not isDisabled)
             ]
-            [ FeatherIcons.chevronLeft |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            [ FeatherIcons.chevronLeft |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 nextYearArrow : ViewState -> Date -> Html Msg
@@ -454,8 +462,8 @@ nextYearArrow viewState navigationDate =
             ]
             [ div
                 [ Css.offsetYearArrow ]
-                [ FeatherIcons.chevronRight |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
-            , FeatherIcons.chevronRight |> FeatherIcons.toHtml [] |> Html.fromUnstyled
+                [ FeatherIcons.chevronRight |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            , FeatherIcons.chevronRight |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled
             ]
 
 
@@ -472,7 +480,7 @@ nextMonthArrow viewState navigationDate =
             [ Css.monthArrows isDisabled
             , onClick NextMonth |> Html.attributeIf (not isDisabled)
             ]
-            [ FeatherIcons.chevronRight |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            [ FeatherIcons.chevronRight |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 calendarWeekDay : String -> Html Msg
@@ -565,7 +573,7 @@ timePicker state =
                 , onMouseDown (OpenTimeSelect Hours) |> Html.attributeIf (state.focusedSelect /= Just Hours) ]
                 [ div
                     [ Css.select ]
-                    [ Select.view state.hours String.fromInt
+                    [ Select.view state.hours (String.fromInt >> String.padLeft 2 '0')
                         |> Select.setId "FORM_DATEPICKER_HOURS"
                         |> Select.render
                         |> Html.map UpdateHours
@@ -582,7 +590,7 @@ timePicker state =
                 , onMouseDown (OpenTimeSelect Minutes) |> Html.attributeIf (state.focusedSelect /= Just Minutes) ]
                 [ div
                     [ Css.select ]
-                    [ Select.view state.minutes String.fromInt
+                    [ Select.view state.minutes (String.fromInt >> String.padLeft 2 '0')
                         |> Select.setId "FORM_DATEPICKER_MINUTES"
                         |> Select.render
                         |> Html.map UpdateMinutes
@@ -599,7 +607,7 @@ timePicker state =
                 , onMouseDown (OpenTimeSelect Seconds) |> Html.attributeIf (state.focusedSelect /= Just Seconds) ]
                 [ div
                     [ Css.select ]
-                    [ Select.view state.seconds String.fromInt
+                    [ Select.view state.seconds (String.fromInt >> String.padLeft 2 '0')
                         |> Select.setId "FORM_DATEPICKER_SECONDS"
                         |> Select.render
                         |> Html.map UpdateSeconds

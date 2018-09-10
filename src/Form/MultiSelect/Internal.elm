@@ -4,7 +4,7 @@ module Form.MultiSelect.Internal exposing
     , Msg, update
     , render
     , reInitialise, reset
-    , setDefaultLabel, setToLabel
+    , setDefaultLabel
     , setInitialOptions, setSelectedOptions, setIsOptionDisabled
     , setIsError, setIsLocked, setIsClearable
     , setId
@@ -179,7 +179,7 @@ closed state viewState =
                 ]
                 [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
             , clearButton state viewState
-            , Html.divIf (not viewState.isLocked) [] [ FeatherIcons.chevronDown |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            , Html.divIf (not viewState.isLocked) [] [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
             ]
         ]
 
@@ -207,7 +207,7 @@ clearButton state viewState =
 
     Html.divIf (viewState.isClearable && List.isEmpty (Resettable.getValue state.selectedOptions))
         [ preventDefaultOn "mousedown" <| Decode.succeed (Clear, True) ]
-        [ FeatherIcons.x |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+        [ FeatherIcons.x |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 optionText : String -> (option -> String) -> Resettable (List option) -> String
@@ -287,12 +287,6 @@ setSelectedOptions selectedOptions state =
 
 
 -- VIEW STATE SETTERS --
-
-
-setToLabel : (option -> String) -> ViewState option -> ViewState option
-setToLabel toLabel viewState =
-
-    { viewState | toLabel = toLabel }
 
 
 setDefaultLabel : String -> ViewState option -> ViewState option

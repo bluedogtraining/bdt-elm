@@ -7,7 +7,7 @@ module Date.Bdt exposing (..)
 
 -}
 
-import Time exposing (Posix)
+import Time exposing (Posix, Month (..))
 import Date exposing (Date)
 
 
@@ -83,3 +83,69 @@ maybeDateToString date =
     date
         |> Maybe.map toString
         |> Maybe.withDefault "––/––/––––"
+
+
+{-| Returns a padded Int representation of the month
+
+    Jan -> "01"
+    Feb -> "02"
+    Mar -> "03"
+    Apr -> "04"
+    May -> "05"
+    Jun -> "06"
+    Jul -> "07"
+    Aug -> "08"
+    Sep -> "09"
+    Oct -> "10"
+    Nov -> "11"
+    Dec -> "12"
+-}
+monthToStringNumber : Month -> String
+monthToStringNumber month =
+
+    case month of
+        Jan -> "01"
+        Feb -> "02"
+        Mar -> "03"
+        Apr -> "04"
+        May -> "05"
+        Jun -> "06"
+        Jul -> "07"
+        Aug -> "08"
+        Sep -> "09"
+        Oct -> "10"
+        Nov -> "11"
+        Dec -> "12"
+
+
+{-| Returns a padded Int representation of the month
+
+    Jan -> "January"
+    Feb -> "February"
+    Mar -> "March"
+    Apr -> "April"
+    May -> "May"
+    Jun -> "June"
+    Jul -> "July"
+    Aug -> "August"
+    Sep -> "September"
+    Oct -> "October"
+    Nov -> "November"
+    Dec -> "December"
+-}
+monthToString : Month -> String
+monthToString month =
+
+    case month of
+        Jan -> "January"
+        Feb -> "February"
+        Mar -> "March"
+        Apr -> "April"
+        May -> "May"
+        Jun -> "June"
+        Jul -> "July"
+        Aug -> "August"
+        Sep -> "September"
+        Oct -> "October"
+        Nov -> "November"
+        Dec -> "December"

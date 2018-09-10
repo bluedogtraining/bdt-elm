@@ -1,5 +1,5 @@
 module Time.Bdt exposing
-    ( toString, maybeTimeToString, maybeTimeToTimeString, maybeTimeToTimeTimeString, monthToString
+    ( toString, maybeTimeToString, maybeTimeToTimeString, maybeTimeToTimeTimeString
     , order
     , encode, encodeMaybe
     )
@@ -7,7 +7,7 @@ module Time.Bdt exposing
 {-| Time Helpers
 
 # Print Times
-@docs toString, maybeTimeToString, maybeTimeToTimeString, maybeTimeToTimeTimeString, monthToString
+@docs toString, maybeTimeToString, maybeTimeToTimeString, maybeTimeToTimeTimeString
 
 # Sort Times
 @docs order
@@ -82,39 +82,6 @@ maybeTimeToTimeTimeString : Maybe Posix -> String
 maybeTimeToTimeTimeString date =
 
     maybeTimeToString date ++ " " ++ maybeTimeToTimeString date
-
-
-{-| Returns a padded Int representation of the month
-
-    Jan -> "01"
-    Feb -> "02"
-    Mar -> "03"
-    Apr -> "04"
-    May -> "05"
-    Jun -> "06"
-    Jul -> "07"
-    Aug -> "08"
-    Sep -> "09"
-    Oct -> "10"
-    Nov -> "11"
-    Dec -> "12"
--}
-monthToString : Month -> String
-monthToString month =
-
-    case month of
-        Jan -> "01"
-        Feb -> "02"
-        Mar -> "03"
-        Apr -> "04"
-        May -> "05"
-        Jun -> "06"
-        Jul -> "07"
-        Aug -> "08"
-        Sep -> "09"
-        Oct -> "10"
-        Nov -> "11"
-        Dec -> "12"
 
 
 {-| Orders 2 dates. This comes in handy with List.sortWith:

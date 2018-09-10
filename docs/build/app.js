@@ -14379,13 +14379,35 @@ var author$project$Button$Css$buttonWidth = F2(
 			return rtfeldman$elm_css$Css$width(rtfeldman$elm_css$Css$auto);
 		}
 	});
+var rtfeldman$elm_css$Css$rgba = F4(
+	function (r, g, b, alpha) {
+		return {
+			alpha: alpha,
+			blue: b,
+			color: rtfeldman$elm_css$Css$Structure$Compatible,
+			green: g,
+			red: r,
+			value: A2(
+				rtfeldman$elm_css$Css$cssFunction,
+				'rgba',
+				_Utils_ap(
+					A2(
+						elm$core$List$map,
+						elm$core$String$fromInt,
+						_List_fromArray(
+							[r, g, b])),
+					_List_fromArray(
+						[
+							elm$core$String$fromFloat(alpha)
+						])))
+		};
+	});
 var author$project$Button$Css$lightenColor = function (color) {
-	return color;
+	return A4(rtfeldman$elm_css$Css$rgba, color.red, color.green, color.blue, 0.2);
 };
 var rtfeldman$elm_css$Css$backgroundColor = function (c) {
 	return A2(rtfeldman$elm_css$Css$property, 'background-color', c.value);
 };
-var rtfeldman$elm_css$Css$bold = {fontWeight: rtfeldman$elm_css$Css$Structure$Compatible, value: 'bold'};
 var rtfeldman$elm_css$Css$prop3 = F4(
 	function (key, argA, argB, argC) {
 		return A2(
@@ -14407,10 +14429,6 @@ var rtfeldman$elm_css$Css$color = function (c) {
 var rtfeldman$elm_css$Css$cursor = rtfeldman$elm_css$Css$prop1('cursor');
 var rtfeldman$elm_css$Css$display = rtfeldman$elm_css$Css$prop1('display');
 var rtfeldman$elm_css$Css$fontSize = rtfeldman$elm_css$Css$prop1('font-size');
-var rtfeldman$elm_css$Css$fontWeight = function (_n0) {
-	var value = _n0.value;
-	return A2(rtfeldman$elm_css$Css$property, 'font-weight', value);
-};
 var rtfeldman$elm_css$Css$height = rtfeldman$elm_css$Css$prop1('height');
 var rtfeldman$elm_css$Css$hidden = {borderStyle: rtfeldman$elm_css$Css$Structure$Compatible, overflow: rtfeldman$elm_css$Css$Structure$Compatible, value: 'hidden', visibility: rtfeldman$elm_css$Css$Structure$Compatible};
 var rtfeldman$elm_css$Css$Preprocess$ExtendSelector = F2(
@@ -14461,29 +14479,6 @@ var rtfeldman$elm_css$Css$padding2 = rtfeldman$elm_css$Css$prop2('padding');
 var rtfeldman$elm_css$Css$pointer = {cursor: rtfeldman$elm_css$Css$Structure$Compatible, value: 'pointer'};
 var rtfeldman$elm_css$Css$PxUnits = {$: 'PxUnits'};
 var rtfeldman$elm_css$Css$px = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, rtfeldman$elm_css$Css$PxUnits, 'px');
-var rtfeldman$elm_css$Css$rgba = F4(
-	function (r, g, b, alpha) {
-		return {
-			alpha: alpha,
-			blue: b,
-			color: rtfeldman$elm_css$Css$Structure$Compatible,
-			green: g,
-			red: r,
-			value: A2(
-				rtfeldman$elm_css$Css$cssFunction,
-				'rgba',
-				_Utils_ap(
-					A2(
-						elm$core$List$map,
-						elm$core$String$fromInt,
-						_List_fromArray(
-							[r, g, b])),
-					_List_fromArray(
-						[
-							elm$core$String$fromFloat(alpha)
-						])))
-		};
-	});
 var rtfeldman$elm_css$Css$solid = {borderStyle: rtfeldman$elm_css$Css$Structure$Compatible, textDecorationStyle: rtfeldman$elm_css$Css$Structure$Compatible, value: 'solid'};
 var rtfeldman$elm_css$Css$textDecoration = rtfeldman$elm_css$Css$prop1('text-decoration');
 var rtfeldman$elm_css$Css$transparent = {color: rtfeldman$elm_css$Css$Structure$Compatible, value: 'transparent'};
@@ -14508,7 +14503,6 @@ var author$project$Button$Css$button = F5(
 					rtfeldman$elm_css$Css$borderRadius(
 					rtfeldman$elm_css$Css$px(2)),
 					rtfeldman$elm_css$Css$backgroundColor(rtfeldman$elm_css$Css$transparent),
-					rtfeldman$elm_css$Css$fontWeight(rtfeldman$elm_css$Css$bold),
 					rtfeldman$elm_css$Css$color(color),
 					rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineFlex),
 					rtfeldman$elm_css$Css$justifyContent(rtfeldman$elm_css$Css$center),
@@ -15341,6 +15335,10 @@ var rtfeldman$elm_css$Css$fontFamilies = A2(
 	elm$core$Basics$composeL,
 	rtfeldman$elm_css$Css$prop1('font-family'),
 	rtfeldman$elm_css$Css$stringsToValue);
+var rtfeldman$elm_css$Css$fontWeight = function (_n0) {
+	var value = _n0.value;
+	return A2(rtfeldman$elm_css$Css$property, 'font-weight', value);
+};
 var rtfeldman$elm_css$Css$UnitlessInteger = {$: 'UnitlessInteger'};
 var rtfeldman$elm_css$Css$int = function (val) {
 	return {
@@ -16676,6 +16674,9 @@ var author$project$FeatherIcons$x = A2(
 					_List_Nil)
 				]))
 		]));
+var author$project$Form$Css$clearIcon = rtfeldman$elm_css$Html$Styled$Attributes$css(
+	_List_fromArray(
+		[rtfeldman$elm_css$Css$displayFlex]));
 var author$project$Form$Select$Internal$Clear = {$: 'Clear'};
 var author$project$Form$Select$Internal$clearButton = F2(
 	function (state, viewState) {
@@ -16690,7 +16691,8 @@ var author$project$Form$Select$Internal$clearButton = F2(
 					rtfeldman$elm_css$Html$Styled$Events$preventDefaultOn,
 					'mousedown',
 					elm$json$Json$Decode$succeed(
-						_Utils_Tuple2(author$project$Form$Select$Internal$Clear, true)))
+						_Utils_Tuple2(author$project$Form$Select$Internal$Clear, true))),
+					author$project$Form$Css$clearIcon
 				]),
 			_List_fromArray(
 				[
@@ -16698,7 +16700,7 @@ var author$project$Form$Select$Internal$clearButton = F2(
 					A2(
 						author$project$FeatherIcons$toHtml,
 						_List_Nil,
-						A2(author$project$FeatherIcons$withSize, 18, author$project$FeatherIcons$x)))
+						A2(author$project$FeatherIcons$withSize, 14, author$project$FeatherIcons$x)))
 				]));
 	});
 var elm$json$Json$Encode$bool = _Json_wrap;
@@ -18388,7 +18390,8 @@ var author$project$Form$MultiSelect$Internal$clearButton = F2(
 					rtfeldman$elm_css$Html$Styled$Events$preventDefaultOn,
 					'mousedown',
 					elm$json$Json$Decode$succeed(
-						_Utils_Tuple2(author$project$Form$MultiSelect$Internal$Clear, true)))
+						_Utils_Tuple2(author$project$Form$MultiSelect$Internal$Clear, true))),
+					author$project$Form$Css$clearIcon
 				]),
 			_List_fromArray(
 				[
@@ -18396,7 +18399,7 @@ var author$project$Form$MultiSelect$Internal$clearButton = F2(
 					A2(
 						author$project$FeatherIcons$toHtml,
 						_List_Nil,
-						A2(author$project$FeatherIcons$withSize, 18, author$project$FeatherIcons$x)))
+						A2(author$project$FeatherIcons$withSize, 14, author$project$FeatherIcons$x)))
 				]));
 	});
 var author$project$Form$MultiSelect$Internal$optionText = F3(
@@ -19324,7 +19327,7 @@ var author$project$Modal$closeIcon = function (closeMsg) {
 				A2(
 					author$project$FeatherIcons$toHtml,
 					_List_Nil,
-					A2(author$project$FeatherIcons$withSize, 18, author$project$FeatherIcons$x)))
+					A2(author$project$FeatherIcons$withSize, 14, author$project$FeatherIcons$x)))
 			]));
 };
 var author$project$Modal$Css$block = F2(

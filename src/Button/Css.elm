@@ -18,7 +18,6 @@ button size content color isDisabled isLoading =
         [ border3 (px 1) solid (rgba color.red color.green color.blue 0.2)
         , borderRadius (px 2)
         , backgroundColor transparent
-        , fontWeight bold
         , Css.color color
         , display inlineFlex
         , justifyContent center
@@ -45,7 +44,6 @@ button size content color isDisabled isLoading =
 
 buttonHeight : Size -> Rem
 buttonHeight size =
-
     case size of
         Small -> Css.rem 1.4
         Normal -> Css.rem 1.8
@@ -53,7 +51,6 @@ buttonHeight size =
 
 buttonWidth : Content -> Size -> Style
 buttonWidth content size =
-
     case (content, size) of
         (Icon _, Small) -> width <| Css.rem 1.4
         (Icon _, Normal) -> width <| Css.rem 1.8
@@ -62,26 +59,19 @@ buttonWidth content size =
 
 buttonPadding : Content -> Size -> Rem
 buttonPadding content size =
-
     case (content, size) of
         (Text _, Small) -> Css.rem 0.5
         (Text _, Normal) -> Css.rem 0.8
         _ -> Css.rem 0
 
 
-lightenColor : Color -> Css.Color
+lightenColor : Color -> Color
 lightenColor color =
-    color
---    @todo: find a way to do this
---        |> Color.toHsl
---        |> (\color -> Color.hsl color.hue color.saturation (color.lightness + 0.45))
---        |> Color.toRgb
---        |> (\color -> Css.rgb color.red color.green color.blue)
+    rgba color.red color.green color.blue 0.2
 
 
 loadingTextContainer : Attribute msg
 loadingTextContainer =
-
     css
         [ displayFlex
         , alignItems center
@@ -91,7 +81,6 @@ loadingTextContainer =
 
 loadingText : Attribute msg
 loadingText =
-
     css
         [ marginLeft <| Css.rem 0.25
         ]
@@ -102,7 +91,6 @@ loadingText =
 
 loading : Attribute msg
 loading =
-
     css
         [ property "animation" "spin 1.5s linear infinite"
         ]
@@ -110,7 +98,6 @@ loading =
 
 spinKeyFrames : Html msg
 spinKeyFrames =
-
     global
          [ selector "@keyframes spin"
              [ property "0% { transform" "rotate(0deg); } 100% { transform: rotate(360deg); }" ]

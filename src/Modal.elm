@@ -173,4 +173,4 @@ closeIcon closeMsg =
 
     div
         [ Css.closeIcon, onClick closeMsg ]
-        [ FeatherIcons.x |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+        [ FeatherIcons.x |> FeatherIcons.withSize 14 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]

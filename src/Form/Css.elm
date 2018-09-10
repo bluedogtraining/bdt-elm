@@ -1,13 +1,14 @@
 module Form.Css exposing (..)
 
 import Css exposing (..)
+import Html.Styled exposing (Attribute)
+import Html.Styled.Attributes exposing (css)
 
 import Css.Bdt as Css
 
 
 input : Bool -> Bool -> List Style
 input isError isLocked =
-
     [ boxSizing borderBox
     , border3 (px 1) solid (hex <| if isError && not isLocked then "d9534f" else "cccccc")
     , width <| pct 100
@@ -29,7 +30,6 @@ input isError isLocked =
 
 select : Bool -> Bool -> List Style
 select isError isLocked =
-
     input isError isLocked
     ++
     [ displayFlex
@@ -40,7 +40,6 @@ select isError isLocked =
 
 title : Bool -> List Style
 title isFaded =
-
     [ flexGrow <| int 1
     , color (rgb 111 111 111) |> Css.styleIf (isFaded)
     , fontWeight (int 200) |> Css.styleIf (isFaded)
@@ -55,7 +54,6 @@ title isFaded =
 
 selectOptionList : List Style
 selectOptionList =
-
     [ position absolute
     , top <| px 31
     , left <| px 0
@@ -72,7 +70,6 @@ selectOptionList =
 
 selectOptionItem : Bool -> Bool -> List Style
 selectOptionItem isDisabled isFocused =
-
     [ padding2 (Css.rem 0) (Css.rem 0.4)
     , margin <| px 0
     , boxSizing borderBox
@@ -90,3 +87,10 @@ selectOptionItem isDisabled isFocused =
         [ backgroundColor (hex "f2f9fc") |> Css.styleIf (not isDisabled)
         ]
     ]
+
+
+clearIcon : Attribute msg
+clearIcon =
+    css
+        [ displayFlex
+        ]

@@ -82,6 +82,10 @@ selectOptionItem isDisabled isFocused =
     , backgroundColor (hex "f2f9fc") |> Css.styleIf (isDisabled || isFocused)
     , cursor pointer
     , outlineWidth <| px 0
+    , overflowX hidden
+    , whiteSpace noWrap
+    , textOverflow ellipsis
+    , maxWidth <| pct 100
     , hover
         [ backgroundColor (hex "f2f9fc") |> Css.styleIf (not isDisabled)
         ]

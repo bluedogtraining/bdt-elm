@@ -194,7 +194,7 @@ content content_ size color isLoading_ =
                 [ Css.loadingTextContainer ]
                 [ div
                     [ Css.loading ]
-                    [ FeatherIcons.loader |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                    [ FeatherIcons.refreshCw |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
                 , div
                     [ Css.loadingText ]
                     [ Html.text string ]
@@ -206,7 +206,7 @@ content content_ size color isLoading_ =
         (Icon _, True) ->
             div
                 [ Css.loading ]
-                [ FeatherIcons.loader |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                [ FeatherIcons.refreshCw |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 iconSize : Size -> Int

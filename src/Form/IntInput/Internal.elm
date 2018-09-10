@@ -17,8 +17,6 @@ import Html.Styled.Lazy exposing (..)
 import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
 
-import Regex exposing (Regex)
-
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
 
@@ -69,13 +67,12 @@ type Msg
 update : Msg -> State -> State
 update (Input string) state =
 
-    case Regex.contains (Regex.fromString "^[-]?[0-9]*$" |> Maybe.withDefault Regex.never) string of
-
-        True ->
-            { state | value = Resettable.update string state.value }
-
-        False ->
+    case (String.toInt string, string == "") of
+        (Nothing, False) ->
             { state | bypassLazy = state.bypassLazy + 1 }
+
+        _ ->
+            { state | value = Resettable.update string state.value }
 
 
 -- VIEW --

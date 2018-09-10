@@ -44,4 +44,5 @@ checkBox =
 
     css
         [ marginRight <| px 6
+        , displayFlex
         ]

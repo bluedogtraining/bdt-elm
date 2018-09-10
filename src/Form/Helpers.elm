@@ -1,34 +1,26 @@
 module Form.Helpers exposing
-    ( toHtmlId
-    , UpDown (..), onUpDown, onSpaceEnter, onEnter
+    ( SelectKey (..), onSelectKey
     , getPreviousOption, getNextOption
-    , focusOption
     )
 
-import Html.Styled as Html exposing (..)
-import Html.Styled.Lazy exposing (..)
+import Html.Styled exposing (..)
 import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes as Attributes exposing (..)
+import Html.Styled.Attributes exposing (..)
 
-import Task
-import Browser.Dom as Dom
 import Json.Decode as Decode exposing (Decoder)
 
 import List.Extra as List
 
 
-toHtmlId : (option -> String) -> option -> String
-toHtmlId toLabel option =
-    toLabel option
-
-
-type UpDown
+type SelectKey
     = Up
     | Down
+    | Enter
+    | Space
 
 
-upDownDecoder : String -> Decoder UpDown
-upDownDecoder key =
+selectKeyDecoder : String -> Decoder SelectKey
+selectKeyDecoder key =
     case key of
         "ArrowUp" ->
             Decode.succeed Up
@@ -36,55 +28,21 @@ upDownDecoder key =
         "ArrowDown" ->
             Decode.succeed Down
 
-        _ ->
-            Decode.fail "Not ArrowUp or ArrowDown"
+        "Enter" ->
+            Decode.succeed Enter
 
-
-onUpDown : (UpDown -> msg) -> Attribute msg
-onUpDown msg =
-
-    preventDefaultOn
-        "keydown"
-        (Decode.field "key" Decode.string |> Decode.andThen upDownDecoder |> Decode.map (\decoder -> (msg decoder, True)))
-
-
-spaceEnterDecoder : msg -> String -> Decoder msg
-spaceEnterDecoder msg key =
-    case key of
         " " ->
-            Decode.succeed msg
-
-        "Enter" ->
-            Decode.succeed msg
+            Decode.succeed Space
 
         _ ->
-            Decode.fail "Not Space or Enter"
+            Decode.fail "Not valid SelectKey"
 
 
-onSpaceEnter : msg -> Attribute msg
-onSpaceEnter msg =
-
+onSelectKey : (SelectKey -> msg) -> Attribute msg
+onSelectKey msg =
     preventDefaultOn
         "keydown"
-        (Decode.field "key" Decode.string |> Decode.andThen (spaceEnterDecoder msg) |> Decode.map (\decoder -> (decoder, True)))
-
-
-enterDecoder : msg -> String -> Decoder msg
-enterDecoder msg key =
-    case key of
-        "Enter" ->
-            Decode.succeed msg
-
-        _ ->
-            Decode.fail "Not Space"
-
-
-onEnter : msg -> Attribute msg
-onEnter msg =
-
-    preventDefaultOn
-        "keydown"
-        (Decode.field "key" Decode.string |> Decode.andThen (enterDecoder msg) |> Decode.map (\decoder -> (decoder, True)))
+        (Decode.field "key" Decode.string |> Decode.andThen selectKeyDecoder |> Decode.map (\decoder -> (msg decoder, True)))
 
 
 getPreviousOption : List option -> Maybe option -> Maybe option
@@ -94,20 +52,13 @@ getPreviousOption options focusedOption =
 
 
 getNextOption : List option -> Maybe option -> Maybe option
-getNextOption options focusedOption =
-
-    options
-        |> List.dropWhile (\option -> Just option == focusedOption)
-        |> List.drop 1
-        |> List.head
-
-
-focusOption : (option -> String) -> Maybe option -> (Result Dom.Error () -> msg) -> Cmd msg
-focusOption toLabel mOption msg =
-
-    case mOption of
-        Just option ->
-            Task.attempt msg (toHtmlId toLabel option |> Dom.focus)
-
+getNextOption options mFocusedOption =
+    case mFocusedOption of
         Nothing ->
-            Cmd.none
+            List.head options
+
+        Just focusedOption ->
+            options
+                |> List.dropWhile ((/=) focusedOption)
+                |> List.drop 1
+                |> List.head

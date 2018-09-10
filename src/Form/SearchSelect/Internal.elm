@@ -29,9 +29,8 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode
 
 import Form.Helpers as Form exposing
-    ( UpDown (..), onUpDown, onEnter
+    ( SelectKey (..), onSelectKey
     , getNextOption, getPreviousOption
-    , focusOption
     )
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
@@ -102,10 +101,7 @@ type Msg option
     | Response (Result Http.Error (List option))
     | Select option
     | Clear
-    | UpDown (option -> String) UpDown
-    | Focus option
-    | BlurOption option
-    | DomFocus (Result Dom.Error ())
+    | SelectKey SelectKey
 
 
 update : Msg option -> State option -> (State option, Cmd (Msg option))
@@ -139,32 +135,23 @@ update msg state =
                 , selectedOption = Resettable.update (Just selectedOption) state.selectedOption
             }, Cmd.none)
 
-        UpDown toLabel Up ->
-            let
-                newFocusedOption =
-                    getPreviousOption state.options state.focusedOption
+        SelectKey Up ->
+            ({ state | focusedOption = getPreviousOption state.options state.focusedOption }, Cmd.none)
 
-            in
-                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
+        SelectKey Down ->
+            ({ state | focusedOption = getNextOption state.options state.focusedOption }, Cmd.none)
 
-        UpDown toLabel Down ->
-            let
-                newFocusedOption =
-                    getNextOption state.options state.focusedOption
+        SelectKey _ ->
+            case state.focusedOption of
+                Nothing ->
+                    (state, Cmd.none)
 
-            in
-                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
-
-        Focus option ->
-            ({ state | focusedOption = Just option }, Cmd.none)
-
-        BlurOption option ->
-            if Just option == state.focusedOption
-            then ({ state | focusedOption = Nothing, isOpen = False }, Cmd.none)
-            else (state, Cmd.none)
-
-        DomFocus _ ->
-            (state, Cmd.none)
+                Just focusedOption ->
+                    ({ state
+                        | input = ""
+                        , selectedOption = Resettable.update (Just focusedOption) state.selectedOption
+                        , isOpen = False
+                    }, Cmd.none)
 
 
 -- SEARCH REQUEST --
@@ -224,14 +211,13 @@ open state viewState =
         [ input
             [ Css.input viewState.isLocked viewState.isError
             , Css.title (Resettable.getValue state.selectedOption == Nothing)
-            , id "OPEN_SEARCH_SELECT"
             , type_ "text"
             , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")
             , tabindex -1
             , disabled viewState.isLocked
             , onInput <| UpdateSearchInput viewState.inputMinimum
             , onBlur Blur
-            , onUpDown <| UpDown viewState.toLabel
+            , onSelectKey SelectKey
             , value state.input
             ]
             []
@@ -301,12 +287,8 @@ searchResultItem focusedOption toLabel option =
 
     div
         [ Css.optionItem (Just option == focusedOption)
-        , id <| Form.toHtmlId toLabel option
         -- use onMouseDown over onClick so that it triggers before the onBlur on the input
         , onMouseDown <| Select option
-        , onFocus <| Focus option
-        , onBlur <| BlurOption option
-        , onEnter <| Select option
         ]
         [ text <| toLabel option ]
 

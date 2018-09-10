@@ -29,9 +29,8 @@ import Json.Decode as Decode exposing (Decoder)
 import FeatherIcons
 
 import Form.Helpers as Form exposing
-    ( UpDown (..), onUpDown, onSpaceEnter
+    ( SelectKey (..), onSelectKey
     , getNextOption, getPreviousOption
-    , focusOption
     )
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
@@ -90,12 +89,10 @@ type Msg option
     | Blur
     | Select option
     | Clear
-    | UpDown (option -> String) UpDown
-    | Focus option
-    | BlurOption option
-    | DomFocus (Result Dom.Error ())
+    | SelectKey (option -> Bool) SelectKey
 
 
+-- At the moment there is no reason to return Cmds, but at some point we should use viewPort in the Browser module to scroll, so leave it as a placeholder
 update : Msg option -> State option -> (State option, Cmd (Msg option))
 update msg state =
 
@@ -104,20 +101,7 @@ update msg state =
             ({ state | isOpen = True }, Cmd.none)
 
         Blur ->
-            case state.focusedOption of
-                Nothing ->
-                    ({ state | isOpen = False }, Cmd.none)
-
-                Just _ ->
-                     (state, Cmd.none)
-
-        BlurOption option ->
-            case Just option == state.focusedOption of
-                True ->
-                    ({ state | focusedOption = Nothing, isOpen = False }, Cmd.none)
-
-                False ->
-                     (state, Cmd.none)
+            ({ state | isOpen = False }, Cmd.none)
 
         Select option ->
             ({ state | selectedOptions = toggleOption option state.selectedOptions }, Cmd.none)
@@ -125,27 +109,24 @@ update msg state =
         Clear ->
             ({ state | selectedOptions = Resettable.update [] state.selectedOptions }, Cmd.none)
 
-        UpDown toLabel Up ->
-            let
-                newFocusedOption =
-                    getPreviousOption (Nonempty.toList state.options) state.focusedOption
+        SelectKey _ Up ->
+            ({ state | focusedOption = getPreviousOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none)
 
-            in
-                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
+        SelectKey _ Down ->
+            ({ state | focusedOption = getNextOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none)
 
-        UpDown toLabel Down ->
-            let
-                newFocusedOption =
-                    getNextOption (Nonempty.toList state.options) state.focusedOption
+        SelectKey isOptionDisabled _ ->
+            case state.focusedOption of
+                Nothing ->
+                    (state, Cmd.none)
 
-            in
-                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
+                Just focusedOption ->
+                    case isOptionDisabled focusedOption of
+                        True ->
+                            (state, Cmd.none)
 
-        Focus option ->
-            ({ state | focusedOption = Just option }, Cmd.none)
-
-        DomFocus result ->
-            (state, Cmd.none)
+                        False ->
+                            ({ state | selectedOptions = toggleOption focusedOption state.selectedOptions }, Cmd.none)
 
 
 toggleOption : option -> Resettable (List option) -> Resettable (List option)
@@ -212,11 +193,11 @@ open state viewState =
             [ Css.input viewState.isError viewState.isLocked
             , tabindex -1
             , onBlur Blur
-            , onUpDown <| UpDown viewState.toLabel
-            , Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)
-            , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
+            , onSelectKey <| SelectKey viewState.isOptionDisabled
+            , Css.title <| List.isEmpty <| Resettable.getValue state.selectedOptions
+            , title <| optionText viewState.defaultLabel viewState.toLabel state.selectedOptions
             ]
-            [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
+            [ text <| optionText viewState.defaultLabel viewState.toLabel state.selectedOptions ]
         , optionList state viewState
         ]
 
@@ -255,21 +236,19 @@ optionItem state viewState option =
 
     div
         [ Css.optionItem (viewState.isOptionDisabled option) (state.focusedOption == Just option)
-        , id <| Form.toHtmlId viewState.toLabel option
-        , onFocus <| Focus option
-        , onBlur <| BlurOption option
         , handleMouseDown state.selectedOptions option
-        , onSpaceEnter (Select option) |> Html.attributeIf (not (viewState.isOptionDisabled option))
         , tabindex -1
         ]
         [ div
             [ Css.checkBox ]
             [
-                if List.member option (Resettable.getValue state.selectedOptions)
-                then FeatherIcons.checkSquare |> FeatherIcons.toHtml [] |> Html.fromUnstyled
-                else FeatherIcons.square |> FeatherIcons.toHtml [] |> Html.fromUnstyled
+                if List.member option <| Resettable.getValue state.selectedOptions
+                then FeatherIcons.checkSquare |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled
+                else FeatherIcons.square |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled
             ]
-        , text (viewState.toLabel option)
+        , div
+            [ title <| viewState.toLabel option ]
+            [ text <| viewState.toLabel option ]
         ]
 
 

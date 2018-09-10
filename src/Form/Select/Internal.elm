@@ -29,9 +29,8 @@ import Json.Decode as Decode exposing (Decoder)
 import FeatherIcons
 
 import Form.Helpers as Form exposing
-    ( UpDown (..), onUpDown, onSpaceEnter
+    ( SelectKey (..), onSelectKey
     , getNextOption, getPreviousOption
-    , focusOption
     )
 import Html.Styled.Bdt as Html
 import Resettable exposing (Resettable)
@@ -90,12 +89,10 @@ type Msg option
     | Blur
     | Select option
     | Clear
-    | UpDown (option -> String) UpDown
-    | Focus option
-    | BlurOption option
-    | DomFocus (Result Dom.Error ())
+    | SelectKey (option -> Bool) SelectKey
 
 
+-- At the moment there is no reason to return Cmds, but at some point we should use viewPort in the Browser module to scroll, so leave it as a placeholder
 update : Msg option -> State option -> (State option, Cmd (Msg option))
 update msg state =
 
@@ -104,12 +101,7 @@ update msg state =
             ({ state | isOpen = True }, Cmd.none)
 
         Blur ->
-            case state.focusedOption of
-                Nothing ->
-                    ({ state | isOpen = False, focusedOption = Nothing }, Cmd.none)
-
-                _ ->
-                    (state, Cmd.none)
+            ({ state | isOpen = False, focusedOption = Nothing }, Cmd.none)
 
         Select option ->
             ({ state
@@ -121,35 +113,28 @@ update msg state =
         Clear ->
             ({ state | selectedOption = Resettable.update Nothing state.selectedOption }, Cmd.none)
 
-        UpDown toLabel Up ->
-            let
-                newFocusedOption =
-                    getPreviousOption (Nonempty.toList state.options) state.focusedOption
+        SelectKey _ Up ->
+            ({ state | focusedOption = getPreviousOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none)
 
-            in
-                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
+        SelectKey _ Down ->
+            ({ state | focusedOption = getNextOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none)
 
-        UpDown toLabel Down ->
-            let
-                newFocusedOption =
-                    getNextOption (Nonempty.toList state.options) state.focusedOption
-
-            in
-                ({ state | focusedOption = newFocusedOption }, focusOption toLabel newFocusedOption DomFocus)
-
-        Focus option ->
-            ({ state | focusedOption = Just option }, Cmd.none)
-
-        BlurOption option ->
-            case state.focusedOption == Just option of
-                True ->
-                    ({ state | focusedOption = Nothing, isOpen = False }, Cmd.none)
-
-                False ->
+        SelectKey isOptionDisabled _ ->
+            case state.focusedOption of
+                Nothing ->
                     (state, Cmd.none)
 
-        DomFocus _ ->
-            (state, Cmd.none)
+                Just focusedOption ->
+                    case isOptionDisabled focusedOption of
+                        True ->
+                            (state, Cmd.none)
+
+                        False ->
+                            ({ state
+                                | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
+                                , isOpen = False
+                                , focusedOption = Nothing
+                            }, Cmd.none)
 
 
 -- VIEW --
@@ -198,8 +183,8 @@ open state viewState =
         [ div
             [ Css.input viewState.isError viewState.isLocked
             , Html.maybeAttribute id viewState.id
-            , onUpDown <| UpDown viewState.toLabel
             , tabindex -1
+            , onSelectKey <| SelectKey viewState.isOptionDisabled
             , onBlur Blur
             ]
             [ div
@@ -233,12 +218,8 @@ optionItem state viewState option =
 
     div
         [ Css.optionItem (viewState.isOptionDisabled option) (state.focusedOption == Just option)
-        , id <| Form.toHtmlId viewState.toLabel option
         , tabindex -1
-        , onFocus <| Focus option
-        , onBlur <| BlurOption option
         , onMouseDown (Select option) |> Html.attributeIf (not <| viewState.isOptionDisabled option)
-        , onSpaceEnter (Select option) |> Html.attributeIf (not <| viewState.isOptionDisabled option)
         ]
         [ text (viewState.toLabel option) ]
 

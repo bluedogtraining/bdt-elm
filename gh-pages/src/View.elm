@@ -91,9 +91,6 @@ view model =
                                     |> Select.setIsOptionDisabled ((==) MusicGenre.Pop)
                                     |> Select.render
                                     |> Html.map SelectMsg
-                                , Html.maybeView
-                                    (Select.getSelectedOption model.select)
-                                    (\musicGenre -> text <| "Value: " ++ MusicGenre.toLabel musicGenre)
                                 ]
                             , Card.block Twelve
                                 [ Label.view "Multi Select"
@@ -101,9 +98,6 @@ view model =
                                 , MultiSelect.view model.multiSelect MusicGenre.toLabel
                                     |> MultiSelect.render
                                     |> Html.map MultiSelectMsg
-                                , Html.maybeView
-                                    (Select.getSelectedOption model.select)
-                                    (\musicGenre -> text <| "Value: " ++ MusicGenre.toLabel musicGenre)
                                 ]
                             , Card.block Twelve
                                 [ Label.view "Search Select"

@@ -15,7 +15,6 @@
         "Form.SearchSelect",
         "Form.DatePicker",
         "Form.TextArea",
-        "Form.DropZone",
         "Toasters",
         "Grid",
         "Grid.Size",

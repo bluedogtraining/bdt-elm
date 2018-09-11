@@ -1,5 +1,6 @@
 module Form.DatePicker.Helpers exposing (..)
 
+import Time exposing (Month (..))
 import Time.Date as Date exposing (Date)
 import Time.DateTime as DateTime exposing (DateTime)
 import Date.Bdt as Date
@@ -160,3 +161,20 @@ visibleDays navigationDate =
 isSame : Date -> Date -> Bool
 isSame date1 date2 =
     Date.compare date1 date2 == EQ
+
+
+monthFromNumber : Int -> Month
+monthFromNumber n =
+    case n of
+        1 -> Jan
+        2 -> Feb
+        3 -> Mar
+        4 -> Apr
+        5 -> May
+        6 -> Jun
+        7 -> Jul
+        8 -> Aug
+        9 -> Sep
+        10 -> Oct
+        11 -> Nov
+        _ -> Dec

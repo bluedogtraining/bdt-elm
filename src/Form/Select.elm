@@ -24,7 +24,7 @@ module Form.Select exposing
 @docs reInitialise, reset, setInitialOption, setSelectedOption, setIsOptionDisabled
 
 # View Setters
-@docs setIsError, setIsLocked, setIsClearable, setDefaultLabel, setToLabel, setId
+@docs setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
 
 # Getters
 @docs getIsChanged, getIsOpen, getInitialOption, getSelectedOption, getId

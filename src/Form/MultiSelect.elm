@@ -24,7 +24,7 @@ module Form.MultiSelect exposing
 @docs reInitialise, reset, setInitialOptions, setSelectedOptions, setIsOptionDisabled
 
 # View Setters
-@docs setIsError, setIsLocked, setIsClearable, setDefaultLabel, setToLabel, setId
+@docs setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
 
 # Getters
 @docs getIsChanged, getIsOpen, getInitialOptions, getSelectedOptions, getId

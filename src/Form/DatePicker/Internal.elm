@@ -451,7 +451,7 @@ calendarNavigation state viewState navigationDate =
 calendarNavigationTitle : Date -> String
 calendarNavigationTitle date =
 
-    (Date.year date |> String.fromInt) ++ " - " ++ (Date.month date |> Date.monthFromNumber |> Date.monthToString)
+    (Date.year date |> String.fromInt) ++ " - " ++ (Date.month date |> Helpers.monthFromNumber |> Date.monthToString)
 
 
 previousYearArrow : ViewState -> Date -> Html Msg

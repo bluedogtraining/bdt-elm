@@ -3,7 +3,7 @@ module Css.Bdt exposing (styleIf)
 {-| Helpers on top of Html.Styled to show/hide things
 
 # Show Hide Elements
-@docs (?)
+@docs styleIf
 
 -}
 

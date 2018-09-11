@@ -15,7 +15,7 @@ import List.Nonempty as Nonempty exposing (Nonempty (..))
 
 import Basics.Bdt exposing (..)
 
-import Date exposing (Date)
+import Time.Date as Date exposing (Date)
 import Date.Bdt as Date
 
 
@@ -23,7 +23,7 @@ import Date.Bdt as Date
 -}
 sortByDate : (a -> Date) -> List a -> List a
 sortByDate f list =
-    List.sortWith (lift2 f Date.order) list
+    List.sortWith (lift2 f Date.compare) list
 
 
 {-| Group while a condition holds true

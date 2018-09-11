@@ -3,12 +3,11 @@ module ListTests exposing (suite)
 import Test exposing (..)
 import Expect exposing (Expectation)
 
-import Date
-
 import List.Nonempty exposing (Nonempty (..))
-
-import Date.Bdt as Date
 import List.Bdt as List
+
+import Time.Date as Date
+import Date.Bdt as Date
 
 
 suite : Test
@@ -50,27 +49,27 @@ test2 _ =
 
 test3 : () -> Expectation
 test3 _ =
-    [ { name = "One", date = Date.fromRataDie 1 }
-    , { name = "Two", date = Date.fromRataDie 2 }
-    , { name = "Three", date = Date.fromRataDie 1 }
+    [ { name = "One", date = Date.date 2018 9 17 }
+    , { name = "Two", date = Date.date 2019 4 8 }
+    , { name = "Three", date = Date.date 2018 9 17 }
     ]
-        |> List.sortWith (\rec1 rec2 -> Date.order rec1.date rec2.date)
+        |> List.sortWith (\rec1 rec2 -> Date.compare rec1.date rec2.date)
         |> List.groupWhile (\rec1 rec2 -> rec1.date == rec2.date)
         |> Expect.equal
-            [ Nonempty { name = "One", date = Date.fromRataDie 1 } [ { name = "Three", date = Date.fromRataDie 1 } ]
-            , Nonempty { name = "Two", date = Date.fromRataDie 2 } []
+            [ Nonempty { name = "One", date = Date.date 2018 9 17 } [ { name = "Three", date = Date.date 2018 9 17 } ]
+            , Nonempty { name = "Two", date = Date.date 2019 4 8 } []
             ]
 
 
 test4 : () -> Expectation
 test4 _ =
-    [ { name = "One", date = Date.fromRataDie 1 }
-    , { name = "Two", date = Date.fromRataDie 2 }
-    , { name = "Three", date = Date.fromRataDie 1 }
+    [ { name = "One", date = Date.date 2018 9 17 }
+    , { name = "Two", date = Date.date 2019 4 8 }
+    , { name = "Three", date = Date.date 2018 9 17 }
     ]
         |> List.sortByDate .date
         |> Expect.equal
-            [ { name = "One", date = Date.fromRataDie 1 }
-            , { name = "Three", date = Date.fromRataDie 1 }
-            , { name = "Two", date = Date.fromRataDie 2 }
+            [ { name = "One", date = Date.date 2018 9 17 }
+            , { name = "Three", date = Date.date 2018 9 17 }
+            , { name = "Two", date = Date.date 2019 4 8 }
             ]

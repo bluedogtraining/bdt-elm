@@ -7,31 +7,8 @@ module Date.Bdt exposing (..)
 
 -}
 
-import Time exposing (Posix, Month (..))
-import Date exposing (Date)
-
-
-fromPosix : Posix -> Date
-fromPosix posix =
-    Date.fromCalendarDate
-        (Time.toYear Time.utc posix)
-        (Time.toMonth Time.utc posix)
-        (Time.toDay Time.utc posix)
-
-
-{-| Orders 2 dates. This comes in handy with List.sortWith:
-
-    List.sortWith Time.order [date1, date2, date3]
--}
-order : Date -> Date -> Order
-order date1 date2 =
-
-    if Date.toRataDie date1 < Date.toRataDie date2 then
-        LT
-    else if Date.toRataDie date1 > Date.toRataDie date2 then
-        GT
-    else
-        EQ
+import Time exposing (Month (..))
+import Time.Date as Date exposing (Date)
 
 
 {-| Returns a string as dd/mm/yyyy
@@ -48,7 +25,7 @@ toString date =
 
         month =
             date
-                |> Date.monthNumber
+                |> Date.month
                 |> String.fromInt
                 |> String.pad 2 '0'
 

@@ -3,7 +3,7 @@ module DateTests exposing (suite)
 import Test exposing (..)
 import Expect exposing (Expectation)
 
-import Date
+import Time.Date as Date
 import Date.Bdt as Date
 
 
@@ -23,14 +23,14 @@ suite =
 
 test1 : () -> Expectation
 test1 _ =
-    Date.toString (Date.fromRataDie <| 736194)
-        |> Expect.equal "18/08/2016"
+    Date.toString (Date.date 2016 11 28)
+        |> Expect.equal "28/11/2016"
 
 
 test2 : () -> Expectation
 test2 _ =
-    Date.maybeDateToString (Just <| Date.fromRataDie <| 736296)
-        |> Expect.equal "28/11/2016"
+    Date.maybeDateToString (Just <| Date.date 2019 1 8)
+        |> Expect.equal "08/01/2019"
 
 
 test3 : () -> Expectation
@@ -65,15 +65,15 @@ test3 _ =
 
 test8 : () -> Expectation
 test8 _ =
-    [ Date.fromRataDie 1531
-    , Date.fromRataDie 1431
-    , Date.fromRataDie 1631
-    , Date.fromRataDie 1501
+    [ Date.date 2019 10 8
+    , Date.date 2017 1 20
+    , Date.date 2049 17 8
+    , Date.date 2019 1 5
     ]
-        |> List.sortWith Date.order
+        |> List.sortWith Date.compare
         |> Expect.equal
-            [ Date.fromRataDie 1431
-            , Date.fromRataDie 1501
-            , Date.fromRataDie 1531
-            , Date.fromRataDie 1631
+            [ Date.date 2017 1 20
+            , Date.date 2019 1 5
+            , Date.date 2019 10 8
+            , Date.date 2049 17 8
             ]

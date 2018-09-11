@@ -11029,7 +11029,7 @@ var author$project$Form$Select$Internal$update = F2(
 							selectedOption: A2(author$project$Resettable$update, elm$core$Maybe$Nothing, state.selectedOption)
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'SelectKey':
 				switch (msg.b.$) {
 					case 'Up':
 						var _n1 = msg.b;
@@ -11081,6 +11081,8 @@ var author$project$Form$Select$Internal$update = F2(
 							}
 						}
 				}
+			default:
+				return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 		}
 	});
 var elm$core$Tuple$mapFirst = F2(
@@ -11518,7 +11520,7 @@ var author$project$Form$MultiSelect$Internal$update = F2(
 							selectedOptions: A2(author$project$Resettable$update, _List_Nil, state.selectedOptions)
 						}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'SelectKey':
 				switch (msg.b.$) {
 					case 'Up':
 						var _n1 = msg.b;
@@ -11565,6 +11567,8 @@ var author$project$Form$MultiSelect$Internal$update = F2(
 							}
 						}
 				}
+			default:
+				return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Form$MultiSelect$update = F2(
@@ -17009,14 +17013,9 @@ var author$project$Form$Select$Css$optionItem = F2(
 		return rtfeldman$elm_css$Html$Styled$Attributes$css(
 			A2(author$project$Form$Css$selectOptionItem, isDisabled, isFocused));
 	});
+var author$project$Form$Select$Internal$NoOp = {$: 'NoOp'};
 var author$project$Form$Select$Internal$Select = function (a) {
 	return {$: 'Select', a: a};
-};
-var rtfeldman$elm_css$Html$Styled$Events$onMouseDown = function (msg) {
-	return A2(
-		rtfeldman$elm_css$Html$Styled$Events$on,
-		'mousedown',
-		elm$json$Json$Decode$succeed(msg));
 };
 var author$project$Form$Select$Internal$optionItem = F3(
 	function (state, viewState, option) {
@@ -17032,10 +17031,12 @@ var author$project$Form$Select$Internal$optionItem = F3(
 						elm$core$Maybe$Just(option))),
 					rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1),
 					A2(
-					author$project$Html$Styled$Bdt$attributeIf,
-					!viewState.isOptionDisabled(option),
-					rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
-						author$project$Form$Select$Internal$Select(option)))
+					rtfeldman$elm_css$Html$Styled$Events$preventDefaultOn,
+					'mousedown',
+					elm$json$Json$Decode$succeed(
+						_Utils_Tuple2(
+							viewState.isOptionDisabled(option) ? author$project$Form$Select$Internal$NoOp : author$project$Form$Select$Internal$Select(option),
+							true)))
 				]),
 			_List_fromArray(
 				[
@@ -17786,6 +17787,12 @@ var rtfeldman$elm_css$VirtualDom$Styled$map = F2(
 		}
 	});
 var rtfeldman$elm_css$Html$Styled$map = rtfeldman$elm_css$VirtualDom$Styled$map;
+var rtfeldman$elm_css$Html$Styled$Events$onMouseDown = function (msg) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$on,
+		'mousedown',
+		elm$json$Json$Decode$succeed(msg));
+};
 var author$project$Form$DatePicker$Internal$timePicker = function (state) {
 	var isDesiredDateSelected = !_Utils_eq(state.desiredDate, elm$core$Maybe$Nothing);
 	var isDateSelected = !_Utils_eq(
@@ -18707,19 +18714,10 @@ var author$project$Form$MultiSelect$Css$optionItem = F2(
 		return rtfeldman$elm_css$Html$Styled$Attributes$css(
 			A2(author$project$Form$Css$selectOptionItem, isDisabled, isFocused));
 	});
+var author$project$Form$MultiSelect$Internal$NoOp = {$: 'NoOp'};
 var author$project$Form$MultiSelect$Internal$Select = function (a) {
 	return {$: 'Select', a: a};
 };
-var author$project$Form$MultiSelect$Internal$handleMouseDown = F2(
-	function (selectedOptions, option) {
-		return A2(
-			rtfeldman$elm_css$Html$Styled$Events$preventDefaultOn,
-			'mousedown',
-			elm$json$Json$Decode$succeed(
-				_Utils_Tuple2(
-					author$project$Form$MultiSelect$Internal$Select(option),
-					true)));
-	});
 var author$project$Form$MultiSelect$Internal$optionItem = F3(
 	function (state, viewState, option) {
 		return A2(
@@ -18732,7 +18730,13 @@ var author$project$Form$MultiSelect$Internal$optionItem = F3(
 					_Utils_eq(
 						state.focusedOption,
 						elm$core$Maybe$Just(option))),
-					A2(author$project$Form$MultiSelect$Internal$handleMouseDown, state.selectedOptions, option),
+					A2(
+					rtfeldman$elm_css$Html$Styled$Events$preventDefaultOn,
+					'mousedown',
+					elm$json$Json$Decode$succeed(
+						_Utils_Tuple2(
+							viewState.isOptionDisabled(option) ? author$project$Form$MultiSelect$Internal$NoOp : author$project$Form$MultiSelect$Internal$Select(option),
+							true))),
 					rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1)
 				]),
 			_List_fromArray(
@@ -18829,6 +18833,21 @@ var author$project$Form$MultiSelect$render = function (_n0) {
 var author$project$Form$MultiSelect$View = F2(
 	function (a, b) {
 		return {$: 'View', a: a, b: b};
+	});
+var author$project$Form$MultiSelect$Internal$setIsOptionDisabled = F2(
+	function (isOptionDisabled, viewState) {
+		return _Utils_update(
+			viewState,
+			{isOptionDisabled: isOptionDisabled});
+	});
+var author$project$Form$MultiSelect$setIsOptionDisabled = F2(
+	function (isOptionDisabled, _n0) {
+		var state = _n0.a;
+		var viewState = _n0.b;
+		return A2(
+			author$project$Form$MultiSelect$View,
+			state,
+			A2(author$project$Form$MultiSelect$Internal$setIsOptionDisabled, isOptionDisabled, viewState));
 	});
 var author$project$Form$MultiSelect$Internal$initialViewState = function (toLabel) {
 	return {
@@ -20565,7 +20584,10 @@ var author$project$View$view = function (model) {
 																rtfeldman$elm_css$Html$Styled$map,
 																author$project$Msg$MultiSelectMsg,
 																author$project$Form$MultiSelect$render(
-																	A2(author$project$Form$MultiSelect$view, model.multiSelect, author$project$MusicGenre$toLabel)))
+																	A2(
+																		author$project$Form$MultiSelect$setIsOptionDisabled,
+																		elm$core$Basics$eq(author$project$MusicGenre$Pop),
+																		A2(author$project$Form$MultiSelect$view, model.multiSelect, author$project$MusicGenre$toLabel))))
 															])),
 														A2(
 														author$project$Card$block,
@@ -21349,4 +21371,4 @@ var author$project$Main$main = elm$browser$Browser$document(
 		}
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Countries.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxDate":{"args":[],"type":"Maybe.Maybe Time.Date.Date"},"Form.DatePicker.Internal.MinDate":{"args":[],"type":"Maybe.Maybe Time.Date.Date"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"ToastersMsg":["Toasters.Msg"],"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"OpenSmModal":[],"CloseSmModal":[],"OpenLgModal":[],"CloseLgModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinDate","Form.DatePicker.Internal.MaxDate","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinDate","Form.DatePicker.Internal.MaxDate","Time.Date.Date"],"PreviousYear":["Form.DatePicker.Internal.MinDate"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxDate"],"NextMonth":[],"SelectDay":["Time.Date.Date","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"],"Tab":["String.String"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"String.String":{"args":[],"tags":{"String":[]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Date.Date":{"args":[],"tags":{"Date":["{ year : Basics.Int, month : Time.Date.Month, day : Basics.Int }"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Time.Date.Month":{"args":[],"tags":{"Jan":[],"Feb":[],"Mar":[],"Apr":[],"May":[],"Jun":[],"Jul":[],"Aug":[],"Sep":[],"Oct":[],"Nov":[],"Dec":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Countries.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxDate":{"args":[],"type":"Maybe.Maybe Time.Date.Date"},"Form.DatePicker.Internal.MinDate":{"args":[],"type":"Maybe.Maybe Time.Date.Date"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"ToastersMsg":["Toasters.Msg"],"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"OpenSmModal":[],"CloseSmModal":[],"OpenLgModal":[],"CloseLgModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinDate","Form.DatePicker.Internal.MaxDate","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinDate","Form.DatePicker.Internal.MaxDate","Time.Date.Date"],"PreviousYear":["Form.DatePicker.Internal.MinDate"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxDate"],"NextMonth":[],"SelectDay":["Time.Date.Date","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"],"Tab":["String.String"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"String.String":{"args":[],"tags":{"String":[]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Date.Date":{"args":[],"tags":{"Date":["{ year : Basics.Int, month : Time.Date.Month, day : Basics.Int }"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Time.Date.Month":{"args":[],"tags":{"Jan":[],"Feb":[],"Mar":[],"Apr":[],"May":[],"Jun":[],"Jul":[],"Aug":[],"Sep":[],"Oct":[],"Nov":[],"Dec":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

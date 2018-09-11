@@ -91,6 +91,7 @@ type Msg option
     | Select option
     | Clear
     | SelectKey (option -> Bool) SelectKey
+    | NoOp
 
 
 -- At the moment there is no reason to return Cmds, but at some point we should use viewPort in the Browser module to scroll, so leave it as a placeholder
@@ -136,6 +137,9 @@ update msg state =
                                 , isOpen = False
                                 , focusedOption = Nothing
                             }, Cmd.none)
+
+        NoOp ->
+            (state, Cmd.none)
 
 
 -- VIEW --
@@ -220,8 +224,7 @@ optionItem state viewState option =
     div
         [ Css.optionItem (viewState.isOptionDisabled option) (state.focusedOption == Just option)
         , tabindex -1
-        , onMouseDown (Select option) |> Html.attributeIf (not <| viewState.isOptionDisabled option)
-        ]
+        , preventDefaultOn "mousedown" <| Decode.succeed (if viewState.isOptionDisabled option then NoOp else Select option, True) ]
         [ text (viewState.toLabel option) ]
 
 

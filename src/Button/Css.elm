@@ -67,7 +67,7 @@ buttonPadding content size =
 
 lightenColor : Color -> Color
 lightenColor color =
-    rgba color.red color.green color.blue 0.2
+    rgba color.red color.green color.blue 0.2 -- @todo: I would like to change the color itself, not just set a lighter alpha
 
 
 loadingTextContainer : Attribute msg

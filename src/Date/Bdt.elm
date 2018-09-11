@@ -19,20 +19,6 @@ fromPosix posix =
         (Time.toDay Time.utc posix)
 
 
-firstOfMonth : Date -> Date
-firstOfMonth date =
-    Date.add Date.Months -(Date.monthNumber date + 1) date
-
-
-daysInMonth : Date -> Int
-daysInMonth date =
-    date
-        |> Date.add Date.Months 1
-        |> firstOfMonth
-        |> Date.add Date.Days -1
-        |> Date.day
-
-
 {-| Orders 2 dates. This comes in handy with List.sortWith:
 
     List.sortWith Time.order [date1, date2, date3]
@@ -101,21 +87,43 @@ maybeDateToString date =
     Dec -> "12"
 -}
 monthToStringNumber : Month -> String
-monthToStringNumber month =
+monthToStringNumber =
 
+    monthNumber >> String.fromInt >> String.padLeft 2 '0'
+
+
+monthNumber : Month -> Int
+monthNumber month =
     case month of
-        Jan -> "01"
-        Feb -> "02"
-        Mar -> "03"
-        Apr -> "04"
-        May -> "05"
-        Jun -> "06"
-        Jul -> "07"
-        Aug -> "08"
-        Sep -> "09"
-        Oct -> "10"
-        Nov -> "11"
-        Dec -> "12"
+        Jan -> 1
+        Feb -> 2
+        Mar -> 3
+        Apr -> 4
+        May -> 5
+        Jun -> 6
+        Jul -> 7
+        Aug -> 8
+        Sep -> 9
+        Oct -> 10
+        Nov -> 11
+        Dec -> 12
+
+
+monthFromNumber : Int -> Month
+monthFromNumber n =
+    case n of
+        1 -> Jan
+        2 -> Feb
+        3 -> Mar
+        4 -> Apr
+        5 -> May
+        6 -> Jun
+        7 -> Jul
+        8 -> Aug
+        9 -> Sep
+        10 -> Oct
+        11 -> Nov
+        _ -> Dec
 
 
 {-| Returns a padded Int representation of the month

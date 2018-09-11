@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Button
 import Card
-import Date
+import Time.Date as Date
 import Form.DatePicker as DatePicker
 import Form.DropZone as DropZone
 import Form.FloatInput as FloatInput
@@ -124,22 +124,16 @@ view model =
                                 , DatePicker.view model.datePicker
                                     |> DatePicker.render
                                     |> Html.map DatePickerMsg
-                                , Html.maybeView
-                                    (DatePicker.getSelectedDate model.datePicker)
-                                    (\date -> text <| "Value: " ++ Date.toIsoString date)
                                 ]
                             , Card.block Twelve
                                 [ Label.view "Date Picker with min and max dates"
                                     |> Label.render
                                 , DatePicker.view model.datePicker2
                                     |> DatePicker.setIsClearable True
-                                    |> DatePicker.setMinDate (Just <| Date.fromRataDie <| 736194)
-                                    |> DatePicker.setMaxDate (Just <| Date.fromRataDie <| 736296)
+                                    |> DatePicker.setMinDate (Just <| Date.date 2017 11 20)
+                                    |> DatePicker.setMaxDate (Just <| Date.date 2020 11 20)
                                     |> DatePicker.render
                                     |> Html.map DatePicker2Msg
-                                , Html.maybeView
-                                    (DatePicker.getSelectedDate model.datePicker2)
-                                    (\date -> text <| "Value: " ++ Date.toIsoString date)
                                 ]
                             , Card.block Twelve
                                 [ Label.view "Date Time Picker!"
@@ -149,9 +143,6 @@ view model =
                                     |> DatePicker.setIncludeTime True
                                     |> DatePicker.render
                                     |> Html.map DatePicker3Msg
-                                , Html.maybeView
-                                    (DatePicker.getSelectedDate model.datePicker3)
-                                    (\date -> text <| "Value: " ++ Date.toIsoString date)
                                 ]
                             ]
                         |> Card.footer []

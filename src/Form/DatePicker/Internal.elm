@@ -4,13 +4,13 @@ module Form.DatePicker.Internal exposing
     , Msg, update
     , render
     , reInitialise, reset
-    , setInitialDate, setSelectedDate
+    , setInitialDate, setSelectedDateTime
     , setMinDate, setMaxDate, setIncludeTime
     , setIsError, setIsLocked, setIsClearable, setIsInput
-    , setDefaultLabel, setToLabel
+    , setDefaultLabel
     , setId
     , getIsChanged, getIsOpen
-    , getInitialDate, getSelectedDate
+    , getInitialDateTime, getSelectedDateTime
     , getId
     )
 
@@ -22,13 +22,16 @@ import Html.Styled.Attributes as Attributes exposing (..)
 import Browser.Dom as Dom
 import Dict
 import Task
-import Date exposing (Date)
+
+import Json.Decode as Decode exposing (Decoder)
+
+import Time exposing (Posix)
+import Time.Date as Date exposing (Date)
+import Time.DateTime as DateTime exposing (DateTime)
 import Date.Bdt as Date
 
 import List.Extra as List
 import List.Nonempty exposing (Nonempty (..))
-
-import Json.Decode as Decode exposing (Decoder)
 
 import FeatherIcons
 
@@ -46,12 +49,12 @@ import Form.DatePicker.Css as Css
 
 type alias State =
     { isOpen : Bool
-    , selectedDate : Resettable (Maybe Date)
+    , selectedDateTime : Resettable (Maybe DateTime)
+    , navigationDate : Maybe Date -- date on which the datepicker is open
+    , desiredDate : Maybe Date -- date selected with timepicker enabled
     , hours : Select.Model Int
     , minutes : Select.Model Int
     , seconds : Select.Model Int
-    , navigationDate : Maybe Date
-    , desiredDate : Maybe Date -- date selected with timepicker enabled, gets set to selectedDate once apply is hit
     , focusedSelect : Maybe TimeSelect -- need to cache this in the model to avoid blurring when switching between time selects
     }
 
@@ -79,12 +82,12 @@ init =
 
     in
         { isOpen = False
-        , selectedDate = Resettable.init Nothing
+        , selectedDateTime = Resettable.init Nothing
         , navigationDate = Nothing
+        , desiredDate = Nothing
         , hours = hours
         , minutes = minutes
         , seconds = seconds
-        , desiredDate = Nothing
         , focusedSelect = Nothing
         }
 
@@ -96,7 +99,7 @@ type alias ViewState =
     , isInput : Bool
     , minDate : MinDate
     , maxDate : MaxDate
-    , toLabel : Date -> String
+    , toLabel : DateTime -> String
     , defaultLabel : String
     , includeTime : Bool
     , id : Maybe String
@@ -111,7 +114,7 @@ initialViewState =
     , isInput = True
     , minDate = Nothing
     , maxDate = Nothing
-    , toLabel = Helpers.toLabel
+    , toLabel = DateTime.date >> Helpers.dateToString
     , defaultLabel = "-- Nothing Selected --"
     , includeTime = False
     , id = Nothing
@@ -165,13 +168,13 @@ update msg state =
         Open minDate maxDate includeTime ->
             ({ state
                 | isOpen = True
+                , navigationDate = Maybe.map DateTime.date (Resettable.getValue state.selectedDateTime)
+                , desiredDate = Maybe.map DateTime.date (Resettable.getValue state.selectedDateTime)
                 , hours = Select.reset state.hours
                 , minutes = Select.reset state.minutes
                 , seconds = Select.reset state.seconds
-                , navigationDate = Nothing
-                , desiredDate = Nothing
                 , focusedSelect = Nothing
-            }, openCmd (Resettable.getValue state.selectedDate) minDate maxDate includeTime)
+            }, openCmd (Resettable.getValue state.selectedDateTime) minDate maxDate includeTime)
 
         Blur ->
             case state.focusedSelect == Nothing of
@@ -199,17 +202,31 @@ update msg state =
         SelectDay date includeTime ->
             case includeTime of
                 False ->
-                    ({ state | selectedDate = Resettable.update (Just date) state.selectedDate, isOpen = False }, Cmd.none)
+                    let
+                        newDateTime =
+                            case Resettable.getValue state.selectedDateTime of
+                                Nothing ->
+                                    DateTime.makeDateTime date 0
+
+                                Just dateTime ->
+                                    DateTime.setDate date dateTime
+
+                    in
+                        ({ state | selectedDateTime = Resettable.update (Just newDateTime) state.selectedDateTime, isOpen = False }, Cmd.none)
 
                 True ->
                     ({ state | desiredDate = Just date }, Cmd.none)
 
         Apply ->
-            (state, Cmd.none)
---            ({ state | selectedDate = Resettable.update (apply state) state.selectedDate, isOpen = False }, Cmd.none)
+            case state.desiredDate of
+                Nothing ->
+                    (state, Cmd.none)
+
+                Just desiredDate ->
+                    ({ state | selectedDateTime = Resettable.update (makeDateTime state desiredDate) state.selectedDateTime, isOpen = False }, Cmd.none)
 
         Clear ->
-            ({ state | selectedDate = Resettable.update Nothing state.selectedDate, isOpen = False }, Cmd.none)
+            ({ state | selectedDateTime = Resettable.update Nothing state.selectedDateTime, isOpen = False }, Cmd.none)
 
         OpenTimeSelect select ->
             ({ state | focusedSelect = Just select }, openTimeSelect select)
@@ -260,15 +277,32 @@ update msg state =
             (state, Cmd.none)
 
 
-openCmd : Maybe Date -> MinDate -> MaxDate -> IncludeTime -> Cmd Msg
+openCmd : Maybe DateTime -> MinDate -> MaxDate -> IncludeTime -> Cmd Msg
 openCmd date minDate maxDate includeTime =
 
     case date of
         Nothing ->
-            Task.perform (InitWithCurrentDate minDate maxDate) Date.today
+            Task.perform (\posix -> InitWithCurrentDate minDate maxDate (posixToDate posix)) Time.now
 
         _ ->
             Cmd.none
+
+
+posixToDate : Posix -> Date
+posixToDate posix =
+    let
+        year =
+            Time.toYear Time.utc posix
+
+        month =
+            Time.toMonth Time.utc posix
+                |> Date.monthNumber
+
+        day =
+            Time.toDay Time.utc posix
+
+    in
+        Date.date year month day
 
 
 initNavigationDate : MinDate -> MaxDate -> Date -> Maybe Date
@@ -289,20 +323,29 @@ openTimeSelect timeSelect =
             Task.attempt DomFocus (Dom.focus "FORM_DATEPICKER_SECONDS")
 
 
---apply : State -> Maybe Date
---apply state =
---
---    let
---        time =
---            state.selectedDate
---
---    in
---        case time.selectedDate of
---            Nothing ->
---                Helpers.dateFromTime { time | selectedDate = Resettable.getValue state.date }
---
---            Just _ ->
---                Helpers.dateFromTime time
+makeDateTime : State -> Date -> Maybe DateTime
+makeDateTime state desiredDate =
+
+    let
+        hours =
+            Select.getSelectedOption state.hours
+                |> Maybe.withDefault 0
+
+        minutes =
+            Select.getSelectedOption state.minutes
+                |> Maybe.withDefault 0
+
+        seconds =
+            Select.getSelectedOption state.seconds
+                |> Maybe.withDefault 0
+
+    in
+        DateTime.epoch
+            |> DateTime.setDate desiredDate
+            |> DateTime.setHour hours
+            |> DateTime.setMinute minutes
+            |> DateTime.setSecond seconds
+            |> Just
 
 
 -- VIEW --
@@ -331,8 +374,8 @@ closed state viewState =
             , onClick (Open viewState.minDate viewState.maxDate viewState.includeTime) |> Html.attributeIf (not viewState.isLocked)
             ]
             [ div
-                [ Css.title (Resettable.getValue state.selectedDate == Nothing) ]
-                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel) ]
+                [ Css.title (Resettable.getValue state.selectedDateTime == Nothing) ]
+                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDateTime) |> Maybe.withDefault viewState.defaultLabel) ]
             , Html.divIf viewState.isInput
                 []
                 [ FeatherIcons.calendar |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
@@ -352,8 +395,8 @@ open state viewState =
             , onBlur Blur
             ]
             [ div
-                [ Css.title (Resettable.getValue state.selectedDate == Nothing) ]
-                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDate) |> Maybe.withDefault viewState.defaultLabel)  ]
+                [ Css.title (Resettable.getValue state.selectedDateTime == Nothing) ]
+                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedDateTime) |> Maybe.withDefault viewState.defaultLabel)  ]
             , Html.divIf viewState.isInput
                 []
                 [ FeatherIcons.calendar |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
@@ -408,7 +451,7 @@ calendarNavigation state viewState navigationDate =
 calendarNavigationTitle : Date -> String
 calendarNavigationTitle date =
 
-    (Date.year date |> String.fromInt) ++ " - " ++ (Date.month date |> Date.monthToString)
+    (Date.year date |> String.fromInt) ++ " - " ++ (Date.month date |> Date.monthFromNumber |> Date.monthToString)
 
 
 previousYearArrow : ViewState -> Date -> Html Msg
@@ -417,7 +460,7 @@ previousYearArrow viewState navigationDate =
     let
         isDisabled =
             Maybe.map Date.year viewState.minDate == Just (Date.year navigationDate) &&
-            Maybe.map Date.monthNumber viewState.minDate == Just (Date.monthNumber navigationDate)
+            Maybe.map Date.month viewState.minDate == Just (Date.month navigationDate)
 
     in
         div
@@ -437,7 +480,7 @@ previousMonthArrow viewState navigationDate =
     let
         isDisabled =
             Maybe.map Date.year viewState.minDate == Just (Date.year navigationDate) &&
-            Maybe.map Date.monthNumber viewState.minDate == Just (Date.monthNumber navigationDate)
+            Maybe.map Date.month viewState.minDate == Just (Date.month navigationDate)
 
     in
         div
@@ -453,7 +496,7 @@ nextYearArrow viewState navigationDate =
     let
         isDisabled =
             Maybe.map Date.year viewState.maxDate == Just (Date.year navigationDate) &&
-            Maybe.map Date.monthNumber viewState.maxDate == Just (Date.monthNumber navigationDate)
+            Maybe.map Date.month viewState.maxDate == Just (Date.month navigationDate)
 
     in
         div
@@ -473,7 +516,7 @@ nextMonthArrow viewState navigationDate =
     let
         isDisabled =
             Maybe.map Date.year viewState.maxDate == Just (Date.year navigationDate) &&
-            Maybe.map Date.monthNumber viewState.maxDate == Just (Date.monthNumber navigationDate)
+            Maybe.map Date.month viewState.maxDate == Just (Date.month navigationDate)
 
     in
         div
@@ -498,7 +541,7 @@ calendarDays state viewState navigationDate =
             Helpers.visibleDays navigationDate
 
         firstOfMonth =
-            Date.firstOfMonth navigationDate
+            Date.setDay 1 navigationDate
 
     in
         div
@@ -525,13 +568,13 @@ calendarDay state viewState firstOfMonth (isCurrentMonth, dayNumber) =
                 |> Helpers.maybeClamp viewState.minDate viewState.maxDate
                 |> Helpers.isSame date
 
-        isSelectedDate =
-            case Resettable.getValue state.selectedDate of
+        isSelectedDateTime =
+            case Resettable.getValue state.selectedDateTime of
                 Nothing ->
                     False
 
-                Just selectedDate ->
-                    Helpers.isSame date selectedDate
+                Just selectedDateTime ->
+                    Helpers.isSame date (DateTime.date selectedDateTime)
 
         isSelectedDesiredDate =
             case state.desiredDate of
@@ -543,7 +586,7 @@ calendarDay state viewState firstOfMonth (isCurrentMonth, dayNumber) =
 
     in
         div
-            [ Css.calendarDayItem isSelectedDate isSelectedDesiredDate (isCurrentMonth && isInRange)
+            [ Css.calendarDayItem isSelectedDateTime isSelectedDesiredDate (isCurrentMonth && isInRange)
             , onClick (SelectDay date viewState.includeTime) |> Html.attributeIf (isCurrentMonth && isInRange) ]
             [ text (String.fromInt dayNumber) ]
 
@@ -560,7 +603,7 @@ timePicker state =
 
     let
         isDateSelected =
-            Resettable.getValue state.selectedDate /= Nothing
+            Resettable.getValue state.selectedDateTime /= Nothing
 
         isDesiredDateSelected =
             state.desiredDate /= Nothing
@@ -634,8 +677,8 @@ clearDateButton : State -> Html Msg
 clearDateButton state =
 
     div
-        [ Css.clearButton <| Resettable.getValue state.selectedDate /= Nothing
-        , onClick Clear |> Html.attributeIf (Resettable.getValue state.selectedDate /= Nothing)
+        [ Css.clearButton <| Resettable.getValue state.selectedDateTime /= Nothing
+        , onClick Clear |> Html.attributeIf (Resettable.getValue state.selectedDateTime /= Nothing)
         ]
         [ text "clear currently selected date" ]
 
@@ -646,25 +689,25 @@ clearDateButton state =
 reInitialise : State -> State
 reInitialise state =
 
-    { state | selectedDate = Resettable.init <| Resettable.getValue state.selectedDate }
+    { state | selectedDateTime = Resettable.init <| Resettable.getValue state.selectedDateTime }
 
 
 reset : State -> State
 reset state =
 
-    { state | selectedDate = Resettable.reset state.selectedDate }
+    { state | selectedDateTime = Resettable.reset state.selectedDateTime }
 
 
-setInitialDate : Maybe Date -> State -> State
-setInitialDate selectedDate state =
+setInitialDate : Maybe DateTime -> State -> State
+setInitialDate selectedDateTime state =
 
-    { state | selectedDate = Resettable.init selectedDate }
+    { state | selectedDateTime = Resettable.init selectedDateTime }
 
 
-setSelectedDate : Maybe Date -> State -> State
-setSelectedDate selectedDate state =
+setSelectedDateTime : Maybe DateTime -> State -> State
+setSelectedDateTime selectedDateTime state =
 
-    { state | selectedDate = Resettable.update selectedDate state.selectedDate }
+    { state | selectedDateTime = Resettable.update selectedDateTime state.selectedDateTime }
 
 
 -- VIEW STATE SETTERS --
@@ -687,11 +730,10 @@ setIncludeTime includeTime viewState =
 
     case includeTime of
         True ->
---            { viewState | includeTime = True, toLabel = Helpers.toTimeLabel }
-            { viewState | includeTime = True, toLabel = Helpers.toLabel }
+            { viewState | includeTime = True, toLabel = Helpers.dateTimeToString }
 
         False ->
-            { viewState | includeTime = False, toLabel = Helpers.toLabel }
+            { viewState | includeTime = False, toLabel = DateTime.date >> Helpers.dateToString }
 
 
 setIsError : Bool -> ViewState -> ViewState
@@ -724,12 +766,6 @@ setDefaultLabel defaultLabel viewState =
     { viewState | defaultLabel = defaultLabel }
 
 
-setToLabel : (Date -> String) -> ViewState -> ViewState
-setToLabel toLabel viewState =
-
-    { viewState | toLabel = toLabel }
-
-
 setId : String -> ViewState -> ViewState
 setId id viewState =
 
@@ -741,7 +777,7 @@ setId id viewState =
 
 getIsChanged : State -> Bool
 getIsChanged =
-    .selectedDate >> Resettable.getIsChanged
+    .selectedDateTime >> Resettable.getIsChanged
 
 
 getIsOpen : State -> Bool
@@ -749,14 +785,14 @@ getIsOpen =
     .isOpen
 
 
-getInitialDate : State -> Maybe Date
-getInitialDate =
-    .selectedDate >> Resettable.getInitialValue
+getInitialDateTime : State -> Maybe DateTime
+getInitialDateTime =
+    .selectedDateTime >> Resettable.getInitialValue
 
 
-getSelectedDate : State -> Maybe Date
-getSelectedDate =
-    .selectedDate >> Resettable.getValue
+getSelectedDateTime : State -> Maybe DateTime
+getSelectedDateTime =
+    .selectedDateTime >> Resettable.getValue
 
 
 getId : ViewState -> Maybe String

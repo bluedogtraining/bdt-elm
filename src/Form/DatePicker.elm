@@ -3,13 +3,13 @@ module Form.DatePicker exposing
     , Msg, update
     , view, render
     , reInitialise, reset
-    , setInitialDate, setSelectedDate
+    , setInitialDate, setSelectedDateTime
     , setMinDate, setMaxDate, setIncludeTime, setIsInput
     , setIsError, setIsLocked, setIsClearable
-    , setDefaultLabel, setToLabel
+    , setDefaultLabel
     , setId
     , getIsChanged, getIsOpen
-    , getInitialDate, getSelectedDate
+    , getInitialDateTime, getSelectedDateTime
     , getId
     )
 
@@ -35,7 +35,8 @@ module Form.DatePicker exposing
 import Html.Styled exposing (Html)
 
 import Tuple
-import Date exposing (Date)
+import Time.Date exposing (Date)
+import Time.DateTime exposing (DateTime)
 
 import Form.DatePicker.Internal as Internal
 
@@ -143,18 +144,18 @@ reset (Model state) =
 
 {-| Set the initial Date of your DatePicker.Model.
 -}
-setInitialDate : Maybe Date -> Model -> Model
-setInitialDate selectedDate (Model state) =
+setInitialDate : Maybe DateTime -> Model -> Model
+setInitialDate selectedDateTime (Model state) =
 
-    Model <| Internal.setInitialDate selectedDate state
+    Model <| Internal.setInitialDate selectedDateTime state
 
 
 {-| Change the Date of your DatePicker.Model.
 -}
-setSelectedDate : Maybe Date -> Model -> Model
-setSelectedDate selectedDate (Model state) =
+setSelectedDateTime : Maybe DateTime -> Model -> Model
+setSelectedDateTime selectedDateTime (Model state) =
 
-    Model <| Internal.setSelectedDate selectedDate state
+    Model <| Internal.setSelectedDateTime selectedDateTime state
 
 
 {-| Set the min. date. Dates prior to this can't be selected. Navigation is also capped to this date.
@@ -221,14 +222,6 @@ setDefaultLabel defaultLabel (View state viewState) =
     View state (Internal.setDefaultLabel defaultLabel viewState)
 
 
-{-| Set how your Dates are printed to the screen.
--}
-setToLabel : (Date -> String) -> View -> View
-setToLabel toLabel (View state viewState) =
-
-    View state (Internal.setToLabel toLabel viewState)
-
-
 {-| Give your datePicker an id. Can be useful for DOM selectors (focus, WebComponents etc.)
 -}
 setId : String -> View -> View
@@ -255,19 +248,19 @@ getIsOpen (Model state) =
 
 {-| Get the initial Date of your datePicker.
 -}
-getInitialDate : Model -> Maybe Date
-getInitialDate (Model state) =
+getInitialDateTime : Model -> Maybe DateTime
+getInitialDateTime (Model state) =
 
-    Internal.getInitialDate state
+    Internal.getInitialDateTime state
 
 
 {-| Get the current Date of your datePicker. This is what you'd use to display the data somewhere outside of your datePicker,
 or to send the data to the backend for example etc.
 -}
-getSelectedDate : Model -> Maybe Date
-getSelectedDate (Model state) =
+getSelectedDateTime : Model -> Maybe DateTime
+getSelectedDateTime (Model state) =
 
-    Internal.getSelectedDate state
+    Internal.getSelectedDateTime state
 
 
 {-| Useful if you need the id of the datePicker in your update function, to set focus etc.

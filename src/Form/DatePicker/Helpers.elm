@@ -1,6 +1,7 @@
 module Form.DatePicker.Helpers exposing (..)
 
-import Date exposing (Date)
+import Time.Date as Date exposing (Date)
+import Time.DateTime as DateTime exposing (DateTime)
 import Date.Bdt as Date
 
 import List.Extra as List
@@ -8,48 +9,55 @@ import List.Extra as List
 import Form.Select as Select
 
 
-toLabel : Date -> String
-toLabel =
-    dateToString
+dateTimeToString : DateTime -> String
+dateTimeToString dateTime =
 
+    let
+        hour =
+            dateTime
+                |> DateTime.hour
+                |> String.fromInt
+                |> String.pad 2 '0'
 
---toTimeLabel : Date -> String
---toTimeLabel posix =
---    dateToString (Date.fromPosix posix) ++ " " ++ timeToString posix
---
---
---timeToString : Int -> Int -> Int -> String
---timeToString date =
---
---    [Time.toHour Time.utc date, Time.toMinute Time.utc date, Time.toSecond Time.utc date]
---        |> List.map (String.fromInt >> String.padLeft 2 '0')
---        |> List.intersperse ":"
---        |> String.concat
+        minute =
+            dateTime
+                |> DateTime.minute
+                |> String.fromInt
+                |> String.pad 2 '0'
+
+        second =
+            dateTime
+                |> DateTime.second
+                |> String.fromInt
+                |> String.pad 2 '0'
+
+    in
+        dateToString (DateTime.date dateTime) ++ " " ++ hour ++ ":" ++ minute ++ ":" ++ second
 
 
 dateToString : Date -> String
 dateToString date =
-
     let
+        year =
+            date
+                |> Date.year
+                |> String.fromInt
+
+        month =
+            date
+                |> Date.month
+                |> String.fromInt
+                |> String.pad 2 '0'
+
         day =
             date
                 |> Date.day
                 |> String.fromInt
                 |> String.pad 2 '0'
 
-        month =
-            date
-                |> Date.monthNumber
-                |> String.fromInt
-                |> String.pad 2 '0'
-
-        year =
-            date
-                |> Date.year
-                |> String.fromInt
-
     in
-        String.join "/" [day, month, year]
+        year ++ "/" ++ month ++ "/" ++ day
+
 
 
 maybeClamp : Maybe Date -> Maybe Date -> Date -> Date
@@ -73,9 +81,9 @@ maybeClamp maybeMinDate maybeMaxDate date =
 clamp : Date -> Date -> Date -> Date
 clamp minDate maxDate date =
 
-    if Date.toRataDie date < Date.toRataDie minDate then
+    if Date.compare date minDate == LT then
         minDate
-    else if Date.toRataDie date > Date.toRataDie maxDate then
+    else if Date.compare date maxDate == GT then
         maxDate
     else
         date
@@ -83,71 +91,27 @@ clamp minDate maxDate date =
 
 previousYear : Date -> Date
 previousYear date =
-    Date.add Date.Months -12 date
+    Date.addMonths -12 date
 
 
 previousMonth : Date -> Date
 previousMonth date =
-    Date.add Date.Months -1 date
+    Date.addMonths -1 date
 
 
 nextMonth : Date -> Date
 nextMonth date =
-    Date.add Date.Months 1 date
+    Date.addMonths 1 date
 
 
 nextYear : Date -> Date
 nextYear date =
-    Date.add Date.Months 12 date
+    Date.addMonths 12 date
 
 
 dateAtDayNumber : Int -> Date -> Date
 dateAtDayNumber dayNumber date =
-    Date.add Date.Days (dayNumber - 1) date
-
-
---dateFromTime : { time | hours : Select.Model String, minutes : Select.Model String, seconds : Select.Model String, selectedDate : Maybe Date } -> Maybe Date
---dateFromTime time =
---
---    case time.selectedDate of
---
---        Nothing ->
---            Nothing
---
---        Just selectedDate ->
---            let
---                year =
---                    Time.toYear Time.utc selectedDate
---
---                month =
---                    Time.toMonth Time.utc selectedDate
---
---                day =
---                    Time.toDay Time.utc selectedDate
---
---                hour =
---                    time.hours
---                        |> Select.getSelectedOption
---                        |> Maybe.map (String.toInt >> Result.toMaybe)
---                        |> Maybe.andThen identity
---                        |> Maybe.withDefault 0
---
---                minute =
---                    time.minutes
---                        |> Select.getSelectedOption
---                        |> Maybe.map (String.toInt >> Result.toMaybe)
---                        |> Maybe.andThen identity
---                        |> Maybe.withDefault 0
---
---                second =
---                    time.seconds
---                        |> Select.getSelectedOption
---                        |> Maybe.map (String.toInt >> Result.toMaybe)
---                        |> Maybe.andThen identity
---                        |> Maybe.withDefault 0
---
---            in
---                Just (Date.dateFromFields year month day hour minute second 0)
+    Date.addDays (dayNumber - 1) date
 
 
 visibleDays : Date -> List (List (Bool, Int))
@@ -155,16 +119,17 @@ visibleDays navigationDate =
 
     let
         firstOfMonth =
-            Date.add Date.Months -(Date.monthNumber navigationDate + 1) navigationDate
+            Date.setDay 1 navigationDate
 
         startNumber =
-            Date.weekdayNumber firstOfMonth
+            Date.day firstOfMonth
 
         daysInMonth =
-            Date.daysInMonth navigationDate
+            Date.daysInMonth (Date.year navigationDate) (Date.month navigationDate)
 
         daysInPreviousMonth =
-            previousMonth navigationDate |> Date.daysInMonth
+            previousMonth navigationDate
+                |> \date -> Date.daysInMonth (Date.year date) (Date.month date)
 
         {-
             the 3 lists we're interested in:
@@ -192,19 +157,6 @@ visibleDays navigationDate =
             |> List.groupsOf 7
 
 
-intsToStrings : List Int -> List String
-intsToStrings ints =
-    List.map (String.fromInt >> String.padLeft 2 '0') ints
-
-
-isSelectOpen : { time | hours : Select.Model String, minutes : Select.Model String, seconds : Select.Model String } -> Bool
-isSelectOpen { hours, minutes, seconds } =
-
-    [hours, minutes, seconds]
-        |> List.map Select.getIsOpen
-        |> List.any ((==) True)
-
-
 isSame : Date -> Date -> Bool
 isSame date1 date2 =
-    Date.toRataDie date1 == Date.toRataDie date2
+    Date.compare date1 date2 == EQ

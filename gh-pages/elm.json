@@ -18,6 +18,7 @@
             "elm/time": "1.0.0",
             "elm/virtual-dom": "1.0.0",
             "elm-community/list-extra": "8.0.0",
+            "isaacseymour/deprecated-time": "1.0.0",
             "justinmimbs/date": "2.0.1",
             "mgold/elm-nonempty-list": "4.0.0",
             "rtfeldman/elm-css": "15.1.0"

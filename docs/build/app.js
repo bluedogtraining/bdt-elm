@@ -16973,10 +16973,19 @@ var author$project$Form$Css$selectOptionItem = F2(
 				rtfeldman$elm_css$Css$alignItems(rtfeldman$elm_css$Css$center),
 				A2(
 				author$project$Css$Bdt$styleIf,
-				isDisabled || isFocused,
+				isFocused,
 				rtfeldman$elm_css$Css$backgroundColor(
 					rtfeldman$elm_css$Css$hex('f2f9fc'))),
+				A2(
+				author$project$Css$Bdt$styleIf,
+				isDisabled,
+				rtfeldman$elm_css$Css$backgroundColor(
+					rtfeldman$elm_css$Css$hex('eeeeee'))),
 				rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$pointer),
+				A2(
+				author$project$Css$Bdt$styleIf,
+				isDisabled,
+				rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$notAllowed)),
 				rtfeldman$elm_css$Css$outlineWidth(
 				rtfeldman$elm_css$Css$px(0)),
 				rtfeldman$elm_css$Css$overflowX(rtfeldman$elm_css$Css$hidden),

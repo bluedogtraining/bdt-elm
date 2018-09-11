@@ -76,8 +76,10 @@ selectOptionItem isDisabled isFocused =
     , height <| Css.rem 2
     , displayFlex
     , alignItems center
-    , backgroundColor (hex "f2f9fc") |> Css.styleIf (isDisabled || isFocused)
+    , backgroundColor (hex "f2f9fc") |> Css.styleIf isFocused
+    , backgroundColor (hex "eeeeee") |> Css.styleIf isDisabled
     , cursor pointer
+    , cursor notAllowed |> Css.styleIf isDisabled
     , outlineWidth <| px 0
     , overflowX hidden
     , whiteSpace noWrap

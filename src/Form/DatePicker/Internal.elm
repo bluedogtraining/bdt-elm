@@ -562,7 +562,7 @@ calendarDay : State -> ViewState -> Posix -> Posix -> Html Msg
 calendarDay state viewState navigationPosix posix =
     let
         isCurrentMonth =
-            Time.posixToMillis posix == Time.posixToMillis navigationPosix
+            Time.toYear Time.utc posix == Time.toYear Time.utc navigationPosix && Time.toMonth Time.utc posix == Time.toMonth Time.utc navigationPosix
 
         isSelectedPosix =
             case Resettable.getValue state.selectedPosix of

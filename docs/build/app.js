@@ -16287,8 +16287,10 @@ var author$project$Form$DatePicker$Internal$calendarDay = F4(
 			}
 		}();
 		var isCurrentMonth = _Utils_eq(
-			elm$time$Time$posixToMillis(posix),
-			elm$time$Time$posixToMillis(navigationPosix));
+			A2(elm$time$Time$toYear, elm$time$Time$utc, posix),
+			A2(elm$time$Time$toYear, elm$time$Time$utc, navigationPosix)) && _Utils_eq(
+			A2(elm$time$Time$toMonth, elm$time$Time$utc, posix),
+			A2(elm$time$Time$toMonth, elm$time$Time$utc, navigationPosix));
 		return A2(
 			rtfeldman$elm_css$Html$Styled$div,
 			_List_fromArray(

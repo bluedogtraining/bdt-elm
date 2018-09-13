@@ -1,42 +1,48 @@
 module Form.Input exposing
-    ( Model, init
-    , Msg, update
+    ( Model, init, Msg, update
     , view, render
-    , reInitialise, reset
-    , setInitialValue, setValue
-    , setPlaceholder, setMaxLength
-    , setIsError, setIsLocked
-    , setId
+    , reInitialise, reset, setInitialValue, setValue
+    , setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
     , setTextType, setEmailType, setPasswordType, setTelType, setNumberType
-    , getIsChanged, getInitialValue, getValue
-    , getId
+    , getInitialValue, getValue, getIsChanged, getId
     )
 
 {-| This module is useful if you want to add an Input Form element to your app.
 
+
 # Initialise and update
+
 @docs Model, init, Msg, update
 
+
 # View and render
+
 @docs view, render
 
+
 # State Setters
+
 @docs reInitialise, reset, setInitialValue, setValue
 
+
 # View Setters
+
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
 
+
 # Type Setters
+
 @docs setTextType, setEmailType, setPasswordType, setTelType, setNumberType
 
+
 # Getters
+
 @docs getInitialValue, getValue, getIsChanged, getId
 
 -}
 
-import Html.Styled exposing (Html)
-
 import Form.Input.Internal as Internal
+import Html.Styled exposing (Html)
 
 
 {-| Add a Input.Model to your model.
@@ -44,6 +50,7 @@ import Form.Input.Internal as Internal
     type alias MyModel =
         { myInput : Input.Model
         }
+
 -}
 type Model
     = Model Internal.State
@@ -59,6 +66,7 @@ type View
     myInitialModel =
         { myInput = Input.init -- optionally pipe into State Setters
         }
+
 -}
 init : Model
 init =
@@ -69,6 +77,7 @@ init =
 
     type MyMsg
         = UpdateMyInput Input.Msg
+
 -}
 type alias Msg =
     Internal.Msg
@@ -76,15 +85,15 @@ type alias Msg =
 
 {-| Use in your update function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             UpdateMyInput inputMsg ->
                 { model | myInput = Input.update inputMsg mode.myInput } ! []
+
 -}
 update : Internal.Msg -> Model -> Model
 update msg (Model state) =
-
     Model (Internal.update msg state)
 
 
@@ -96,10 +105,10 @@ update msg (Model state) =
             []
             [ Input.view model.myInput -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
+
 -}
 view : Model -> View
 view (Model state) =
-
     View state Internal.initialViewState
 
 
@@ -113,10 +122,10 @@ view (Model state) =
                 |> Input.render
                 |> Html.map UpdateMyInput
             ]
+
 -}
 render : View -> Html Internal.Msg
 render (View state viewState) =
-
     Internal.render state viewState
 
 
@@ -124,7 +133,6 @@ render (View state viewState) =
 -}
 reInitialise : Model -> Model
 reInitialise (Model state) =
-
     Model <| Internal.reInitialise state
 
 
@@ -132,7 +140,6 @@ reInitialise (Model state) =
 -}
 reset : Model -> Model
 reset (Model state) =
-
     Model <| Internal.reset state
 
 
@@ -140,7 +147,6 @@ reset (Model state) =
 -}
 setInitialValue : String -> Model -> Model
 setInitialValue value (Model state) =
-
     Model <| Internal.setInitialValue value state
 
 
@@ -148,7 +154,6 @@ setInitialValue value (Model state) =
 -}
 setValue : String -> Model -> Model
 setValue value (Model state) =
-
     Model <| Internal.setValue value state
 
 
@@ -156,7 +161,6 @@ setValue value (Model state) =
 -}
 setMaxLength : Int -> View -> View
 setMaxLength maxLength (View state viewState) =
-
     View state (Internal.setMaxLength maxLength viewState)
 
 
@@ -164,7 +168,6 @@ setMaxLength maxLength (View state viewState) =
 -}
 setPlaceholder : String -> View -> View
 setPlaceholder placeholder (View state viewState) =
-
     View state (Internal.setPlaceholder placeholder viewState)
 
 
@@ -172,7 +175,6 @@ setPlaceholder placeholder (View state viewState) =
 -}
 setIsLocked : Bool -> View -> View
 setIsLocked isLocked (View state viewState) =
-
     View state (Internal.setIsLocked isLocked viewState)
 
 
@@ -180,7 +182,6 @@ setIsLocked isLocked (View state viewState) =
 -}
 setIsError : Bool -> View -> View
 setIsError isError (View state viewState) =
-
     View state (Internal.setIsError isError viewState)
 
 
@@ -188,47 +189,41 @@ setIsError isError (View state viewState) =
 -}
 setId : String -> View -> View
 setId id (View state viewState) =
-
     View state (Internal.setId id viewState)
 
 
-{-| Set the type_ of your input to "text"
+{-| Set the type\_ of your input to "text"
 -}
 setTextType : View -> View
 setTextType (View state viewState) =
-
     View state (Internal.setTextType viewState)
 
 
-{-| Set the type_ of your input to "email"
+{-| Set the type\_ of your input to "email"
 -}
 setEmailType : View -> View
 setEmailType (View state viewState) =
-
     View state (Internal.setEmailType viewState)
 
 
-{-| Set the type_ of your input to "password"
+{-| Set the type\_ of your input to "password"
 -}
 setPasswordType : View -> View
 setPasswordType (View state viewState) =
-
     View state (Internal.setPasswordType viewState)
 
 
-{-| Set the type_ of your input to "tel"
+{-| Set the type\_ of your input to "tel"
 -}
 setTelType : View -> View
 setTelType (View state viewState) =
-
     View state (Internal.setTelType viewState)
 
 
-{-| Set the type_ of your input to "number"
+{-| Set the type\_ of your input to "number"
 -}
 setNumberType : View -> View
 setNumberType (View state viewState) =
-
     View state (Internal.setNumberType viewState)
 
 
@@ -236,7 +231,6 @@ setNumberType (View state viewState) =
 -}
 getIsChanged : Model -> Bool
 getIsChanged (Model state) =
-
     Internal.getIsChanged state
 
 
@@ -244,7 +238,6 @@ getIsChanged (Model state) =
 -}
 getInitialValue : Model -> String
 getInitialValue (Model state) =
-
     Internal.getInitialValue state
 
 
@@ -253,7 +246,6 @@ or to send the data to the backend for example etc.
 -}
 getValue : Model -> String
 getValue (Model state) =
-
     Internal.getValue state
 
 
@@ -261,5 +253,4 @@ getValue (Model state) =
 -}
 getId : View -> Maybe String
 getId (View _ viewState) =
-
     Internal.getId viewState

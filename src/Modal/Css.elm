@@ -1,23 +1,21 @@
-module Modal.Css exposing (..)
+module Modal.Css exposing (background, block, body, closeIcon, footer, header, headerTitle, modal, removeBodyScroll)
 
 import Css exposing (..)
 import Css.Global as Global
-import Html.Styled exposing (Html, Attribute)
-import Html.Styled.Attributes exposing (css)
-
 import Grid.Css as Grid
-import Grid.Size exposing (Size, Cols)
+import Grid.Size exposing (Cols, Size)
 import Grid.SizeHelpers as SizeHelpers
+import Html.Styled exposing (Attribute, Html)
+import Html.Styled.Attributes exposing (css)
 
 
 removeBodyScroll : Html msg
 removeBodyScroll =
-
     Global.global
-         [ Global.body
+        [ Global.body
             [ overflow hidden
             ]
-         ]
+        ]
 
 
 background : Attribute msg
@@ -37,19 +35,18 @@ modal : Size -> Attribute msg
 modal size =
     css <|
         Grid.containerWidths
-        ++
-        [ maxWidth <| px <| SizeHelpers.containerPxWidth size
-        , boxSizing borderBox
-        , position fixed
-        , top <| Css.rem 3
-        , left <| pct 50
-        , transform <| translate <| pct -50
-        , zIndex <| int 100
-        , backgroundColor <| hex "ffffff"
-        , borderRadius <| px 2
-        , padding <| Css.rem 1
-        , border3 (px 1) solid (hex "777777")
-        ]
+            ++ [ maxWidth <| px <| SizeHelpers.containerPxWidth size
+               , boxSizing borderBox
+               , position fixed
+               , top <| Css.rem 3
+               , left <| pct 50
+               , transform <| translate <| pct -50
+               , zIndex <| int 100
+               , backgroundColor <| hex "ffffff"
+               , borderRadius <| px 2
+               , padding <| Css.rem 1
+               , border3 (px 1) solid (hex "777777")
+               ]
 
 
 header : Attribute msg
@@ -85,16 +82,15 @@ body =
         ]
 
 
-block : Cols -> List (Size, Cols) -> Attribute msg
+block : Cols -> List ( Size, Cols ) -> Attribute msg
 block cols sizes =
     css <|
         List.map Grid.colSize (SizeHelpers.orderBySize sizes)
-        ++
-        [ flexGrow <| num 1
-        , padding2 (Css.rem 0.2) (Css.rem 0.8)
-        , boxSizing borderBox
-        , Grid.defaultColSize cols
-        ]
+            ++ [ flexGrow <| num 1
+               , padding2 (Css.rem 0.2) (Css.rem 0.8)
+               , boxSizing borderBox
+               , Grid.defaultColSize cols
+               ]
 
 
 footer : Attribute msg

@@ -1,39 +1,44 @@
 module Button exposing
     ( Button
-    , view, viewIf, render
-    , text, icon, onClick, href, small
-    , isLoading, isDisabled
-    , green, red
+    , view, viewIf
+    , text, icon, onClick, href, small, isLoading, isDisabled, green, red
+    , render
     )
 
 {-| Module to add Buttons to your app
 
+
 # Type hint
+
 @docs Button
 
+
 # Initialise
+
 @docs view, viewIf
 
+
 # Configure
+
 @docs text, icon, onClick, href, small, isLoading, isDisabled, green, red
 
+
 # Render
+
 @docs render
 
 -}
 
-import Css exposing (Color, rgb)
-import Html.Styled as Html exposing (..)
-import Html.Styled.Events as Html exposing (..)
-import Html.Styled.Attributes as Attributes exposing (..)
-
-import Html.Styled.Bdt as Html
-
-import FeatherIcons exposing (Icon)
-
 import Button.Content as Content exposing (..)
-import Button.Size exposing (..)
 import Button.Css as Css
+import Button.Size exposing (..)
+import Css exposing (Color, rgb)
+import FeatherIcons exposing (Icon)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Attributes as Attributes exposing (..)
+import Html.Styled.Bdt as Html
+import Html.Styled.Events as Html exposing (..)
+
 
 
 -- CONFIG --
@@ -45,6 +50,7 @@ import Button.Css as Css
         { headerTitle : String
         , headerButtons : List (Button Msg)
         }
+
 -}
 type Button msg
     = Button (Config msg)
@@ -75,6 +81,7 @@ initialConfig =
     }
 
 
+
 -- VIEW / SETTERS --
 
 
@@ -82,7 +89,6 @@ initialConfig =
 -}
 view : Button msg
 view =
-
     Button initialConfig
 
 
@@ -90,7 +96,6 @@ view =
 -}
 viewIf : Bool -> Button msg
 viewIf isShown =
-
     Button { initialConfig | isShown = isShown }
 
 
@@ -98,7 +103,6 @@ viewIf isShown =
 -}
 text : String -> Button msg -> Button msg
 text text_ (Button config) =
-
     Button { config | content = Text text_ }
 
 
@@ -106,7 +110,6 @@ text text_ (Button config) =
 -}
 icon : Icon -> Button msg -> Button msg
 icon icon_ (Button config) =
-
     Button { config | content = Icon icon_ }
 
 
@@ -114,7 +117,6 @@ icon icon_ (Button config) =
 -}
 small : Button msg -> Button msg
 small (Button config) =
-
     Button { config | size = Small }
 
 
@@ -122,7 +124,6 @@ small (Button config) =
 -}
 onClick : msg -> Button msg -> Button msg
 onClick msg (Button config) =
-
     Button { config | onClick = Just msg }
 
 
@@ -130,7 +131,6 @@ onClick msg (Button config) =
 -}
 href : String -> Button msg -> Button msg
 href url (Button config) =
-
     Button { config | url = url }
 
 
@@ -138,7 +138,6 @@ href url (Button config) =
 -}
 isLoading : Bool -> Button msg -> Button msg
 isLoading isLoading_ (Button config) =
-
     Button { config | isLoading = isLoading_ }
 
 
@@ -146,7 +145,6 @@ isLoading isLoading_ (Button config) =
 -}
 isDisabled : Bool -> Button msg -> Button msg
 isDisabled isDisabled_ (Button config) =
-
     Button { config | isDisabled = isDisabled_ }
 
 
@@ -154,7 +152,6 @@ isDisabled isDisabled_ (Button config) =
 -}
 green : Button msg -> Button msg
 green (Button config) =
-
     Button { config | color = rgb 81 163 81 }
 
 
@@ -162,7 +159,6 @@ green (Button config) =
 -}
 red : Button msg -> Button msg
 red (Button config) =
-
     Button { config | color = rgb 189 54 47 }
 
 
@@ -170,7 +166,6 @@ red (Button config) =
 -}
 render : Button msg -> Html msg
 render (Button config) =
-
     a
         [ Css.button config.size config.content config.color config.isDisabled config.isLoading
         , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
@@ -184,12 +179,11 @@ render (Button config) =
 
 content : Content -> Size -> Color -> Bool -> Html msg
 content content_ size color isLoading_ =
-
-    case (content_, isLoading_) of
-        (Text string, False) ->
+    case ( content_, isLoading_ ) of
+        ( Text string, False ) ->
             Html.text string
 
-        (Text string, True) ->
+        ( Text string, True ) ->
             div
                 [ Css.loadingTextContainer ]
                 [ div
@@ -200,10 +194,10 @@ content content_ size color isLoading_ =
                     [ Html.text string ]
                 ]
 
-        (Icon icon_, False) ->
+        ( Icon icon_, False ) ->
             icon_ |> FeatherIcons.withSize (iconSize size) |> FeatherIcons.toHtml [] |> Html.fromUnstyled
 
-        (Icon _, True) ->
+        ( Icon _, True ) ->
             div
                 [ Css.loading ]
                 [ FeatherIcons.refreshCw |> FeatherIcons.withSize (iconSize size) |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
@@ -211,7 +205,9 @@ content content_ size color isLoading_ =
 
 iconSize : Size -> Float
 iconSize size =
-
     case size of
-        Small -> 14
-        Normal -> 18
+        Small ->
+            14
+
+        Normal ->
+            18

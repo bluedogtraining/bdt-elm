@@ -1,32 +1,44 @@
 module Time.Bdt exposing
-    ( toString, maybeTimeToString, maybeTimeToTimeString, maybeTimeToTimeTimeString
+    ( toDateString, toTimeString, toDateTimeString, maybeToDateString, maybeToTimeString, maybeToDateTimeString
+    , monthNumber, monthString, monthFromNumber
+    , addMonths, clamp, maybeClamp
     , order
     , encode, encodeMaybe
     )
 
 {-| Time Helpers
 
-# Print Times
-@docs toString, maybeTimeToString, maybeTimeToTimeString, maybeTimeToTimeTimeString
+
+# Print Posix
+
+@docs toDateString, toTimeString, toDateTimeString, maybeToDateString, maybeToTimeString, maybeToDateTimeString
+
+
+# Helpers
+
+@docs monthNumber, monthString, clamp, maybeClamp
+
 
 # Sort Times
+
 @docs order
 
+
 # Encode Times
+
 @docs encode, encodeMaybe
 
 -}
 
-import Time exposing (Posix, Month (..))
-
 import Json.Encode as Encode exposing (Value)
+import Time exposing (Month(..), Posix)
+import Time.DateTime as DateTime
 
 
 {-| Returns a string as dd/mm/yyyy
 -}
-toString : Posix -> String
-toString date =
-
+toDateString : Posix -> String
+toDateString date =
     let
         day =
             date
@@ -37,64 +49,259 @@ toString date =
         month =
             date
                 |> Time.toMonth Time.utc
-                |> monthToString
+                |> monthNumber
+                |> String.fromInt
+                |> String.pad 2 '0'
 
         year =
             date
                 |> Time.toYear Time.utc
                 |> String.fromInt
-
     in
-        [ day, month, year ]
-            |> String.join "/"
+    [ day, month, year ]
+        |> String.join "/"
 
 
-{-| Returns a string as `dd/mm/yyyy`, defaulted to `––/––/––––`
+{-| Returns a string as hh:mm:ss
 -}
-maybeTimeToString : Maybe Posix -> String
-maybeTimeToString date =
+toTimeString : Posix -> String
+toTimeString posix =
+    let
+        hour =
+            posix
+                |> Time.toHour Time.utc
+                |> String.fromInt
+                |> String.pad 2 '0'
 
-    date
-        |> Maybe.map toString
-        |> Maybe.withDefault "––/––/––––"
+        minute =
+            posix
+                |> Time.toMinute Time.utc
+                |> String.fromInt
+                |> String.pad 2 '0'
+
+        second =
+            posix
+                |> Time.toSecond Time.utc
+                |> String.fromInt
+                |> String.pad 2 '0'
+    in
+    [ hour, minute, second ]
+        |> String.join ":"
 
 
-{-| Returns a string as `ss:mm:hh`, defaulted to `00:00:00`
+{-| Returns a string as dd/mm/yyyy hh:mm:ss
 -}
-maybeTimeToTimeString : Maybe Posix -> String
-maybeTimeToTimeString mTime =
-
-    case mTime of
-        Nothing ->
-            "00:00:00"
-
-        Just date ->
-            [ Time.toHour, Time.toMinute, Time.toSecond ]
-                |> List.map (\f -> f Time.utc)
-                |> List.map (((|>) date) >> String.fromInt >> String.pad 2 '0')
-                |> List.intersperse ":"
-                |> String.concat
+toDateTimeString : Posix -> String
+toDateTimeString posix =
+    toDateString posix ++ " " ++ toTimeString posix
 
 
-{-| Returns a string as `ss:mm:hh dd/mm/yyyy`, defaulted to `00:00:00 ––/––/––––`
+{-| Returns a string as dd/mm/yyyy. Defaults to --/--/----
 -}
-maybeTimeToTimeTimeString : Maybe Posix -> String
-maybeTimeToTimeTimeString date =
+maybeToDateString : Maybe Posix -> String
+maybeToDateString mPosix =
+    mPosix
+        |> Maybe.map toDateString
+        |> Maybe.withDefault "--/--/----"
 
-    maybeTimeToString date ++ " " ++ maybeTimeToTimeString date
+
+{-| Returns a string as hh:mm:ss. Defaults to 00:00:00
+-}
+maybeToTimeString : Maybe Posix -> String
+maybeToTimeString mPosix =
+    mPosix
+        |> Maybe.map toTimeString
+        |> Maybe.withDefault "00:00:00"
+
+
+{-| Returns a string as hh:mm:ss dd/mm/yyyy. Defaults to --/--/---- 00:00:00
+-}
+maybeToDateTimeString : Maybe Posix -> String
+maybeToDateTimeString mPosix =
+    maybeToTimeString mPosix ++ " " ++ maybeToDateString mPosix
+
+
+{-| Returns the Int representation of a month
+-}
+monthNumber : Month -> Int
+monthNumber month =
+    case month of
+        Jan ->
+            1
+
+        Feb ->
+            2
+
+        Mar ->
+            3
+
+        Apr ->
+            4
+
+        May ->
+            5
+
+        Jun ->
+            6
+
+        Jul ->
+            7
+
+        Aug ->
+            8
+
+        Sep ->
+            9
+
+        Oct ->
+            10
+
+        Nov ->
+            11
+
+        Dec ->
+            12
+
+
+{-| Returns the String representation of a month
+-}
+monthString : Month -> String
+monthString month =
+    case month of
+        Jan ->
+            "January"
+
+        Feb ->
+            "February"
+
+        Mar ->
+            "March"
+
+        Apr ->
+            "April"
+
+        May ->
+            "May"
+
+        Jun ->
+            "June"
+
+        Jul ->
+            "July"
+
+        Aug ->
+            "August"
+
+        Sep ->
+            "September"
+
+        Oct ->
+            "October"
+
+        Nov ->
+            "November"
+
+        Dec ->
+            "December"
+
+
+{-| Returns the Month based on it's number
+-}
+monthFromNumber : Int -> Month
+monthFromNumber n =
+    case n of
+        1 ->
+            Jan
+
+        2 ->
+            Feb
+
+        3 ->
+            Mar
+
+        4 ->
+            Apr
+
+        5 ->
+            May
+
+        6 ->
+            Jun
+
+        7 ->
+            Jul
+
+        8 ->
+            Aug
+
+        9 ->
+            Sep
+
+        10 ->
+            Oct
+
+        11 ->
+            Nov
+
+        _ ->
+            Dec
+
+
+{-| Add months to a posix
+-}
+addMonths : Int -> Posix -> Posix
+addMonths number posix =
+    posix
+        |> DateTime.fromPosix
+        |> DateTime.addMonths number
+        |> DateTime.toPosix
+
+
+{-| Clamp a posix
+-}
+clamp : Posix -> Posix -> Posix -> Posix
+clamp minPosix maxPosix posix =
+    if Time.posixToMillis posix < Time.posixToMillis minPosix then
+        minPosix
+
+    else if Time.posixToMillis posix > Time.posixToMillis maxPosix then
+        maxPosix
+
+    else
+        posix
+
+
+{-| Clamp between maybe posix
+-}
+maybeClamp : Maybe Posix -> Maybe Posix -> Posix -> Posix
+maybeClamp mMinPosix mMaxPosix posix =
+    case ( mMinPosix, mMaxPosix ) of
+        ( Just minPosix, Just maxPosix ) ->
+            clamp minPosix maxPosix posix
+
+        ( Just minPosix, _ ) ->
+            clamp minPosix posix posix
+
+        ( _, Just maxPosix ) ->
+            clamp posix maxPosix posix
+
+        _ ->
+            posix
 
 
 {-| Orders 2 dates. This comes in handy with List.sortWith:
 
-    List.sortWith Time.order [date1, date2, date3]
+    List.sortWith Time.order [ date1, date2, date3 ]
+
 -}
 order : Posix -> Posix -> Order
 order date1 date2 =
-
     if Time.posixToMillis date1 > Time.posixToMillis date2 then
         LT
+
     else if Time.posixToMillis date1 < Time.posixToMillis date2 then
         GT
+
     else
         EQ
 
@@ -110,7 +317,6 @@ encode =
 -}
 encodeMaybe : Maybe Posix -> Value
 encodeMaybe maybeTime =
-
     maybeTime
         |> Maybe.map encode
         |> Maybe.withDefault Encode.null

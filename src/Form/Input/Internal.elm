@@ -1,27 +1,39 @@
 module Form.Input.Internal exposing
-    ( State, ViewState
-    , init, initialViewState
-    , Msg, update
-    , render
-    , reInitialise, reset
-    , setInitialValue, setValue
-    , setPlaceholder, setMaxLength
-    , setIsError, setIsLocked
-    , setTextType, setEmailType, setPasswordType, setTelType, setNumberType
-    , setId
-    , getIsChanged, getInitialValue, getValue
+    ( Msg
+    , State
+    , ViewState
     , getId
+    , getInitialValue
+    , getIsChanged
+    , getValue
+    , init
+    , initialViewState
+    , reInitialise
+    , render
+    , reset
+    , setEmailType
+    , setId
+    , setInitialValue
+    , setIsError
+    , setIsLocked
+    , setMaxLength
+    , setNumberType
+    , setPasswordType
+    , setPlaceholder
+    , setTelType
+    , setTextType
+    , setValue
+    , update
     )
 
+import Form.Input.Css as Css
 import Html.Styled as Html exposing (..)
-import Html.Styled.Lazy exposing (..)
-import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
-
 import Html.Styled.Bdt as Html
+import Html.Styled.Events exposing (..)
+import Html.Styled.Lazy exposing (..)
 import Resettable exposing (Resettable)
 
-import Form.Input.Css as Css
 
 
 -- MODEL --
@@ -67,6 +79,7 @@ initialViewState =
     }
 
 
+
 -- UPDATE --
 
 
@@ -76,8 +89,8 @@ type Msg
 
 update : Msg -> State -> State
 update (Input string) state =
-
     { state | value = Resettable.update string state.value }
+
 
 
 -- VIEW --
@@ -85,13 +98,11 @@ update (Input string) state =
 
 render : State -> ViewState -> Html Msg
 render state viewState =
-
     lazy2 inputField state viewState
 
 
 inputField : State -> ViewState -> Html Msg
 inputField state viewState =
-
     input
         [ Css.input viewState.isError viewState.isLocked
         , disabled viewState.isLocked
@@ -107,7 +118,6 @@ inputField state viewState =
 
 typeToString : Type -> String
 typeToString inputType =
-
     case inputType of
         Text ->
             "text"
@@ -125,31 +135,29 @@ typeToString inputType =
             "number"
 
 
+
 -- STATE SETTERS --
 
 
 reInitialise : State -> State
 reInitialise state =
-
     { state | value = Resettable.init <| Resettable.getValue state.value }
 
 
 reset : State -> State
 reset state =
-
     { state | value = Resettable.reset state.value }
 
 
 setInitialValue : String -> State -> State
 setInitialValue value state =
-
     { state | value = Resettable.init value }
 
 
 setValue : String -> State -> State
 setValue value state =
-
     { state | value = Resettable.update value state.value }
+
 
 
 -- VIEW STATE SETTERS --
@@ -157,62 +165,53 @@ setValue value state =
 
 setMaxLength : Int -> ViewState -> ViewState
 setMaxLength maxLength viewState =
-
     { viewState | maxLength = Just maxLength }
 
 
 setPlaceholder : String -> ViewState -> ViewState
 setPlaceholder placeholder viewState =
-
     { viewState | placeholder = Just placeholder }
 
 
 setIsLocked : Bool -> ViewState -> ViewState
 setIsLocked isLocked viewState =
-
     { viewState | isLocked = isLocked }
 
 
 setIsError : Bool -> ViewState -> ViewState
 setIsError isError viewState =
-
     { viewState | isError = isError }
 
 
 setId : String -> ViewState -> ViewState
 setId id viewState =
-
     { viewState | id = Just id }
 
 
 setTextType : ViewState -> ViewState
 setTextType viewState =
-
     { viewState | inputType = Text }
 
 
 setEmailType : ViewState -> ViewState
 setEmailType viewState =
-
     { viewState | inputType = Email }
 
 
 setPasswordType : ViewState -> ViewState
 setPasswordType viewState =
-
     { viewState | inputType = Password }
 
 
 setTelType : ViewState -> ViewState
 setTelType viewState =
-
     { viewState | inputType = Tel }
 
 
 setNumberType : ViewState -> ViewState
 setNumberType viewState =
-
     { viewState | inputType = Number }
+
 
 
 -- GETTERS --
@@ -220,19 +219,16 @@ setNumberType viewState =
 
 getIsChanged : State -> Bool
 getIsChanged state =
-
     Resettable.getIsChanged state.value
 
 
 getInitialValue : State -> String
 getInitialValue state =
-
     Resettable.getInitialValue state.value
 
 
 getValue : State -> String
 getValue state =
-
     Resettable.getValue state.value
 
 

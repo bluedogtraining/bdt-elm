@@ -1,10 +1,9 @@
 module ResettableTests exposing (suite)
 
-import Test exposing (..)
-import Fuzz exposing (Fuzzer)
 import Expect exposing (Expectation)
-
+import Fuzz exposing (Fuzzer)
 import Resettable
+import Test exposing (..)
 
 
 suite : Test

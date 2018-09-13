@@ -1,14 +1,14 @@
 module Form.Helpers exposing
-    ( SelectKey (..), onSelectKey
-    , getPreviousOption, getNextOption
+    ( SelectKey(..)
+    , getNextOption
+    , getPreviousOption
+    , onSelectKey
     )
 
 import Html.Styled exposing (..)
-import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
-
+import Html.Styled.Events exposing (..)
 import Json.Decode as Decode exposing (Decoder)
-
 import List.Extra as List
 
 
@@ -42,12 +42,11 @@ onSelectKey : (SelectKey -> msg) -> Attribute msg
 onSelectKey msg =
     preventDefaultOn
         "keydown"
-        (Decode.field "key" Decode.string |> Decode.andThen selectKeyDecoder |> Decode.map (\decoder -> (msg decoder, True)))
+        (Decode.field "key" Decode.string |> Decode.andThen selectKeyDecoder |> Decode.map (\decoder -> ( msg decoder, True )))
 
 
 getPreviousOption : List option -> Maybe option -> Maybe option
 getPreviousOption options focusedOption =
-
     getNextOption (List.reverse options) focusedOption
 
 

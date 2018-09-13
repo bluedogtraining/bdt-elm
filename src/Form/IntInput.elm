@@ -1,38 +1,42 @@
 module Form.IntInput exposing
-    ( Model, init
-    , Msg, update
+    ( Model, init, Msg, update
     , view, render
-    , reInitialise, reset
-    , setInitialValue, setValue
-    , setPlaceholder, setMaxLength
-    , setIsError, setIsLocked
-    , setId
-    , getIsChanged, getInitialValue, getValue
-    , getId
+    , reInitialise, reset, setInitialValue, setValue
+    , setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
+    , getInitialValue, getValue, getIsChanged, getId
     )
 
 {-| This module is useful if you want to add an Integer based Input element to your app.
 
+
 # Initialise and update
+
 @docs Model, init, Msg, update
 
+
 # View and render
+
 @docs view, render
 
+
 # State Setters
+
 @docs reInitialise, reset, setInitialValue, setValue
 
+
 # View Setters
+
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
 
+
 # Getters
+
 @docs getInitialValue, getValue, getIsChanged, getId
 
 -}
 
-import Html.Styled exposing (Html)
-
 import Form.IntInput.Internal as Internal
+import Html.Styled exposing (Html)
 
 
 {-| Add a Input.Model to your model.
@@ -40,6 +44,7 @@ import Form.IntInput.Internal as Internal
     type alias MyModel =
         { myInput : Input.Model
         }
+
 -}
 type Model
     = Model Internal.State
@@ -55,6 +60,7 @@ type View
     myInitialModel =
         { myInput = Input.init -- optionally pipe into State Setters
         }
+
 -}
 init : Model
 init =
@@ -65,6 +71,7 @@ init =
 
     type MyMsg
         = UpdateMyInput Input.Msg
+
 -}
 type alias Msg =
     Internal.Msg
@@ -72,15 +79,15 @@ type alias Msg =
 
 {-| Use in your update function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             UpdateMyInput inputMsg ->
                 { model | myInput = Input.update inputMsg model.myInput } ! []
+
 -}
 update : Internal.Msg -> Model -> Model
 update msg (Model state) =
-
     Model (Internal.update msg state)
 
 
@@ -92,10 +99,10 @@ update msg (Model state) =
             []
             [ Input.view model.myInput -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
+
 -}
 view : Model -> View
 view (Model state) =
-
     View state Internal.initialViewState
 
 
@@ -109,10 +116,10 @@ view (Model state) =
                 |> Input.render
                 |> Html.map UpdateMyInput
             ]
+
 -}
 render : View -> Html Internal.Msg
 render (View state viewState) =
-
     Internal.render state viewState
 
 
@@ -120,7 +127,6 @@ render (View state viewState) =
 -}
 reInitialise : Model -> Model
 reInitialise (Model state) =
-
     Model <| Internal.reInitialise state
 
 
@@ -128,7 +134,6 @@ reInitialise (Model state) =
 -}
 reset : Model -> Model
 reset (Model state) =
-
     Model <| Internal.reset state
 
 
@@ -136,7 +141,6 @@ reset (Model state) =
 -}
 setInitialValue : Int -> Model -> Model
 setInitialValue value (Model state) =
-
     Model <| Internal.setInitialValue value state
 
 
@@ -144,7 +148,6 @@ setInitialValue value (Model state) =
 -}
 setValue : Int -> Model -> Model
 setValue value (Model state) =
-
     Model <| Internal.setValue value state
 
 
@@ -152,7 +155,6 @@ setValue value (Model state) =
 -}
 setMaxLength : Int -> View -> View
 setMaxLength maxLength (View state viewState) =
-
     View state (Internal.setMaxLength maxLength viewState)
 
 
@@ -160,7 +162,6 @@ setMaxLength maxLength (View state viewState) =
 -}
 setPlaceholder : String -> View -> View
 setPlaceholder placeholder (View state viewState) =
-
     View state (Internal.setPlaceholder placeholder viewState)
 
 
@@ -168,7 +169,6 @@ setPlaceholder placeholder (View state viewState) =
 -}
 setIsLocked : Bool -> View -> View
 setIsLocked isLocked (View state viewState) =
-
     View state (Internal.setIsLocked isLocked viewState)
 
 
@@ -176,7 +176,6 @@ setIsLocked isLocked (View state viewState) =
 -}
 setIsError : Bool -> View -> View
 setIsError isError (View state viewState) =
-
     View state (Internal.setIsError isError viewState)
 
 
@@ -184,7 +183,6 @@ setIsError isError (View state viewState) =
 -}
 setId : String -> View -> View
 setId id (View state viewState) =
-
     View state (Internal.setId id viewState)
 
 
@@ -192,7 +190,6 @@ setId id (View state viewState) =
 -}
 getIsChanged : Model -> Bool
 getIsChanged (Model state) =
-
     Internal.getIsChanged state
 
 
@@ -200,7 +197,6 @@ getIsChanged (Model state) =
 -}
 getInitialValue : Model -> Maybe Int
 getInitialValue (Model state) =
-
     Internal.getInitialValue state
 
 
@@ -209,7 +205,6 @@ or to send the data to the backend for example etc.
 -}
 getValue : Model -> Maybe Int
 getValue (Model state) =
-
     Internal.getValue state
 
 
@@ -217,5 +212,4 @@ getValue (Model state) =
 -}
 getId : View -> Maybe String
 getId (View _ viewState) =
-
     Internal.getId viewState

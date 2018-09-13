@@ -1,15 +1,13 @@
-module Form.SearchSelect.Css exposing (..)
+module Form.SearchSelect.Css exposing (container, infoMessage, input, optionItem, optionList, title)
 
 import Css exposing (..)
+import Form.Css as Css
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes exposing (css)
-
-import Form.Css as Css
 
 
 container : Attribute msg
 container =
-
     css
         [ position relative
         ]
@@ -17,35 +15,29 @@ container =
 
 input : Bool -> Bool -> Attribute msg
 input isError isLocked =
-
     css <| Css.input isError isLocked
 
 
 title : Bool -> Attribute msg
 title isFaded =
-
     css <| Css.title isFaded
 
 
 optionList : Attribute msg
 optionList =
-
     css <|
         Css.selectOptionList
-        ++
-        [ top <| px 39
-        ]
+            ++ [ top <| px 39
+               ]
 
 
 optionItem : Bool -> Attribute msg
 optionItem isFocused =
-
     css <| Css.selectOptionItem False isFocused
 
 
 infoMessage : Attribute msg
 infoMessage =
-
     css
         [ border3 (px 1) solid (hex "cccccc")
         , borderTopColor <| hex "eeeeee"

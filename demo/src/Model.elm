@@ -1,8 +1,9 @@
 module Model exposing (Model, initialModel)
 
+--import Form.DropZone as DropZone
+
 import Countries exposing (Country)
 import Form.DatePicker as DatePicker
-import Form.DropZone as DropZone
 import Form.FloatInput as FloatInput
 import Form.Input as Input
 import Form.IntInput as IntInput

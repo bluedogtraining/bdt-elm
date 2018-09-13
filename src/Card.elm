@@ -1,27 +1,34 @@
-module Card exposing (view, viewIf, header, body, footer, CardBlock, block, blockIf, maybeBlock, blockSizes, render)
+module Card exposing
+    ( view, viewIf
+    , header, body, footer, CardBlock, block, blockIf, maybeBlock, blockSizes
+    , render
+    )
 
 {-| Module to create Cards with Headers, CardBlocks and Footers
 
+
 # Init
+
 @docs view, viewIf
 
+
 # Create blocks
+
 @docs header, body, footer, CardBlock, block, blockIf, maybeBlock, blockSizes
 
+
 # Render
+
 @docs render
+
 -}
 
+import Button exposing (Button)
+import Card.Css as Css
+import Grid.Size exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
-
 import Html.Styled.Bdt as Html
-
-import Button exposing (Button)
-
-import Grid.Size exposing (..)
-
-import Card.Css as Css
 
 
 type Config msg
@@ -58,7 +65,6 @@ view =
 -}
 viewIf : Bool -> Config msg
 viewIf isShown =
-
     Config <| initialViewConfig isShown
 
 
@@ -66,7 +72,6 @@ viewIf isShown =
 -}
 header : String -> List (Button msg) -> Config msg -> Config msg
 header title buttons (Config viewConfig) =
-
     Config { viewConfig | headerTitle = title, headerButtons = buttons }
 
 
@@ -74,7 +79,6 @@ header title buttons (Config viewConfig) =
 -}
 body : List (CardBlock msg) -> Config msg -> Config msg
 body cardBlocks (Config viewConfig) =
-
     Config { viewConfig | cardBlocks = cardBlocks }
 
 
@@ -82,7 +86,6 @@ body cardBlocks (Config viewConfig) =
 -}
 footer : List (Button msg) -> Config msg -> Config msg
 footer buttons (Config viewConfig) =
-
     Config { viewConfig | footerButtons = buttons }
 
 
@@ -94,7 +97,7 @@ type CardBlock msg
 
 type alias CardBlockConfig msg =
     { defaultCols : Cols
-    , sizes : List (Size, Cols)
+    , sizes : List ( Size, Cols )
     , children : List (Html msg)
     }
 
@@ -127,12 +130,12 @@ maybeBlock cols maybe children =
             CardBlock <| CardBlockConfig cols [] []
 
         Just a ->
-            CardBlock <| CardBlockConfig cols [] ( children a )
+            CardBlock <| CardBlockConfig cols [] (children a)
 
 
 {-| Add a block of varying sizes
 -}
-blockSizes : Cols -> List (Size, Cols) -> List (Html msg) -> CardBlock msg
+blockSizes : Cols -> List ( Size, Cols ) -> List (Html msg) -> CardBlock msg
 blockSizes cols sizes children =
     CardBlock <| CardBlockConfig cols sizes children
 
@@ -141,7 +144,6 @@ blockSizes cols sizes children =
 -}
 render : Config msg -> Html msg
 render (Config viewConfig) =
-
     Html.divIf viewConfig.isShown
         [ Css.card ]
         [ Html.divIf (viewConfig.headerTitle /= "" || not (List.isEmpty viewConfig.headerButtons))
@@ -164,7 +166,6 @@ render (Config viewConfig) =
 
 renderCardBlock : CardBlock msg -> Html msg
 renderCardBlock (CardBlock cardBlockConfig) =
-
     Html.divIf (not <| List.isEmpty cardBlockConfig.children)
         [ Css.block cardBlockConfig.defaultCols cardBlockConfig.sizes ]
         cardBlockConfig.children

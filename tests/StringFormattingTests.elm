@@ -1,9 +1,8 @@
 module StringFormattingTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
 import StringFormatting
+import Test exposing (..)
 
 
 suite : Test

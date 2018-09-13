@@ -1,13 +1,12 @@
-module Card.Css exposing (..)
+module Card.Css exposing (block, body, card, footer, header, headerTitle)
 
 import Css exposing (..)
 import Css.Media as Media
-import Html.Styled exposing (Attribute)
-import Html.Styled.Attributes exposing (css)
-
 import Grid.Css
 import Grid.Size as Size exposing (..)
 import Grid.SizeHelpers as SizeHelpers
+import Html.Styled exposing (Attribute)
+import Html.Styled.Attributes exposing (css)
 
 
 card : Attribute msg
@@ -53,16 +52,15 @@ body =
         ]
 
 
-block : Cols -> List (Size, Cols) -> Attribute msg
+block : Cols -> List ( Size, Cols ) -> Attribute msg
 block cols sizes =
     css <|
         List.map Grid.Css.colSize (SizeHelpers.orderBySize sizes)
-        ++
-        [ flexGrow <| num 1
-        , padding2 (Css.rem 0.2) (Css.rem 0.8)
-        , boxSizing borderBox
-        , Grid.Css.defaultColSize cols
-        ]
+            ++ [ flexGrow <| num 1
+               , padding2 (Css.rem 0.2) (Css.rem 0.8)
+               , boxSizing borderBox
+               , Grid.Css.defaultColSize cols
+               ]
 
 
 footer : Attribute msg

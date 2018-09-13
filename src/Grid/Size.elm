@@ -1,11 +1,14 @@
-module Grid.Size exposing (Size (..), Cols (..))
+module Grid.Size exposing (Size(..), Cols(..))
 
 {-| Provide the Size to Grids and CardBlocks
 
+
 # Size
+
 @docs Size, Cols
 
 -}
+
 
 {-| Size
 -}

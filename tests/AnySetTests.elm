@@ -1,10 +1,9 @@
 module AnySetTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
 import Set.Any as AnySet exposing (AnySet)
 import Set.Any.Bdt as AnySet
+import Test exposing (..)
 
 
 suite : Test

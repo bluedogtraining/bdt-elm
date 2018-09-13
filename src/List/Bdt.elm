@@ -1,29 +1,16 @@
-module List.Bdt exposing (sortByDate, groupWhile)
+module List.Bdt exposing (groupWhile)
 
 {-| List Helpers
 
-# Sorting
-@docs sortByDate
 
 # Grouping
+
 @docs groupWhile
 
 -}
 
 import List.Extra as List
-import List.Nonempty as Nonempty exposing (Nonempty (..))
-
-import Basics.Bdt exposing (..)
-
-import Time.Date as Date exposing (Date)
-import Date.Bdt as Date
-
-
-{-| Sort a list by date
--}
-sortByDate : (a -> Date) -> List a -> List a
-sortByDate f list =
-    List.sortWith (lift2 f Date.compare) list
+import List.Nonempty as Nonempty exposing (Nonempty(..))
 
 
 {-| Group while a condition holds true
@@ -51,15 +38,13 @@ sortByDate f list =
 -}
 groupWhile : (a -> a -> Bool) -> List a -> List (Nonempty a)
 groupWhile eq xs_ =
-
     case xs_ of
         [] ->
             []
 
         x :: xs ->
             let
-                (ys, zs) =
+                ( ys, zs ) =
                     List.span (eq x) xs
-
             in
-                (Nonempty x ys) :: groupWhile eq zs
+            Nonempty x ys :: groupWhile eq zs

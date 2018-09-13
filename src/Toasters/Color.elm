@@ -1,4 +1,4 @@
-module Toasters.Color exposing (Color (..))
+module Toasters.Color exposing (Color(..))
 
 
 type Color

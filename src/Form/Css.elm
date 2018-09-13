@@ -1,23 +1,36 @@
-module Form.Css exposing (..)
+module Form.Css exposing (clearIcon, input, select, selectOptionItem, selectOptionList, title)
 
 import Css exposing (..)
+import Css.Bdt as Css
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes exposing (css)
-
-import Css.Bdt as Css
 
 
 input : Bool -> Bool -> List Style
 input isError isLocked =
     [ boxSizing borderBox
-    , border3 (px 1) solid (hex <| if isError && not isLocked then "d9534f" else "cccccc")
+    , border3 (px 1)
+        solid
+        (hex <|
+            if isError && not isLocked then
+                "d9534f"
+
+            else
+                "cccccc"
+        )
     , width <| pct 100
     , maxWidth <| pct 100
     , height <| Css.rem 2
     , padding2 (Css.rem 0) (Css.rem 0.4)
     , margin2 (Css.rem 0.5) (Css.rem 0)
     , color <| hex "555555"
-    , backgroundColor <| hex <| if isLocked then "dddddd" else "ffffff"
+    , backgroundColor <|
+        hex <|
+            if isLocked then
+                "dddddd"
+
+            else
+                "ffffff"
     , fontSize <| Css.rem 0.8
     , whiteSpace noWrap
     , textOverflow ellipsis
@@ -31,18 +44,17 @@ input isError isLocked =
 select : Bool -> Bool -> List Style
 select isError isLocked =
     input isError isLocked
-    ++
-    [ displayFlex
-    , cursor pointer
-    , alignItems center
-    ]
+        ++ [ displayFlex
+           , cursor pointer
+           , alignItems center
+           ]
 
 
 title : Bool -> List Style
 title isFaded =
     [ flexGrow <| int 1
-    , color (rgb 111 111 111) |> Css.styleIf (isFaded)
-    , fontWeight (int 200) |> Css.styleIf (isFaded)
+    , color (rgb 111 111 111) |> Css.styleIf isFaded
+    , fontWeight (int 200) |> Css.styleIf isFaded
     , fontFamilies
         [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
     , whiteSpace noWrap

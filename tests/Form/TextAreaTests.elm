@@ -1,9 +1,8 @@
 module Form.TextAreaTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
 import Form.TextArea as TextArea
+import Test exposing (..)
 
 
 suite : Test

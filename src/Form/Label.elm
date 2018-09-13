@@ -1,24 +1,32 @@
-module Form.Label exposing (view, mandatory, render)
+module Form.Label exposing
+    ( view
+    , mandatory
+    , render
+    )
 
 {-| Module to add Labels to your app
 
+
 # Initialise
+
 @docs view
 
+
 # Configure
+
 @docs mandatory
 
+
 # Render
+
 @docs render
 
 -}
 
 import Css exposing (..)
-
+import Form.Label.Css as Css
 import Html.Styled exposing (..)
 import Html.Styled.Bdt exposing (..)
-
-import Form.Label.Css as Css
 
 
 type Label
@@ -33,10 +41,10 @@ type alias Config =
 
 initialConfig : String -> Config
 initialConfig text =
-
     { text = text
     , mandatory = False
     }
+
 
 
 -- VIEW / SETTERS --
@@ -46,7 +54,6 @@ initialConfig text =
 -}
 view : String -> Label
 view =
-
     initialConfig >> Label
 
 
@@ -54,7 +61,6 @@ view =
 -}
 mandatory : Bool -> Label -> Label
 mandatory bool (Label config) =
-
     Label { config | mandatory = bool }
 
 
@@ -62,7 +68,6 @@ mandatory bool (Label config) =
 -}
 render : Label -> Html msg
 render (Label config) =
-
     label
         [ Css.label ]
         [ text config.text

@@ -1,9 +1,8 @@
 module Form.DatePickerTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
 import Form.DatePicker as DatePicker
+import Test exposing (..)
 
 
 suite : Test

@@ -1,28 +1,35 @@
-module Modal exposing (view, viewIf, setSize, header, body, footer, block, blockSizes, render)
+module Modal exposing
+    ( view, viewIf, setSize
+    , header, body, footer, block, blockSizes
+    , render
+    )
 
 {-| Module to create Modals with Headers, ModalBlocks and Footers
 
+
 # Init
+
 @docs view, viewIf, setSize
 
+
 # Create blocks
+
 @docs header, body, footer, block, blockSizes
 
+
 # Render
+
 @docs render
+
 -}
 
-import Html.Styled as Html exposing (..)
-import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes exposing (..)
-
-import Html.Styled.Bdt as Html
-
-
-import FeatherIcons
 import Button exposing (Button)
+import FeatherIcons
 import Grid.Size exposing (..)
-
+import Html.Styled as Html exposing (..)
+import Html.Styled.Attributes exposing (..)
+import Html.Styled.Bdt as Html
+import Html.Styled.Events exposing (..)
 import Modal.Css as Css
 
 
@@ -64,7 +71,6 @@ view =
 -}
 viewIf : Bool -> msg -> Config msg
 viewIf isOpen =
-
     Config << initialViewConfig isOpen
 
 
@@ -72,7 +78,6 @@ viewIf isOpen =
 -}
 setSize : Size -> Config msg -> Config msg
 setSize size (Config viewConfig) =
-
     Config { viewConfig | size = size }
 
 
@@ -80,7 +85,6 @@ setSize size (Config viewConfig) =
 -}
 header : String -> List (Button msg) -> Config msg -> Config msg
 header title buttons (Config viewConfig) =
-
     Config { viewConfig | headerTitle = title, headerButtons = buttons }
 
 
@@ -88,7 +92,6 @@ header title buttons (Config viewConfig) =
 -}
 body : List (ModalBlock msg) -> Config msg -> Config msg
 body modalBlocks (Config viewConfig) =
-
     Config { viewConfig | modalBlocks = modalBlocks }
 
 
@@ -96,7 +99,6 @@ body modalBlocks (Config viewConfig) =
 -}
 footer : List (Button msg) -> Config msg -> Config msg
 footer buttons (Config viewConfig) =
-
     Config { viewConfig | footerButtons = buttons }
 
 
@@ -106,7 +108,7 @@ type ModalBlock msg
 
 type alias ModalBlockConfig msg =
     { defaultCols : Cols
-    , sizes : List (Size, Cols)
+    , sizes : List ( Size, Cols )
     , children : List (Html msg)
     }
 
@@ -120,7 +122,7 @@ block cols children =
 
 {-| Add a block of varying sizes
 -}
-blockSizes : Cols -> List (Size, Cols) -> List (Html msg) -> ModalBlock msg
+blockSizes : Cols -> List ( Size, Cols ) -> List (Html msg) -> ModalBlock msg
 blockSizes cols sizes children =
     ModalBlock <| ModalBlockConfig cols sizes children
 
@@ -129,7 +131,6 @@ blockSizes cols sizes children =
 -}
 render : Config msg -> Html msg
 render (Config viewConfig) =
-
     Html.divIf viewConfig.isOpen
         []
         [ Css.removeBodyScroll
@@ -162,7 +163,6 @@ render (Config viewConfig) =
 
 renderModalBlock : ModalBlock msg -> Html msg
 renderModalBlock (ModalBlock modalBlockConfig) =
-
     div
         [ Css.block modalBlockConfig.defaultCols modalBlockConfig.sizes ]
         modalBlockConfig.children
@@ -170,7 +170,6 @@ renderModalBlock (ModalBlock modalBlockConfig) =
 
 closeIcon : msg -> Html msg
 closeIcon closeMsg =
-
     div
         [ Css.closeIcon, onClick closeMsg ]
         [ FeatherIcons.x |> FeatherIcons.withSize 14 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]

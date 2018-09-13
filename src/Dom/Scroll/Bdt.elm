@@ -1,18 +1,16 @@
-module Dom.Scroll.Bdt exposing
-    ( HorizontalScroll, onHorizontalScroll
-    , VerticalScroll, onVerticalScroll
-    )
+module Dom.Scroll.Bdt exposing (HorizontalScroll, onHorizontalScroll, VerticalScroll, onVerticalScroll)
 
 {-| Dom Scroll Helpers
 
+
 # String Formatting Helpers
+
 @docs HorizontalScroll, onHorizontalScroll, VerticalScroll, onVerticalScroll
 
 -}
 
 import Html exposing (..)
 import Html.Events exposing (..)
-
 import Json.Decode as Decode
 
 
@@ -35,9 +33,9 @@ onHorizontalScroll tagger =
 onHorizontalScrollJsonParser : Decode.Decoder HorizontalScroll
 onHorizontalScrollJsonParser =
     Decode.map3 HorizontalScroll
-        (Decode.at ["target", "scrollWidth"] Decode.int)
-        (Decode.at ["target", "scrollLeft"] Decode.int)
-        (Decode.at ["target", "clientWidth"] Decode.int)
+        (Decode.at [ "target", "scrollWidth" ] Decode.int)
+        (Decode.at [ "target", "scrollLeft" ] Decode.int)
+        (Decode.at [ "target", "clientWidth" ] Decode.int)
 
 
 {-| This record is emitted by onHorizontalScroll
@@ -59,6 +57,6 @@ onVerticalScroll tagger =
 onVerticalScrollJsonParser : Decode.Decoder VerticalScroll
 onVerticalScrollJsonParser =
     Decode.map3 VerticalScroll
-        (Decode.at ["target", "scrollHeight"] Decode.int)
-        (Decode.at ["target", "scrollTop"] Decode.int)
-        (Decode.at ["target", "clienHeight"] Decode.int)
+        (Decode.at [ "target", "scrollHeight" ] Decode.int)
+        (Decode.at [ "target", "scrollTop" ] Decode.int)
+        (Decode.at [ "target", "clienHeight" ] Decode.int)

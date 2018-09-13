@@ -1,18 +1,19 @@
 module Toasters.Internal exposing
-    ( Toaster, init
-    , Msg, update
+    ( Msg
+    , Toaster
+    , add
+    , init
     , subscription
-    , add, view
+    , update
+    , view
     )
 
 import Html.Styled exposing (..)
-import Html.Styled.Events exposing (..)
 import Html.Styled.Attributes exposing (..)
-
+import Html.Styled.Events exposing (..)
 import Time
-
-import Toasters.Css as Css
 import Toasters.Color exposing (Color)
+import Toasters.Css as Css
 
 
 type alias Toaster =
@@ -36,13 +37,12 @@ type Msg
 
 
 init : List Toaster
-init  =
+init =
     []
 
 
 update : Msg -> List Toaster -> List Toaster
 update toasterMsg toasters =
-
     case toasterMsg of
         Close toaster ->
             List.filter ((/=) toaster) toasters
@@ -53,20 +53,17 @@ update toasterMsg toasters =
 
 tick : Toaster -> List Toaster -> List Toaster
 tick toaster toasters =
-
     case toaster.ticks > 100 of
         True ->
             toasters
 
         False ->
-            List.append toasters [{ toaster | ticks = toaster.ticks + 1 }]
+            List.append toasters [ { toaster | ticks = toaster.ticks + 1 } ]
 
 
 subscription : List Toaster -> Sub Msg
 subscription toasters =
-
     case List.isEmpty toasters of
-
         False ->
             Time.every 50 (always Tick)
 
@@ -76,13 +73,11 @@ subscription toasters =
 
 add : Color -> String -> List Toaster -> List Toaster
 add color message toasters =
-
     initialToaster color message :: toasters
 
 
 view : List Toaster -> Html Msg
 view toasters =
-
     div
         [ Css.relativeContainer ]
         [ div
@@ -96,7 +91,6 @@ view toasters =
 
 item : Toaster -> Html Msg
 item toaster =
-
     div
         [ Css.toaster toaster.color toaster.ticks
         , onClick <| Close toaster

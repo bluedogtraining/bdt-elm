@@ -1,6 +1,5 @@
 module Toasters exposing
-    ( Model, init
-    , Msg, update, merge
+    ( Model, init, Msg, update, merge
     , subscription
     , addGreen, addRed
     , view
@@ -8,24 +7,31 @@ module Toasters exposing
 
 {-| Module to add Toasters to your app
 
+
 # Initialise and update
+
 @docs Model, init, Msg, update, merge
 
+
 # Subscription
+
 @docs subscription
 
+
 # Add toasters
+
 @docs addGreen, addRed
 
+
 # Add to your view
+
 @docs view
 
 -}
 
 import Html.Styled exposing (Html)
-
+import Toasters.Color exposing (Color(..))
 import Toasters.Internal as Internal
-import Toasters.Color exposing (Color (..))
 
 
 {-| Add a Toasters.Model to your model.
@@ -33,9 +39,10 @@ import Toasters.Color exposing (Color (..))
     type alias MyModel =
         { toasters : Toasters.Model
         }
+
 -}
-type Model =
-    Model (List Internal.Toaster)
+type Model
+    = Model (List Internal.Toaster)
 
 
 {-| Add a Toasters.Model to your model.
@@ -44,9 +51,10 @@ type Model =
     myInitialModel =
         { toasters = Toasters.init
         }
+
 -}
 init : Model
-init  =
+init =
     Model []
 
 
@@ -54,6 +62,7 @@ init  =
 
     type MyMsg
         = ToastersMsg Toasters.Msg
+
 -}
 type alias Msg =
     Internal.Msg
@@ -61,15 +70,15 @@ type alias Msg =
 
 {-| Use in your update function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             ToastersMsg toastersMsg ->
                 { model | toasters = Toasters.update toastersMsg model.toasters } ! []
+
 -}
 update : Msg -> Model -> Model
 update toasterMsg (Model toasters) =
-
     Model <| Internal.update toasterMsg toasters
 
 
@@ -81,7 +90,6 @@ Useful when Return types that carry their own Toasters.Model want to merge back 
 -}
 merge : Model -> Model -> Model
 merge (Model new) (Model existing) =
-
     Model <| List.append existing new
 
 
@@ -92,44 +100,46 @@ merge (Model new) (Model existing) =
         Sub.batch
             [ Toasters.subscription model.toasters |> Sub.map Msg.ToastersMsg
             ]
+
 -}
 subscription : Model -> Sub Msg
 subscription (Model toasters) =
-
     Internal.subscription toasters
 
 
 {-| Add to your subscription function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             SavedSuccessfully ->
                 { model
                     | isSaving = False
                     , toasters = Toasters.addGreen "Data saved Successfully :)" model.toasters
-                } ! []
+                }
+                    ! []
+
 -}
 addGreen : String -> Model -> Model
 addGreen message (Model toasters) =
-
     Model <| Internal.add Green message toasters
 
 
 {-| Add to your subscription function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             SavingFailed ->
                 { model
                     | isSaving = False
                     , toasters = Toasters.addRed "Data could not be saved :(" model.toasters
-                } ! []
+                }
+                    ! []
+
 -}
 addRed : String -> Model -> Model
 addRed message (Model toasters) =
-
     Model <| Internal.add Red message toasters
 
 
@@ -143,8 +153,8 @@ addRed message (Model toasters) =
             []
             [ text "My Cool App" ]
         ]
+
 -}
 view : Model -> Html Msg
 view (Model toasters) =
-
     Internal.view toasters

@@ -1,10 +1,9 @@
-module Form.Select.Css exposing (..)
+module Form.Select.Css exposing (container, input, optionItem, optionList, title)
 
 import Css exposing (..)
+import Form.Css as Css
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes exposing (css)
-
-import Form.Css as Css
 
 
 container : Attribute msg

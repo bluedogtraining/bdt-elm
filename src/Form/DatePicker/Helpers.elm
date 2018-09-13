@@ -1,180 +1,90 @@
-module Form.DatePicker.Helpers exposing (..)
-
-import Time exposing (Month (..))
-import Time.Date as Date exposing (Date)
-import Time.DateTime as DateTime exposing (DateTime)
-import Date.Bdt as Date
+module Form.DatePicker.Helpers exposing (isSameMonthAndYear, visibleDays)
 
 import List.Extra as List
-
-import Form.Select as Select
-
-
-dateTimeToString : DateTime -> String
-dateTimeToString dateTime =
-
-    let
-        hour =
-            dateTime
-                |> DateTime.hour
-                |> String.fromInt
-                |> String.pad 2 '0'
-
-        minute =
-            dateTime
-                |> DateTime.minute
-                |> String.fromInt
-                |> String.pad 2 '0'
-
-        second =
-            dateTime
-                |> DateTime.second
-                |> String.fromInt
-                |> String.pad 2 '0'
-
-    in
-        dateToString (DateTime.date dateTime) ++ " " ++ hour ++ ":" ++ minute ++ ":" ++ second
+import Time exposing (Month(..), Posix)
+import Time.Date as Date exposing (Weekday(..))
+import Time.DateTime as DateTime
 
 
-dateToString : Date -> String
-dateToString date =
-    let
-        year =
-            date
-                |> Date.year
-                |> String.fromInt
-
-        month =
-            date
-                |> Date.month
-                |> String.fromInt
-                |> String.pad 2 '0'
-
-        day =
-            date
-                |> Date.day
-                |> String.fromInt
-                |> String.pad 2 '0'
-
-    in
-        year ++ "/" ++ month ++ "/" ++ day
-
-
-
-maybeClamp : Maybe Date -> Maybe Date -> Date -> Date
-maybeClamp maybeMinDate maybeMaxDate date =
-
-    case (maybeMinDate, maybeMaxDate) of
-
-        (Just minDate, Just maxDate) ->
-            clamp minDate maxDate date
-
-        (Just minDate, _) ->
-            clamp minDate date date
-
-        (_, Just maxDate) ->
-            clamp date maxDate date
+isSameMonthAndYear : Posix -> Maybe Posix -> Bool
+isSameMonthAndYear posix1 mPosix2 =
+    case mPosix2 of
+        Just posix2 ->
+            Time.toYear Time.utc posix1 == Time.toYear Time.utc posix2 && Time.toMonth Time.utc posix1 == Time.toMonth Time.utc posix2
 
         _ ->
-            date
+            False
 
 
-clamp : Date -> Date -> Date -> Date
-clamp minDate maxDate date =
-
-    if Date.compare date minDate == LT then
-        minDate
-    else if Date.compare date maxDate == GT then
-        maxDate
-    else
-        date
-
-
-previousYear : Date -> Date
-previousYear date =
-    Date.addMonths -12 date
-
-
-previousMonth : Date -> Date
-previousMonth date =
-    Date.addMonths -1 date
-
-
-nextMonth : Date -> Date
-nextMonth date =
-    Date.addMonths 1 date
-
-
-nextYear : Date -> Date
-nextYear date =
-    Date.addMonths 12 date
-
-
-dateAtDayNumber : Int -> Date -> Date
-dateAtDayNumber dayNumber date =
-    Date.addDays (dayNumber - 1) date
-
-
-visibleDays : Date -> List (List (Bool, Int))
-visibleDays navigationDate =
-
+visibleDays : Posix -> List (List Posix)
+visibleDays navigationPosix =
     let
+        date =
+            navigationPosix
+                |> DateTime.fromPosix
+                |> DateTime.date
+
         firstOfMonth =
-            Date.setDay 1 navigationDate
+            Date.setDay 1 date
 
         startNumber =
-            Date.day firstOfMonth
+            firstOfMonth
+                |> Date.weekday
+                |> weekDayOnCalendar
 
         daysInMonth =
-            Date.daysInMonth (Date.year navigationDate) (Date.month navigationDate)
+            Date.daysInMonth (Date.year date) (Date.month date)
 
         daysInPreviousMonth =
-            previousMonth navigationDate
-                |> \date -> Date.daysInMonth (Date.year date) (Date.month date)
+            Date.addMonths 1 date
+                |> (\newDate -> Date.daysInMonth (Date.year newDate) (Date.month newDate))
 
         {-
-            the 3 lists we're interested in:
-                - the tail of the previous month (the disabled list at the front)
-                - the current month (the enabled dates for this month)
-                - the head of the next month (the disabled list as the end)
+           the 3 lists we're interested in:
+               - the tail of the previous month (the disabled list at the front)
+               - the current month (the enabled dates for this month)
+               - the head of the next month (the disabled list as the end)
         -}
-
         currentMonth =
             List.range 1 daysInMonth
-                |> List.map (Tuple.pair True)
+                |> List.map (\day -> DateTime.fromPosix navigationPosix |> DateTime.setDay day |> DateTime.toPosix)
 
         tailOfPreviousMonth =
             List.range 1 daysInPreviousMonth
                 |> List.drop (daysInPreviousMonth - startNumber)
-                |> List.map (Tuple.pair False)
+                |> List.map (\day -> DateTime.fromPosix navigationPosix |> DateTime.addMonths -1 |> DateTime.setDay day |> DateTime.toPosix)
 
         headOfNextMonth =
             List.range 1 (6 * 7 - startNumber - daysInMonth)
-                |> List.map (Tuple.pair False)
-
+                |> List.map (\day -> DateTime.fromPosix navigationPosix |> DateTime.addMonths 1 |> DateTime.setDay day |> DateTime.toPosix)
     in
-        -- bundle them up and split them in groups for each week
-        tailOfPreviousMonth ++ currentMonth ++ headOfNextMonth
-            |> List.groupsOf 7
+    -- bundle them up and split them in groups for each week
+    tailOfPreviousMonth
+        ++ currentMonth
+        ++ headOfNextMonth
+        |> List.groupsOf 7
 
 
-isSame : Date -> Date -> Bool
-isSame date1 date2 =
-    Date.compare date1 date2 == EQ
+weekDayOnCalendar : Weekday -> Int
+weekDayOnCalendar weekday =
+    case weekday of
+        Mon ->
+            0
 
+        Tue ->
+            1
 
-monthFromNumber : Int -> Month
-monthFromNumber n =
-    case n of
-        1 -> Jan
-        2 -> Feb
-        3 -> Mar
-        4 -> Apr
-        5 -> May
-        6 -> Jun
-        7 -> Jul
-        8 -> Aug
-        9 -> Sep
-        10 -> Oct
-        11 -> Nov
-        _ -> Dec
+        Wed ->
+            2
+
+        Thu ->
+            3
+
+        Fri ->
+            4
+
+        Sat ->
+            5
+
+        Sun ->
+            6

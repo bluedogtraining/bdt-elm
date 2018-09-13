@@ -6,22 +6,26 @@ module Toggle exposing
 
 {-| Module to add Toggles to your app
 
+
 # Views
+
 @docs view
 
+
 # Configure
+
 @docs isError, isDisabled, label
 
+
 # Render
+
 @docs render
 
 -}
 
 import Html.Styled exposing (..)
-import Html.Styled.Events exposing (onClick)
-
 import Html.Styled.Bdt as Html
-
+import Html.Styled.Events exposing (onClick)
 import Toggle.Css as Css
 
 
@@ -48,6 +52,7 @@ initialConfig toggled toggleMsg =
     }
 
 
+
 -- VIEW / SETTERS --
 
 
@@ -55,7 +60,6 @@ initialConfig toggled toggleMsg =
 -}
 view : Bool -> msg -> Toggle msg
 view toggled msg =
-
     Toggle (initialConfig toggled msg)
 
 
@@ -63,7 +67,6 @@ view toggled msg =
 -}
 isError : Bool -> Toggle msg -> Toggle msg
 isError isError_ (Toggle config) =
-
     Toggle { config | isError = isError_ }
 
 
@@ -71,7 +74,6 @@ isError isError_ (Toggle config) =
 -}
 isDisabled : Bool -> Toggle msg -> Toggle msg
 isDisabled isDisabled_ (Toggle config) =
-
     Toggle { config | isDisabled = isDisabled_ }
 
 
@@ -79,7 +81,6 @@ isDisabled isDisabled_ (Toggle config) =
 -}
 label : String -> Toggle msg -> Toggle msg
 label label_ (Toggle config) =
-
     Toggle { config | label = label_ }
 
 
@@ -87,7 +88,6 @@ label label_ (Toggle config) =
 -}
 render : Toggle msg -> Html msg
 render (Toggle config) =
-
     div
         [ Css.labelContainer ]
         [ div

@@ -1,44 +1,45 @@
 module Form.DatePicker exposing
-    ( Model, init
-    , Msg, update
+    ( Model, init, Msg, update
     , view, render
     , reInitialise, reset
-    , setInitialDate, setSelectedDateTime
-    , setMinDate, setMaxDate, setIncludeTime, setIsInput
-    , setIsError, setIsLocked, setIsClearable
-    , setDefaultLabel
-    , setId
-    , getIsChanged, getIsOpen
-    , getInitialDateTime, getSelectedDateTime
-    , getId
+    , setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
+    , getIsChanged, getIsOpen, getId
+    , getInitialPosix, getSelectedPosix, setInitialPosix, setMaxPosix, setMinPosix, setSelectedPosix
     )
 
 {-| This module is useful if you want to add a DatePicker Form element to your app.
 
+
 # Initialise and update
+
 @docs Model, init, Msg, update
 
+
 # View and render
+
 @docs view, render
 
+
 # State Setters
+
 @docs reInitialise, reset, setInitialDate, setSelectedDateTime
 
+
 # View Setters
+
 @docs setMinDate, setMaxDate, setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
 
+
 # Getters
+
 @docs getIsChanged, getIsOpen, getInitialDateTime, getSelectedDateTime, getId
 
 -}
 
-import Html.Styled exposing (Html)
-
-import Tuple
-import Time.Date exposing (Date)
-import Time.DateTime exposing (DateTime)
-
 import Form.DatePicker.Internal as Internal
+import Html.Styled exposing (Html)
+import Time exposing (Posix)
+import Tuple
 
 
 {-| Add a DatePicker.Model to your model.
@@ -46,6 +47,7 @@ import Form.DatePicker.Internal as Internal
     type alias MyModel =
         { myDatePicker : DatePicker.Model
         }
+
 -}
 type Model
     = Model Internal.State
@@ -61,6 +63,7 @@ type View
     myInitialModel =
         { myDatePicker = DatePicker.init
         }
+
 -}
 init : Model
 init =
@@ -71,6 +74,7 @@ init =
 
     type MyMsg
         = UpdateMyDatePicker DatePicker.Msg
+
 -}
 type alias Msg =
     Internal.Msg
@@ -78,20 +82,20 @@ type alias Msg =
 
 {-| Use in your update function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             UpdateMyDatePicker datePickerMsg ->
                 let
-                    (newDatePicker, cmd) =
+                    ( newDatePicker, cmd ) =
                         DatePicker.update datePickerMsg mode.myDatePicker
                 in
-                    { model | myDatePicker = newDatePicker } ! [ cmd ]
--}
-update : Internal.Msg -> Model -> (Model, Cmd Internal.Msg)
-update msg (Model state) =
+                { model | myDatePicker = newDatePicker } ! [ cmd ]
 
-    Tuple.mapFirst Model (Internal.update msg state)
+-}
+update : Internal.Msg -> Model -> ( Model, Cmd Internal.Msg )
+update msg (Model state) =
+    Tuple.mapFirst Model <| Internal.update msg state
 
 
 {-| Transform an DatePicker.Model into an DatePicker.View, which allows us to pipe View Setters on it.
@@ -102,10 +106,10 @@ update msg (Model state) =
             []
             [ DatePicker.view model.myDatePicker -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
+
 -}
 view : Model -> View
 view (Model state) =
-
     View state Internal.initialViewState
 
 
@@ -119,10 +123,10 @@ view (Model state) =
                 |> DatePicker.render
                 |> Html.map UpdateMyDatePicker
             ]
+
 -}
 render : View -> Html Internal.Msg
 render (View state viewState) =
-
     Internal.render state viewState
 
 
@@ -130,7 +134,6 @@ render (View state viewState) =
 -}
 reInitialise : Model -> Model
 reInitialise (Model state) =
-
     Model <| Internal.reInitialise state
 
 
@@ -138,47 +141,41 @@ reInitialise (Model state) =
 -}
 reset : Model -> Model
 reset (Model state) =
-
     Model <| Internal.reset state
 
 
 {-| Set the initial Date of your DatePicker.Model.
 -}
-setInitialDate : Maybe DateTime -> Model -> Model
-setInitialDate selectedDateTime (Model state) =
-
-    Model <| Internal.setInitialDate selectedDateTime state
+setInitialPosix : Maybe Posix -> Model -> Model
+setInitialPosix posix (Model state) =
+    Model <| Internal.setInitialPosix posix state
 
 
 {-| Change the Date of your DatePicker.Model.
 -}
-setSelectedDateTime : Maybe DateTime -> Model -> Model
-setSelectedDateTime selectedDateTime (Model state) =
-
-    Model <| Internal.setSelectedDateTime selectedDateTime state
+setSelectedPosix : Maybe Posix -> Model -> Model
+setSelectedPosix posix (Model state) =
+    Model <| Internal.setSelectedPosix posix state
 
 
 {-| Set the min. date. Dates prior to this can't be selected. Navigation is also capped to this date.
 -}
-setMinDate : Maybe Date -> View -> View
-setMinDate date (View state viewState) =
-
-    View state (Internal.setMinDate date viewState)
+setMinPosix : Maybe Posix -> View -> View
+setMinPosix posix (View state viewState) =
+    View state (Internal.setMinPosix posix viewState)
 
 
 {-| Set the min. date. Dates subsequent to this can't be selected. Navigation is also capped to this date.
 -}
-setMaxDate : Maybe Date -> View -> View
-setMaxDate date (View state viewState) =
-
-    View state (Internal.setMaxDate date viewState)
+setMaxPosix : Maybe Posix -> View -> View
+setMaxPosix posix (View state viewState) =
+    View state (Internal.setMaxPosix posix viewState)
 
 
 {-| Sets whether your date picker should include a time picker.
 -}
 setIncludeTime : Bool -> View -> View
 setIncludeTime includeTime (View state viewState) =
-
     View state (Internal.setIncludeTime includeTime viewState)
 
 
@@ -186,7 +183,6 @@ setIncludeTime includeTime (View state viewState) =
 -}
 setIsInput : Bool -> View -> View
 setIsInput isInput (View state viewState) =
-
     View state (Internal.setIsInput isInput viewState)
 
 
@@ -194,7 +190,6 @@ setIsInput isInput (View state viewState) =
 -}
 setIsError : Bool -> View -> View
 setIsError isError (View state viewState) =
-
     View state (Internal.setIsError isError viewState)
 
 
@@ -202,7 +197,6 @@ setIsError isError (View state viewState) =
 -}
 setIsLocked : Bool -> View -> View
 setIsLocked isLocked (View state viewState) =
-
     View state (Internal.setIsLocked isLocked viewState)
 
 
@@ -210,7 +204,6 @@ setIsLocked isLocked (View state viewState) =
 -}
 setIsClearable : Bool -> View -> View
 setIsClearable isClearable (View state viewState) =
-
     View state (Internal.setIsClearable isClearable viewState)
 
 
@@ -218,7 +211,6 @@ setIsClearable isClearable (View state viewState) =
 -}
 setDefaultLabel : String -> View -> View
 setDefaultLabel defaultLabel (View state viewState) =
-
     View state (Internal.setDefaultLabel defaultLabel viewState)
 
 
@@ -226,7 +218,6 @@ setDefaultLabel defaultLabel (View state viewState) =
 -}
 setId : String -> View -> View
 setId id (View state viewState) =
-
     View state (Internal.setId id viewState)
 
 
@@ -234,7 +225,6 @@ setId id (View state viewState) =
 -}
 getIsChanged : Model -> Bool
 getIsChanged (Model state) =
-
     Internal.getIsChanged state
 
 
@@ -242,30 +232,26 @@ getIsChanged (Model state) =
 -}
 getIsOpen : Model -> Bool
 getIsOpen (Model state) =
-
     Internal.getIsOpen state
 
 
 {-| Get the initial Date of your datePicker.
 -}
-getInitialDateTime : Model -> Maybe DateTime
-getInitialDateTime (Model state) =
-
-    Internal.getInitialDateTime state
+getInitialPosix : Model -> Maybe Posix
+getInitialPosix (Model state) =
+    Internal.getInitialPosix state
 
 
 {-| Get the current Date of your datePicker. This is what you'd use to display the data somewhere outside of your datePicker,
 or to send the data to the backend for example etc.
 -}
-getSelectedDateTime : Model -> Maybe DateTime
-getSelectedDateTime (Model state) =
-
-    Internal.getSelectedDateTime state
+getSelectedPosix : Model -> Maybe Posix
+getSelectedPosix (Model state) =
+    Internal.getSelectedPosix state
 
 
 {-| Useful if you need the id of the datePicker in your update function, to set focus etc.
 -}
 getId : View -> Maybe String
 getId (View _ viewState) =
-
     Internal.getId viewState

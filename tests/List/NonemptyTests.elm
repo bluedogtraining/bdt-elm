@@ -1,12 +1,10 @@
 module List.NonemptyTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
 import Json.Decode as Decode
-
-import List.Nonempty exposing (Nonempty (..))
+import List.Nonempty exposing (Nonempty(..))
 import List.Nonempty.Bdt as Nonempty
+import Test exposing (..)
 
 
 suite : Test
@@ -40,4 +38,4 @@ test3 _ =
 test4 : () -> Expectation
 test4 _ =
     Decode.decodeString (Nonempty.decoder Decode.string) "[\"hello\", \"hola\", \"hi\"]"
-        |> Expect.equal (Ok (Nonempty "hello" ["hola", "hi"]))
+        |> Expect.equal (Ok (Nonempty "hello" [ "hola", "hi" ]))

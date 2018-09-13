@@ -1,43 +1,44 @@
 module Form.Select exposing
-    ( Model, init
-    , Msg, update
+    ( Model, init, Msg, update
     , view, render
-    , reInitialise, reset
-    , setInitialOption, setSelectedOption, setIsOptionDisabled
-    , setIsError, setIsLocked, setIsClearable
-    , setDefaultLabel
-    , setId
-    , getIsChanged, getIsOpen
-    , getInitialOption, getSelectedOption
-    , getId
+    , reInitialise, reset, setInitialOption, setSelectedOption, setIsOptionDisabled
+    , setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
+    , getIsChanged, getIsOpen, getInitialOption, getSelectedOption, getId
     )
 
 {-| This module is useful if you want to add a Select Form element to your app.
 
+
 # Initialise and update
+
 @docs Model, init, Msg, update
 
+
 # View and render
+
 @docs view, render
 
+
 # State Setters
+
 @docs reInitialise, reset, setInitialOption, setSelectedOption, setIsOptionDisabled
 
+
 # View Setters
+
 @docs setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
 
+
 # Getters
+
 @docs getIsChanged, getIsOpen, getInitialOption, getSelectedOption, getId
 
 -}
 
-import Html.Styled exposing (Html)
-
-import Tuple
-
-import List.Nonempty as Nonempty exposing (Nonempty)
-
 import Form.Select.Internal as Internal
+import Html.Styled exposing (Html)
+import List.Nonempty as Nonempty exposing (Nonempty)
+import Tuple
 
 
 {-| Add a Select.Model to your model.
@@ -50,6 +51,7 @@ import Form.Select.Internal as Internal
     type alias MyModel =
         { mySelect : Select.Model Title
         }
+
 -}
 type Model option
     = Model (Internal.State option)
@@ -63,8 +65,9 @@ type View option
 
     myInitialModel : MyModel
     myInitialModel =
-        { mySelect = Select.init [Mr, Ms, Dr]
+        { mySelect = Select.init [ Mr, Ms, Dr ]
         }
+
 -}
 init : Nonempty option -> Model option
 init =
@@ -75,6 +78,7 @@ init =
 
     type MyMsg
         = UpdateMySelect Select.Msg
+
 -}
 type alias Msg option =
     Internal.Msg option
@@ -82,19 +86,19 @@ type alias Msg option =
 
 {-| Use in your update function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             UpdateMySelect selectMsg ->
                 let
-                    (newSelect, cmd) =
+                    ( newSelect, cmd ) =
                         Select.update selectMsg mode.mySelect
                 in
-                    { model | mySelect = newSelect } ! [ cmd ]
--}
-update : Internal.Msg option -> Model option -> (Model option, Cmd (Internal.Msg option))
-update msg (Model state) =
+                { model | mySelect = newSelect } ! [ cmd ]
 
+-}
+update : Internal.Msg option -> Model option -> ( Model option, Cmd (Internal.Msg option) )
+update msg (Model state) =
     Tuple.mapFirst Model (Internal.update msg state)
 
 
@@ -106,10 +110,10 @@ update msg (Model state) =
             []
             [ Select.view model.mySelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
+
 -}
 view : Model option -> (option -> String) -> View option
 view (Model state) toLabel =
-
     View state (Internal.initialViewState toLabel)
 
 
@@ -123,10 +127,10 @@ view (Model state) toLabel =
                 |> Select.render
                 |> Html.map UpdateMySelect
             ]
+
 -}
 render : View option -> Html (Internal.Msg option)
 render (View state viewState) =
-
     Internal.render state viewState
 
 
@@ -134,7 +138,6 @@ render (View state viewState) =
 -}
 reInitialise : Model option -> Model option
 reInitialise (Model state) =
-
     Model <| Internal.reInitialise state
 
 
@@ -142,7 +145,6 @@ reInitialise (Model state) =
 -}
 reset : Model option -> Model option
 reset (Model state) =
-
     Model <| Internal.reset state
 
 
@@ -150,7 +152,6 @@ reset (Model state) =
 -}
 setInitialOption : Maybe option -> Model option -> Model option
 setInitialOption selectedOption (Model state) =
-
     Model <| Internal.setInitialOption selectedOption state
 
 
@@ -158,7 +159,6 @@ setInitialOption selectedOption (Model state) =
 -}
 setSelectedOption : Maybe option -> Model option -> Model option
 setSelectedOption selectedOption (Model state) =
-
     Model <| Internal.setSelectedOption selectedOption state
 
 
@@ -166,7 +166,6 @@ setSelectedOption selectedOption (Model state) =
 -}
 setIsOptionDisabled : (option -> Bool) -> View option -> View option
 setIsOptionDisabled isOptionDisabled (View state viewState) =
-
     View state (Internal.setIsOptionDisabled isOptionDisabled viewState)
 
 
@@ -174,7 +173,6 @@ setIsOptionDisabled isOptionDisabled (View state viewState) =
 -}
 setIsError : Bool -> View option -> View option
 setIsError isError (View state viewState) =
-
     View state (Internal.setIsError isError viewState)
 
 
@@ -182,7 +180,6 @@ setIsError isError (View state viewState) =
 -}
 setIsLocked : Bool -> View option -> View option
 setIsLocked isLocked (View state viewState) =
-
     View state (Internal.setIsLocked isLocked viewState)
 
 
@@ -190,7 +187,6 @@ setIsLocked isLocked (View state viewState) =
 -}
 setIsClearable : Bool -> View option -> View option
 setIsClearable isClearable (View state viewState) =
-
     View state (Internal.setIsClearable isClearable viewState)
 
 
@@ -198,7 +194,6 @@ setIsClearable isClearable (View state viewState) =
 -}
 setDefaultLabel : String -> View option -> View option
 setDefaultLabel defaultLabel (View state viewState) =
-
     View state (Internal.setDefaultLabel defaultLabel viewState)
 
 
@@ -206,7 +201,6 @@ setDefaultLabel defaultLabel (View state viewState) =
 -}
 setId : String -> View option -> View option
 setId id (View state viewState) =
-
     View state (Internal.setId id viewState)
 
 
@@ -214,7 +208,6 @@ setId id (View state viewState) =
 -}
 getIsChanged : Model option -> Bool
 getIsChanged (Model state) =
-
     Internal.getIsChanged state
 
 
@@ -222,7 +215,6 @@ getIsChanged (Model state) =
 -}
 getIsOpen : Model option -> Bool
 getIsOpen (Model state) =
-
     Internal.getIsOpen state
 
 
@@ -230,7 +222,6 @@ getIsOpen (Model state) =
 -}
 getInitialOption : Model option -> Maybe option
 getInitialOption (Model state) =
-
     Internal.getInitialOption state
 
 
@@ -239,7 +230,6 @@ or to send the data to the backend for example etc.
 -}
 getSelectedOption : Model option -> Maybe option
 getSelectedOption (Model state) =
-
     Internal.getSelectedOption state
 
 
@@ -247,5 +237,4 @@ getSelectedOption (Model state) =
 -}
 getId : View option -> Maybe String
 getId (View _ viewState) =
-
     Internal.getId viewState

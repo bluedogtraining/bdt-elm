@@ -1,11 +1,9 @@
 module Form.SearchSelectTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
-import Json.Decode as Decode
-
 import Form.SearchSelect as SearchSelect
+import Json.Decode as Decode
+import Test exposing (..)
 
 
 suite : Test

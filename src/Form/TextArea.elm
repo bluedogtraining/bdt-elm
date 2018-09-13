@@ -1,39 +1,42 @@
 module Form.TextArea exposing
-    ( Model, init
-    , Msg, update
+    ( Model, init, Msg, update
     , view, render
-    , reInitialise, reset
-    , setInitialValue, setValue
-    , setSubstituteTabs, setReplacements
-    , setPlaceholder, setMaxLength
-    , setIsError, setIsLocked
-    , setId
-    , getIsChanged, getInitialValue, getValue
-    , getId
+    , reInitialise, reset, setInitialValue, setValue, setSubstituteTabs, setReplacements
+    , setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
+    , getInitialValue, getValue, getIsChanged, getId
     )
 
 {-| This module is useful if you want to add an TextArea Form element to your app.
 
+
 # Initialise and update
+
 @docs Model, init, Msg, update
 
+
 # View and render
+
 @docs view, render
 
+
 # State Setters
+
 @docs reInitialise, reset, setInitialValue, setValue, setSubstituteTabs, setReplacements
 
+
 # View Setters
+
 @docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
 
+
 # Getters
+
 @docs getInitialValue, getValue, getIsChanged, getId
 
 -}
 
-import Html.Styled exposing (Html)
-
 import Form.TextArea.Internal as Internal
+import Html.Styled exposing (Html)
 
 
 {-| Add a TextArea.Model to your model.
@@ -41,6 +44,7 @@ import Form.TextArea.Internal as Internal
     type alias MyModel =
         { myTextArea : TextArea.Model
         }
+
 -}
 type Model
     = Model Internal.State
@@ -56,6 +60,7 @@ type View
     myInitialModel =
         { myTextArea = TextArea.init -- optionally pipe into State Setters
         }
+
 -}
 init : Model
 init =
@@ -66,6 +71,7 @@ init =
 
     type MyMsg
         = UpdateMyTextArea TextArea.Msg
+
 -}
 type alias Msg =
     Internal.Msg
@@ -73,15 +79,15 @@ type alias Msg =
 
 {-| Use in your update function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             UpdateMyTextArea inputMsg ->
                 { model | myTextArea = TextArea.update inputMsg mode.myTextArea } ! []
+
 -}
 update : Internal.Msg -> Model -> Model
 update msg (Model state) =
-
     Model (Internal.update msg state)
 
 
@@ -93,10 +99,10 @@ update msg (Model state) =
             []
             [ TextArea.view model.myTextArea -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
+
 -}
 view : Model -> View
 view (Model state) =
-
     View state Internal.initialViewState
 
 
@@ -110,10 +116,10 @@ view (Model state) =
                 |> TextArea.render
                 |> Html.map UpdateMyTextArea
             ]
+
 -}
 render : View -> Html Internal.Msg
 render (View state viewState) =
-
     Internal.render state viewState
 
 
@@ -121,7 +127,6 @@ render (View state viewState) =
 -}
 reInitialise : Model -> Model
 reInitialise (Model state) =
-
     Model <| Internal.reInitialise state
 
 
@@ -129,7 +134,6 @@ reInitialise (Model state) =
 -}
 reset : Model -> Model
 reset (Model state) =
-
     Model <| Internal.reset state
 
 
@@ -137,7 +141,6 @@ reset (Model state) =
 -}
 setInitialValue : String -> Model -> Model
 setInitialValue value (Model state) =
-
     Model <| Internal.setInitialValue value state
 
 
@@ -145,7 +148,6 @@ setInitialValue value (Model state) =
 -}
 setValue : String -> Model -> Model
 setValue value (Model state) =
-
     Model <| Internal.setValue value state
 
 
@@ -153,15 +155,13 @@ setValue value (Model state) =
 -}
 setSubstituteTabs : Bool -> Model -> Model
 setSubstituteTabs bool (Model state) =
-
     Model (Internal.setSubstituteTabs bool state)
 
 
 {-| Set a ist of string that should be replaced.
 -}
-setReplacements : List (String, String) -> Model -> Model
+setReplacements : List ( String, String ) -> Model -> Model
 setReplacements replacements (Model state) =
-
     Model (Internal.setReplacements replacements state)
 
 
@@ -169,7 +169,6 @@ setReplacements replacements (Model state) =
 -}
 setMaxLength : Int -> View -> View
 setMaxLength maxLength (View state viewState) =
-
     View state (Internal.setMaxLength maxLength viewState)
 
 
@@ -177,7 +176,6 @@ setMaxLength maxLength (View state viewState) =
 -}
 setPlaceholder : String -> View -> View
 setPlaceholder placeholder (View state viewState) =
-
     View state (Internal.setPlaceholder placeholder viewState)
 
 
@@ -185,7 +183,6 @@ setPlaceholder placeholder (View state viewState) =
 -}
 setIsLocked : Bool -> View -> View
 setIsLocked isLocked (View state viewState) =
-
     View state (Internal.setIsLocked isLocked viewState)
 
 
@@ -193,7 +190,6 @@ setIsLocked isLocked (View state viewState) =
 -}
 setIsError : Bool -> View -> View
 setIsError isError (View state viewState) =
-
     View state (Internal.setIsError isError viewState)
 
 
@@ -201,7 +197,6 @@ setIsError isError (View state viewState) =
 -}
 setId : String -> View -> View
 setId id (View state viewState) =
-
     View state (Internal.setId id viewState)
 
 
@@ -209,7 +204,6 @@ setId id (View state viewState) =
 -}
 getIsChanged : Model -> Bool
 getIsChanged (Model state) =
-
     Internal.getIsChanged state
 
 
@@ -217,7 +211,6 @@ getIsChanged (Model state) =
 -}
 getInitialValue : Model -> String
 getInitialValue (Model state) =
-
     Internal.getInitialValue state
 
 
@@ -226,7 +219,6 @@ or to send the data to the backend for example etc.
 -}
 getValue : Model -> String
 getValue (Model state) =
-
     Internal.getValue state
 
 
@@ -234,5 +226,4 @@ getValue (Model state) =
 -}
 getId : View -> Maybe String
 getId (View _ viewState) =
-
     Internal.getId viewState

@@ -1,9 +1,8 @@
 module Form.InputTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
 import Form.Input as Input
+import Test exposing (..)
 
 
 suite : Test

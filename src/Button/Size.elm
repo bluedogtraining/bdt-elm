@@ -1,4 +1,4 @@
-module Button.Size exposing (Size (..))
+module Button.Size exposing (Size(..))
 
 
 type Size

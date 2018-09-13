@@ -1,10 +1,11 @@
 module View exposing (view)
 
+--import Form.DropZone as DropZone
+
 import Button
 import Card
-import Time.Date as Date
+import FeatherIcons
 import Form.DatePicker as DatePicker
-import Form.DropZone as DropZone
 import Form.FloatInput as FloatInput
 import Form.Input as Input
 import Form.IntInput as IntInput
@@ -24,9 +25,9 @@ import Model exposing (Model)
 import Msg exposing (Msg(..))
 import MusicGenre exposing (MusicGenre)
 import Time
+import Time.Date as Date
 import Toasters
 import Toggle
-import FeatherIcons
 
 
 view : Model -> Html Msg
@@ -42,7 +43,7 @@ view model =
                 [ text "Form Elements" ]
             , Grid.row
                 [ Grid.colSizes Twelve
-                    [ (Lg, Six) ]
+                    [ ( Lg, Six ) ]
                     [ Card.view
                         |> Card.header "Example Inputs" []
                         |> Card.body
@@ -79,7 +80,7 @@ view model =
                         |> Card.render
                     ]
                 , Grid.colSizes Twelve
-                    [ (Lg, Six) ]
+                    [ ( Lg, Six ) ]
                     [ Card.view
                         |> Card.header "Example Selects" []
                         |> Card.body
@@ -115,7 +116,7 @@ view model =
                         |> Card.render
                     ]
                 , Grid.colSizes Twelve
-                    [ (Lg, Six) ]
+                    [ ( Lg, Six ) ]
                     [ Card.view
                         |> Card.header "Date Pickers!" []
                         |> Card.body
@@ -131,8 +132,8 @@ view model =
                                     |> Label.render
                                 , DatePicker.view model.datePicker2
                                     |> DatePicker.setIsClearable True
-                                    |> DatePicker.setMinDate (Just <| Date.date 2017 11 20)
-                                    |> DatePicker.setMaxDate (Just <| Date.date 2020 11 20)
+                                    |> DatePicker.setMinPosix (Just <| Time.millisToPosix <| 1511822890 * 1000)
+                                    |> DatePicker.setMaxPosix (Just <| Time.millisToPosix <| 1588822890 * 1000)
                                     |> DatePicker.render
                                     |> Html.map DatePicker2Msg
                                 ]
@@ -160,7 +161,7 @@ view model =
                         |> Card.render
                     ]
                 , Grid.colSizes Twelve
-                    [ (Lg, Six) ]
+                    [ ( Lg, Six ) ]
                     [ Card.view
                         |> Card.header "Toasters" []
                         |> Card.body
@@ -276,25 +277,26 @@ view model =
                             ]
                         |> Card.footer []
                         |> Card.render
---                    , Card.view
---                        |> Card.header "File Uploads" []
---                        |> Card.body
---                            [ Card.block Twelve
---                                [ Grid.row
---                                    [ Grid.col Twelve
---                                        [ DropZone.view model.dropZone
---                                            |> DropZone.setLabel "Drop files here or click to select files"
---                                            |> DropZone.render
---                                            |> Html.map DropZone
---                                        ]
---                                    ]
---                                ]
---                            ]
---                        |> Card.footer []
---                        |> Card.render
+
+                    --                    , Card.view
+                    --                        |> Card.header "File Uploads" []
+                    --                        |> Card.body
+                    --                            [ Card.block Twelve
+                    --                                [ Grid.row
+                    --                                    [ Grid.col Twelve
+                    --                                        [ DropZone.view model.dropZone
+                    --                                            |> DropZone.setLabel "Drop files here or click to select files"
+                    --                                            |> DropZone.render
+                    --                                            |> Html.map DropZone
+                    --                                        ]
+                    --                                    ]
+                    --                                ]
+                    --                            ]
+                    --                        |> Card.footer []
+                    --                        |> Card.render
                     ]
                 , Grid.colSizes Twelve
-                    [ (Lg, Six) ]
+                    [ ( Lg, Six ) ]
                     [ Card.view
                         |> Card.header "Example Buttons" [ Button.view |> Button.text "Header Button", Button.view |> Button.text "Another Button" ]
                         |> Card.body
@@ -361,7 +363,7 @@ view model =
                         |> Card.render
                     ]
                 , Grid.colSizes Twelve
-                    [ (Lg, Six) ]
+                    [ ( Lg, Six ) ]
                     [ Card.view
                         |> Card.header "User Details" [ Button.view |> Button.icon FeatherIcons.edit ]
                         |> Card.body

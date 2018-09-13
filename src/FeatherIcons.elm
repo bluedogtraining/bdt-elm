@@ -1,297 +1,29 @@
-module FeatherIcons
-    exposing
-        ( toHtml
-        , withClass
-        , withViewBox
-        , withSize
-        , withSizeUnit
-        , withStrokeWidth
-        , customIcon
-        , Icon
-        , activity
-        , airplay
-        , alertCircle
-        , alertOctagon
-        , alertTriangle
-        , alignCenter
-        , alignJustify
-        , alignLeft
-        , alignRight
-        , anchor
-        , aperture
-        , archive
-        , arrowDownCircle
-        , arrowDownLeft
-        , arrowDownRight
-        , arrowDown
-        , arrowLeftCircle
-        , arrowLeft
-        , arrowRightCircle
-        , arrowRight
-        , arrowUpCircle
-        , arrowUpLeft
-        , arrowUpRight
-        , arrowUp
-        , atSign
-        , award
-        , barChart2
-        , barChart
-        , batteryCharging
-        , battery
-        , bellOff
-        , bell
-        , bluetooth
-        , bold
-        , bookOpen
-        , book
-        , bookmark
-        , box
-        , briefcase
-        , calendar
-        , cameraOff
-        , camera
-        , cast
-        , checkCircle
-        , checkSquare
-        , check
-        , chevronDown
-        , chevronLeft
-        , chevronRight
-        , chevronUp
-        , chevronsDown
-        , chevronsLeft
-        , chevronsRight
-        , chevronsUp
-        , chrome
-        , circle
-        , clipboard
-        , clock
-        , cloudDrizzle
-        , cloudLightning
-        , cloudOff
-        , cloudRain
-        , cloudSnow
-        , cloud
-        , code
-        , codepen
-        , command
-        , compass
-        , copy
-        , cornerDownLeft
-        , cornerDownRight
-        , cornerLeftDown
-        , cornerLeftUp
-        , cornerRightDown
-        , cornerRightUp
-        , cornerUpLeft
-        , cornerUpRight
-        , cpu
-        , creditCard
-        , crop
-        , crosshair
-        , database
-        , delete
-        , disc
-        , dollarSign
-        , downloadCloud
-        , download
-        , droplet
-        , edit2
-        , edit3
-        , edit
-        , externalLink
-        , eyeOff
-        , eye
-        , facebook
-        , fastForward
-        , feather
-        , fileMinus
-        , filePlus
-        , fileText
-        , file
-        , film
-        , filter
-        , flag
-        , folderMinus
-        , folderPlus
-        , folder
-        , gift
-        , gitBranch
-        , gitCommit
-        , gitMerge
-        , gitPullRequest
-        , github
-        , gitlab
-        , globe
-        , grid
-        , hardDrive
-        , hash
-        , headphones
-        , heart
-        , helpCircle
-        , home
-        , image
-        , inbox
-        , info
-        , instagram
-        , italic
-        , layers
-        , layout
-        , lifeBuoy
-        , link2
-        , link
-        , linkedin
-        , list
-        , loader
-        , lock
-        , logIn
-        , logOut
-        , mail
-        , mapPin
-        , map
-        , maximize2
-        , maximize
-        , menu
-        , messageCircle
-        , messageSquare
-        , micOff
-        , mic
-        , minimize2
-        , minimize
-        , minusCircle
-        , minusSquare
-        , minus
-        , monitor
-        , moon
-        , moreHorizontal
-        , moreVertical
-        , move
-        , music
-        , navigation2
-        , navigation
-        , octagon
-        , package
-        , paperclip
-        , pauseCircle
-        , pause
-        , percent
-        , phoneCall
-        , phoneForwarded
-        , phoneIncoming
-        , phoneMissed
-        , phoneOff
-        , phoneOutgoing
-        , phone
-        , pieChart
-        , playCircle
-        , play
-        , plusCircle
-        , plusSquare
-        , plus
-        , pocket
-        , power
-        , printer
-        , radio
-        , refreshCcw
-        , refreshCw
-        , repeat
-        , rewind
-        , rotateCcw
-        , rotateCw
-        , rss
-        , save
-        , scissors
-        , search
-        , send
-        , server
-        , settings
-        , share2
-        , share
-        , shieldOff
-        , shield
-        , shoppingBag
-        , shoppingCart
-        , shuffle
-        , sidebar
-        , skipBack
-        , skipForward
-        , slack
-        , slash
-        , sliders
-        , smartphone
-        , speaker
-        , square
-        , star
-        , stopCircle
-        , sun
-        , sunrise
-        , sunset
-        , tablet
-        , tag
-        , target
-        , terminal
-        , thermometer
-        , thumbsDown
-        , thumbsUp
-        , toggleLeft
-        , toggleRight
-        , trash2
-        , trash
-        , trendingDown
-        , trendingUp
-        , triangle
-        , truck
-        , tv
-        , twitter
-        , type_
-        , umbrella
-        , underline
-        , unlock
-        , uploadCloud
-        , upload
-        , userCheck
-        , userMinus
-        , userPlus
-        , userX
-        , user
-        , users
-        , videoOff
-        , video
-        , voicemail
-        , volume1
-        , volume2
-        , volumeX
-        , volume
-        , watch
-        , wifiOff
-        , wifi
-        , wind
-        , xCircle
-        , xSquare
-        , x
-        , youtube
-        , zapOff
-        , zap
-        , zoomIn
-        , zoomOut
-        )
+module FeatherIcons exposing
+    ( Icon, toHtml
+    , withClass, withSize, withSizeUnit, withStrokeWidth
+    , customIcon, withViewBox
+    , activity, airplay, alertCircle, alertOctagon, alertTriangle, alignCenter, alignJustify, alignLeft, alignRight, anchor, aperture, archive, arrowDownCircle, arrowDownLeft, arrowDownRight, arrowDown, arrowLeftCircle, arrowLeft, arrowRightCircle, arrowRight, arrowUpCircle, arrowUpLeft, arrowUpRight, arrowUp, atSign, award, barChart2, barChart, batteryCharging, battery, bellOff, bell, bluetooth, bold, bookOpen, book, bookmark, box, briefcase, calendar, cameraOff, camera, cast, checkCircle, checkSquare, check, chevronDown, chevronLeft, chevronRight, chevronUp, chevronsDown, chevronsLeft, chevronsRight, chevronsUp, chrome, circle, clipboard, clock, cloudDrizzle, cloudLightning, cloudOff, cloudRain, cloudSnow, cloud, code, codepen, command, compass, copy, cornerDownLeft, cornerDownRight, cornerLeftDown, cornerLeftUp, cornerRightDown, cornerRightUp, cornerUpLeft, cornerUpRight, cpu, creditCard, crop, crosshair, database, delete, disc, dollarSign, downloadCloud, download, droplet, edit2, edit3, edit, externalLink, eyeOff, eye, facebook, fastForward, feather, fileMinus, filePlus, fileText, file, film, filter, flag, folderMinus, folderPlus, folder, gift, gitBranch, gitCommit, gitMerge, gitPullRequest, github, gitlab, globe, grid, hardDrive, hash, headphones, heart, helpCircle, home, image, inbox, info, instagram, italic, layers, layout, lifeBuoy, link2, link, linkedin, list, loader, lock, logIn, logOut, mail, mapPin, map, maximize2, maximize, menu, messageCircle, messageSquare, micOff, mic, minimize2, minimize, minusCircle, minusSquare, minus, monitor, moon, moreHorizontal, moreVertical, move, music, navigation2, navigation, octagon, package, paperclip, pauseCircle, pause, percent, phoneCall, phoneForwarded, phoneIncoming, phoneMissed, phoneOff, phoneOutgoing, phone, pieChart, playCircle, play, plusCircle, plusSquare, plus, pocket, power, printer, radio, refreshCcw, refreshCw, repeat, rewind, rotateCcw, rotateCw, rss, save, scissors, search, send, server, settings, share2, share, shieldOff, shield, shoppingBag, shoppingCart, shuffle, sidebar, skipBack, skipForward, slack, slash, sliders, smartphone, speaker, square, star, stopCircle, sun, sunrise, sunset, tablet, tag, target, terminal, thermometer, thumbsDown, thumbsUp, toggleLeft, toggleRight, trash2, trash, trendingDown, trendingUp, triangle, truck, tv, twitter, type_, umbrella, underline, unlock, uploadCloud, upload, userCheck, userMinus, userPlus, userX, user, users, videoOff, video, voicemail, volume1, volume2, volumeX, volume, watch, wifiOff, wifi, wind, xCircle, xSquare, x, youtube, zapOff, zap, zoomIn, zoomOut
+    )
+
 {-|
+
+
 # Basic Usage
 
 Using a feather icon in your view is as easy as:
 
-```elm
-featherIcon : Html msg
-featherIcon =
-    FeatherIcons.feather
-        |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml []
-```
+    featherIcon : Html msg
+    featherIcon =
+        FeatherIcons.feather
+            |> FeatherIcons.withSize 18
+            |> FeatherIcons.toHtml []
 
-Change `FeatherIcons.feather` by the icon you prefer, a list of all icons is visible here: https://1602.github.io/elm-feather-icons/
+Change `FeatherIcons.feather` by the icon you prefer, a list of all icons is visible here: <https://1602.github.io/elm-feather-icons/>
 
 All icons of this package are provided as the internal type `Icon`. To turn them into an `Html msg`, simply use the `toHtml` function.
 
 @docs Icon, toHtml
+
 
 # Customize Icons
 
@@ -301,22 +33,25 @@ To customize it's class and size attributes simply use the `withClass` and `with
 
 @docs withClass, withSize, withSizeUnit, withStrokeWidth
 
+
 # New Custom Icons
 
 If you'd like to use same API while creating personally designed icons, you can use the `customIcon` function. You have to provide it with a `List (Svg Never)` that will be embedded into the icon.
 
 @docs customIcon, withViewBox
 
+
 # Feather Icons List
 
 @docs activity, airplay, alertCircle, alertOctagon, alertTriangle, alignCenter, alignJustify, alignLeft, alignRight, anchor, aperture, archive, arrowDownCircle, arrowDownLeft, arrowDownRight, arrowDown, arrowLeftCircle, arrowLeft, arrowRightCircle, arrowRight, arrowUpCircle, arrowUpLeft, arrowUpRight, arrowUp, atSign, award, barChart2, barChart, batteryCharging, battery, bellOff, bell, bluetooth, bold, bookOpen, book, bookmark, box, briefcase, calendar, cameraOff, camera, cast, checkCircle, checkSquare, check, chevronDown, chevronLeft, chevronRight, chevronUp, chevronsDown, chevronsLeft, chevronsRight, chevronsUp, chrome, circle, clipboard, clock, cloudDrizzle, cloudLightning, cloudOff, cloudRain, cloudSnow, cloud, code, codepen, command, compass, copy, cornerDownLeft, cornerDownRight, cornerLeftDown, cornerLeftUp, cornerRightDown, cornerRightUp, cornerUpLeft, cornerUpRight, cpu, creditCard, crop, crosshair, database, delete, disc, dollarSign, downloadCloud, download, droplet, edit2, edit3, edit, externalLink, eyeOff, eye, facebook, fastForward, feather, fileMinus, filePlus, fileText, file, film, filter, flag, folderMinus, folderPlus, folder, gift, gitBranch, gitCommit, gitMerge, gitPullRequest, github, gitlab, globe, grid, hardDrive, hash, headphones, heart, helpCircle, home, image, inbox, info, instagram, italic, layers, layout, lifeBuoy, link2, link, linkedin, list, loader, lock, logIn, logOut, mail, mapPin, map, maximize2, maximize, menu, messageCircle, messageSquare, micOff, mic, minimize2, minimize, minusCircle, minusSquare, minus, monitor, moon, moreHorizontal, moreVertical, move, music, navigation2, navigation, octagon, package, paperclip, pauseCircle, pause, percent, phoneCall, phoneForwarded, phoneIncoming, phoneMissed, phoneOff, phoneOutgoing, phone, pieChart, playCircle, play, plusCircle, plusSquare, plus, pocket, power, printer, radio, refreshCcw, refreshCw, repeat, rewind, rotateCcw, rotateCw, rss, save, scissors, search, send, server, settings, share2, share, shieldOff, shield, shoppingBag, shoppingCart, shuffle, sidebar, skipBack, skipForward, slack, slash, sliders, smartphone, speaker, square, star, stopCircle, sun, sunrise, sunset, tablet, tag, target, terminal, thermometer, thumbsDown, thumbsUp, toggleLeft, toggleRight, trash2, trash, trendingDown, trendingUp, triangle, truck, tv, twitter, type_, umbrella, underline, unlock, uploadCloud, upload, userCheck, userMinus, userPlus, userX, user, users, videoOff, video, voicemail, volume1, volume2, volumeX, volume, watch, wifiOff, wifi, wind, xCircle, xSquare, x, youtube, zapOff, zap, zoomIn, zoomOut
+
 -}
 
 import Html exposing (Html)
+import Json.Encode
 import Svg exposing (Svg, svg)
 import Svg.Attributes exposing (..)
 import VirtualDom
-import Json.Encode
 
 
 {-| Customizable attributes of icon
@@ -363,7 +98,8 @@ type Icon
         |> withViewBox "0 0 26 26"
         |> toHtml []
 
-Example output: <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg>
+Example output: <svg xmlns="<http://www.w3.org/2000/svg"> width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg>
+
 -}
 customIcon : List (Svg Never) -> Icon
 customIcon src =
@@ -378,10 +114,12 @@ customIcon src =
     Icon.download
         |> Icon.withSize 10
         |> Icon.toHtml []
+
 -}
 withSize : Float -> Icon -> Icon
 withSize size (Icon { attrs, src }) =
     Icon { attrs = { attrs | size = size }, src = src }
+
 
 {-| Set unit of size attribute of an icon, one of: "em", "ex", "px", "in", "cm", "mm", "pt", "pc", "%"
 
@@ -389,6 +127,7 @@ withSize size (Icon { attrs, src }) =
         |> Icon.withSize 50
         |> Icon.withSizeUnit "%"
         |> Icon.toHtml []
+
 -}
 withSizeUnit : String -> Icon -> Icon
 withSizeUnit sizeUnit (Icon { attrs, src }) =
@@ -400,16 +139,19 @@ withSizeUnit sizeUnit (Icon { attrs, src }) =
     Icon.playCircle
         |> Icon.withStrokeWidth 1
         |> Icon.toHtml []
+
 -}
 withStrokeWidth : Float -> Icon -> Icon
 withStrokeWidth strokeWidth (Icon { attrs, src }) =
     Icon { attrs = { attrs | strokeWidth = strokeWidth }, src = src }
+
 
 {-| Set viewBox attribute for a custom icon
 
     Icon.custom [ customSvgPathFittingWithin100pxSquare ]
         |> Icon.withViewBox "0 0 100 100"
         |> Icon.toHtml []
+
 -}
 withViewBox : String -> Icon -> Icon
 withViewBox viewBox (Icon { attrs, src }) =
@@ -421,6 +163,7 @@ withViewBox viewBox (Icon { attrs, src }) =
     Icon.download
         |> Icon.withClass "icon-download"
         |> Icon.toHtml []
+
 -}
 withClass : String -> Icon -> Icon
 withClass class (Icon { attrs, src }) =
@@ -433,11 +176,13 @@ withClass class (Icon { attrs, src }) =
     Icon.download
         |> Icon.toHtml []
 
+
     -- with some attributes
     Icon.download
         |> Icon.withSize 10
         |> Icon.withClass "icon-download"
         |> Icon.toHtml [ onClick Download ]
+
 -}
 toHtml : List (Svg.Attribute msg) -> Icon -> Html msg
 toHtml attributes (Icon { src, attrs }) =
@@ -459,16 +204,16 @@ toHtml attributes (Icon { src, attrs }) =
         combinedAttributes =
             (case attrs.class of
                 Just c ->
-                    (class c) :: baseAttributes
+                    class c :: baseAttributes
 
                 Nothing ->
                     baseAttributes
-            ) ++ attributes
+            )
+                ++ attributes
     in
-        src
-            |> List.map (Svg.map never)
-            |> svg combinedAttributes
-
+    src
+        |> List.map (Svg.map never)
+        |> svg combinedAttributes
 
 
 xmlns : String -> Svg.Attribute a
@@ -479,6 +224,7 @@ xmlns s =
 makeBuilder : String -> List (Svg Never) -> Icon
 makeBuilder name src =
     Icon { attrs = defaultAttributes name, src = src }
+
 
 {-| activity
 ![image](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItYWN0aXZpdHkiPjxwb2x5bGluZSBwb2ludHM9IjIyIDEyIDE4IDEyIDE1IDIxIDkgMyA2IDEyIDIgMTIiPjwvcG9seWxpbmU+PC9zdmc+)

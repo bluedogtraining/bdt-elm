@@ -1,13 +1,10 @@
 module ListTests exposing (suite)
 
-import Test exposing (..)
 import Expect exposing (Expectation)
-
-import List.Nonempty exposing (Nonempty (..))
 import List.Bdt as List
-
+import List.Nonempty exposing (Nonempty(..))
+import Test exposing (..)
 import Time.Date as Date
-import Date.Bdt as Date
 
 
 suite : Test
@@ -16,7 +13,6 @@ suite =
         [ test "test groupWhile with no successions" test1
         , test "test groupWhile with successions" test2
         , test "test groupWhile after a sort" test3
-        , test "test sortByDate" test4
         ]
 
 
@@ -58,18 +54,4 @@ test3 _ =
         |> Expect.equal
             [ Nonempty { name = "One", date = Date.date 2018 9 17 } [ { name = "Three", date = Date.date 2018 9 17 } ]
             , Nonempty { name = "Two", date = Date.date 2019 4 8 } []
-            ]
-
-
-test4 : () -> Expectation
-test4 _ =
-    [ { name = "One", date = Date.date 2018 9 17 }
-    , { name = "Two", date = Date.date 2019 4 8 }
-    , { name = "Three", date = Date.date 2018 9 17 }
-    ]
-        |> List.sortByDate .date
-        |> Expect.equal
-            [ { name = "One", date = Date.date 2018 9 17 }
-            , { name = "Three", date = Date.date 2018 9 17 }
-            , { name = "Two", date = Date.date 2019 4 8 }
             ]

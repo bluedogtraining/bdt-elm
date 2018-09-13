@@ -38,15 +38,12 @@ import Html.Styled.Attributes as Attributes exposing (..)
 import Html.Styled.Bdt as Html
 import Html.Styled.Events exposing (..)
 import Html.Styled.Lazy exposing (..)
-import Json.Decode as Decode exposing (Decoder)
-import List.Extra as List
+import Json.Decode as Decode
 import List.Nonempty exposing (Nonempty(..))
 import Resettable exposing (Resettable)
 import Task
 import Time exposing (Posix)
 import Time.Bdt as Time
-import Time.Date as Date exposing (Date)
-import Time.Date.Bdt as Date
 import Time.DateTime as DateTime exposing (DateTime)
 
 

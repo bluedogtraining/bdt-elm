@@ -22,17 +22,17 @@ module Form.DatePicker exposing
 
 # State Setters
 
-@docs reInitialise, reset, setInitialDate, setSelectedDateTime
+@docs reInitialise, reset, setInitialPosix, setSelectedPosix
 
 
 # View Setters
 
-@docs setMinDate, setMaxDate, setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
+@docs setMinPosix, setMaxPosix, setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
 
 
 # Getters
 
-@docs getIsChanged, getIsOpen, getInitialDateTime, getSelectedDateTime, getId
+@docs getIsChanged, getIsOpen, getInitialPosix, getSelectedPosix, getId
 
 -}
 

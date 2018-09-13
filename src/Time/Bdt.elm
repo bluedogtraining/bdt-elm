@@ -16,7 +16,7 @@ module Time.Bdt exposing
 
 # Helpers
 
-@docs monthNumber, monthString, clamp, maybeClamp
+@docs monthNumber, monthString, monthFromNumber, addMonths, clamp, maybeClamp
 
 
 # Sort Times

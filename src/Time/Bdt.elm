@@ -1,9 +1,8 @@
 module Time.Bdt exposing
     ( toDateString, toTimeString, toDateTimeString, maybeToDateString, maybeToTimeString, maybeToDateTimeString
-    , monthNumber, monthString, monthFromNumber
-    , addMonths, clamp, maybeClamp
+    , monthNumber, monthString, monthFromNumber, addMonths, clamp, maybeClamp
     , order
-    , encode, encodeMaybe
+    , encode, encodeMaybe, decoder
     )
 
 {-| Time Helpers
@@ -24,12 +23,13 @@ module Time.Bdt exposing
 @docs order
 
 
-# Encode Times
+# Encode/Decode Times
 
-@docs encode, encodeMaybe
+@docs encode, encodeMaybe, decoder
 
 -}
 
+import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
 import Time exposing (Month(..), Posix)
 import Time.DateTime as DateTime
@@ -306,17 +306,24 @@ order date1 date2 =
         EQ
 
 
-{-| Encode a Time
+{-| Encode a Posix
 -}
 encode : Posix -> Value
 encode =
     Time.posixToMillis >> Encode.int
 
 
-{-| Encode a Maybe Time
+{-| Encode a Maybe Posix
 -}
 encodeMaybe : Maybe Posix -> Value
 encodeMaybe maybeTime =
     maybeTime
         |> Maybe.map encode
         |> Maybe.withDefault Encode.null
+
+
+{-| Decode a Posix
+-}
+decoder : Decoder Posix
+decoder =
+    Decode.map Time.millisToPosix Decode.int

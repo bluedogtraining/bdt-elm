@@ -108,12 +108,15 @@ update msg (Model state) =
     myView model =
         div
             []
-            [ Select.view model.mySelect -- pipe view setters here, for example |> setIsLocked 'your logic here'
+            [ model.mySelect
+                |> Select.view .name
+
+            -- pipe view setters here, for example |> setIsLocked 'your logic here'
             ]
 
 -}
-view : Model option -> (option -> String) -> View option
-view (Model state) toLabel =
+view : (option -> String) -> Model option -> View option
+view toLabel (Model state) =
     View state (Internal.initialViewState toLabel)
 
 

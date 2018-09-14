@@ -17796,7 +17796,7 @@ var author$project$Form$Select$Internal$initialViewState = function (toLabel) {
 	};
 };
 var author$project$Form$Select$view = F2(
-	function (_n0, toLabel) {
+	function (toLabel, _n0) {
 		var state = _n0.a;
 		return A2(
 			author$project$Form$Select$View,
@@ -17982,14 +17982,14 @@ var author$project$Form$DatePicker$Internal$timePicker = function (state) {
 										'FORM_DATEPICKER_HOURS',
 										A2(
 											author$project$Form$Select$view,
-											state.hours,
 											A2(
 												elm$core$Basics$composeR,
 												elm$core$String$fromInt,
 												A2(
 													elm$core$String$padLeft,
 													2,
-													_Utils_chr('0')))))))
+													_Utils_chr('0'))),
+											state.hours))))
 							]))
 					])),
 				A2(
@@ -18036,14 +18036,14 @@ var author$project$Form$DatePicker$Internal$timePicker = function (state) {
 										'FORM_DATEPICKER_MINUTES',
 										A2(
 											author$project$Form$Select$view,
-											state.minutes,
 											A2(
 												elm$core$Basics$composeR,
 												elm$core$String$fromInt,
 												A2(
 													elm$core$String$padLeft,
 													2,
-													_Utils_chr('0')))))))
+													_Utils_chr('0'))),
+											state.minutes))))
 							]))
 					])),
 				A2(
@@ -18090,14 +18090,14 @@ var author$project$Form$DatePicker$Internal$timePicker = function (state) {
 										'FORM_DATEPICKER_SECONDS',
 										A2(
 											author$project$Form$Select$view,
-											state.seconds,
 											A2(
 												elm$core$Basics$composeR,
 												elm$core$String$fromInt,
 												A2(
 													elm$core$String$padLeft,
 													2,
-													_Utils_chr('0')))))))
+													_Utils_chr('0'))),
+											state.seconds))))
 							]))
 					])),
 				A2(
@@ -19006,7 +19006,7 @@ var author$project$Form$MultiSelect$Internal$initialViewState = function (toLabe
 	};
 };
 var author$project$Form$MultiSelect$view = F2(
-	function (_n0, toLabel) {
+	function (toLabel, _n0) {
 		var state = _n0.a;
 		return A2(
 			author$project$Form$MultiSelect$View,
@@ -19277,7 +19277,7 @@ var author$project$Form$SearchSelect$Internal$initialViewState = function (toLab
 	};
 };
 var author$project$Form$SearchSelect$view = F2(
-	function (_n0, toLabel) {
+	function (toLabel, _n0) {
 		var state = _n0.a;
 		return A2(
 			author$project$Form$SearchSelect$View,
@@ -20716,7 +20716,7 @@ var author$project$View$view = function (model) {
 																		A2(
 																			author$project$Form$Select$setIsClearable,
 																			true,
-																			A2(author$project$Form$Select$view, model.select, author$project$MusicGenre$toLabel)))))
+																			A2(author$project$Form$Select$view, author$project$MusicGenre$toLabel, model.select)))))
 															])),
 														A2(
 														author$project$Card$block,
@@ -20732,7 +20732,7 @@ var author$project$View$view = function (model) {
 																	A2(
 																		author$project$Form$MultiSelect$setIsOptionDisabled,
 																		elm$core$Basics$eq(author$project$MusicGenre$Pop),
-																		A2(author$project$Form$MultiSelect$view, model.multiSelect, author$project$MusicGenre$toLabel))))
+																		A2(author$project$Form$MultiSelect$view, author$project$MusicGenre$toLabel, model.multiSelect))))
 															])),
 														A2(
 														author$project$Card$block,
@@ -20747,10 +20747,10 @@ var author$project$View$view = function (model) {
 																author$project$Form$SearchSelect$render(
 																	A2(
 																		author$project$Form$SearchSelect$view,
-																		model.searchSelect,
 																		function ($) {
 																			return $.name;
-																		}))),
+																		},
+																		model.searchSelect))),
 																A2(
 																author$project$Html$Styled$Bdt$maybeView,
 																author$project$Form$SearchSelect$getSelectedOption(model.searchSelect),
@@ -21436,10 +21436,10 @@ var author$project$View$view = function (model) {
 																author$project$Form$SearchSelect$render(
 																	A2(
 																		author$project$Form$SearchSelect$view,
-																		model.countryOfBirth,
 																		function ($) {
 																			return $.name;
-																		})))
+																		},
+																		model.countryOfBirth)))
 															])),
 														A2(
 														author$project$Card$block,
@@ -21452,7 +21452,7 @@ var author$project$View$view = function (model) {
 																rtfeldman$elm_css$Html$Styled$map,
 																author$project$Msg$UpdatePreferredGenre,
 																author$project$Form$Select$render(
-																	A2(author$project$Form$Select$view, model.preferredGenre, author$project$MusicGenre$toLabel)))
+																	A2(author$project$Form$Select$view, author$project$MusicGenre$toLabel, model.preferredGenre)))
 															]))
 													]),
 												A3(
@@ -21482,7 +21482,7 @@ var author$project$View$view = function (model) {
 																A2(
 																	author$project$Form$Select$setIsClearable,
 																	true,
-																	A2(author$project$Form$Select$view, model.maybeBlockSelect, author$project$MusicGenre$toLabel))))
+																	A2(author$project$Form$Select$view, author$project$MusicGenre$toLabel, model.maybeBlockSelect))))
 														])),
 													A3(
 													author$project$Card$maybeBlock,

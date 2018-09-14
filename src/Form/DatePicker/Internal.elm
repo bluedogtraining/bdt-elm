@@ -612,7 +612,8 @@ timePicker state =
             ]
             [ div
                 [ Css.select ]
-                [ Select.view state.hours (String.fromInt >> String.padLeft 2 '0')
+                [ state.hours
+                    |> Select.view (String.fromInt >> String.padLeft 2 '0')
                     |> Select.setId "FORM_DATEPICKER_HOURS"
                     |> Select.render
                     |> Html.map UpdateHours
@@ -630,7 +631,8 @@ timePicker state =
             ]
             [ div
                 [ Css.select ]
-                [ Select.view state.minutes (String.fromInt >> String.padLeft 2 '0')
+                [ state.minutes
+                    |> Select.view (String.fromInt >> String.padLeft 2 '0')
                     |> Select.setId "FORM_DATEPICKER_MINUTES"
                     |> Select.render
                     |> Html.map UpdateMinutes
@@ -648,7 +650,8 @@ timePicker state =
             ]
             [ div
                 [ Css.select ]
-                [ Select.view state.seconds (String.fromInt >> String.padLeft 2 '0')
+                [ state.seconds
+                    |> Select.view (String.fromInt >> String.padLeft 2 '0')
                     |> Select.setId "FORM_DATEPICKER_SECONDS"
                     |> Select.render
                     |> Html.map UpdateSeconds

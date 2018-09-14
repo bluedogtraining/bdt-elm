@@ -87,7 +87,8 @@ view model =
                             [ Card.block Twelve
                                 [ Label.view "Simple Select"
                                     |> Label.render
-                                , Select.view model.select MusicGenre.toLabel
+                                , model.select
+                                    |> Select.view MusicGenre.toLabel
                                     |> Select.setIsClearable True
                                     |> Select.setIsOptionDisabled ((==) MusicGenre.Pop)
                                     |> Select.render
@@ -96,7 +97,8 @@ view model =
                             , Card.block Twelve
                                 [ Label.view "Multi Select"
                                     |> Label.render
-                                , MultiSelect.view model.multiSelect MusicGenre.toLabel
+                                , model.multiSelect
+                                    |> MultiSelect.view MusicGenre.toLabel
                                     |> MultiSelect.setIsOptionDisabled ((==) MusicGenre.Pop)
                                     |> MultiSelect.render
                                     |> Html.map MultiSelectMsg
@@ -104,7 +106,8 @@ view model =
                             , Card.block Twelve
                                 [ Label.view "Search Select"
                                     |> Label.render
-                                , SearchSelect.view model.searchSelect .name
+                                , model.searchSelect
+                                    |> SearchSelect.view .name
                                     |> SearchSelect.render
                                     |> Html.map SearchSelectMsg
                                 , Html.maybeView
@@ -395,14 +398,16 @@ view model =
                                 [ Label.view "Country of Birth"
                                     |> Label.mandatory True
                                     |> Label.render
-                                , SearchSelect.view model.countryOfBirth .name
+                                , model.countryOfBirth
+                                    |> SearchSelect.view .name
                                     |> SearchSelect.render
                                     |> Html.map UpdateCountryOfBirth
                                 ]
                             , Card.block Six
                                 [ Label.view "Preferred Music Genre"
                                     |> Label.render
-                                , Select.view model.preferredGenre MusicGenre.toLabel
+                                , model.preferredGenre
+                                    |> Select.view MusicGenre.toLabel
                                     |> Select.render
                                     |> Html.map UpdatePreferredGenre
                                 ]
@@ -418,7 +423,8 @@ view model =
                             [ Card.block Six
                                 [ Label.view "Preferred Music Genre"
                                     |> Label.render
-                                , Select.view model.maybeBlockSelect MusicGenre.toLabel
+                                , model.maybeBlockSelect
+                                    |> Select.view MusicGenre.toLabel
                                     |> Select.setIsClearable True
                                     |> Select.render
                                     |> Html.map UpdateMaybeBLockSelect

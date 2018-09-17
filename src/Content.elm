@@ -1,4 +1,4 @@
-module Button.Content exposing (Content(..))
+module Content exposing (Content(..))
 
 import FeatherIcons exposing (Icon)
 

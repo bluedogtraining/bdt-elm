@@ -29,7 +29,7 @@ module Button exposing
 
 -}
 
-import Button.Content as Content exposing (..)
+import Content as Content exposing (..)
 import Button.Css as Css
 import Button.Size exposing (..)
 import Css exposing (Color, rgb)

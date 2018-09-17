@@ -2298,52 +2298,6 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 
 
 
-function _Time_now(millisToPosix)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(millisToPosix(Date.now())));
-	});
-}
-
-var _Time_setInterval = F2(function(interval, task)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
-		return function() { clearInterval(id); };
-	});
-});
-
-function _Time_here()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(
-			A2(elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
-		));
-	});
-}
-
-
-function _Time_getZoneName()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		try
-		{
-			var name = elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
-		}
-		catch (e)
-		{
-			var name = elm$time$Time$Offset(new Date().getTimezoneOffset());
-		}
-		callback(_Scheduler_succeed(name));
-	});
-}
-
-
-
 
 // HELPERS
 
@@ -3898,6 +3852,52 @@ function _VirtualDom_dekey(keyedNode)
 }
 
 
+function _Time_now(millisToPosix)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(millisToPosix(Date.now())));
+	});
+}
+
+var _Time_setInterval = F2(function(interval, task)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
+		return function() { clearInterval(id); };
+	});
+});
+
+function _Time_here()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(
+			A2(elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
+		));
+	});
+}
+
+
+function _Time_getZoneName()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			var name = elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
+		}
+		catch (e)
+		{
+			var name = elm$time$Time$Offset(new Date().getTimezoneOffset());
+		}
+		callback(_Scheduler_succeed(name));
+	});
+}
+
+
+
 var _Bitwise_and = F2(function(a, b)
 {
 	return a & b;
@@ -5073,6 +5073,12 @@ function _Http_multipart(parts)
 
 	return elm$http$Http$Internal$FormDataBody(formData);
 }
+var author$project$Content$Icon = function (a) {
+	return {$: 'Icon', a: a};
+};
+var author$project$Content$Text = function (a) {
+	return {$: 'Text', a: a};
+};
 var elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
@@ -5587,6 +5593,189 @@ var author$project$Countries$countryDecoder = A3(
 					'name',
 					elm$json$Json$Decode$string,
 					elm$json$Json$Decode$succeed(author$project$Countries$Country))))));
+var author$project$FeatherIcons$Icon = function (a) {
+	return {$: 'Icon', a: a};
+};
+var author$project$FeatherIcons$defaultAttributes = function (name) {
+	return {
+		_class: elm$core$Maybe$Just('feather feather-' + name),
+		size: 24,
+		sizeUnit: '',
+		strokeWidth: 2,
+		viewBox: '0 0 24 24'
+	};
+};
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var author$project$FeatherIcons$makeBuilder = F2(
+	function (name, src) {
+		return author$project$FeatherIcons$Icon(
+			{
+				attrs: author$project$FeatherIcons$defaultAttributes(name),
+				src: src
+			});
+	});
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
+var elm$virtual_dom$VirtualDom$property = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_property,
+			_VirtualDom_noInnerHtmlOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var author$project$FeatherIcons$xmlns = function (s) {
+	return A2(
+		elm$virtual_dom$VirtualDom$property,
+		'xmlns',
+		elm$json$Json$Encode$string(s));
+};
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
+var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
+var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
+var elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var author$project$FeatherIcons$calendar = A2(
+	author$project$FeatherIcons$makeBuilder,
+	'calendar',
+	_List_fromArray(
+		[
+			A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					author$project$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
+					elm$svg$Svg$Attributes$width('24'),
+					elm$svg$Svg$Attributes$height('24'),
+					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+					elm$svg$Svg$Attributes$fill('none'),
+					elm$svg$Svg$Attributes$stroke('currentColor'),
+					elm$svg$Svg$Attributes$strokeWidth('2'),
+					elm$svg$Svg$Attributes$strokeLinecap('round'),
+					elm$svg$Svg$Attributes$strokeLinejoin('round'),
+					elm$svg$Svg$Attributes$class('feather feather-calendar')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('3'),
+							elm$svg$Svg$Attributes$y('4'),
+							elm$svg$Svg$Attributes$width('18'),
+							elm$svg$Svg$Attributes$height('18'),
+							elm$svg$Svg$Attributes$rx('2'),
+							elm$svg$Svg$Attributes$ry('2')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('16'),
+							elm$svg$Svg$Attributes$y1('2'),
+							elm$svg$Svg$Attributes$x2('16'),
+							elm$svg$Svg$Attributes$y2('6')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('8'),
+							elm$svg$Svg$Attributes$y1('2'),
+							elm$svg$Svg$Attributes$x2('8'),
+							elm$svg$Svg$Attributes$y2('6')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('3'),
+							elm$svg$Svg$Attributes$y1('10'),
+							elm$svg$Svg$Attributes$x2('21'),
+							elm$svg$Svg$Attributes$y2('10')
+						]),
+					_List_Nil)
+				]))
+		]));
+var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
+var elm$svg$Svg$polygon = elm$svg$Svg$trustedNode('polygon');
+var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
+var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var author$project$FeatherIcons$compass = A2(
+	author$project$FeatherIcons$makeBuilder,
+	'compass',
+	_List_fromArray(
+		[
+			A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					author$project$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
+					elm$svg$Svg$Attributes$width('24'),
+					elm$svg$Svg$Attributes$height('24'),
+					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+					elm$svg$Svg$Attributes$fill('none'),
+					elm$svg$Svg$Attributes$stroke('currentColor'),
+					elm$svg$Svg$Attributes$strokeWidth('2'),
+					elm$svg$Svg$Attributes$strokeLinecap('round'),
+					elm$svg$Svg$Attributes$strokeLinejoin('round'),
+					elm$svg$Svg$Attributes$class('feather feather-compass')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$cx('12'),
+							elm$svg$Svg$Attributes$cy('12'),
+							elm$svg$Svg$Attributes$r('10')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$polygon,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$points('16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76')
+						]),
+					_List_Nil)
+				]))
+		]));
 var author$project$Form$DatePicker$Model = function (a) {
 	return {$: 'Model', a: a};
 };
@@ -5610,9 +5799,6 @@ var elm$core$Basics$composeR = F3(
 		return g(
 			f(x));
 	});
-var elm$core$Basics$identity = function (x) {
-	return x;
-};
 var author$project$Form$Select$init = A2(elm$core$Basics$composeR, author$project$Form$Select$Internal$init, author$project$Form$Select$Model);
 var mgold$elm_nonempty_list$List$Nonempty$Nonempty = F2(
 	function (a, b) {
@@ -5751,6 +5937,18 @@ var author$project$Toasters$Model = function (a) {
 	return {$: 'Model', a: a};
 };
 var author$project$Toasters$init = author$project$Toasters$Model(_List_Nil);
+var author$project$ToolTip$InternalState = F3(
+	function (content, tip, isOpen) {
+		return {content: content, isOpen: isOpen, tip: tip};
+	});
+var author$project$ToolTip$Model = function (a) {
+	return {$: 'Model', a: a};
+};
+var author$project$ToolTip$init = F2(
+	function (content, tip) {
+		return author$project$ToolTip$Model(
+			A3(author$project$ToolTip$InternalState, content, tip, false));
+	});
 var author$project$Model$initialModel = {
 	countryOfBirth: A2(author$project$Form$SearchSelect$init, 'https://restcountries.eu/rest/v2/name/', author$project$Countries$countryDecoder),
 	datePicker: author$project$Form$DatePicker$init,
@@ -5779,7 +5977,23 @@ var author$project$Model$initialModel = {
 	toasters: author$project$Toasters$init,
 	toggle1: false,
 	toggle2: false,
-	toggle3: false
+	toggle3: false,
+	toolTip1: A2(
+		author$project$ToolTip$init,
+		author$project$Content$Text('ToolTip1'),
+		'This is the first ToolTip!'),
+	toolTip2: A2(
+		author$project$ToolTip$init,
+		author$project$Content$Icon(author$project$FeatherIcons$compass),
+		'This is the second ToolTip!'),
+	toolTip3: A2(
+		author$project$ToolTip$init,
+		author$project$Content$Text('help'),
+		'This is the third ToolTip!'),
+	toolTip4: A2(
+		author$project$ToolTip$init,
+		author$project$Content$Icon(author$project$FeatherIcons$calendar),
+		'This is the fourth ToolTip!')
 };
 var author$project$Msg$ToastersMsg = function (a) {
 	return {$: 'ToastersMsg', a: a};
@@ -6437,7 +6651,6 @@ var elm$core$Basics$never = function (_n0) {
 		continue never;
 	}
 };
-var elm$json$Json$Decode$map = _Json_map1;
 var elm$browser$Debugger$Expando$ArraySeq = {$: 'ArraySeq'};
 var elm$browser$Debugger$Expando$Constructor = F3(
 	function (a, b, c) {
@@ -6495,18 +6708,6 @@ var elm$browser$Debugger$Overlay$Choose = F2(
 	});
 var elm$browser$Debugger$Overlay$goodNews1 = '\nThe good news is that having values like this in your message type is not\nso great in the long run. You are better off using simpler data, like\n';
 var elm$browser$Debugger$Overlay$goodNews2 = '\nfunction can pattern match on that data and call whatever functions, JSON\ndecoders, etc. you need. This makes the code much more explicit and easy to\nfollow for other readers (or you in a few months!)\n';
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
 var elm$html$Html$code = _VirtualDom_node('code');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
@@ -6584,7 +6785,6 @@ var elm$browser$Debugger$Overlay$viewProblemType = function (_n0) {
 var elm$html$Html$a = _VirtualDom_node('a');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -12164,6 +12364,21 @@ var author$project$Toasters$update = F2(
 		return author$project$Toasters$Model(
 			A2(author$project$Toasters$Internal$update, toasterMsg, toasters));
 	});
+var author$project$ToolTip$update = F2(
+	function (msg, _n0) {
+		var state = _n0.a;
+		if (msg.$ === 'MouseEnter') {
+			return author$project$ToolTip$Model(
+				_Utils_update(
+					state,
+					{isOpen: true}));
+		} else {
+			return author$project$ToolTip$Model(
+				_Utils_update(
+					state,
+					{isOpen: false}));
+		}
+	});
 var author$project$Update$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -12306,6 +12521,42 @@ var author$project$Update$update = F2(
 						model,
 						{toggle3: !model.toggle3}),
 					elm$core$Platform$Cmd$none);
+			case 'ToolTip1Msg':
+				var toolTipMsg = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							toolTip1: A2(author$project$ToolTip$update, toolTipMsg, model.toolTip1)
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'ToolTip2Msg':
+				var toolTipMsg = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							toolTip2: A2(author$project$ToolTip$update, toolTipMsg, model.toolTip2)
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'ToolTip3Msg':
+				var toolTipMsg = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							toolTip3: A2(author$project$ToolTip$update, toolTipMsg, model.toolTip3)
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'ToolTip4Msg':
+				var toolTipMsg = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							toolTip4: A2(author$project$ToolTip$update, toolTipMsg, model.toolTip4)
+						}),
+					elm$core$Platform$Cmd$none);
 			case 'UpdateName':
 				var inputMsg = msg.a;
 				return _Utils_Tuple2(
@@ -12433,9 +12684,6 @@ var author$project$Button$href = F2(
 				config,
 				{url: url}));
 	});
-var author$project$Button$Content$Icon = function (a) {
-	return {$: 'Icon', a: a};
-};
 var author$project$Button$icon = F2(
 	function (icon_, _n0) {
 		var config = _n0.a;
@@ -12443,7 +12691,7 @@ var author$project$Button$icon = F2(
 			_Utils_update(
 				config,
 				{
-					content: author$project$Button$Content$Icon(icon_)
+					content: author$project$Content$Icon(icon_)
 				}));
 	});
 var author$project$Button$isDisabled = F2(
@@ -12494,13 +12742,6 @@ var rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
 var rtfeldman$elm_css$Css$property = F2(
 	function (key, value) {
 		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
-	});
-var elm$virtual_dom$VirtualDom$property = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_property,
-			_VirtualDom_noInnerHtmlOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var rtfeldman$elm_css$VirtualDom$Styled$Attribute = F3(
 	function (a, b, c) {
@@ -14332,47 +14573,9 @@ var author$project$Button$Css$loadingTextContainer = rtfeldman$elm_css$Html$Styl
 			rtfeldman$elm_css$Css$alignItems(rtfeldman$elm_css$Css$center),
 			rtfeldman$elm_css$Css$justifyContent(rtfeldman$elm_css$Css$center)
 		]));
-var author$project$FeatherIcons$Icon = function (a) {
-	return {$: 'Icon', a: a};
-};
-var author$project$FeatherIcons$defaultAttributes = function (name) {
-	return {
-		_class: elm$core$Maybe$Just('feather feather-' + name),
-		size: 24,
-		sizeUnit: '',
-		strokeWidth: 2,
-		viewBox: '0 0 24 24'
-	};
-};
-var author$project$FeatherIcons$makeBuilder = F2(
-	function (name, src) {
-		return author$project$FeatherIcons$Icon(
-			{
-				attrs: author$project$FeatherIcons$defaultAttributes(name),
-				src: src
-			});
-	});
-var author$project$FeatherIcons$xmlns = function (s) {
-	return A2(
-		elm$virtual_dom$VirtualDom$property,
-		'xmlns',
-		elm$json$Json$Encode$string(s));
-};
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$path = elm$svg$Svg$trustedNode('path');
 var elm$svg$Svg$polyline = elm$svg$Svg$trustedNode('polyline');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
-var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
-var elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var author$project$FeatherIcons$refreshCw = A2(
 	author$project$FeatherIcons$makeBuilder,
 	'refresh-cw',
@@ -14880,9 +15083,6 @@ var author$project$Button$small = function (_n0) {
 			config,
 			{size: author$project$Button$Size$Small}));
 };
-var author$project$Button$Content$Text = function (a) {
-	return {$: 'Text', a: a};
-};
 var author$project$Button$text = F2(
 	function (text_, _n0) {
 		var config = _n0.a;
@@ -14890,13 +15090,13 @@ var author$project$Button$text = F2(
 			_Utils_update(
 				config,
 				{
-					content: author$project$Button$Content$Text(text_)
+					content: author$project$Content$Text(text_)
 				}));
 	});
 var author$project$Button$Size$Normal = {$: 'Normal'};
 var author$project$Button$initialConfig = {
 	color: A3(rtfeldman$elm_css$Css$rgb, 102, 102, 102),
-	content: author$project$Button$Content$Text(''),
+	content: author$project$Content$Text(''),
 	isDisabled: false,
 	isLoading: false,
 	isShown: true,
@@ -15641,83 +15841,6 @@ var author$project$Card$initialViewConfig = function (isShown) {
 };
 var author$project$Card$view = author$project$Card$Config(
 	author$project$Card$initialViewConfig(true));
-var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
-var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
-var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
-var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
-var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
-var author$project$FeatherIcons$calendar = A2(
-	author$project$FeatherIcons$makeBuilder,
-	'calendar',
-	_List_fromArray(
-		[
-			A2(
-			elm$svg$Svg$svg,
-			_List_fromArray(
-				[
-					author$project$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					elm$svg$Svg$Attributes$width('24'),
-					elm$svg$Svg$Attributes$height('24'),
-					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					elm$svg$Svg$Attributes$fill('none'),
-					elm$svg$Svg$Attributes$stroke('currentColor'),
-					elm$svg$Svg$Attributes$strokeWidth('2'),
-					elm$svg$Svg$Attributes$strokeLinecap('round'),
-					elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					elm$svg$Svg$Attributes$class('feather feather-calendar')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x('3'),
-							elm$svg$Svg$Attributes$y('4'),
-							elm$svg$Svg$Attributes$width('18'),
-							elm$svg$Svg$Attributes$height('18'),
-							elm$svg$Svg$Attributes$rx('2'),
-							elm$svg$Svg$Attributes$ry('2')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x1('16'),
-							elm$svg$Svg$Attributes$y1('2'),
-							elm$svg$Svg$Attributes$x2('16'),
-							elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x1('8'),
-							elm$svg$Svg$Attributes$y1('2'),
-							elm$svg$Svg$Attributes$x2('8'),
-							elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x1('3'),
-							elm$svg$Svg$Attributes$y1('10'),
-							elm$svg$Svg$Attributes$x2('21'),
-							elm$svg$Svg$Attributes$y2('10')
-						]),
-					_List_Nil)
-				]))
-		]));
-var elm$svg$Svg$polygon = elm$svg$Svg$trustedNode('polygon');
 var author$project$FeatherIcons$edit = A2(
 	author$project$FeatherIcons$makeBuilder,
 	'edit',
@@ -19547,6 +19670,7 @@ var author$project$Grid$row = function (cols) {
 		A2(elm$core$List$map, author$project$Grid$renderCol, cols));
 };
 var author$project$Grid$Size$Six = {$: 'Six'};
+var author$project$Grid$Size$Three = {$: 'Three'};
 var author$project$Grid$Size$Twelve = {$: 'Twelve'};
 var author$project$Html$Styled$Bdt$maybeView = F2(
 	function (maybe, f) {
@@ -19911,6 +20035,18 @@ var author$project$Msg$TextAreaMsg = function (a) {
 };
 var author$project$Msg$Toggle1 = {$: 'Toggle1'};
 var author$project$Msg$Toggle2 = {$: 'Toggle2'};
+var author$project$Msg$ToolTip1Msg = function (a) {
+	return {$: 'ToolTip1Msg', a: a};
+};
+var author$project$Msg$ToolTip2Msg = function (a) {
+	return {$: 'ToolTip2Msg', a: a};
+};
+var author$project$Msg$ToolTip3Msg = function (a) {
+	return {$: 'ToolTip3Msg', a: a};
+};
+var author$project$Msg$ToolTip4Msg = function (a) {
+	return {$: 'ToolTip4Msg', a: a};
+};
 var author$project$Msg$UpdateEmail = function (a) {
 	return {$: 'UpdateEmail', a: a};
 };
@@ -20554,6 +20690,268 @@ var author$project$Toggle$view = F2(
 		return author$project$Toggle$Toggle(
 			A2(author$project$Toggle$initialConfig, toggled, msg));
 	});
+var author$project$ToolTip$Blue = {$: 'Blue'};
+var author$project$ToolTip$View = F2(
+	function (a, b) {
+		return {$: 'View', a: a, b: b};
+	});
+var author$project$ToolTip$blue = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(
+		author$project$ToolTip$View,
+		state,
+		_Utils_update(
+			viewState,
+			{color: author$project$ToolTip$Blue}));
+};
+var author$project$ToolTip$Bottom = {$: 'Bottom'};
+var author$project$ToolTip$bottom = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(
+		author$project$ToolTip$View,
+		state,
+		_Utils_update(
+			viewState,
+			{placement: author$project$ToolTip$Bottom}));
+};
+var author$project$ToolTip$Green = {$: 'Green'};
+var author$project$ToolTip$green = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(
+		author$project$ToolTip$View,
+		state,
+		_Utils_update(
+			viewState,
+			{color: author$project$ToolTip$Green}));
+};
+var author$project$ToolTip$Left = {$: 'Left'};
+var author$project$ToolTip$left = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(
+		author$project$ToolTip$View,
+		state,
+		_Utils_update(
+			viewState,
+			{placement: author$project$ToolTip$Left}));
+};
+var author$project$ToolTip$Red = {$: 'Red'};
+var author$project$ToolTip$red = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(
+		author$project$ToolTip$View,
+		state,
+		_Utils_update(
+			viewState,
+			{color: author$project$ToolTip$Red}));
+};
+var author$project$ToolTip$MouseEnter = {$: 'MouseEnter'};
+var author$project$ToolTip$MouseLeave = {$: 'MouseLeave'};
+var rtfeldman$elm_css$Css$bold = {fontWeight: rtfeldman$elm_css$Css$Structure$Compatible, value: 'bold'};
+var rtfeldman$elm_css$Css$default = {cursor: rtfeldman$elm_css$Css$Structure$Compatible, value: 'default'};
+var author$project$ToolTip$contentWrapper = function (colorConfig) {
+	return rtfeldman$elm_css$Html$Styled$Attributes$css(
+		_List_fromArray(
+			[
+				rtfeldman$elm_css$Css$color(
+				function () {
+					switch (colorConfig.$) {
+						case 'Green':
+							return rtfeldman$elm_css$Css$hex('3FC380');
+						case 'Blue':
+							return rtfeldman$elm_css$Css$hex('59ABE3');
+						case 'Red':
+							return rtfeldman$elm_css$Css$hex('dc3545');
+						default:
+							return rtfeldman$elm_css$Css$hex('000000');
+					}
+				}()),
+				rtfeldman$elm_css$Css$fontSize(
+				rtfeldman$elm_css$Css$rem(0.75)),
+				A2(
+				rtfeldman$elm_css$Css$padding2,
+				rtfeldman$elm_css$Css$rem(0.2),
+				rtfeldman$elm_css$Css$rem(0.5)),
+				rtfeldman$elm_css$Css$borderRadius(
+				rtfeldman$elm_css$Css$px(3)),
+				rtfeldman$elm_css$Css$fontWeight(rtfeldman$elm_css$Css$bold),
+				rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$default),
+				rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineFlex),
+				rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$relative)
+			]));
+};
+var author$project$ToolTip$renderContent = F2(
+	function (colorConfig, content) {
+		if (content.$ === 'Icon') {
+			var icon = content.a;
+			return rtfeldman$elm_css$Html$Styled$fromUnstyled(
+				A2(author$project$FeatherIcons$toHtml, _List_Nil, icon));
+		} else {
+			var string = content.a;
+			return rtfeldman$elm_css$Html$Styled$text(string);
+		}
+	});
+var rtfeldman$elm_css$Css$translateX = function (_n0) {
+	var value = _n0.value;
+	return {
+		transform: rtfeldman$elm_css$Css$Structure$Compatible,
+		value: A2(
+			rtfeldman$elm_css$Css$cssFunction,
+			'translateX',
+			_List_fromArray(
+				[value]))
+	};
+};
+var author$project$ToolTip$placementPosition = function (placement) {
+	switch (placement.$) {
+		case 'Right':
+			return _List_fromArray(
+				[
+					rtfeldman$elm_css$Css$top(
+					rtfeldman$elm_css$Css$rem(-0.25)),
+					rtfeldman$elm_css$Css$left(
+					rtfeldman$elm_css$Css$pct(100))
+				]);
+		case 'Top':
+			return _List_fromArray(
+				[
+					rtfeldman$elm_css$Css$top(
+					rtfeldman$elm_css$Css$pct(-100)),
+					rtfeldman$elm_css$Css$left(
+					rtfeldman$elm_css$Css$rem(0))
+				]);
+		case 'Bottom':
+			return _List_fromArray(
+				[
+					rtfeldman$elm_css$Css$top(
+					rtfeldman$elm_css$Css$pct(100)),
+					rtfeldman$elm_css$Css$left(
+					rtfeldman$elm_css$Css$rem(0))
+				]);
+		default:
+			return _List_fromArray(
+				[
+					rtfeldman$elm_css$Css$top(
+					rtfeldman$elm_css$Css$rem(-0.25)),
+					rtfeldman$elm_css$Css$left(
+					rtfeldman$elm_css$Css$rem(-0.25)),
+					rtfeldman$elm_css$Css$transform(
+					rtfeldman$elm_css$Css$translateX(
+						rtfeldman$elm_css$Css$pct(-100)))
+				]);
+	}
+};
+var rtfeldman$elm_css$Css$prop5 = F6(
+	function (key, argA, argB, argC, argD, argE) {
+		return A2(
+			rtfeldman$elm_css$Css$property,
+			key,
+			A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					[argA.value, argB.value, argC.value, argD.value, argE.value])));
+	});
+var rtfeldman$elm_css$Css$boxShadow5 = rtfeldman$elm_css$Css$prop5('box-shadow');
+var author$project$ToolTip$tooltip = function (placement) {
+	return rtfeldman$elm_css$Html$Styled$Attributes$css(
+		A2(
+			elm$core$List$append,
+			_List_fromArray(
+				[
+					rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$absolute),
+					A5(
+					rtfeldman$elm_css$Css$boxShadow5,
+					rtfeldman$elm_css$Css$px(0),
+					rtfeldman$elm_css$Css$px(2),
+					rtfeldman$elm_css$Css$px(8),
+					rtfeldman$elm_css$Css$px(0),
+					A3(rtfeldman$elm_css$Css$rgb, 110, 110, 110)),
+					A2(
+					rtfeldman$elm_css$Css$padding2,
+					rtfeldman$elm_css$Css$rem(0.3),
+					rtfeldman$elm_css$Css$rem(0.6)),
+					rtfeldman$elm_css$Css$borderRadius(
+					rtfeldman$elm_css$Css$px(2)),
+					rtfeldman$elm_css$Css$backgroundColor(
+					rtfeldman$elm_css$Css$hex('fff')),
+					rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$default),
+					rtfeldman$elm_css$Css$fontFamilies(
+					_List_fromArray(
+						['-apple-system', 'system-ui', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'])),
+					rtfeldman$elm_css$Css$fontWeight(
+					rtfeldman$elm_css$Css$int(100)),
+					rtfeldman$elm_css$Css$fontSize(
+					rtfeldman$elm_css$Css$rem(0.75)),
+					rtfeldman$elm_css$Css$color(
+					A3(rtfeldman$elm_css$Css$rgb, 90, 90, 90)),
+					rtfeldman$elm_css$Css$whiteSpace(rtfeldman$elm_css$Css$noWrap),
+					rtfeldman$elm_css$Css$zIndex(
+					rtfeldman$elm_css$Css$int(10))
+				]),
+			author$project$ToolTip$placementPosition(placement)));
+};
+var rtfeldman$elm_css$Html$Styled$Events$onMouseEnter = function (msg) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$on,
+		'mouseenter',
+		elm$json$Json$Decode$succeed(msg));
+};
+var rtfeldman$elm_css$Html$Styled$Events$onMouseLeave = function (msg) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$on,
+		'mouseleave',
+		elm$json$Json$Decode$succeed(msg));
+};
+var author$project$ToolTip$render = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(
+		rtfeldman$elm_css$Html$Styled$div,
+		_List_fromArray(
+			[
+				rtfeldman$elm_css$Html$Styled$Events$onMouseEnter(author$project$ToolTip$MouseEnter),
+				rtfeldman$elm_css$Html$Styled$Events$onMouseLeave(author$project$ToolTip$MouseLeave),
+				author$project$ToolTip$contentWrapper(viewState.color)
+			]),
+		_List_fromArray(
+			[
+				A2(author$project$ToolTip$renderContent, viewState.color, state.content),
+				A3(
+				author$project$Html$Styled$Bdt$divIf,
+				state.isOpen,
+				_List_fromArray(
+					[
+						author$project$ToolTip$tooltip(viewState.placement)
+					]),
+				_List_fromArray(
+					[
+						rtfeldman$elm_css$Html$Styled$text(state.tip)
+					]))
+			]));
+};
+var author$project$ToolTip$Top = {$: 'Top'};
+var author$project$ToolTip$top = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(
+		author$project$ToolTip$View,
+		state,
+		_Utils_update(
+			viewState,
+			{placement: author$project$ToolTip$Top}));
+};
+var author$project$ToolTip$Default = {$: 'Default'};
+var author$project$ToolTip$Right = {$: 'Right'};
+var author$project$ToolTip$initialViewState = {color: author$project$ToolTip$Default, placement: author$project$ToolTip$Right};
+var author$project$ToolTip$view = function (_n0) {
+	var state = _n0.a;
+	return A2(author$project$ToolTip$View, state, author$project$ToolTip$initialViewState);
+};
 var rtfeldman$elm_css$Html$Styled$p = rtfeldman$elm_css$Html$Styled$node('p');
 var author$project$View$maybeBlockView = function (musicGenre) {
 	return _List_fromArray(
@@ -21356,6 +21754,73 @@ var author$project$View$view = function (model) {
 									[
 										author$project$Card$render(
 										A2(
+											author$project$Card$body,
+											_List_fromArray(
+												[
+													A2(
+													author$project$Card$block,
+													author$project$Grid$Size$Three,
+													_List_fromArray(
+														[
+															A2(
+															rtfeldman$elm_css$Html$Styled$map,
+															author$project$Msg$ToolTip1Msg,
+															author$project$ToolTip$render(
+																author$project$ToolTip$view(model.toolTip1)))
+														])),
+													A2(
+													author$project$Card$block,
+													author$project$Grid$Size$Three,
+													_List_fromArray(
+														[
+															A2(
+															rtfeldman$elm_css$Html$Styled$map,
+															author$project$Msg$ToolTip2Msg,
+															author$project$ToolTip$render(
+																author$project$ToolTip$green(
+																	author$project$ToolTip$bottom(
+																		author$project$ToolTip$view(model.toolTip2)))))
+														])),
+													A2(
+													author$project$Card$block,
+													author$project$Grid$Size$Three,
+													_List_fromArray(
+														[
+															A2(
+															rtfeldman$elm_css$Html$Styled$map,
+															author$project$Msg$ToolTip3Msg,
+															author$project$ToolTip$render(
+																author$project$ToolTip$blue(
+																	author$project$ToolTip$left(
+																		author$project$ToolTip$view(model.toolTip3)))))
+														])),
+													A2(
+													author$project$Card$block,
+													author$project$Grid$Size$Three,
+													_List_fromArray(
+														[
+															A2(
+															rtfeldman$elm_css$Html$Styled$map,
+															author$project$Msg$ToolTip4Msg,
+															author$project$ToolTip$render(
+																author$project$ToolTip$red(
+																	author$project$ToolTip$top(
+																		author$project$ToolTip$view(model.toolTip4)))))
+														]))
+												]),
+											A3(author$project$Card$header, 'Example ToolTips', _List_Nil, author$project$Card$view)))
+									])),
+								A3(
+								author$project$Grid$colSizes,
+								author$project$Grid$Size$Twelve,
+								_List_fromArray(
+									[
+										_Utils_Tuple2(author$project$Grid$Size$Lg, author$project$Grid$Size$Six)
+									]),
+								_List_fromArray(
+									[
+										author$project$Card$render(
+										A2(
 											author$project$Card$footer,
 											_List_fromArray(
 												[
@@ -21516,4 +21981,4 @@ var author$project$Main$main = elm$browser$Browser$document(
 		}
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Countries.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"ToastersMsg":["Toasters.Msg"],"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"OpenSmModal":[],"CloseSmModal":[],"OpenLgModal":[],"CloseLgModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"],"Tab":["String.String"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"String.String":{"args":[],"tags":{"String":[]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Countries.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Toasters.Msg":{"args":[],"type":"Toasters.Internal.Msg"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"ToastersMsg":["Toasters.Msg"],"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Countries.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Countries.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"OpenSmModal":[],"CloseSmModal":[],"OpenLgModal":[],"CloseLgModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg MusicGenre.MusicGenre"]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"],"Tab":["String.String"]}},"MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"String.String":{"args":[],"tags":{"String":[]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

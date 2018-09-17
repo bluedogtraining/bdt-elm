@@ -28,6 +28,7 @@ import Time
 import Time.Date as Date
 import Toasters
 import Toggle
+import ToolTip
 
 
 view : Model -> Html Msg
@@ -363,6 +364,40 @@ view model =
                                 ]
                             ]
                         |> Card.footer [ Button.view |> Button.text "Footer Button" ]
+                        |> Card.render
+                    ]
+                , Grid.colSizes Twelve
+                    [ ( Lg, Six ) ]
+                    [ Card.view
+                        |> Card.header "Example ToolTips" []
+                        |> Card.body
+                            [ Card.block Three
+                                [ ToolTip.view model.toolTip1
+                                    |> ToolTip.render
+                                    |> Html.map ToolTip1Msg
+                                ]
+                            , Card.block Three
+                                [ ToolTip.view model.toolTip2
+                                    |> ToolTip.bottom
+                                    |> ToolTip.green
+                                    |> ToolTip.render
+                                    |> Html.map ToolTip2Msg
+                                ]
+                            , Card.block Three
+                                [ ToolTip.view model.toolTip3
+                                    |> ToolTip.left
+                                    |> ToolTip.blue
+                                    |> ToolTip.render
+                                    |> Html.map ToolTip3Msg
+                                ]
+                            , Card.block Three
+                                [ ToolTip.view model.toolTip4
+                                    |> ToolTip.top
+                                    |> ToolTip.red
+                                    |> ToolTip.render
+                                    |> Html.map ToolTip4Msg
+                                ]
+                            ]
                         |> Card.render
                     ]
                 , Grid.colSizes Twelve

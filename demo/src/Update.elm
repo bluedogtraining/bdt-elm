@@ -13,6 +13,7 @@ import Form.TextArea as TextArea
 import Model exposing (Model)
 import Msg exposing (Msg(..))
 import Toasters
+import ToolTip
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -89,6 +90,18 @@ update msg model =
 
         DisabledToggle ->
             ( { model | toggle3 = not model.toggle3 }, Cmd.none )
+
+        ToolTip1Msg toolTipMsg ->
+            ( { model | toolTip1 = ToolTip.update toolTipMsg model.toolTip1 }, Cmd.none )
+
+        ToolTip2Msg toolTipMsg ->
+            ( { model | toolTip2 = ToolTip.update toolTipMsg model.toolTip2 }, Cmd.none )
+
+        ToolTip3Msg toolTipMsg ->
+            ( { model | toolTip3 = ToolTip.update toolTipMsg model.toolTip3 }, Cmd.none )
+
+        ToolTip4Msg toolTipMsg ->
+            ( { model | toolTip4 = ToolTip.update toolTipMsg model.toolTip4 }, Cmd.none )
 
         --        DropZone dropZoneMsg ->
         --            ({ model | dropZone = DropZone.update dropZoneMsg model.dropZone }, Cmd.none)

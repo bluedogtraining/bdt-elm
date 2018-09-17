@@ -97,7 +97,7 @@ type alias Msg option =
                 { model | mySelect = newSelect } ! [ cmd ]
 
 -}
-update : Internal.Msg option -> Model option -> ( Model option, Cmd (Internal.Msg option) )
+update : Msg option -> Model option -> ( Model option, Cmd (Msg option) )
 update msg (Model state) =
     Tuple.mapFirst Model (Internal.update msg state)
 
@@ -132,7 +132,7 @@ view toLabel (Model state) =
             ]
 
 -}
-render : View option -> Html (Internal.Msg option)
+render : View option -> Html (Msg option)
 render (View state viewState) =
     Internal.render state viewState
 

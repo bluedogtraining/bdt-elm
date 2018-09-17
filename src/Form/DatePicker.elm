@@ -93,7 +93,7 @@ type alias Msg =
                 { model | myDatePicker = newDatePicker } ! [ cmd ]
 
 -}
-update : Internal.Msg -> Model -> ( Model, Cmd Internal.Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg (Model state) =
     Tuple.mapFirst Model <| Internal.update msg state
 
@@ -125,7 +125,7 @@ view (Model state) =
             ]
 
 -}
-render : View -> Html Internal.Msg
+render : View -> Html Msg
 render (View state viewState) =
     Internal.render state viewState
 

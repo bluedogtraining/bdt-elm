@@ -86,7 +86,7 @@ type alias Msg =
                 { model | myInput = Input.update inputMsg mode.myInput } ! []
 
 -}
-update : Internal.Msg -> Model -> Model
+update : Msg -> Model -> Model
 update msg (Model state) =
     Model (Internal.update msg state)
 
@@ -118,7 +118,7 @@ view (Model state) =
             ]
 
 -}
-render : View -> Html Internal.Msg
+render : View -> Html Msg
 render (View state viewState) =
     Internal.render state viewState
 

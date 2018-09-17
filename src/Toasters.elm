@@ -29,7 +29,7 @@ module Toasters exposing
 
 -}
 
-import Html.Styled exposing (Html)
+import Html.Styled as Html exposing (Html)
 import Toasters.Color exposing (Color(..))
 import Toasters.Internal as Internal
 
@@ -64,8 +64,8 @@ init =
         = ToastersMsg Toasters.Msg
 
 -}
-type alias Msg =
-    Internal.Msg
+type Msg =
+    InternalMsg Internal.Msg
 
 
 {-| Use in your update function.
@@ -78,8 +78,8 @@ type alias Msg =
 
 -}
 update : Msg -> Model -> Model
-update toasterMsg (Model toasters) =
-    Model <| Internal.update toasterMsg toasters
+update (InternalMsg internalMsg) (Model toasters) =
+    Model <| Internal.update internalMsg toasters
 
 
 {-| Merge multiple toaster models into one.
@@ -104,7 +104,7 @@ merge (Model new) (Model existing) =
 -}
 subscription : Model -> Sub Msg
 subscription (Model toasters) =
-    Internal.subscription toasters
+    Internal.subscription toasters |> Sub.map InternalMsg
 
 
 {-| Add to your subscription function.
@@ -157,4 +157,4 @@ addRed message (Model toasters) =
 -}
 view : Model -> Html Msg
 view (Model toasters) =
-    Internal.view toasters
+    Internal.view toasters |> Html.map InternalMsg

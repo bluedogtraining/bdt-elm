@@ -2,7 +2,9 @@ module Model exposing (Model, initialModel)
 
 --import Form.DropZone as DropZone
 
+import Content
 import Countries exposing (Country)
+import FeatherIcons
 import Form.DatePicker as DatePicker
 import Form.FloatInput as FloatInput
 import Form.Input as Input
@@ -13,6 +15,7 @@ import Form.Select as Select
 import Form.TextArea as TextArea
 import MusicGenre exposing (MusicGenre)
 import Toasters
+import ToolTip
 
 
 type alias Model =
@@ -32,6 +35,10 @@ type alias Model =
     , toggle3 : Bool
 
     --    , dropZone : DropZone.Model
+    , toolTip1 : ToolTip.Model
+    , toolTip2 : ToolTip.Model
+    , toolTip3 : ToolTip.Model
+    , toolTip4 : ToolTip.Model
     , name : Input.Model
     , startDate : DatePicker.Model
     , email : Input.Model
@@ -61,6 +68,10 @@ initialModel =
     , toggle3 = False
 
     --    , dropZone = DropZone.init
+    , toolTip1 = ToolTip.init (Content.Text "ToolTip1") "This is the first ToolTip!"
+    , toolTip2 = ToolTip.init (Content.Icon FeatherIcons.compass) "This is the second ToolTip!"
+    , toolTip3 = ToolTip.init (Content.Text "help") "This is the third ToolTip!"
+    , toolTip4 = ToolTip.init (Content.Icon FeatherIcons.calendar) "This is the fourth ToolTip!"
     , name = Input.init
     , startDate = DatePicker.init
     , email = Input.init

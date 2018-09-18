@@ -13,6 +13,7 @@ import Form.Select as Select
 import Form.TextArea as TextArea
 import MusicGenre exposing (MusicGenre)
 import Toasters
+import ToolTip
 
 
 type Msg
@@ -29,6 +30,10 @@ type Msg
     | DatePicker2Msg DatePicker.Msg
     | DatePicker3Msg DatePicker.Msg
     | TextAreaMsg TextArea.Msg
+    | ToolTip1Msg ToolTip.Msg
+    | ToolTip2Msg ToolTip.Msg
+    | ToolTip3Msg ToolTip.Msg
+    | ToolTip4Msg ToolTip.Msg
     | UpdateName Input.Msg
     | UpdateStartDate DatePicker.Msg
     | UpdateEmail Input.Msg

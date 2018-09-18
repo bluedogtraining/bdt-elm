@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-elm-live ./src/Main.elm --output=../docs/build/app.js --debug
+chokidar "./src/**/*.elm" "../src/**/*.elm" -c "elm make ./src/Main.elm --output ../docs/build/app.js --debug" --initial

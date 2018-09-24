@@ -166,15 +166,28 @@ red (Button config) =
 -}
 render : Button msg -> Html msg
 render (Button config) =
-    a
-        [ Css.button config.size config.content config.color config.isDisabled config.isLoading
-        , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
-        , Attributes.href config.url |> Html.attributeIf (not <| String.isEmpty config.url)
-        , target "_blank" |> Html.attributeIf (not <| String.isEmpty config.url)
-        ]
-        [ Css.spinKeyFrames
-        , content config.content config.size config.color config.isLoading
-        ]
+
+    case String.isEmpty config.url of
+
+        True ->
+            button
+                [ Css.button config.size config.content config.color config.isDisabled config.isLoading
+                , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
+                ]
+                [ Css.spinKeyFrames
+                , content config.content config.size config.color config.isLoading
+                ]
+
+        False ->
+            a
+                [ Css.button config.size config.content config.color config.isDisabled config.isLoading
+                , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
+                , Attributes.href config.url |> Html.attributeIf (not <| String.isEmpty config.url)
+                , target "_blank" |> Html.attributeIf (not <| String.isEmpty config.url)
+                ]
+                [ Css.spinKeyFrames
+                , content config.content config.size config.color config.isLoading
+                ]
 
 
 content : Content -> Size -> Color -> Bool -> Html msg

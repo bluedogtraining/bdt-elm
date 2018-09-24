@@ -15031,6 +15031,7 @@ var author$project$Html$Styled$Bdt$maybeAttribute = F2(
 		}
 	});
 var rtfeldman$elm_css$Html$Styled$a = rtfeldman$elm_css$Html$Styled$node('a');
+var rtfeldman$elm_css$Html$Styled$button = rtfeldman$elm_css$Html$Styled$node('button');
 var rtfeldman$elm_css$Html$Styled$Attributes$href = function (url) {
 	return A2(rtfeldman$elm_css$Html$Styled$Attributes$stringProperty, 'href', url);
 };
@@ -15058,29 +15059,48 @@ var rtfeldman$elm_css$Html$Styled$Events$onClick = function (msg) {
 };
 var author$project$Button$render = function (_n0) {
 	var config = _n0.a;
-	return A2(
-		rtfeldman$elm_css$Html$Styled$a,
-		_List_fromArray(
-			[
-				A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
-				A2(
-				author$project$Html$Styled$Bdt$attributeIf,
-				!config.isDisabled,
-				A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
-				A2(
-				author$project$Html$Styled$Bdt$attributeIf,
-				!elm$core$String$isEmpty(config.url),
-				rtfeldman$elm_css$Html$Styled$Attributes$href(config.url)),
-				A2(
-				author$project$Html$Styled$Bdt$attributeIf,
-				!elm$core$String$isEmpty(config.url),
-				rtfeldman$elm_css$Html$Styled$Attributes$target('_blank'))
-			]),
-		_List_fromArray(
-			[
-				author$project$Button$Css$spinKeyFrames,
-				A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
-			]));
+	var _n1 = elm$core$String$isEmpty(config.url);
+	if (_n1) {
+		return A2(
+			rtfeldman$elm_css$Html$Styled$button,
+			_List_fromArray(
+				[
+					A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
+					A2(
+					author$project$Html$Styled$Bdt$attributeIf,
+					!config.isDisabled,
+					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick))
+				]),
+			_List_fromArray(
+				[
+					author$project$Button$Css$spinKeyFrames,
+					A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
+				]));
+	} else {
+		return A2(
+			rtfeldman$elm_css$Html$Styled$a,
+			_List_fromArray(
+				[
+					A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
+					A2(
+					author$project$Html$Styled$Bdt$attributeIf,
+					!config.isDisabled,
+					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
+					A2(
+					author$project$Html$Styled$Bdt$attributeIf,
+					!elm$core$String$isEmpty(config.url),
+					rtfeldman$elm_css$Html$Styled$Attributes$href(config.url)),
+					A2(
+					author$project$Html$Styled$Bdt$attributeIf,
+					!elm$core$String$isEmpty(config.url),
+					rtfeldman$elm_css$Html$Styled$Attributes$target('_blank'))
+				]),
+			_List_fromArray(
+				[
+					author$project$Button$Css$spinKeyFrames,
+					A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
+				]));
+	}
 };
 var author$project$Button$Size$Small = {$: 'Small'};
 var author$project$Button$small = function (_n0) {

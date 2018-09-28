@@ -114,10 +114,11 @@ loadingText =
 -- Hacky stuff below, @todo: fix it up once this is ready: https://github.com/rtfeldman/elm-css/issues/431
 
 
-loading : Attribute msg
-loading =
+loading : Float -> Attribute msg
+loading size =
     css
         [ property "animation" "spin 1.5s linear infinite"
+        , height (px size)
         ]
 
 

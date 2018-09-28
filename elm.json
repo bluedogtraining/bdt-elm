@@ -28,8 +28,7 @@
         "List.Nonempty.Bdt",
         "Set.Any.Bdt",
         "Time.Bdt",
-        "StringFormatting",
-        "FeatherIcons"
+        "StringFormatting"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
@@ -45,6 +44,7 @@
         "elm-community/json-extra": "4.0.0 <= v < 5.0.0",
         "elm-community/list-extra": "8.0.0 <= v < 9.0.0",
         "elm-community/string-extra": "3.0.0 <= v < 4.0.0",
+        "feathericons/elm-feather": "1.0.0 <= v < 2.0.0",
         "isaacseymour/deprecated-time": "1.0.0 <= v < 2.0.0",
         "mgold/elm-nonempty-list": "4.0.0 <= v < 5.0.0",
         "rtfeldman/elm-css": "15.1.0 <= v < 16.0.0",

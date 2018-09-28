@@ -1,4 +1,4 @@
-module Countries exposing (Country, countryDecoder)
+module Records.Country exposing (Country, countryDecoder)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Decode

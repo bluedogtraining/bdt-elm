@@ -1,4 +1,4 @@
-module MusicGenre exposing (MusicGenre(..), asNonempty, toLabel)
+module Records.MusicGenre exposing (MusicGenre(..), asNonempty, toLabel)
 
 import List.Nonempty exposing (Nonempty(..))
 

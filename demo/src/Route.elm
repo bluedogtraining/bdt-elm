@@ -6,7 +6,7 @@ import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes as Attributes
 import Trainer.Route as Trainer
 import Url exposing (Url)
-import Url.Parser as Parser exposing (Parser, s)
+import Url.Parser as Parser exposing (Parser, s, (</>))
 
 
 type Route
@@ -19,9 +19,9 @@ type Route
 routeParser : Parser (Route -> subRoute) subRoute
 routeParser =
     Parser.oneOf
-        [ Parser.map Index (s "")
-        , Parser.map Admin Admin.routeParser
-        , Parser.map Trainer Trainer.routeParser
+        [ Parser.map Index Parser.top
+        , Parser.map Admin (s "admin" </> Admin.routeParser)
+        , Parser.map Trainer (s "trainer" </> Trainer.routeParser)
         ]
 
 
@@ -35,10 +35,10 @@ toString route =
             "/"
 
         Admin adminRoute ->
-            Admin.toString adminRoute
+            "/admin" ++ Admin.toString adminRoute
 
         Trainer trainerRoute ->
-            Trainer.toString trainerRoute
+            "/trainer" ++ Trainer.toString trainerRoute
 
 
 fromUrl : Url -> Maybe Route

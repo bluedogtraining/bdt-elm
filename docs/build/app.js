@@ -12393,8 +12393,8 @@ var author$project$Msg$IndexMsg = function (a) {
 	return {$: 'IndexMsg', a: a};
 };
 var author$project$Route$NotFound = {$: 'NotFound'};
-var author$project$Admin$Route$Settings = {$: 'Settings'};
-var author$project$Admin$Route$TrainingPlan = {$: 'TrainingPlan'};
+var author$project$Admin$Route$Courses = {$: 'Courses'};
+var author$project$Admin$Route$Units = {$: 'Units'};
 var elm$url$Url$Parser$Parser = function (a) {
 	return {$: 'Parser', a: a};
 };
@@ -12477,12 +12477,12 @@ var author$project$Admin$Route$routeParser = elm$url$Url$Parser$oneOf(
 		[
 			A2(
 			elm$url$Url$Parser$map,
-			author$project$Admin$Route$TrainingPlan,
-			elm$url$Url$Parser$s('/training-plan')),
+			author$project$Admin$Route$Courses,
+			elm$url$Url$Parser$s('courses')),
 			A2(
 			elm$url$Url$Parser$map,
-			author$project$Admin$Route$Settings,
-			elm$url$Url$Parser$s('/settings'))
+			author$project$Admin$Route$Units,
+			elm$url$Url$Parser$s('units'))
 		]));
 var author$project$Route$Admin = function (a) {
 	return {$: 'Admin', a: a};
@@ -12498,21 +12498,47 @@ var author$project$Trainer$Route$routeParser = elm$url$Url$Parser$oneOf(
 			A2(
 			elm$url$Url$Parser$map,
 			author$project$Trainer$Route$TrainingPlan,
-			elm$url$Url$Parser$s('/training-plan')),
+			elm$url$Url$Parser$s('training-plan')),
 			A2(
 			elm$url$Url$Parser$map,
 			author$project$Trainer$Route$Settings,
-			elm$url$Url$Parser$s('/settings'))
+			elm$url$Url$Parser$s('settings'))
 		]));
+var elm$url$Url$Parser$slash = F2(
+	function (_n0, _n1) {
+		var parseBefore = _n0.a;
+		var parseAfter = _n1.a;
+		return elm$url$Url$Parser$Parser(
+			function (state) {
+				return A2(
+					elm$core$List$concatMap,
+					parseAfter,
+					parseBefore(state));
+			});
+	});
+var elm$url$Url$Parser$top = elm$url$Url$Parser$Parser(
+	function (state) {
+		return _List_fromArray(
+			[state]);
+	});
 var author$project$Route$routeParser = elm$url$Url$Parser$oneOf(
 	_List_fromArray(
 		[
+			A2(elm$url$Url$Parser$map, author$project$Route$Index, elm$url$Url$Parser$top),
 			A2(
 			elm$url$Url$Parser$map,
-			author$project$Route$Index,
-			elm$url$Url$Parser$s('')),
-			A2(elm$url$Url$Parser$map, author$project$Route$Admin, author$project$Admin$Route$routeParser),
-			A2(elm$url$Url$Parser$map, author$project$Route$Trainer, author$project$Trainer$Route$routeParser)
+			author$project$Route$Admin,
+			A2(
+				elm$url$Url$Parser$slash,
+				elm$url$Url$Parser$s('admin'),
+				author$project$Admin$Route$routeParser)),
+			A2(
+			elm$url$Url$Parser$map,
+			author$project$Route$Trainer,
+			A2(
+				elm$url$Url$Parser$slash,
+				elm$url$Url$Parser$s('trainer'),
+				author$project$Trainer$Route$routeParser))
 		]));
 var elm$url$Url$Parser$getFirstMatch = function (states) {
 	getFirstMatch:
@@ -15783,6 +15809,56 @@ var author$project$Toasters$view = function (_n0) {
 		author$project$Toasters$InternalMsg,
 		author$project$Toasters$Internal$view(toasters));
 };
+var author$project$Admin$Route$toString = function (route) {
+	if (route.$ === 'Courses') {
+		return '/courses';
+	} else {
+		return '/units';
+	}
+};
+var author$project$Trainer$Route$toString = function (route) {
+	if (route.$ === 'TrainingPlan') {
+		return '/training-plan';
+	} else {
+		return '/settings';
+	}
+};
+var author$project$Route$toString = function (route) {
+	switch (route.$) {
+		case 'NotFound':
+			return '/404';
+		case 'Index':
+			return '/';
+		case 'Admin':
+			var adminRoute = route.a;
+			return '/admin' + author$project$Admin$Route$toString(adminRoute);
+		default:
+			var trainerRoute = route.a;
+			return '/trainer' + author$project$Trainer$Route$toString(trainerRoute);
+	}
+};
+var rtfeldman$elm_css$VirtualDom$Styled$property = F2(
+	function (key, value) {
+		return A3(
+			rtfeldman$elm_css$VirtualDom$Styled$Attribute,
+			A2(elm$virtual_dom$VirtualDom$property, key, value),
+			_List_Nil,
+			'');
+	});
+var rtfeldman$elm_css$Html$Styled$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			rtfeldman$elm_css$VirtualDom$Styled$property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var rtfeldman$elm_css$Html$Styled$Attributes$href = function (url) {
+	return A2(rtfeldman$elm_css$Html$Styled$Attributes$stringProperty, 'href', url);
+};
+var author$project$Route$href = function (targetRoute) {
+	return rtfeldman$elm_css$Html$Styled$Attributes$href(
+		author$project$Route$toString(targetRoute));
+};
 var author$project$View$adminMenu = function (isOpen) {
 	if (!isOpen) {
 		return rtfeldman$elm_css$Html$Styled$text('');
@@ -15796,6 +15872,7 @@ var author$project$View$adminMenu = function (isOpen) {
 				]));
 	}
 };
+var rtfeldman$elm_css$Html$Styled$a = rtfeldman$elm_css$Html$Styled$node('a');
 var author$project$View$menu = function (isAdminMenuOpen) {
 	return A2(
 		rtfeldman$elm_css$Html$Styled$div,
@@ -15803,22 +15880,33 @@ var author$project$View$menu = function (isAdminMenuOpen) {
 		_List_fromArray(
 			[
 				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_Nil,
+				rtfeldman$elm_css$Html$Styled$a,
+				_List_fromArray(
+					[
+						author$project$Route$href(author$project$Route$Index)
+					]),
 				_List_fromArray(
 					[
 						rtfeldman$elm_css$Html$Styled$text('Index')
 					])),
 				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_Nil,
+				rtfeldman$elm_css$Html$Styled$a,
+				_List_fromArray(
+					[
+						author$project$Route$href(
+						author$project$Route$Admin(author$project$Admin$Route$Courses))
+					]),
 				_List_fromArray(
 					[
 						rtfeldman$elm_css$Html$Styled$text('Admin')
 					])),
 				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_Nil,
+				rtfeldman$elm_css$Html$Styled$a,
+				_List_fromArray(
+					[
+						author$project$Route$href(
+						author$project$Route$Trainer(author$project$Trainer$Route$TrainingPlan))
+					]),
 				_List_fromArray(
 					[
 						rtfeldman$elm_css$Html$Styled$text('Trainer')
@@ -15926,11 +16014,15 @@ var author$project$Button$iconSize = function (size) {
 		return 18;
 	}
 };
-var author$project$Button$Css$loading = rtfeldman$elm_css$Html$Styled$Attributes$css(
-	_List_fromArray(
-		[
-			A2(rtfeldman$elm_css$Css$property, 'animation', 'spin 1.5s linear infinite')
-		]));
+var author$project$Button$Css$loading = function (size) {
+	return rtfeldman$elm_css$Html$Styled$Attributes$css(
+		_List_fromArray(
+			[
+				A2(rtfeldman$elm_css$Css$property, 'animation', 'spin 1.5s linear infinite'),
+				rtfeldman$elm_css$Css$height(
+				rtfeldman$elm_css$Css$px(size))
+			]));
+};
 var rtfeldman$elm_css$Css$marginLeft = rtfeldman$elm_css$Css$prop1('margin-left');
 var rtfeldman$elm_css$Css$RemUnits = {$: 'RemUnits'};
 var rtfeldman$elm_css$Css$rem = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, rtfeldman$elm_css$Css$RemUnits, 'rem');
@@ -16150,7 +16242,10 @@ var author$project$Button$content = F4(
 							A2(
 							rtfeldman$elm_css$Html$Styled$div,
 							_List_fromArray(
-								[author$project$Button$Css$loading]),
+								[
+									author$project$Button$Css$loading(
+									author$project$Button$iconSize(size))
+								]),
 							_List_fromArray(
 								[
 									rtfeldman$elm_css$Html$Styled$fromUnstyled(
@@ -16187,7 +16282,10 @@ var author$project$Button$content = F4(
 				return A2(
 					rtfeldman$elm_css$Html$Styled$div,
 					_List_fromArray(
-						[author$project$Button$Css$loading]),
+						[
+							author$project$Button$Css$loading(
+							author$project$Button$iconSize(size))
+						]),
 					_List_fromArray(
 						[
 							rtfeldman$elm_css$Html$Styled$fromUnstyled(
@@ -16383,21 +16481,6 @@ var author$project$Button$Css$spinKeyFrames = rtfeldman$elm_css$Css$Global$globa
 					A2(rtfeldman$elm_css$Css$property, '0% { transform', 'rotate(0deg); } 100% { transform: rotate(360deg); }')
 				]))
 		]));
-var rtfeldman$elm_css$VirtualDom$Styled$property = F2(
-	function (key, value) {
-		return A3(
-			rtfeldman$elm_css$VirtualDom$Styled$Attribute,
-			A2(elm$virtual_dom$VirtualDom$property, key, value),
-			_List_Nil,
-			'');
-	});
-var rtfeldman$elm_css$Html$Styled$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			rtfeldman$elm_css$VirtualDom$Styled$property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
 var rtfeldman$elm_css$Html$Styled$Attributes$class = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('className');
 var author$project$Html$Styled$Bdt$attributeIf = F2(
 	function (bool, attribute) {
@@ -16412,11 +16495,7 @@ var author$project$Html$Styled$Bdt$maybeAttribute = F2(
 			return f(a);
 		}
 	});
-var rtfeldman$elm_css$Html$Styled$a = rtfeldman$elm_css$Html$Styled$node('a');
 var rtfeldman$elm_css$Html$Styled$button = rtfeldman$elm_css$Html$Styled$node('button');
-var rtfeldman$elm_css$Html$Styled$Attributes$href = function (url) {
-	return A2(rtfeldman$elm_css$Html$Styled$Attributes$stringProperty, 'href', url);
-};
 var rtfeldman$elm_css$Html$Styled$Attributes$target = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('target');
 var author$project$Button$render = function (_n0) {
 	var config = _n0.a;

@@ -4,23 +4,23 @@ import Url.Parser as Parser exposing (Parser, s)
 
 
 type Route
-    = TrainingPlan
-    | Settings
+    = Courses
+    | Units
 
 
 routeParser : Parser (Route -> subRoute) subRoute
 routeParser =
     Parser.oneOf
-        [ Parser.map TrainingPlan (s "/training-plan")
-        , Parser.map Settings (s "/settings")
+        [ Parser.map Courses (s "courses")
+        , Parser.map Units (s "units")
         ]
 
 
 toString : Route -> String
 toString route =
     case route of
-        TrainingPlan ->
-            "/training-plan"
+        Courses ->
+            "/courses"
 
-        Settings ->
-            "/settings"
+        Units ->
+            "/units"

@@ -1,6 +1,6 @@
 module Trainer.Route exposing (Route(..), routeParser, toString)
 
-import Url.Parser as Parser exposing (Parser, s)
+import Url.Parser as Parser exposing (Parser, s, (</>))
 
 
 type Route
@@ -11,8 +11,8 @@ type Route
 routeParser : Parser (Route -> subRoute) subRoute
 routeParser =
     Parser.oneOf
-        [ Parser.map TrainingPlan (s "/training-plan")
-        , Parser.map Settings (s "/settings")
+        [ Parser.map TrainingPlan (s "training-plan")
+        , Parser.map Settings (s "settings")
         ]
 
 

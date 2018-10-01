@@ -1,8 +1,5 @@
 module Model exposing (Model, initialModel)
 
---import Admin.Model as Admin
---import Trainer.Model as Trainer
-
 import Browser.Navigation as Navigation
 import Dict exposing (Dict)
 import Index.Model as Index

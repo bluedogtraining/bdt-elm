@@ -1,5 +1,6 @@
 module View exposing (view)
 
+import Admin.Route exposing (Route(..))
 import Admin.View as Admin
 import Browser exposing (Document)
 import Html.Styled as Html exposing (..)
@@ -9,6 +10,7 @@ import Model exposing (Model)
 import Msg exposing (Msg(..))
 import Route exposing (Route(..))
 import Toasters
+import Trainer.Route exposing (Route(..))
 import Trainer.View as Trainer
 
 
@@ -37,14 +39,14 @@ menu : Bool -> Html Msg
 menu isAdminMenuOpen =
     div
         []
-        [ div
-            []
+        [ a
+            [ Route.href Index ]
             [ text "Index" ]
-        , div
-            []
+        , a
+            [ Route.href <| Admin Courses ]
             [ text "Admin" ]
-        , div
-            []
+        , a
+            [ Route.href <| Trainer TrainingPlan ]
             [ text "Trainer" ]
         , adminMenu isAdminMenuOpen
         ]

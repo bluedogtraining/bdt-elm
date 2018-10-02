@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Admin.Route exposing (Route(..))
+import Admin.Route as Route
 import Admin.View as Admin
 import Browser exposing (Document)
 import Html.Styled as Html exposing (..)
@@ -8,9 +8,10 @@ import Html.Styled.Events exposing (..)
 import Index.View as Index
 import Model exposing (Model)
 import Msg exposing (Msg(..))
-import Route exposing (Route(..))
+import Route
+import Page
 import Toasters
-import Trainer.Route exposing (Route(..))
+import Trainer.Route as Route
 import Trainer.View as Trainer
 
 
@@ -40,13 +41,13 @@ menu isAdminMenuOpen =
     div
         []
         [ a
-            [ Route.href Index ]
+            [ Route.href Route.Index ]
             [ text "Index" ]
         , a
-            [ Route.href <| Admin Courses ]
+            [ Route.href <| Route.Admin Route.Courses ]
             [ text "Admin" ]
         , a
-            [ Route.href <| Trainer TrainingPlan ]
+            [ Route.href <| Route.Trainer Route.TrainingPlan ]
             [ text "Trainer" ]
         , adminMenu isAdminMenuOpen
         ]
@@ -66,23 +67,21 @@ adminMenu isOpen =
 
 page : Model -> Html Msg
 page model =
-    case model.route of
-        NotFound ->
+    case model.page of
+        Page.NotFound ->
             div
                 []
                 [ text "404 D:" ]
 
-        Index ->
-            model.index
+        Page.Index indexModel ->
+            indexModel
                 |> Index.view
                 |> Html.map IndexMsg
 
-        Admin adminRoute ->
-            model.admin
-                |> Admin.view adminRoute
+        Page.Admin adminPage ->
+            adminPage
+                |> Admin.view
                 |> Html.map AdminMsg
 
-        Trainer trainerRoute ->
-            model.trainer
-                |> Trainer.view trainerRoute
-                |> Html.map TrainerMsg
+        Page.Trainer trainerPage ->
+            Debug.todo "trainer view"

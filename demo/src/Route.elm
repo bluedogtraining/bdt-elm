@@ -4,14 +4,14 @@ import Admin.Route as Admin
 import Browser.Navigation as Navigation
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes as Attributes
+import Index.Model as Index
 import Trainer.Route as Trainer
 import Url exposing (Url)
-import Url.Parser as Parser exposing (Parser, s, (</>))
+import Url.Parser as Parser exposing ((</>), Parser, s)
 
 
 type Route
-    = NotFound
-    | Index
+    = Index
     | Admin Admin.Route
     | Trainer Trainer.Route
 
@@ -19,7 +19,7 @@ type Route
 routeParser : Parser (Route -> subRoute) subRoute
 routeParser =
     Parser.oneOf
-        [ Parser.map Index Parser.top
+        [ Parser.map Index  Parser.top
         , Parser.map Admin (s "admin" </> Admin.routeParser)
         , Parser.map Trainer (s "trainer" </> Trainer.routeParser)
         ]
@@ -28,9 +28,6 @@ routeParser =
 toString : Route -> String
 toString route =
     case route of
-        NotFound ->
-            "/404"
-
         Index ->
             "/"
 

@@ -23,15 +23,14 @@ type alias Model =
     }
 
 
-initialModel : Navigation.Key -> Return Msg Model
+initialModel : Navigation.Key -> Model
 initialModel navigationKey =
-    Return.init
-        { db = initialDb
-        , toasters = Toasters.init
-        , navigationKey = navigationKey
-        , isAdminMenuOpen = False
-        , page = Page.Index Index.initialModel
-        }
+    { db = initialDb
+    , toasters = Toasters.init
+    , navigationKey = navigationKey
+    , isAdminMenuOpen = False
+    , page = Page.Index Index.initialModel
+    }
 
 
 type alias Db =

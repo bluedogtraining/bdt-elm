@@ -49,6 +49,9 @@ menu isAdminMenuOpen =
         , a
             [ Route.href <| Route.Trainer Route.TrainingPlan ]
             [ text "Trainer" ]
+        , a
+            [ Route.href Route.Test ]
+            [ text "Test" ]
         , adminMenu isAdminMenuOpen
         ]
 
@@ -85,3 +88,8 @@ page model =
 
         Page.Trainer trainerPage ->
             Debug.todo "trainer view"
+
+        Page.Test ->
+            div
+                []
+                [ text "test" ]

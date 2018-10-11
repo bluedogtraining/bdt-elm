@@ -10,3 +10,4 @@ type Page
     | Index Index.Model
     | Admin Admin.Page
     | Trainer Trainer.Page
+    | Test

@@ -20,7 +20,7 @@ main =
     Browser.application
         { init = always init
         , view = view
-        , update = (\msg model -> update msg (Return.init model) |> returnToProgram)
+        , update = update
         , subscriptions = subscriptions
         , onUrlRequest = Navigate
         , onUrlChange = UrlChange
@@ -30,22 +30,3 @@ main =
 init : Url -> Navigation.Key -> ( Model, Cmd Msg )
 init url navigationKey =
     update (UrlChange url) (initialModel navigationKey)
-        |> returnToProgram
-
-
-returnToProgram : Return Msg Model -> ( Model, Cmd Msg )
-returnToProgram return =
-    let
-        (model, data) =
-            Return.toData return
-
-        db =
-            model.db
-    in
-    ( { model
-        | toasters = Toasters.merge data.toasters model.toasters
-        , db =
-            { db | entities = List.foldl Entities.union db.entities data.entities }
-      }
-    , Cmd.batch data.cmd
-    )

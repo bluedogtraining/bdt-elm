@@ -14,14 +14,16 @@ type Route
     = Index
     | Admin Admin.Route
     | Trainer Trainer.Route
+    | Test
 
 
 routeParser : Parser (Route -> subRoute) subRoute
 routeParser =
     Parser.oneOf
-        [ Parser.map Index  Parser.top
+        [ Parser.map Index Parser.top
         , Parser.map Admin (s "admin" </> Admin.routeParser)
         , Parser.map Trainer (s "trainer" </> Trainer.routeParser)
+        , Parser.map Test (s "test")
         ]
 
 
@@ -36,6 +38,9 @@ toString route =
 
         Trainer trainerRoute ->
             "/trainer" ++ Trainer.toString trainerRoute
+
+        Test ->
+            "/test"
 
 
 fromUrl : Url -> Maybe Route

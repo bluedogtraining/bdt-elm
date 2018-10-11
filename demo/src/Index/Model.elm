@@ -40,6 +40,7 @@ type alias Model =
     , countryOfBirth : SearchSelect.Model Country
     , modalSmOpen : Bool
     , modalLgOpen : Bool
+    , modalResizeOpen : Bool
     , maybeBlockSelect : Select.Model MusicGenre
     }
 
@@ -70,5 +71,6 @@ initialModel =
     , countryOfBirth = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Country.countryDecoder
     , modalSmOpen = False
     , modalLgOpen = False
+    , modalResizeOpen = False
     , maybeBlockSelect = Select.init MusicGenre.asNonempty
     }

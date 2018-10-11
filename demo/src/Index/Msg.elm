@@ -38,8 +38,7 @@ type Msg
     | Toggle1
     | Toggle2
     | DisabledToggle
-    | OpenSmModal
-    | CloseSmModal
-    | OpenLgModal
-    | CloseLgModal
+    | ToggleSmModal
+    | ToggleLgModal
+    | ToggleResizeModal
     | UpdateMaybeBLockSelect (Select.Msg MusicGenre)

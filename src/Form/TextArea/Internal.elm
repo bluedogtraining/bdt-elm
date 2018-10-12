@@ -18,7 +18,6 @@ module Form.TextArea.Internal exposing
     , setMaxLength
     , setPlaceholder
     , setReplacements
-    , setSubstituteTabs
     , setValue
     , update
     )
@@ -77,7 +76,6 @@ initialViewState =
 
 type Msg
     = Input String
-    | Tab String
 
 
 update : Msg -> State -> State
@@ -85,9 +83,6 @@ update msg state =
     case msg of
         Input string ->
             { state | value = Resettable.update (List.foldl replace string state.replacements) state.value }
-
-        Tab string ->
-            { state | value = Resettable.update string state.value }
 
 
 replace : ( String, String ) -> String -> String
@@ -114,24 +109,8 @@ inputField state viewState =
         , placeholder viewState.placeholder
         , Html.maybeAttribute maxlength viewState.maxLength
         , Html.maybeAttribute id viewState.id
-
-        -- Hack it in js, as elm currently has no notion of cursor position. Best we could do is add spaces at the end of the textarea, not where the cursor is.
-        , attribute "onkeydown" "if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" |> Html.attributeIf state.substituteTabs
-
-        -- Since we use the above js hack, our model doesn't get updated the conventional way. We need to grab the new value after the tab was pressed, and update our state accordingly.
-        , on "keyup" (Decode.andThen shouldUpdateTab keyCode) |> Html.attributeIf state.substituteTabs
         ]
         []
-
-
-shouldUpdateTab : Int -> Decoder Msg
-shouldUpdateTab keyCode =
-    case keyCode of
-        9 ->
-            Decode.andThen (Decode.succeed << Tab) targetValue
-
-        _ ->
-            Decode.fail "Not Tab"
 
 
 
@@ -156,11 +135,6 @@ setInitialValue value state =
 setValue : String -> State -> State
 setValue value state =
     { state | value = Resettable.update value state.value }
-
-
-setSubstituteTabs : Bool -> State -> State
-setSubstituteTabs substituteTabs state =
-    { state | substituteTabs = substituteTabs }
 
 
 setReplacements : List ( String, String ) -> State -> State

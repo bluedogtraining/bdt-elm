@@ -16058,7 +16058,10 @@ var author$project$Button$href = F2(
 		return author$project$Button$Button(
 			_Utils_update(
 				config,
-				{url: url}));
+				{
+					href: elm$core$Maybe$Just(
+						{blank: false, url: url})
+				}));
 	});
 var author$project$Button$icon = F2(
 	function (icon_, _n0) {
@@ -16597,8 +16600,8 @@ var rtfeldman$elm_css$Html$Styled$button = rtfeldman$elm_css$Html$Styled$node('b
 var rtfeldman$elm_css$Html$Styled$Attributes$target = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('target');
 var author$project$Button$render = function (_n0) {
 	var config = _n0.a;
-	var _n1 = elm$core$String$isEmpty(config.url);
-	if (_n1) {
+	var _n1 = config.href;
+	if (_n1.$ === 'Nothing') {
 		return A2(
 			rtfeldman$elm_css$Html$Styled$button,
 			_List_fromArray(
@@ -16615,6 +16618,7 @@ var author$project$Button$render = function (_n0) {
 					A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
 				]));
 	} else {
+		var href_ = _n1.a;
 		return A2(
 			rtfeldman$elm_css$Html$Styled$a,
 			_List_fromArray(
@@ -16626,12 +16630,12 @@ var author$project$Button$render = function (_n0) {
 					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
 					A2(
 					author$project$Html$Styled$Bdt$attributeIf,
-					!elm$core$String$isEmpty(config.url),
-					rtfeldman$elm_css$Html$Styled$Attributes$href(config.url)),
+					!_Utils_eq(config.href, elm$core$Maybe$Nothing),
+					rtfeldman$elm_css$Html$Styled$Attributes$href(href_.url)),
 					A2(
 					author$project$Html$Styled$Bdt$attributeIf,
-					!elm$core$String$isEmpty(config.url),
-					rtfeldman$elm_css$Html$Styled$Attributes$target('_blank'))
+					href_.blank,
+					rtfeldman$elm_css$Html$Styled$Attributes$target('blank_'))
 				]),
 			_List_fromArray(
 				[
@@ -16662,12 +16666,12 @@ var author$project$Button$Size$Normal = {$: 'Normal'};
 var author$project$Button$initialConfig = {
 	color: A3(rtfeldman$elm_css$Css$rgb, 102, 102, 102),
 	content: author$project$Content$Text(''),
+	href: elm$core$Maybe$Nothing,
 	isDisabled: false,
 	isLoading: false,
 	isShown: true,
 	onClick: elm$core$Maybe$Nothing,
-	size: author$project$Button$Size$Normal,
-	url: ''
+	size: author$project$Button$Size$Normal
 };
 var author$project$Button$view = author$project$Button$Button(author$project$Button$initialConfig);
 var author$project$Card$CardBlock = function (a) {

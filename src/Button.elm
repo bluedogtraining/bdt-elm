@@ -1,9 +1,8 @@
 module Button exposing
     ( Button
     , view, viewIf
-    , text, icon, onClick, href, small, isLoading, isDisabled, green, red
+    , text, icon, onClick, href, hrefBlank, small, isLoading, isDisabled, green, red
     , render
-    , hrefBlank
     )
 
 {-| Module to add Buttons to your app
@@ -21,7 +20,7 @@ module Button exposing
 
 # Configure
 
-@docs text, icon, onClick, href, small, isLoading, isDisabled, green, red
+@docs text, icon, onClick, href, hrefBlank, small, isLoading, isDisabled, green, red
 
 
 # Render

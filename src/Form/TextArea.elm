@@ -21,7 +21,7 @@ module Form.TextArea exposing
 
 # State Setters
 
-@docs reInitialise, reset, setInitialValue, setValue, setSubstituteTabs, setReplacements
+@docs reInitialise, reset, setInitialValue, setValue, setReplacements
 
 
 # View Setters

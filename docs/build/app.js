@@ -20423,6 +20423,21 @@ var author$project$Form$Select$setIsOptionDisabled = F2(
 var author$project$Form$TextArea$Internal$Input = function (a) {
 	return {$: 'Input', a: a};
 };
+var rtfeldman$elm_css$Css$text_ = {cursor: rtfeldman$elm_css$Css$Structure$Compatible, value: 'text'};
+var author$project$Form$Textarea$Css$input = F2(
+	function (isError, isLocked) {
+		return rtfeldman$elm_css$Html$Styled$Attributes$css(
+			_Utils_ap(
+				A2(author$project$Form$Css$select, isError, isLocked),
+				_List_fromArray(
+					[
+						rtfeldman$elm_css$Css$flexGrow(
+						rtfeldman$elm_css$Css$int(1)),
+						rtfeldman$elm_css$Css$padding(
+						rtfeldman$elm_css$Css$rem(0.4)),
+						rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$text_)
+					])));
+	});
 var rtfeldman$elm_css$Html$Styled$textarea = rtfeldman$elm_css$Html$Styled$node('textarea');
 var author$project$Form$TextArea$Internal$inputField = F2(
 	function (state, viewState) {
@@ -20430,8 +20445,7 @@ var author$project$Form$TextArea$Internal$inputField = F2(
 			rtfeldman$elm_css$Html$Styled$textarea,
 			_List_fromArray(
 				[
-					rtfeldman$elm_css$Html$Styled$Attributes$css(
-					A2(author$project$Form$Css$input, viewState.isError, viewState.isLocked)),
+					A2(author$project$Form$Textarea$Css$input, viewState.isError, viewState.isLocked),
 					rtfeldman$elm_css$Html$Styled$Attributes$disabled(viewState.isLocked),
 					rtfeldman$elm_css$Html$Styled$Attributes$value(
 					author$project$Resettable$getValue(state.value)),
@@ -21829,14 +21843,32 @@ var author$project$Index$View$view = function (model) {
 												[
 													A2(
 													author$project$Card$block,
-													author$project$Grid$Size$Twelve,
+													author$project$Grid$Size$Six,
 													_List_fromArray(
 														[
 															A2(
-															rtfeldman$elm_css$Html$Styled$map,
-															author$project$Index$Msg$TextAreaMsg,
-															author$project$Form$TextArea$render(
-																author$project$Form$TextArea$view(model.textArea)))
+															rtfeldman$elm_css$Html$Styled$div,
+															_List_fromArray(
+																[
+																	A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'flex'),
+																	A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'flex-direction', 'column'),
+																	A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'height', '100%')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	rtfeldman$elm_css$Html$Styled$map,
+																	author$project$Index$Msg$TextAreaMsg,
+																	author$project$Form$TextArea$render(
+																		author$project$Form$TextArea$view(model.textArea)))
+																]))
+														])),
+													A2(
+													author$project$Card$block,
+													author$project$Grid$Size$Six,
+													_List_fromArray(
+														[
+															rtfeldman$elm_css$Html$Styled$text('Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.')
 														]))
 												]),
 											A3(author$project$Card$header, 'Text Area!', _List_Nil, author$project$Card$view)))

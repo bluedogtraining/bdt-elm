@@ -22,7 +22,7 @@ module Form.TextArea.Internal exposing
     , update
     )
 
-import Form.Css as Css
+import Form.Textarea.Css as Css
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Bdt as Html
@@ -102,7 +102,7 @@ render state viewState =
 inputField : State -> ViewState -> Html Msg
 inputField state viewState =
     textarea
-        [ css <| Css.input viewState.isError viewState.isLocked
+        [ Css.input viewState.isError viewState.isLocked
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input

@@ -154,10 +154,16 @@ view model =
                     , Card.view
                         |> Card.header "Text Area!" []
                         |> Card.body
-                            [ Card.block Twelve
-                                [ TextArea.view model.textArea
-                                    |> TextArea.render
-                                    |> Html.map TextAreaMsg
+                            [ Card.block Six
+                                [ div
+                                    [ style "display" "flex", style "flex-direction" "column", style "height" "100%" ]
+                                    [ TextArea.view model.textArea
+                                        |> TextArea.render
+                                        |> Html.map TextAreaMsg
+                                    ]
+                                ]
+                            , Card.block Six
+                                [ text "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
                                 ]
                             ]
                         |> Card.render
@@ -262,7 +268,7 @@ view model =
                                     |> Modal.setSize Xl
                                     |> Modal.body
                                         [ Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Learning" ]
@@ -280,7 +286,7 @@ view model =
                                                 [ text "Course Schemes" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Users" ]
@@ -292,7 +298,7 @@ view model =
                                                 [ text "Classes" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Skills Profiler" ]
@@ -304,7 +310,7 @@ view model =
                                                 [ text "Descriptions" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Apprenticeship Providers" ]
@@ -316,7 +322,7 @@ view model =
                                                 [ text "Field Officers" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Finance" ]
@@ -325,7 +331,7 @@ view model =
                                                 [ text "Invoices" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Avetmiss" ]
@@ -334,7 +340,7 @@ view model =
                                                 [ text "Funding Schemes" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Schools & Vetis" ]
@@ -346,7 +352,7 @@ view model =
                                                 [ text "Vetis Management" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Other" ]

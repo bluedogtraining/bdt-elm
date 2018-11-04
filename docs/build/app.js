@@ -16370,6 +16370,66 @@ var rtfeldman$elm_css$Css$pseudoClass = function (_class) {
 		rtfeldman$elm_css$Css$Structure$PseudoClassSelector(_class));
 };
 var rtfeldman$elm_css$Css$hover = rtfeldman$elm_css$Css$pseudoClass('hover');
+var elm$core$String$endsWith = _String_endsWith;
+var rtfeldman$elm_css$Css$makeImportant = function (str) {
+	return A2(
+		elm$core$String$endsWith,
+		' !important',
+		elm$core$String$toLower(str)) ? str : (str + ' !important');
+};
+var rtfeldman$elm_css$Css$Preprocess$mapAllLastProperty = F2(
+	function (update, styles) {
+		if (!styles.b) {
+			return styles;
+		} else {
+			if (!styles.b.b) {
+				var only = styles.a;
+				return _List_fromArray(
+					[
+						A2(rtfeldman$elm_css$Css$Preprocess$mapLastProperty, update, only)
+					]);
+			} else {
+				var first = styles.a;
+				var rest = styles.b;
+				return A2(
+					elm$core$List$cons,
+					first,
+					A2(rtfeldman$elm_css$Css$Preprocess$mapAllLastProperty, update, rest));
+			}
+		}
+	});
+var rtfeldman$elm_css$Css$Preprocess$mapLastProperty = F2(
+	function (update, style) {
+		switch (style.$) {
+			case 'AppendProperty':
+				var property = style.a;
+				return rtfeldman$elm_css$Css$Preprocess$AppendProperty(
+					update(property));
+			case 'ExtendSelector':
+				var selector = style.a;
+				var styles = style.b;
+				return A2(
+					rtfeldman$elm_css$Css$Preprocess$ExtendSelector,
+					selector,
+					A2(rtfeldman$elm_css$Css$Preprocess$mapAllLastProperty, update, styles));
+			case 'NestSnippet':
+				return style;
+			case 'WithPseudoElement':
+				return style;
+			case 'WithMedia':
+				return style;
+			case 'WithKeyframes':
+				return style;
+			default:
+				var otherStyles = style.a;
+				return rtfeldman$elm_css$Css$Preprocess$ApplyStyles(
+					A2(
+						rtfeldman$elm_css$Css$Structure$mapLast,
+						rtfeldman$elm_css$Css$Preprocess$mapLastProperty(update),
+						otherStyles));
+		}
+	});
+var rtfeldman$elm_css$Css$important = rtfeldman$elm_css$Css$Preprocess$mapLastProperty(rtfeldman$elm_css$Css$makeImportant);
 var rtfeldman$elm_css$Css$inlineFlex = {display: rtfeldman$elm_css$Css$Structure$Compatible, value: 'inline-flex'};
 var rtfeldman$elm_css$Css$margin2 = rtfeldman$elm_css$Css$prop2('margin');
 var rtfeldman$elm_css$Css$middle = rtfeldman$elm_css$Css$prop1('middle');
@@ -16414,7 +16474,8 @@ var author$project$Button$Css$button = F5(
 					rtfeldman$elm_css$Css$borderRadius(
 					rtfeldman$elm_css$Css$px(2)),
 					rtfeldman$elm_css$Css$backgroundColor(rtfeldman$elm_css$Css$transparent),
-					rtfeldman$elm_css$Css$color(color),
+					rtfeldman$elm_css$Css$important(
+					rtfeldman$elm_css$Css$color(color)),
 					rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineFlex),
 					rtfeldman$elm_css$Css$justifyContent(rtfeldman$elm_css$Css$center),
 					rtfeldman$elm_css$Css$alignItems(rtfeldman$elm_css$Css$center),
@@ -16439,7 +16500,8 @@ var author$project$Button$Css$button = F5(
 					rtfeldman$elm_css$Css$fontSize(
 					rtfeldman$elm_css$Css$rem(0.8)),
 					rtfeldman$elm_css$Css$verticalAlign(rtfeldman$elm_css$Css$middle),
-					rtfeldman$elm_css$Css$textDecoration(rtfeldman$elm_css$Css$none),
+					rtfeldman$elm_css$Css$important(
+					rtfeldman$elm_css$Css$textDecoration(rtfeldman$elm_css$Css$none)),
 					A2(rtfeldman$elm_css$Css$property, 'user-select', 'none'),
 					rtfeldman$elm_css$Css$whiteSpace(rtfeldman$elm_css$Css$noWrap),
 					rtfeldman$elm_css$Css$overflow(rtfeldman$elm_css$Css$hidden),

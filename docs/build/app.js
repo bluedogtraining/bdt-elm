@@ -5090,8 +5090,7 @@ function _Url_percentDecode(string)
 	{
 		return elm$core$Maybe$Nothing;
 	}
-}var author$project$Admin$Model$initialModel = {courses: '', units: ''};
-var author$project$Content$Icon = function (a) {
+}var author$project$Content$Icon = function (a) {
 	return {$: 'Icon', a: a};
 };
 var author$project$Content$Text = function (a) {
@@ -5346,18 +5345,6 @@ var author$project$Form$TextArea$setReplacements = F2(
 		var state = _n0.a;
 		return author$project$Form$TextArea$Model(
 			A2(author$project$Form$TextArea$Internal$setReplacements, replacements, state));
-	});
-var author$project$Form$TextArea$Internal$setSubstituteTabs = F2(
-	function (substituteTabs, state) {
-		return _Utils_update(
-			state,
-			{substituteTabs: substituteTabs});
-	});
-var author$project$Form$TextArea$setSubstituteTabs = F2(
-	function (bool, _n0) {
-		var state = _n0.a;
-		return author$project$Form$TextArea$Model(
-			A2(author$project$Form$TextArea$Internal$setSubstituteTabs, bool, state));
 	});
 var elm$core$Array$branchFactor = 32;
 var elm$core$Array$Array_elm_builtin = F4(
@@ -5974,6 +5961,7 @@ var author$project$Index$Model$initialModel = {
 	intInput: author$project$Form$IntInput$init,
 	maybeBlockSelect: author$project$Form$Select$init(author$project$Records$MusicGenre$asNonempty),
 	modalLgOpen: false,
+	modalResizeOpen: false,
 	modalSmOpen: false,
 	multiSelect: author$project$Form$MultiSelect$init(author$project$Records$MusicGenre$asNonempty),
 	name: author$project$Form$Input$init,
@@ -5987,7 +5975,7 @@ var author$project$Index$Model$initialModel = {
 			[
 				_Utils_Tuple2('[]', '☐')
 			]),
-		A2(author$project$Form$TextArea$setSubstituteTabs, true, author$project$Form$TextArea$init)),
+		author$project$Form$TextArea$init),
 	toggle1: false,
 	toggle2: false,
 	toggle3: false,
@@ -6008,20 +5996,63 @@ var author$project$Index$Model$initialModel = {
 		author$project$Content$Icon(feathericons$elm_feather$FeatherIcons$calendar),
 		'This is the fourth ToolTip!')
 };
+var author$project$Entities$courseIdToString = function (_n0) {
+	var id = _n0.a;
+	return id;
+};
+var author$project$Entities$taskIdToString = function (_n0) {
+	var id = _n0.a;
+	return id;
+};
+var author$project$Entities$unitIdToString = function (_n0) {
+	var id = _n0.a;
+	return id;
+};
 var elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
-var author$project$Model$initialDb = {entities: elm$core$Dict$empty};
-var author$project$Route$Index = {$: 'Index'};
+var turboMaCk$any_dict$Dict$Any$AnyDict = function (a) {
+	return {$: 'AnyDict', a: a};
+};
+var turboMaCk$any_dict$Dict$Any$empty = function (toKey) {
+	return turboMaCk$any_dict$Dict$Any$AnyDict(
+		{dict: elm$core$Dict$empty, toKey: toKey});
+};
+var author$project$Entities$init = {
+	courses: turboMaCk$any_dict$Dict$Any$empty(author$project$Entities$courseIdToString),
+	tasks: turboMaCk$any_dict$Dict$Any$empty(author$project$Entities$taskIdToString),
+	units: turboMaCk$any_dict$Dict$Any$empty(author$project$Entities$unitIdToString)
+};
+var author$project$Model$initialDb = {entities: author$project$Entities$init};
+var author$project$Page$Index = function (a) {
+	return {$: 'Index', a: a};
+};
 var author$project$Toasters$Model = function (a) {
 	return {$: 'Model', a: a};
 };
 var author$project$Toasters$init = author$project$Toasters$Model(_List_Nil);
-var author$project$Trainer$Model$initialModel = {settings: '', trainingPlan: ''};
 var author$project$Model$initialModel = function (navigationKey) {
-	return {admin: author$project$Admin$Model$initialModel, db: author$project$Model$initialDb, index: author$project$Index$Model$initialModel, isAdminMenuOpen: false, navigationKey: navigationKey, route: author$project$Route$Index, toasters: author$project$Toasters$init, trainer: author$project$Trainer$Model$initialModel};
+	return {
+		db: author$project$Model$initialDb,
+		isAdminMenuOpen: false,
+		navigationKey: navigationKey,
+		page: author$project$Page$Index(author$project$Index$Model$initialModel),
+		toasters: author$project$Toasters$init
+	};
 };
 var author$project$Msg$UrlChange = function (a) {
 	return {$: 'UrlChange', a: a};
+};
+var author$project$Admin$Courses$Page$Search = {$: 'Search'};
+var author$project$Admin$Page$Courses = function (a) {
+	return {$: 'Courses', a: a};
+};
+var author$project$Admin$Page$Units = {$: 'Units'};
+var author$project$Admin$Page$fromRoute = function (route) {
+	if (route.$ === 'Courses') {
+		return author$project$Admin$Page$Courses(author$project$Admin$Courses$Page$Search);
+	} else {
+		return author$project$Admin$Page$Units;
+	}
 };
 var author$project$Form$DatePicker$Internal$DomFocus = function (a) {
 	return {$: 'DomFocus', a: a};
@@ -12084,24 +12115,15 @@ var author$project$Form$TextArea$Internal$replace = F2(
 	});
 var author$project$Form$TextArea$Internal$update = F2(
 	function (msg, state) {
-		if (msg.$ === 'Input') {
-			var string = msg.a;
-			return _Utils_update(
-				state,
-				{
-					value: A2(
-						author$project$Resettable$update,
-						A3(elm$core$List$foldl, author$project$Form$TextArea$Internal$replace, string, state.replacements),
-						state.value)
-				});
-		} else {
-			var string = msg.a;
-			return _Utils_update(
-				state,
-				{
-					value: A2(author$project$Resettable$update, string, state.value)
-				});
-		}
+		var string = msg.a;
+		return _Utils_update(
+			state,
+			{
+				value: A2(
+					author$project$Resettable$update,
+					A3(elm$core$List$foldl, author$project$Form$TextArea$Internal$replace, string, state.replacements),
+					state.value)
+			});
 	});
 var author$project$Form$TextArea$update = F2(
 	function (msg, _n0) {
@@ -12353,29 +12375,23 @@ var author$project$Index$Update$update = F2(
 						model,
 						{countryOfBirth: newSearchSelect}),
 					A2(elm$core$Platform$Cmd$map, author$project$Index$Msg$UpdateCountryOfBirth, cmd));
-			case 'OpenSmModal':
+			case 'ToggleSmModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{modalSmOpen: true}),
+						{modalSmOpen: !model.modalSmOpen}),
 					elm$core$Platform$Cmd$none);
-			case 'CloseSmModal':
+			case 'ToggleLgModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{modalSmOpen: false}),
+						{modalLgOpen: !model.modalLgOpen}),
 					elm$core$Platform$Cmd$none);
-			case 'OpenLgModal':
+			case 'ToggleResizeModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{modalLgOpen: true}),
-					elm$core$Platform$Cmd$none);
-			case 'CloseLgModal':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{modalLgOpen: false}),
+						{modalResizeOpen: !model.modalResizeOpen}),
 					elm$core$Platform$Cmd$none);
 			default:
 				var selectMsg = msg.a;
@@ -12392,7 +12408,11 @@ var author$project$Index$Update$update = F2(
 var author$project$Msg$IndexMsg = function (a) {
 	return {$: 'IndexMsg', a: a};
 };
-var author$project$Route$NotFound = {$: 'NotFound'};
+var author$project$Page$Admin = function (a) {
+	return {$: 'Admin', a: a};
+};
+var author$project$Page$NotFound = {$: 'NotFound'};
+var author$project$Page$Test = {$: 'Test'};
 var author$project$Admin$Route$Courses = {$: 'Courses'};
 var author$project$Admin$Route$Units = {$: 'Units'};
 var elm$url$Url$Parser$Parser = function (a) {
@@ -12487,6 +12507,8 @@ var author$project$Admin$Route$routeParser = elm$url$Url$Parser$oneOf(
 var author$project$Route$Admin = function (a) {
 	return {$: 'Admin', a: a};
 };
+var author$project$Route$Index = {$: 'Index'};
+var author$project$Route$Test = {$: 'Test'};
 var author$project$Route$Trainer = function (a) {
 	return {$: 'Trainer', a: a};
 };
@@ -12538,7 +12560,11 @@ var author$project$Route$routeParser = elm$url$Url$Parser$oneOf(
 			A2(
 				elm$url$Url$Parser$slash,
 				elm$url$Url$Parser$s('trainer'),
-				author$project$Trainer$Route$routeParser))
+				author$project$Trainer$Route$routeParser)),
+			A2(
+			elm$url$Url$Parser$map,
+			author$project$Route$Test,
+			elm$url$Url$Parser$s('test'))
 		]));
 var elm$url$Url$Parser$getFirstMatch = function (states) {
 	getFirstMatch:
@@ -12749,75 +12775,117 @@ var elm$url$Url$toString = function (url) {
 };
 var author$project$Update$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'Navigate':
-				if (msg.a.$ === 'Internal') {
-					var url = msg.a.a;
-					return _Utils_Tuple2(
-						model,
-						A2(
-							elm$browser$Browser$Navigation$pushUrl,
-							model.navigationKey,
-							elm$url$Url$toString(url)));
-				} else {
-					var href = msg.a.a;
-					return _Utils_Tuple2(
-						model,
-						elm$browser$Browser$Navigation$load(href));
-				}
-			case 'UrlChange':
-				var url = msg.a;
-				var _n1 = author$project$Route$fromUrl(url);
-				if (_n1.$ === 'Just') {
-					var route = _n1.a;
-					return _Utils_Tuple2(
-						_Utils_update(
+		var _n0 = _Utils_Tuple2(msg, model.page);
+		_n0$6:
+		while (true) {
+			switch (_n0.a.$) {
+				case 'Navigate':
+					if (_n0.a.a.$ === 'Internal') {
+						var url = _n0.a.a.a;
+						return _Utils_Tuple2(
 							model,
-							{route: route}),
-						elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(
-						_Utils_update(
+							A2(
+								elm$browser$Browser$Navigation$pushUrl,
+								model.navigationKey,
+								elm$url$Url$toString(url)));
+					} else {
+						var href = _n0.a.a.a;
+						return _Utils_Tuple2(
 							model,
-							{route: author$project$Route$NotFound}),
-						elm$core$Platform$Cmd$none);
-				}
-			case 'ToastersMsg':
-				var toasterMsg = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							toasters: A2(author$project$Toasters$update, toasterMsg, model.toasters)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 'ToggleAdminMenu':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{isAdminMenuOpen: !model.isAdminMenuOpen}),
-					elm$core$Platform$Cmd$none);
-			case 'IndexMsg':
-				var indexMsg = msg.a;
-				return A2(
-					elm$core$Tuple$mapSecond,
-					elm$core$Platform$Cmd$map(author$project$Msg$IndexMsg),
-					A2(
-						elm$core$Tuple$mapFirst,
-						function (indexModel) {
-							return _Utils_update(
+							elm$browser$Browser$Navigation$load(href));
+					}
+				case 'UrlChange':
+					var url = _n0.a.a;
+					var _n1 = author$project$Route$fromUrl(url);
+					if (_n1.$ === 'Nothing') {
+						return _Utils_Tuple2(
+							_Utils_update(
 								model,
-								{index: indexModel});
-						},
-						A2(author$project$Index$Update$update, indexMsg, model.index)));
-			default:
-				return _Debug_todo(
-					'Update',
-					{
-						start: {line: 49, column: 13},
-						end: {line: 49, column: 23}
-					})('todo update');
+								{page: author$project$Page$NotFound}),
+							elm$core$Platform$Cmd$none);
+					} else {
+						switch (_n1.a.$) {
+							case 'Index':
+								var _n2 = _n1.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											page: author$project$Page$Index(author$project$Index$Model$initialModel)
+										}),
+									elm$core$Platform$Cmd$none);
+							case 'Admin':
+								var adminRoute = _n1.a.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											page: author$project$Page$Admin(
+												author$project$Admin$Page$fromRoute(adminRoute))
+										}),
+									elm$core$Platform$Cmd$none);
+							case 'Trainer':
+								var trainerRoute = _n1.a.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{page: author$project$Page$NotFound}),
+									elm$core$Platform$Cmd$none);
+							default:
+								var _n3 = _n1.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{page: author$project$Page$Test}),
+									elm$core$Platform$Cmd$none);
+						}
+					}
+				case 'ToastersMsg':
+					var toasterMsg = _n0.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								toasters: A2(author$project$Toasters$update, toasterMsg, model.toasters)
+							}),
+						elm$core$Platform$Cmd$none);
+				case 'ToggleAdminMenu':
+					var _n4 = _n0.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{isAdminMenuOpen: !model.isAdminMenuOpen}),
+						elm$core$Platform$Cmd$none);
+				case 'IndexMsg':
+					if (_n0.b.$ === 'Index') {
+						var indexMsg = _n0.a.a;
+						var indexModel = _n0.b.a;
+						return A2(
+							elm$core$Tuple$mapSecond,
+							elm$core$Platform$Cmd$map(author$project$Msg$IndexMsg),
+							A2(
+								elm$core$Tuple$mapFirst,
+								function (indexModel_) {
+									return _Utils_update(
+										model,
+										{
+											page: author$project$Page$Index(indexModel_)
+										});
+								},
+								A2(author$project$Index$Update$update, indexMsg, indexModel)));
+					} else {
+						break _n0$6;
+					}
+				default:
+					break _n0$6;
+			}
 		}
+		return _Debug_todo(
+			'Update',
+			{
+				start: {line: 56, column: 13},
+				end: {line: 56, column: 23}
+			})('other updates');
 	});
 var author$project$Main$init = F2(
 	function (url, navigationKey) {
@@ -15825,16 +15893,16 @@ var author$project$Trainer$Route$toString = function (route) {
 };
 var author$project$Route$toString = function (route) {
 	switch (route.$) {
-		case 'NotFound':
-			return '/404';
 		case 'Index':
 			return '/';
 		case 'Admin':
 			var adminRoute = route.a;
 			return '/admin' + author$project$Admin$Route$toString(adminRoute);
-		default:
+		case 'Trainer':
 			var trainerRoute = route.a;
 			return '/trainer' + author$project$Trainer$Route$toString(trainerRoute);
+		default:
+			return '/test';
 	}
 };
 var rtfeldman$elm_css$VirtualDom$Styled$property = F2(
@@ -15911,19 +15979,28 @@ var author$project$View$menu = function (isAdminMenuOpen) {
 					[
 						rtfeldman$elm_css$Html$Styled$text('Trainer')
 					])),
+				A2(
+				rtfeldman$elm_css$Html$Styled$a,
+				_List_fromArray(
+					[
+						author$project$Route$href(author$project$Route$Test)
+					]),
+				_List_fromArray(
+					[
+						rtfeldman$elm_css$Html$Styled$text('Test')
+					])),
 				author$project$View$adminMenu(isAdminMenuOpen)
 			]));
 };
-var author$project$Admin$View$view = F2(
-	function (route, model) {
-		return A2(
-			rtfeldman$elm_css$Html$Styled$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					rtfeldman$elm_css$Html$Styled$text('admin view')
-				]));
-	});
+var author$project$Admin$View$view = function (page) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				rtfeldman$elm_css$Html$Styled$text('admin view')
+			]));
+};
 var author$project$Button$Button = function (a) {
 	return {$: 'Button', a: a};
 };
@@ -15960,7 +16037,10 @@ var author$project$Button$href = F2(
 		return author$project$Button$Button(
 			_Utils_update(
 				config,
-				{url: url}));
+				{
+					href: elm$core$Maybe$Just(
+						{blank: false, url: url})
+				}));
 	});
 var author$project$Button$icon = F2(
 	function (icon_, _n0) {
@@ -16561,8 +16641,8 @@ var rtfeldman$elm_css$Html$Styled$button = rtfeldman$elm_css$Html$Styled$node('b
 var rtfeldman$elm_css$Html$Styled$Attributes$target = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('target');
 var author$project$Button$render = function (_n0) {
 	var config = _n0.a;
-	var _n1 = elm$core$String$isEmpty(config.url);
-	if (_n1) {
+	var _n1 = config.href;
+	if (_n1.$ === 'Nothing') {
 		return A2(
 			rtfeldman$elm_css$Html$Styled$button,
 			_List_fromArray(
@@ -16579,6 +16659,7 @@ var author$project$Button$render = function (_n0) {
 					A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
 				]));
 	} else {
+		var href_ = _n1.a;
 		return A2(
 			rtfeldman$elm_css$Html$Styled$a,
 			_List_fromArray(
@@ -16590,12 +16671,12 @@ var author$project$Button$render = function (_n0) {
 					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
 					A2(
 					author$project$Html$Styled$Bdt$attributeIf,
-					!elm$core$String$isEmpty(config.url),
-					rtfeldman$elm_css$Html$Styled$Attributes$href(config.url)),
+					!_Utils_eq(config.href, elm$core$Maybe$Nothing),
+					rtfeldman$elm_css$Html$Styled$Attributes$href(href_.url)),
 					A2(
 					author$project$Html$Styled$Bdt$attributeIf,
-					!elm$core$String$isEmpty(config.url),
-					rtfeldman$elm_css$Html$Styled$Attributes$target('_blank'))
+					href_.blank,
+					rtfeldman$elm_css$Html$Styled$Attributes$target('blank_'))
 				]),
 			_List_fromArray(
 				[
@@ -16626,12 +16707,12 @@ var author$project$Button$Size$Normal = {$: 'Normal'};
 var author$project$Button$initialConfig = {
 	color: A3(rtfeldman$elm_css$Css$rgb, 102, 102, 102),
 	content: author$project$Content$Text(''),
+	href: elm$core$Maybe$Nothing,
 	isDisabled: false,
 	isLoading: false,
 	isShown: true,
 	onClick: elm$core$Maybe$Nothing,
-	size: author$project$Button$Size$Normal,
-	url: ''
+	size: author$project$Button$Size$Normal
 };
 var author$project$Button$view = author$project$Button$Button(author$project$Button$initialConfig);
 var author$project$Card$CardBlock = function (a) {
@@ -20404,48 +20485,36 @@ var author$project$Form$Select$setIsOptionDisabled = F2(
 var author$project$Form$TextArea$Internal$Input = function (a) {
 	return {$: 'Input', a: a};
 };
-var author$project$Form$TextArea$Internal$Tab = function (a) {
-	return {$: 'Tab', a: a};
-};
-var author$project$Form$TextArea$Internal$shouldUpdateTab = function (keyCode) {
-	if (keyCode === 9) {
-		return A2(
-			elm$json$Json$Decode$andThen,
-			A2(elm$core$Basics$composeL, elm$json$Json$Decode$succeed, author$project$Form$TextArea$Internal$Tab),
-			rtfeldman$elm_css$Html$Styled$Events$targetValue);
-	} else {
-		return elm$json$Json$Decode$fail('Not Tab');
-	}
-};
+var rtfeldman$elm_css$Css$text_ = {cursor: rtfeldman$elm_css$Css$Structure$Compatible, value: 'text'};
+var author$project$Form$Textarea$Css$input = F2(
+	function (isError, isLocked) {
+		return rtfeldman$elm_css$Html$Styled$Attributes$css(
+			_Utils_ap(
+				A2(author$project$Form$Css$select, isError, isLocked),
+				_List_fromArray(
+					[
+						rtfeldman$elm_css$Css$flexGrow(
+						rtfeldman$elm_css$Css$int(1)),
+						rtfeldman$elm_css$Css$padding(
+						rtfeldman$elm_css$Css$rem(0.4)),
+						rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$text_)
+					])));
+	});
 var rtfeldman$elm_css$Html$Styled$textarea = rtfeldman$elm_css$Html$Styled$node('textarea');
-var rtfeldman$elm_css$Html$Styled$Attributes$attribute = rtfeldman$elm_css$VirtualDom$Styled$attribute;
-var rtfeldman$elm_css$Html$Styled$Events$keyCode = A2(elm$json$Json$Decode$field, 'keyCode', elm$json$Json$Decode$int);
 var author$project$Form$TextArea$Internal$inputField = F2(
 	function (state, viewState) {
 		return A2(
 			rtfeldman$elm_css$Html$Styled$textarea,
 			_List_fromArray(
 				[
-					rtfeldman$elm_css$Html$Styled$Attributes$css(
-					A2(author$project$Form$Css$input, viewState.isError, viewState.isLocked)),
+					A2(author$project$Form$Textarea$Css$input, viewState.isError, viewState.isLocked),
 					rtfeldman$elm_css$Html$Styled$Attributes$disabled(viewState.isLocked),
 					rtfeldman$elm_css$Html$Styled$Attributes$value(
 					author$project$Resettable$getValue(state.value)),
 					rtfeldman$elm_css$Html$Styled$Events$onInput(author$project$Form$TextArea$Internal$Input),
 					rtfeldman$elm_css$Html$Styled$Attributes$placeholder(viewState.placeholder),
 					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$maxlength, viewState.maxLength),
-					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$id, viewState.id),
-					A2(
-					author$project$Html$Styled$Bdt$attributeIf,
-					state.substituteTabs,
-					A2(rtfeldman$elm_css$Html$Styled$Attributes$attribute, 'onkeydown', 'if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+\'\t\'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}')),
-					A2(
-					author$project$Html$Styled$Bdt$attributeIf,
-					state.substituteTabs,
-					A2(
-						rtfeldman$elm_css$Html$Styled$Events$on,
-						'keyup',
-						A2(elm$json$Json$Decode$andThen, author$project$Form$TextArea$Internal$shouldUpdateTab, rtfeldman$elm_css$Html$Styled$Events$keyCode)))
+					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$id, viewState.id)
 				]),
 			_List_Nil);
 	});
@@ -20592,7 +20661,8 @@ var author$project$Grid$Css$col = F2(
 				A2(
 					elm$core$List$map,
 					author$project$Grid$Css$colSize,
-					author$project$Grid$SizeHelpers$orderBySize(sizes)),
+					elm$core$List$reverse(
+						author$project$Grid$SizeHelpers$orderBySize(sizes))),
 				_List_fromArray(
 					[
 						rtfeldman$elm_css$Css$flexGrow(
@@ -20633,9 +20703,11 @@ var author$project$Grid$row = function (cols) {
 			[author$project$Grid$Css$row]),
 		A2(elm$core$List$map, author$project$Grid$renderCol, cols));
 };
+var author$project$Grid$Size$Four = {$: 'Four'};
 var author$project$Grid$Size$Six = {$: 'Six'};
 var author$project$Grid$Size$Three = {$: 'Three'};
 var author$project$Grid$Size$Twelve = {$: 'Twelve'};
+var author$project$Grid$Size$Two = {$: 'Two'};
 var author$project$Html$Styled$Bdt$maybeView = F2(
 	function (maybe, f) {
 		if (maybe.$ === 'Nothing') {
@@ -20647,8 +20719,6 @@ var author$project$Html$Styled$Bdt$maybeView = F2(
 	});
 var author$project$Index$Msg$AddGreenToaster = {$: 'AddGreenToaster'};
 var author$project$Index$Msg$AddRedToaster = {$: 'AddRedToaster'};
-var author$project$Index$Msg$CloseLgModal = {$: 'CloseLgModal'};
-var author$project$Index$Msg$CloseSmModal = {$: 'CloseSmModal'};
 var author$project$Index$Msg$DisabledToggle = {$: 'DisabledToggle'};
 var author$project$Index$Msg$FloatInputMsg = function (a) {
 	return {$: 'FloatInputMsg', a: a};
@@ -20659,13 +20729,14 @@ var author$project$Index$Msg$InputMsg = function (a) {
 var author$project$Index$Msg$IntInputMsg = function (a) {
 	return {$: 'IntInputMsg', a: a};
 };
-var author$project$Index$Msg$OpenLgModal = {$: 'OpenLgModal'};
-var author$project$Index$Msg$OpenSmModal = {$: 'OpenSmModal'};
 var author$project$Index$Msg$TextAreaMsg = function (a) {
 	return {$: 'TextAreaMsg', a: a};
 };
 var author$project$Index$Msg$Toggle1 = {$: 'Toggle1'};
 var author$project$Index$Msg$Toggle2 = {$: 'Toggle2'};
+var author$project$Index$Msg$ToggleLgModal = {$: 'ToggleLgModal'};
+var author$project$Index$Msg$ToggleResizeModal = {$: 'ToggleResizeModal'};
+var author$project$Index$Msg$ToggleSmModal = {$: 'ToggleSmModal'};
 var author$project$Index$Msg$ToolTip1Msg = function (a) {
 	return {$: 'ToolTip1Msg', a: a};
 };
@@ -20739,6 +20810,11 @@ var author$project$Modal$block = F2(
 		return author$project$Modal$ModalBlock(
 			A3(author$project$Modal$ModalBlockConfig, cols, _List_Nil, children));
 	});
+var author$project$Modal$blockSizes = F3(
+	function (cols, sizes, children) {
+		return author$project$Modal$ModalBlock(
+			A3(author$project$Modal$ModalBlockConfig, cols, sizes, children));
+	});
 var author$project$Modal$Config = function (a) {
 	return {$: 'Config', a: a};
 };
@@ -20800,7 +20876,8 @@ var author$project$Modal$Css$block = F2(
 				A2(
 					elm$core$List$map,
 					author$project$Grid$Css$colSize,
-					author$project$Grid$SizeHelpers$orderBySize(sizes)),
+					elm$core$List$reverse(
+						author$project$Grid$SizeHelpers$orderBySize(sizes))),
 				_List_fromArray(
 					[
 						rtfeldman$elm_css$Css$flexGrow(
@@ -21556,6 +21633,15 @@ var feathericons$elm_feather$FeatherIcons$edit = A2(
 				]))
 		]));
 var rtfeldman$elm_css$Html$Styled$h1 = rtfeldman$elm_css$Html$Styled$node('h1');
+var rtfeldman$elm_css$VirtualDom$Styled$style = F2(
+	function (key, val) {
+		return A3(
+			rtfeldman$elm_css$VirtualDom$Styled$Attribute,
+			A2(elm$virtual_dom$VirtualDom$style, key, val),
+			_List_Nil,
+			'');
+	});
+var rtfeldman$elm_css$Html$Styled$Attributes$style = rtfeldman$elm_css$VirtualDom$Styled$style;
 var author$project$Index$View$view = function (model) {
 	return A2(
 		rtfeldman$elm_css$Html$Styled$div,
@@ -21819,14 +21905,32 @@ var author$project$Index$View$view = function (model) {
 												[
 													A2(
 													author$project$Card$block,
-													author$project$Grid$Size$Twelve,
+													author$project$Grid$Size$Six,
 													_List_fromArray(
 														[
 															A2(
-															rtfeldman$elm_css$Html$Styled$map,
-															author$project$Index$Msg$TextAreaMsg,
-															author$project$Form$TextArea$render(
-																author$project$Form$TextArea$view(model.textArea)))
+															rtfeldman$elm_css$Html$Styled$div,
+															_List_fromArray(
+																[
+																	A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'flex'),
+																	A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'flex-direction', 'column'),
+																	A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'height', '100%')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	rtfeldman$elm_css$Html$Styled$map,
+																	author$project$Index$Msg$TextAreaMsg,
+																	author$project$Form$TextArea$render(
+																		author$project$Form$TextArea$view(model.textArea)))
+																]))
+														])),
+													A2(
+													author$project$Card$block,
+													author$project$Grid$Size$Six,
+													_List_fromArray(
+														[
+															rtfeldman$elm_css$Html$Styled$text('Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.')
 														]))
 												]),
 											A3(author$project$Card$header, 'Text Area!', _List_Nil, author$project$Card$view)))
@@ -21884,13 +21988,18 @@ var author$project$Index$View$view = function (model) {
 																author$project$Button$render(
 																A2(
 																	author$project$Button$onClick,
-																	author$project$Index$Msg$OpenSmModal,
+																	author$project$Index$Msg$ToggleSmModal,
 																	A2(author$project$Button$text, 'Open Sm Modal', author$project$Button$view))),
 																author$project$Button$render(
 																A2(
 																	author$project$Button$onClick,
-																	author$project$Index$Msg$OpenLgModal,
+																	author$project$Index$Msg$ToggleLgModal,
 																	A2(author$project$Button$text, 'Open Lg Modal', author$project$Button$view))),
+																author$project$Button$render(
+																A2(
+																	author$project$Button$onClick,
+																	author$project$Index$Msg$ToggleResizeModal,
+																	A2(author$project$Button$text, 'Open Resize Modal', author$project$Button$view))),
 																author$project$Modal$render(
 																A2(
 																	author$project$Modal$footer,
@@ -21914,7 +22023,7 @@ var author$project$Index$View$view = function (model) {
 																			A2(
 																				author$project$Modal$setSize,
 																				author$project$Grid$Size$Sm,
-																				A2(author$project$Modal$viewIf, model.modalSmOpen, author$project$Index$Msg$CloseSmModal)))))),
+																				A2(author$project$Modal$viewIf, model.modalSmOpen, author$project$Index$Msg$ToggleSmModal)))))),
 																author$project$Modal$render(
 																A2(
 																	author$project$Modal$footer,
@@ -21923,7 +22032,7 @@ var author$project$Index$View$view = function (model) {
 																			author$project$Button$red(
 																			A2(
 																				author$project$Button$onClick,
-																				author$project$Index$Msg$CloseLgModal,
+																				author$project$Index$Msg$ToggleLgModal,
 																				A2(author$project$Button$text, 'Cancel', author$project$Button$view))),
 																			author$project$Button$green(
 																			A2(author$project$Button$text, 'Save', author$project$Button$view))
@@ -22184,7 +22293,389 @@ var author$project$Index$View$view = function (model) {
 																			A2(
 																				author$project$Modal$setSize,
 																				author$project$Grid$Size$Lg,
-																				A2(author$project$Modal$viewIf, model.modalLgOpen, author$project$Index$Msg$CloseLgModal))))))
+																				A2(author$project$Modal$viewIf, model.modalLgOpen, author$project$Index$Msg$ToggleLgModal)))))),
+																author$project$Modal$render(
+																A2(
+																	author$project$Modal$body,
+																	_List_fromArray(
+																		[
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Learning')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/courses'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Courses')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/units'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Units')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/tasks'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Tasks')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/course-schemes'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Course Schemes')
+																						]))
+																				])),
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Users')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/courses'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Trainer Roles')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/units'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Classes')
+																						]))
+																				])),
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Skills Profiler')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/courses'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Activity Definitions')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/units'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Descriptions')
+																						]))
+																				])),
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Apprenticeship Providers')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/courses'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Apprenticeship Providers')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/units'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Field Officers')
+																						]))
+																				])),
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Finance')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/courses'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Invoices')
+																						]))
+																				])),
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Avetmiss')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/courses'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Funding Schemes')
+																						]))
+																				])),
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Schools & Vetis')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Schools')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Vetis Management')
+																						]))
+																				])),
+																			A3(
+																			author$project$Modal$blockSizes,
+																			author$project$Grid$Size$Twelve,
+																			_List_fromArray(
+																				[
+																					_Utils_Tuple2(author$project$Grid$Size$Xs, author$project$Grid$Size$Six),
+																					_Utils_Tuple2(author$project$Grid$Size$Sm, author$project$Grid$Size$Four),
+																					_Utils_Tuple2(author$project$Grid$Size$Xl, author$project$Grid$Size$Two)
+																				]),
+																			_List_fromArray(
+																				[
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$h1,
+																					_List_Nil,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Other')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Reports')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Assessment Questions')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Course Descriptors')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Feedback')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Referral Sources')
+																						])),
+																					A2(
+																					rtfeldman$elm_css$Html$Styled$a,
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$Attributes$href('/admin/schools'),
+																							A2(rtfeldman$elm_css$Html$Styled$Attributes$style, 'display', 'block')
+																						]),
+																					_List_fromArray(
+																						[
+																							rtfeldman$elm_css$Html$Styled$text('Student Course Archival Status')
+																						]))
+																				]))
+																		]),
+																	A2(
+																		author$project$Modal$setSize,
+																		author$project$Grid$Size$Xl,
+																		A2(author$project$Modal$viewIf, model.modalResizeOpen, author$project$Index$Msg$ToggleResizeModal))))
 															]))
 													]),
 												A3(author$project$Card$header, 'Modal', _List_Nil, author$project$Card$view)))),
@@ -22542,21 +23033,8 @@ var author$project$Index$View$view = function (model) {
 var author$project$Msg$AdminMsg = function (a) {
 	return {$: 'AdminMsg', a: a};
 };
-var author$project$Msg$TrainerMsg = function (a) {
-	return {$: 'TrainerMsg', a: a};
-};
-var author$project$Trainer$View$view = F2(
-	function (route, model) {
-		return A2(
-			rtfeldman$elm_css$Html$Styled$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					rtfeldman$elm_css$Html$Styled$text('trainer view')
-				]));
-	});
 var author$project$View$page = function (model) {
-	var _n0 = model.route;
+	var _n0 = model.page;
 	switch (_n0.$) {
 		case 'NotFound':
 			return A2(
@@ -22567,22 +23045,33 @@ var author$project$View$page = function (model) {
 						rtfeldman$elm_css$Html$Styled$text('404 D:')
 					]));
 		case 'Index':
+			var indexModel = _n0.a;
 			return A2(
 				rtfeldman$elm_css$Html$Styled$map,
 				author$project$Msg$IndexMsg,
-				author$project$Index$View$view(model.index));
+				author$project$Index$View$view(indexModel));
 		case 'Admin':
-			var adminRoute = _n0.a;
+			var adminPage = _n0.a;
 			return A2(
 				rtfeldman$elm_css$Html$Styled$map,
 				author$project$Msg$AdminMsg,
-				A2(author$project$Admin$View$view, adminRoute, model.admin));
+				author$project$Admin$View$view(adminPage));
+		case 'Trainer':
+			var trainerPage = _n0.a;
+			return _Debug_todo(
+				'View',
+				{
+					start: {line: 90, column: 13},
+					end: {line: 90, column: 23}
+				})('trainer view');
 		default:
-			var trainerRoute = _n0.a;
 			return A2(
-				rtfeldman$elm_css$Html$Styled$map,
-				author$project$Msg$TrainerMsg,
-				A2(author$project$Trainer$View$view, trainerRoute, model.trainer));
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						rtfeldman$elm_css$Html$Styled$text('test')
+					]));
 	}
 };
 var author$project$View$body = function (model) {
@@ -22619,4 +23108,4 @@ var author$project$Main$main = elm$browser$Browser$application(
 		view: author$project$View$view
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"OpenSmModal":[],"CloseSmModal":[],"OpenLgModal":[],"CloseLgModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"],"Tab":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

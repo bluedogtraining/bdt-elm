@@ -154,10 +154,16 @@ view model =
                     , Card.view
                         |> Card.header "Text Area!" []
                         |> Card.body
-                            [ Card.block Twelve
-                                [ TextArea.view model.textArea
-                                    |> TextArea.render
-                                    |> Html.map TextAreaMsg
+                            [ Card.block Six
+                                [ div
+                                    [ style "display" "flex", style "flex-direction" "column", style "height" "100%" ]
+                                    [ TextArea.view model.textArea
+                                        |> TextArea.render
+                                        |> Html.map TextAreaMsg
+                                    ]
+                                ]
+                            , Card.block Six
+                                [ text "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
                                 ]
                             ]
                         |> Card.render
@@ -188,13 +194,17 @@ view model =
                             [ Card.block Twelve
                                 [ Button.view
                                     |> Button.text "Open Sm Modal"
-                                    |> Button.onClick OpenSmModal
+                                    |> Button.onClick ToggleSmModal
                                     |> Button.render
                                 , Button.view
                                     |> Button.text "Open Lg Modal"
-                                    |> Button.onClick OpenLgModal
+                                    |> Button.onClick ToggleLgModal
                                     |> Button.render
-                                , Modal.viewIf model.modalSmOpen CloseSmModal
+                                , Button.view
+                                    |> Button.text "Open Resize Modal"
+                                    |> Button.onClick ToggleResizeModal
+                                    |> Button.render
+                                , Modal.viewIf model.modalSmOpen ToggleSmModal
                                     |> Modal.setSize Sm
                                     |> Modal.header "Hi I'm Sm Modal" []
                                     |> Modal.body
@@ -203,7 +213,7 @@ view model =
                                         ]
                                     |> Modal.footer []
                                     |> Modal.render
-                                , Modal.viewIf model.modalLgOpen CloseLgModal
+                                , Modal.viewIf model.modalLgOpen ToggleLgModal
                                     |> Modal.setSize Lg
                                     |> Modal.header "Hi I'm Lg Modal" []
                                     |> Modal.body
@@ -247,11 +257,124 @@ view model =
                                     |> Modal.footer
                                         [ Button.view
                                             |> Button.text "Cancel"
-                                            |> Button.onClick CloseLgModal
+                                            |> Button.onClick ToggleLgModal
                                             |> Button.red
                                         , Button.view
                                             |> Button.text "Save"
                                             |> Button.green
+                                        ]
+                                    |> Modal.render
+                                , Modal.viewIf model.modalResizeOpen ToggleResizeModal
+                                    |> Modal.setSize Xl
+                                    |> Modal.body
+                                        [ Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Learning" ]
+                                            , a
+                                                [ href "/admin/courses", style "display" "block" ]
+                                                [ text "Courses" ]
+                                            , a
+                                                [ href "/admin/units", style "display" "block" ]
+                                                [ text "Units" ]
+                                            , a
+                                                [ href "/admin/tasks", style "display" "block" ]
+                                                [ text "Tasks" ]
+                                            , a
+                                                [ href "/admin/course-schemes", style "display" "block" ]
+                                                [ text "Course Schemes" ]
+                                            ]
+                                        , Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Users" ]
+                                            , a
+                                                [ href "/admin/courses", style "display" "block" ]
+                                                [ text "Trainer Roles" ]
+                                            , a
+                                                [ href "/admin/units", style "display" "block" ]
+                                                [ text "Classes" ]
+                                            ]
+                                        , Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Skills Profiler" ]
+                                            , a
+                                                [ href "/admin/courses", style "display" "block" ]
+                                                [ text "Activity Definitions" ]
+                                            , a
+                                                [ href "/admin/units", style "display" "block" ]
+                                                [ text "Descriptions" ]
+                                            ]
+                                        , Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Apprenticeship Providers" ]
+                                            , a
+                                                [ href "/admin/courses", style "display" "block" ]
+                                                [ text "Apprenticeship Providers" ]
+                                            , a
+                                                [ href "/admin/units", style "display" "block" ]
+                                                [ text "Field Officers" ]
+                                            ]
+                                        , Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Finance" ]
+                                            , a
+                                                [ href "/admin/courses", style "display" "block" ]
+                                                [ text "Invoices" ]
+                                            ]
+                                        , Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Avetmiss" ]
+                                            , a
+                                                [ href "/admin/courses", style "display" "block" ]
+                                                [ text "Funding Schemes" ]
+                                            ]
+                                        , Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Schools & Vetis" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Schools" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Vetis Management" ]
+                                            ]
+                                        , Modal.blockSizes Twelve
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
+                                            [ h1
+                                                []
+                                                [ text "Other" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Reports" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Assessment Questions" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Course Descriptors" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Feedback" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Referral Sources" ]
+                                            , a
+                                                [ href "/admin/schools", style "display" "block" ]
+                                                [ text "Student Course Archival Status" ]
+                                            ]
                                         ]
                                     |> Modal.render
                                 ]

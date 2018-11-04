@@ -85,7 +85,7 @@ body =
 block : Cols -> List ( Size, Cols ) -> Attribute msg
 block cols sizes =
     css <|
-        List.map Grid.colSize (SizeHelpers.orderBySize sizes)
+        List.map Grid.colSize (SizeHelpers.orderBySize sizes |> List.reverse)
             ++ [ flexGrow <| num 1
                , padding2 (Css.rem 0.2) (Css.rem 0.8)
                , boxSizing borderBox

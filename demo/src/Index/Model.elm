@@ -40,6 +40,7 @@ type alias Model =
     , countryOfBirth : SearchSelect.Model Country
     , modalSmOpen : Bool
     , modalLgOpen : Bool
+    , modalResizeOpen : Bool
     , maybeBlockSelect : Select.Model MusicGenre
     }
 
@@ -55,7 +56,7 @@ initialModel =
     , datePicker = DatePicker.init
     , datePicker2 = DatePicker.init
     , datePicker3 = DatePicker.init
-    , textArea = TextArea.init |> TextArea.setSubstituteTabs True |> TextArea.setReplacements [ ( "[]", "☐" ) ]
+    , textArea = TextArea.init |> TextArea.setReplacements [ ( "[]", "☐" ) ]
     , toggle1 = False
     , toggle2 = False
     , toggle3 = False
@@ -70,5 +71,6 @@ initialModel =
     , countryOfBirth = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Country.countryDecoder
     , modalSmOpen = False
     , modalLgOpen = False
+    , modalResizeOpen = False
     , maybeBlockSelect = Select.init MusicGenre.asNonempty
     }

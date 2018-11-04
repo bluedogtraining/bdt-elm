@@ -127,17 +127,14 @@ update msg model =
             in
             ( { model | countryOfBirth = newSearchSelect }, Cmd.map UpdateCountryOfBirth cmd )
 
-        OpenSmModal ->
-            ( { model | modalSmOpen = True }, Cmd.none )
+        ToggleSmModal ->
+            ( { model | modalSmOpen = not model.modalSmOpen }, Cmd.none )
 
-        CloseSmModal ->
-            ( { model | modalSmOpen = False }, Cmd.none )
+        ToggleLgModal ->
+            ( { model | modalLgOpen = not model.modalLgOpen }, Cmd.none )
 
-        OpenLgModal ->
-            ( { model | modalLgOpen = True }, Cmd.none )
-
-        CloseLgModal ->
-            ( { model | modalLgOpen = False }, Cmd.none )
+        ToggleResizeModal ->
+            ( { model | modalResizeOpen = not model.modalResizeOpen }, Cmd.none )
 
         UpdateMaybeBLockSelect selectMsg ->
             let

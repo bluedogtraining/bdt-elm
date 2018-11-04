@@ -1,7 +1,7 @@
 module Button exposing
     ( Button
     , view, viewIf
-    , text, icon, onClick, href, small, isLoading, isDisabled, green, red
+    , text, icon, onClick, href, hrefBlank, small, isLoading, isDisabled, green, red
     , render
     )
 
@@ -20,7 +20,7 @@ module Button exposing
 
 # Configure
 
-@docs text, icon, onClick, href, small, isLoading, isDisabled, green, red
+@docs text, icon, onClick, href, hrefBlank, small, isLoading, isDisabled, green, red
 
 
 # Render
@@ -29,9 +29,9 @@ module Button exposing
 
 -}
 
-import Content as Content exposing (..)
 import Button.Css as Css
 import Button.Size exposing (..)
+import Content as Content exposing (..)
 import Css exposing (Color, rgb)
 import FeatherIcons exposing (Icon)
 import Html.Styled as Html exposing (..)
@@ -62,7 +62,7 @@ type alias Config msg =
     , content : Content
     , color : Color
     , onClick : Maybe msg
-    , url : String
+    , href : Maybe { url : String, blank : Bool }
     , isLoading : Bool
     , isDisabled : Bool
     }
@@ -75,7 +75,7 @@ initialConfig =
     , content = Text ""
     , color = rgb 102 102 102
     , onClick = Nothing
-    , url = ""
+    , href = Nothing
     , isLoading = False
     , isDisabled = False
     }
@@ -131,7 +131,14 @@ onClick msg (Button config) =
 -}
 href : String -> Button msg -> Button msg
 href url (Button config) =
-    Button { config | url = url }
+    Button { config | href = Just { url = url, blank = False } }
+
+
+{-| Open a href url when clicked
+-}
+hrefBlank : String -> Button msg -> Button msg
+hrefBlank url (Button config) =
+    Button { config | href = Just { url = url, blank = True } }
 
 
 {-| Display as loading, removing the click Msg
@@ -166,10 +173,8 @@ red (Button config) =
 -}
 render : Button msg -> Html msg
 render (Button config) =
-
-    case String.isEmpty config.url of
-
-        True ->
+    case config.href of
+        Nothing ->
             button
                 [ Css.button config.size config.content config.color config.isDisabled config.isLoading
                 , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
@@ -178,12 +183,12 @@ render (Button config) =
                 , content config.content config.size config.color config.isLoading
                 ]
 
-        False ->
+        Just href_ ->
             a
                 [ Css.button config.size config.content config.color config.isDisabled config.isLoading
                 , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
-                , Attributes.href config.url |> Html.attributeIf (not <| String.isEmpty config.url)
-                , target "_blank" |> Html.attributeIf (not <| String.isEmpty config.url)
+                , Attributes.href href_.url |> Html.attributeIf (config.href /= Nothing)
+                , target "blank_" |> Html.attributeIf href_.blank
                 ]
                 [ Css.spinKeyFrames
                 , content config.content config.size config.color config.isLoading
@@ -200,7 +205,7 @@ content content_ size color isLoading_ =
             div
                 [ Css.loadingTextContainer ]
                 [ div
-                    [ Css.loading (iconSize size)]
+                    [ Css.loading (iconSize size) ]
                     [ FeatherIcons.refreshCw |> FeatherIcons.withSize (iconSize size) |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
                 , div
                     [ Css.loadingText ]

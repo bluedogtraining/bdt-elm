@@ -1,57 +1,56 @@
 module Update exposing (update)
 
---import Admin.Update as Admin
---import Trainer.Update as Trainer
-
+import Admin.Page as Admin
+import Admin.Update as Admin
+import BaseReturn as Return
 import Browser
 import Browser.Navigation as Navigation
+import Index.Model as Index
 import Index.Update as Index
 import Model exposing (Model)
 import Msg exposing (Msg(..))
-import Route exposing (Route(..))
+import Page
+import Route
 import Toasters
 import Url
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        Navigate (Browser.Internal url) ->
-            ( model
-            , Navigation.pushUrl model.navigationKey (Url.toString url)
-            )
+    case ( msg, model.page ) of
+        ( Navigate (Browser.Internal url), _ ) ->
+            ( model, Navigation.pushUrl model.navigationKey (Url.toString url) )
 
-        Navigate (Browser.External href) ->
-            ( model
-            , Navigation.load href
-            )
+        ( Navigate (Browser.External href), _ ) ->
+            ( model, Navigation.load href )
 
-        UrlChange url ->
+        ( UrlChange url, _ ) ->
             case Route.fromUrl url of
-                Just route ->
-                    ( { model | route = route }, Cmd.none )
-
                 Nothing ->
-                    ( { model | route = NotFound }, Cmd.none )
+                    ( { model | page = Page.NotFound }, Cmd.none )
 
-        ToastersMsg toasterMsg ->
+                Just Route.Index ->
+                    ( { model | page = Page.Index Index.initialModel }, Cmd.none )
+
+                Just (Route.Admin adminRoute) ->
+                    ( { model | page = Page.Admin <| Admin.fromRoute adminRoute }, Cmd.none )
+
+                Just (Route.Trainer trainerRoute) ->
+                    ( { model | page = Page.NotFound }, Cmd.none )
+
+                Just Route.Test ->
+                    ( { model | page = Page.Test }, Cmd.none )
+
+        ( ToastersMsg toasterMsg, _ ) ->
             ( { model | toasters = Toasters.update toasterMsg model.toasters }, Cmd.none )
 
-        ToggleAdminMenu ->
+        ( ToggleAdminMenu, _ ) ->
             ( { model | isAdminMenuOpen = not model.isAdminMenuOpen }, Cmd.none )
 
-        IndexMsg indexMsg ->
-            Index.update indexMsg model.index
-                |> Tuple.mapFirst (\indexModel -> { model | index = indexModel })
+        ( IndexMsg indexMsg, Page.Index indexModel ) ->
+            Index.update indexMsg indexModel
+                |> Tuple.mapFirst (\indexModel_ -> { model | page = Page.Index indexModel_ })
                 |> Tuple.mapSecond (Cmd.map IndexMsg)
 
         _ ->
-            Debug.todo "todo update"
-
-
-
---        AdminMsg adminMsg ->
---            Admin.update adminMsg model.admin
---
---        TrainerMsg trainerMsg ->
---            Trainer.update trainerMsg model.trainer
+            Debug.todo "other updates"

@@ -1,23 +1,25 @@
 module Model exposing (Model, initialModel)
 
+import Admin.Page as Admin
+import BaseReturn as Return
 import Browser.Navigation as Navigation
 import Dict exposing (Dict)
+import Entities exposing (Entities)
 import Index.Model as Index
+import Msg exposing (Msg)
+import Page exposing (Page)
+import Return exposing (Return)
 import Route exposing (Route(..))
 import Toasters
-import Trainer.Model as Trainer
-import Admin.Model as Admin
+import Trainer.Page as Trainer
 
 
 type alias Model =
     { db : Db
     , toasters : Toasters.Model
-    , route : Route
     , navigationKey : Navigation.Key
     , isAdminMenuOpen : Bool
-    , index : Index.Model
-    , admin : Admin.Model
-    , trainer : Trainer.Model
+    , page : Page
     }
 
 
@@ -25,21 +27,18 @@ initialModel : Navigation.Key -> Model
 initialModel navigationKey =
     { db = initialDb
     , toasters = Toasters.init
-    , route = Index
     , navigationKey = navigationKey
     , isAdminMenuOpen = False
-    , index = Index.initialModel
-    , admin = Admin.initialModel
-    , trainer = Trainer.initialModel
+    , page = Page.Index Index.initialModel
     }
 
 
 type alias Db =
-    { entities : Dict String String
+    { entities : Entities
     }
 
 
 initialDb : Db
 initialDb =
-    { entities = Dict.empty
+    { entities = Entities.init
     }

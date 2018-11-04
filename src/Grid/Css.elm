@@ -48,7 +48,7 @@ row =
 col : Cols -> List ( Size, Cols ) -> Attribute msg
 col cols sizes =
     css <|
-        List.map colSize (SizeHelpers.orderBySize sizes)
+        List.map colSize (SizeHelpers.orderBySize sizes |> List.reverse)
             ++ [ flexGrow <| num 1
                , paddingLeft <| px 15
                , paddingRight <| px 15

@@ -1,10 +1,10 @@
 module Form.DatePicker exposing
     ( Model, init, Msg, update
     , view, render
-    , reInitialise, reset
-    , setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
-    , getIsChanged, getIsOpen, getId
-    , getInitialPosix, getSelectedPosix, setInitialPosix, setMaxPosix, setMinPosix, setSelectedPosix
+    , reInitialise, reset, setInitialPosix, setSelectedPosix
+    , setMinPosix, setMaxPosix, setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
+    , getIsChanged, getIsOpen, getInitialPosix, getSelectedPosix, getId
+    , setTimeZone
     )
 
 {-| This module is useful if you want to add a DatePicker Form element to your app.
@@ -22,7 +22,7 @@ module Form.DatePicker exposing
 
 # State Setters
 
-@docs reInitialise, reset, setInitialPosix, setSelectedPosix
+@docs reInitialise, reset, setTimeZone, setInitialPosix, setSelectedPosix
 
 
 # View Setters
@@ -142,6 +142,13 @@ reInitialise (Model state) =
 reset : Model -> Model
 reset (Model state) =
     Model <| Internal.reset state
+
+
+{-| Set the TimeZone
+-}
+setTimeZone : Time.Zone -> Model -> Model
+setTimeZone timeZone (Model state) =
+    Model <| Internal.setTimeZone timeZone state
 
 
 {-| Set the initial Date of your DatePicker.Model.

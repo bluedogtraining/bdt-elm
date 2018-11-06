@@ -23,6 +23,7 @@ module Form.DatePicker.Internal exposing
     , setMaxPosix
     , setMinPosix
     , setSelectedPosix
+    , setTimeZone
     , update
     )
 
@@ -53,6 +54,7 @@ import Time.DateTime as DateTime exposing (DateTime)
 
 type alias State =
     { isOpen : Bool
+    , timeZone : Time.Zone
     , selectedPosix : Resettable (Maybe Posix)
     , navigationPosix : Maybe Posix -- date on which the datepicker is open
     , desiredPosix : Maybe Posix -- date selected with timepicker enabled
@@ -82,6 +84,7 @@ init =
                 |> Select.init
     in
     { isOpen = False
+    , timeZone = Time.utc
     , selectedPosix = Resettable.init Nothing
     , navigationPosix = Nothing
     , desiredPosix = Nothing
@@ -173,17 +176,17 @@ update msg state =
                 , hours =
                     state.selectedPosix
                         |> Resettable.getValue
-                        |> Maybe.map (Time.toHour Time.utc)
+                        |> Maybe.map (Time.toHour state.timeZone)
                         |> (\option -> Select.setInitialOption (option |> Maybe.withDefault 0 |> Just) state.hours)
                 , minutes =
                     state.selectedPosix
                         |> Resettable.getValue
-                        |> Maybe.map (Time.toMinute Time.utc)
+                        |> Maybe.map (Time.toMinute state.timeZone)
                         |> (\option -> Select.setInitialOption (option |> Maybe.withDefault 0 |> Just) state.minutes)
                 , seconds =
                     state.selectedPosix
                         |> Resettable.getValue
-                        |> Maybe.map (Time.toSecond Time.utc)
+                        |> Maybe.map (Time.toSecond state.timeZone)
                         |> (\option -> Select.setInitialOption (option |> Maybe.withDefault 0 |> Just) state.seconds)
                 , focusedSelect = Nothing
               }
@@ -225,9 +228,9 @@ update msg state =
                                 Just currentPosix ->
                                     currentPosix
                                         |> DateTime.fromPosix
-                                        |> DateTime.setYear (Time.toYear Time.utc posix)
-                                        |> DateTime.setMonth (Time.toMonth Time.utc posix |> Time.monthNumber)
-                                        |> DateTime.setDay (Time.toDay Time.utc posix)
+                                        |> DateTime.setYear (Time.toYear state.timeZone posix)
+                                        |> DateTime.setMonth (Time.toMonth state.timeZone posix |> Time.monthNumber)
+                                        |> DateTime.setDay (Time.toDay state.timeZone posix)
                                         |> DateTime.toPosix
                     in
                     ( { state | selectedPosix = Resettable.update (Just newPosix) state.selectedPosix, isOpen = False }, Cmd.none )
@@ -244,9 +247,9 @@ update msg state =
                     let
                         newPosix =
                             DateTime.epoch
-                                |> DateTime.setYear (Time.toYear Time.utc desiredPosix)
-                                |> DateTime.setMonth (Time.toMonth Time.utc desiredPosix |> Time.monthNumber)
-                                |> DateTime.setDay (Time.toDay Time.utc desiredPosix)
+                                |> DateTime.setYear (Time.toYear state.timeZone desiredPosix)
+                                |> DateTime.setMonth (Time.toMonth state.timeZone desiredPosix |> Time.monthNumber)
+                                |> DateTime.setDay (Time.toDay state.timeZone desiredPosix)
                                 |> DateTime.setHour (Select.getSelectedOption state.hours |> Maybe.withDefault 0)
                                 |> DateTime.setMinute (Select.getSelectedOption state.minutes |> Maybe.withDefault 0)
                                 |> DateTime.setSecond (Select.getSelectedOption state.seconds |> Maybe.withDefault 0)
@@ -455,26 +458,26 @@ calendarNavigation : State -> ViewState -> Posix -> Html Msg
 calendarNavigation state viewState navigationPosix =
     div
         [ Css.navigation ]
-        [ previousYearArrow viewState navigationPosix
-        , previousMonthArrow viewState navigationPosix
+        [ previousYearArrow state viewState navigationPosix
+        , previousMonthArrow state viewState navigationPosix
         , div
             [ Css.date ]
-            [ text <| calendarNavigationTitle navigationPosix ]
-        , nextMonthArrow viewState navigationPosix
-        , nextYearArrow viewState navigationPosix
+            [ text <| calendarNavigationTitle state.timeZone navigationPosix ]
+        , nextMonthArrow state viewState navigationPosix
+        , nextYearArrow state viewState navigationPosix
         ]
 
 
-calendarNavigationTitle : Posix -> String
-calendarNavigationTitle posix =
-    (Time.toYear Time.utc posix |> String.fromInt) ++ " - " ++ (Time.toMonth Time.utc posix |> Time.monthString)
+calendarNavigationTitle : Time.Zone -> Posix -> String
+calendarNavigationTitle timeZone posix =
+    (Time.toYear timeZone posix |> String.fromInt) ++ " - " ++ (Time.toMonth timeZone posix |> Time.monthString)
 
 
-previousYearArrow : ViewState -> Posix -> Html Msg
-previousYearArrow viewState navigationPosix =
+previousYearArrow : State -> ViewState -> Posix -> Html Msg
+previousYearArrow state viewState navigationPosix =
     let
         isDisabled =
-            Helpers.isSameMonthAndYear navigationPosix viewState.minPosix
+            Helpers.isSameMonthAndYear state.timeZone navigationPosix viewState.minPosix
     in
     div
         [ Css.yearArrows isDisabled
@@ -487,11 +490,11 @@ previousYearArrow viewState navigationPosix =
         ]
 
 
-previousMonthArrow : ViewState -> Posix -> Html Msg
-previousMonthArrow viewState navigationPosix =
+previousMonthArrow : State -> ViewState -> Posix -> Html Msg
+previousMonthArrow state viewState navigationPosix =
     let
         isDisabled =
-            Helpers.isSameMonthAndYear navigationPosix viewState.minPosix
+            Helpers.isSameMonthAndYear state.timeZone navigationPosix viewState.minPosix
     in
     div
         [ Css.monthArrows isDisabled
@@ -500,11 +503,11 @@ previousMonthArrow viewState navigationPosix =
         [ FeatherIcons.chevronLeft |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
-nextYearArrow : ViewState -> Posix -> Html Msg
-nextYearArrow viewState navigationPosix =
+nextYearArrow : State -> ViewState -> Posix -> Html Msg
+nextYearArrow state viewState navigationPosix =
     let
         isDisabled =
-            Helpers.isSameMonthAndYear navigationPosix viewState.maxPosix
+            Helpers.isSameMonthAndYear state.timeZone navigationPosix viewState.maxPosix
     in
     div
         [ Css.yearArrows isDisabled
@@ -517,11 +520,11 @@ nextYearArrow viewState navigationPosix =
         ]
 
 
-nextMonthArrow : ViewState -> Posix -> Html Msg
-nextMonthArrow viewState navigationPosix =
+nextMonthArrow : State -> ViewState -> Posix -> Html Msg
+nextMonthArrow state viewState navigationPosix =
     let
         isDisabled =
-            Helpers.isSameMonthAndYear navigationPosix viewState.maxPosix
+            Helpers.isSameMonthAndYear state.timeZone navigationPosix viewState.maxPosix
     in
     div
         [ Css.monthArrows isDisabled
@@ -559,7 +562,7 @@ calendarDay : State -> ViewState -> Posix -> Posix -> Html Msg
 calendarDay state viewState navigationPosix posix =
     let
         isCurrentMonth =
-            Time.toYear Time.utc posix == Time.toYear Time.utc navigationPosix && Time.toMonth Time.utc posix == Time.toMonth Time.utc navigationPosix
+            Time.toYear state.timeZone posix == Time.toYear state.timeZone navigationPosix && Time.toMonth state.timeZone posix == Time.toMonth state.timeZone navigationPosix
 
         isSelectedPosix =
             case Resettable.getValue state.selectedPosix of
@@ -586,7 +589,7 @@ calendarDay state viewState navigationPosix posix =
         [ Css.calendarDayItem isSelectedPosix isDesiredPosix (isCurrentMonth && isInRange)
         , onClick (SelectDay posix viewState.includeTime) |> Html.attributeIf (isCurrentMonth && isInRange)
         ]
-        [ text <| String.fromInt <| Time.toDay Time.utc posix ]
+        [ text <| String.fromInt <| Time.toDay state.timeZone posix ]
 
 
 timePickerContainer : State -> Bool -> Html Msg
@@ -694,6 +697,11 @@ reInitialise state =
 reset : State -> State
 reset state =
     { state | selectedPosix = Resettable.reset state.selectedPosix }
+
+
+setTimeZone : Time.Zone -> State -> State
+setTimeZone timeZone state =
+    { state | timeZone = timeZone }
 
 
 setInitialPosix : Maybe Posix -> State -> State

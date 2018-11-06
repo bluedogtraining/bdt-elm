@@ -1,7 +1,6 @@
 module Index.Model exposing (Model, initialModel)
 
 import Content
-import Records.Country as Country exposing (Country)
 import FeatherIcons
 import Form.DatePicker as DatePicker
 import Form.FloatInput as FloatInput
@@ -11,7 +10,11 @@ import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.Select as Select
 import Form.TextArea as TextArea
+import Records.Country as Country exposing (Country)
 import Records.MusicGenre as MusicGenre exposing (MusicGenre)
+import Time
+import Time.TimeZone as TimeZone
+import Time.TimeZones as TimeZones
 import ToolTip
 
 
@@ -53,7 +56,7 @@ initialModel =
     , select = Select.init MusicGenre.asNonempty
     , multiSelect = MultiSelect.init MusicGenre.asNonempty
     , searchSelect = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Country.countryDecoder
-    , datePicker = DatePicker.init
+    , datePicker = DatePicker.init |> DatePicker.setTimeZone (Time.customZone (TimeZone.offset (Time.millisToPosix 0) TimeZones.australia_brisbane // 1000 // 60 |> abs) [])
     , datePicker2 = DatePicker.init
     , datePicker3 = DatePicker.init
     , textArea = TextArea.init |> TextArea.setReplacements [ ( "[]", "☐" ) ]

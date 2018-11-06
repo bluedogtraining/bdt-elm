@@ -123,11 +123,13 @@ view model =
                         |> Card.header "Date Pickers!" []
                         |> Card.body
                             [ Card.block Twelve
-                                [ Label.view "Simple Date Picker"
+                                [ Label.view "Simple Date Picker (set to Brisbane Time)"
                                     |> Label.render
                                 , DatePicker.view model.datePicker
                                     |> DatePicker.render
                                     |> Html.map DatePickerMsg
+                                , Html.maybeView (DatePicker.getSelectedPosix model.datePicker)
+                                    (\posix -> Time.posixToMillis posix |> String.fromInt |> text)
                                 ]
                             , Card.block Twelve
                                 [ Label.view "Date Picker with min and max dates"

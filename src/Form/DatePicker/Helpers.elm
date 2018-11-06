@@ -6,11 +6,11 @@ import Time.Date as Date exposing (Weekday(..))
 import Time.DateTime as DateTime
 
 
-isSameMonthAndYear : Posix -> Maybe Posix -> Bool
-isSameMonthAndYear posix1 mPosix2 =
+isSameMonthAndYear : Time.Zone -> Posix -> Maybe Posix -> Bool
+isSameMonthAndYear timeZone posix1 mPosix2 =
     case mPosix2 of
         Just posix2 ->
-            Time.toYear Time.utc posix1 == Time.toYear Time.utc posix2 && Time.toMonth Time.utc posix1 == Time.toMonth Time.utc posix2
+            Time.toYear timeZone posix1 == Time.toYear timeZone posix2 && Time.toMonth timeZone posix1 == Time.toMonth timeZone posix2
 
         _ ->
             False

@@ -15,6 +15,3 @@ The folder structure is pretty simple:
 
 ## Compile the demo
 In order to compile the demo, navigate to `./demo` and run `./live`. 
-
-Any changes to the demo will trigger the compiler to re-run.  
-Any changes to the library itself will not be detected and you'll have to stop the `./live` command and re-start it. @todo: Auto detect these changes.

@@ -15,7 +15,7 @@ button size content color isDisabled isLoading =
         [ border3 (px 1) solid (rgba color.red color.green color.blue 0.2)
         , borderRadius (px 2)
         , backgroundColor transparent
-        , Css.color color
+        , Css.color color |> important
         , display inlineFlex
         , justifyContent center
         , alignItems center
@@ -39,7 +39,7 @@ button size content color isDisabled isLoading =
         , margin2 (px 0) (Css.rem 0.2)
         , fontSize <| Css.rem 0.8
         , verticalAlign middle
-        , textDecoration none
+        , textDecoration none |> important
         , property "user-select" "none"
         , whiteSpace noWrap
         , overflow hidden

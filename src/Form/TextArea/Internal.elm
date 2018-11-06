@@ -22,7 +22,7 @@ module Form.TextArea.Internal exposing
     , update
     )
 
-import Form.Textarea.Css as Css
+import Form.TextArea.Css as Css
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Bdt as Html

@@ -1,4 +1,4 @@
-module Admin.Msg exposing (Msg (..))
+module Admin.Msg exposing (Msg(..))
 
 
 type Msg

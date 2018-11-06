@@ -1,11 +1,11 @@
 module Msg exposing (Msg(..))
 
-import Index.Msg as Index
 import Admin.Msg as Admin
-import Trainer.Msg as Trainer
-import Toasters
-import Url exposing (Url)
 import Browser exposing (UrlRequest)
+import Index.Msg as Index
+import Toasters
+import Trainer.Msg as Trainer
+import Url exposing (Url)
 
 
 type Msg
@@ -16,4 +16,3 @@ type Msg
     | IndexMsg Index.Msg
     | AdminMsg Admin.Msg
     | TrainerMsg Trainer.Msg
-

@@ -64,8 +64,8 @@ init =
         = ToastersMsg Toasters.Msg
 
 -}
-type Msg =
-    InternalMsg Internal.Msg
+type Msg
+    = InternalMsg Internal.Msg
 
 
 {-| Use in your update function.

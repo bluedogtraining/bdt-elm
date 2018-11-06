@@ -1,35 +1,36 @@
 module ToolTip exposing
-    ( Model, init
-    , Msg, update
+    ( Model, init, Msg, update
     , view, render
-    , top, left, bottom
-    , green, red, blue
+    , top, left, bottom, green, red, blue
     )
 
 {-| This module is useful if you want to add a ToolTip to your app.
 
+
 # Initialise and update
+
 @docs Model, init, Msg, update
 
+
 # View and render
+
 @docs view, render
 
+
 # View Setters
+
 @docs top, left, bottom, green, red, blue
 
 -}
 
-import Html.Styled as Html exposing (..)
-import Html.Styled.Lazy exposing (..)
-import Html.Styled.Events exposing (..)
-import Html.Styled.Attributes as Attributes exposing (..)
-
-import Html.Styled.Bdt as Html
-
-import Css exposing (..)
-
 import Content exposing (..)
+import Css exposing (..)
 import FeatherIcons exposing (Icon)
+import Html.Styled as Html exposing (..)
+import Html.Styled.Attributes as Attributes exposing (..)
+import Html.Styled.Bdt as Html
+import Html.Styled.Events exposing (..)
+import Html.Styled.Lazy exposing (..)
 
 
 {-| Add a ToolTip.Model to your model.
@@ -37,9 +38,10 @@ import FeatherIcons exposing (Icon)
     type alias MyModel =
         { myToolTip : ToolTip.Model
         }
+
 -}
-type Model =
-    Model InternalState
+type Model
+    = Model InternalState
 
 
 type alias InternalState =
@@ -48,8 +50,9 @@ type alias InternalState =
     , isOpen : Bool
     }
 
-type View =
-    View InternalState ViewState
+
+type View
+    = View InternalState ViewState
 
 
 type alias ViewState =
@@ -60,7 +63,6 @@ type alias ViewState =
 
 initialViewState : ViewState
 initialViewState =
-
     { placement = Right
     , color = Default
     }
@@ -82,18 +84,17 @@ type Placement
     | Right
 
 
-{-|
-}
+{-| }
 } Init a ToolTip.Model in your model.
 
     myInitialModel : MyModel
     myInitialModel =
         { myToolTip = ToolTip.init
         }
+
 -}
 init : Content -> String -> Model
 init content tip =
-
     Model <| InternalState content tip False
 
 
@@ -101,6 +102,7 @@ init content tip =
 
     type MyMsg
         = UpdateMyToolTip ToolTip.Msg
+
 -}
 type Msg
     = MouseEnter
@@ -109,27 +111,24 @@ type Msg
 
 {-| Use in your update function.
 
-    myUpdate : Msg -> Model -> (Model, Cmd Msg)
+    myUpdate : Msg -> Model -> ( Model, Cmd Msg )
     myUpdate msg model =
         case msg of
             UpdateMyToolTip toolTipMsg ->
                 let
-                    (newToolTip, cmd) =
+                    ( newToolTip, cmd ) =
                         ToolTip.update toolTipMsg mode.myToolTip
                 in
-                    { model | myToolTip = newToolTip } ! [ cmd ]
+                { model | myToolTip = newToolTip } ! [ cmd ]
+
 -}
 update : Msg -> Model -> Model
 update msg (Model state) =
-
     case msg of
-
         MouseEnter ->
-
             Model { state | isOpen = True }
 
         MouseLeave ->
-
             Model { state | isOpen = False }
 
 
@@ -141,10 +140,10 @@ update msg (Model state) =
             []
             [ ToolTip.view model.myToolTip -- pipe view setters here, for example |> setPlacement Top
             ]
+
 -}
 view : Model -> View
 view (Model state) =
-
     View state initialViewState
 
 
@@ -157,10 +156,10 @@ view (Model state) =
             [ ToolTip.render model.myToolTip
                 |> Html.map UpdateMyToolTip
             ]
+
 -}
 render : View -> Html Msg
 render (View state viewState) =
-
     div
         [ onMouseEnter MouseEnter
         , onMouseLeave MouseLeave
@@ -175,9 +174,7 @@ render (View state viewState) =
 
 renderContent : ColorConfig -> Content -> Html Msg
 renderContent colorConfig content =
-
     case content of
-
         Icon icon ->
             FeatherIcons.toHtml [] icon
                 |> Html.fromUnstyled
@@ -190,7 +187,6 @@ renderContent colorConfig content =
 -}
 setPlacement : Placement -> View -> View
 setPlacement placement (View state viewState) =
-
     View state { viewState | placement = placement }
 
 
@@ -198,7 +194,6 @@ setPlacement placement (View state viewState) =
 -}
 top : View -> View
 top (View state viewState) =
-
     View state { viewState | placement = Top }
 
 
@@ -206,7 +201,6 @@ top (View state viewState) =
 -}
 left : View -> View
 left (View state viewState) =
-
     View state { viewState | placement = Left }
 
 
@@ -214,7 +208,6 @@ left (View state viewState) =
 -}
 bottom : View -> View
 bottom (View state viewState) =
-
     View state { viewState | placement = Bottom }
 
 
@@ -222,7 +215,6 @@ bottom (View state viewState) =
 -}
 green : View -> View
 green (View state viewState) =
-
     View state { viewState | color = Green }
 
 
@@ -230,7 +222,6 @@ green (View state viewState) =
 -}
 red : View -> View
 red (View state viewState) =
-
     View state { viewState | color = Red }
 
 
@@ -238,7 +229,6 @@ red (View state viewState) =
 -}
 blue : View -> View
 blue (View state viewState) =
-
     View state { viewState | color = Blue }
 
 
@@ -247,7 +237,6 @@ contentWrapper colorConfig =
     css
         [ color <|
             case colorConfig of
-
                 Green ->
                     hex "3FC380"
 
@@ -259,7 +248,6 @@ contentWrapper colorConfig =
 
                 Default ->
                     hex "000000"
-
         , fontSize <| Css.rem 0.75
         , padding2 (Css.rem 0.2) (Css.rem 0.5)
         , borderRadius <| px 3
@@ -272,29 +260,28 @@ contentWrapper colorConfig =
 
 tooltip : Placement -> Attribute Msg
 tooltip placement =
-    css <| List.append
-        [ position absolute
-        , boxShadow5 (px 0) (px 2) (px 8) (px 0) (rgb 110 110 110)
-        , padding2 (Css.rem 0.3) (Css.rem 0.6)
-        , borderRadius <| px 2
-        , backgroundColor <| hex "fff"
-        , cursor Css.default
-        , fontFamilies
-            [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
-        , fontWeight <| int 100
-        , fontSize <| Css.rem 0.75
-        , color <| Css.rgb 90 90 90
-        , whiteSpace noWrap
-        , zIndex <| int 10
-        ]
-        (placementPosition placement)
+    css <|
+        List.append
+            [ position absolute
+            , boxShadow5 (px 0) (px 2) (px 8) (px 0) (rgb 110 110 110)
+            , padding2 (Css.rem 0.3) (Css.rem 0.6)
+            , borderRadius <| px 2
+            , backgroundColor <| hex "fff"
+            , cursor Css.default
+            , fontFamilies
+                [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
+            , fontWeight <| int 100
+            , fontSize <| Css.rem 0.75
+            , color <| Css.rgb 90 90 90
+            , whiteSpace noWrap
+            , zIndex <| int 10
+            ]
+            (placementPosition placement)
 
 
 placementPosition : Placement -> List Style
 placementPosition placement =
-
     case placement of
-
         Right ->
             [ Css.top <| Css.rem -0.25
             , Css.left <| pct 100
@@ -315,4 +302,3 @@ placementPosition placement =
             , Css.left <| Css.rem -0.25
             , transform <| translateX (pct -100)
             ]
-

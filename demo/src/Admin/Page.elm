@@ -1,7 +1,7 @@
-module Admin.Page exposing (Page (..), fromRoute)
+module Admin.Page exposing (Page(..), fromRoute)
 
-import Admin.Route as Admin
 import Admin.Courses.Page as Courses
+import Admin.Route as Admin
 
 
 type Page

@@ -262,7 +262,7 @@ view model =
                                     |> Modal.setSize Xl
                                     |> Modal.body
                                         [ Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Learning" ]
@@ -280,7 +280,7 @@ view model =
                                                 [ text "Course Schemes" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Users" ]
@@ -292,7 +292,7 @@ view model =
                                                 [ text "Classes" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Skills Profiler" ]
@@ -304,7 +304,7 @@ view model =
                                                 [ text "Descriptions" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Apprenticeship Providers" ]
@@ -316,7 +316,7 @@ view model =
                                                 [ text "Field Officers" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Finance" ]
@@ -325,7 +325,7 @@ view model =
                                                 [ text "Invoices" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Avetmiss" ]
@@ -334,7 +334,7 @@ view model =
                                                 [ text "Funding Schemes" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Schools & Vetis" ]
@@ -346,7 +346,7 @@ view model =
                                                 [ text "Vetis Management" ]
                                             ]
                                         , Modal.blockSizes Twelve
-                                            [ (Xs, Six), ( Sm, Four ), (Xl, Two) ]
+                                            [ ( Xs, Six ), ( Sm, Four ), ( Xl, Two ) ]
                                             [ h1
                                                 []
                                                 [ text "Other" ]

@@ -1,4 +1,4 @@
-module Admin.Courses.Page exposing (..)
+module Admin.Courses.Page exposing (Page(..))
 
 
 type Page

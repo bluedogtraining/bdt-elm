@@ -1,6 +1,6 @@
 module Trainer.Route exposing (Route(..), routeParser, toString)
 
-import Url.Parser as Parser exposing (Parser, s, (</>))
+import Url.Parser as Parser exposing ((</>), Parser, s)
 
 
 type Route

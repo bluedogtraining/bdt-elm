@@ -1,4 +1,4 @@
-module Trainer.Msg exposing (Msg (..))
+module Trainer.Msg exposing (Msg(..))
 
 
 type Msg

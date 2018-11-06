@@ -1,10 +1,9 @@
 module Form.DatePicker exposing
     ( Model, init, Msg, update
     , view, render
-    , reInitialise, reset
-    , setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
-    , getIsChanged, getIsOpen, getId
-    , getInitialPosix, getSelectedPosix, setInitialPosix, setMaxPosix, setMinPosix, setSelectedPosix
+    , reInitialise, reset, setInitialPosix, setSelectedPosix
+    , setMinPosix, setMaxPosix, setIncludeTime, setIsInput, setIsError, setIsLocked, setIsClearable, setDefaultLabel, setId
+    , getIsChanged, getIsOpen, getInitialPosix, getSelectedPosix, getId
     )
 
 {-| This module is useful if you want to add a DatePicker Form element to your app.

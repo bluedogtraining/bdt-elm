@@ -1,7 +1,7 @@
 module Button.Css exposing (button, buttonHeight, buttonPadding, buttonWidth, lightenColor, loading, loadingText, loadingTextContainer, spinKeyFrames)
 
-import Content exposing (Content(..))
 import Button.Size exposing (Size(..))
+import Content exposing (Content(..))
 import Css exposing (..)
 import Css.Global exposing (..)
 import Css.Transitions as Transitions exposing (transition)

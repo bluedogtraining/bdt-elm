@@ -1,6 +1,5 @@
 module Index.Msg exposing (Msg(..))
 
-import Records.Country exposing (Country)
 import Form.DatePicker as DatePicker
 import Form.FloatInput as FloatInput
 import Form.Input as Input
@@ -9,6 +8,7 @@ import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.Select as Select
 import Form.TextArea as TextArea
+import Records.Country exposing (Country)
 import Records.MusicGenre exposing (MusicGenre)
 import ToolTip
 

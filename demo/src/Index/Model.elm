@@ -1,7 +1,6 @@
 module Index.Model exposing (Model, initialModel)
 
 import Content
-import Records.Country as Country exposing (Country)
 import FeatherIcons
 import Form.DatePicker as DatePicker
 import Form.FloatInput as FloatInput
@@ -11,6 +10,7 @@ import Form.MultiSelect as MultiSelect
 import Form.SearchSelect as SearchSelect
 import Form.Select as Select
 import Form.TextArea as TextArea
+import Records.Country as Country exposing (Country)
 import Records.MusicGenre as MusicGenre exposing (MusicGenre)
 import ToolTip
 

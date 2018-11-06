@@ -1,7 +1,7 @@
 module Return exposing (Return)
 
-import Entities exposing (Entities)
 import BaseReturn exposing (BaseReturn)
+import Entities exposing (Entities)
 
 
 type alias Return msg model =

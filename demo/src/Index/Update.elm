@@ -18,13 +18,13 @@ update : Msg -> Index.Model -> ( Index.Model, Cmd Msg )
 update msg model =
     case msg of
         AddGreenToaster ->
-            (model, Cmd.none)
---            ( { model | toasters = Toasters.addGreen "Green Toasters are great." model.toasters }, Cmd.none )
+            ( model, Cmd.none )
 
+        --            ( { model | toasters = Toasters.addGreen "Green Toasters are great." model.toasters }, Cmd.none )
         AddRedToaster ->
-            (model, Cmd.none)
---            ( { model | toasters = Toasters.addRed "Red Toasters are even better!" model.toasters }, Cmd.none )
+            ( model, Cmd.none )
 
+        --            ( { model | toasters = Toasters.addRed "Red Toasters are even better!" model.toasters }, Cmd.none )
         InputMsg inputMsg ->
             ( { model | input = Input.update inputMsg model.input }, Cmd.none )
 

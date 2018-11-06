@@ -8,8 +8,8 @@ import Html.Styled.Events exposing (..)
 import Index.View as Index
 import Model exposing (Model)
 import Msg exposing (Msg(..))
-import Route
 import Page
+import Route
 import Toasters
 import Trainer.Route as Route
 import Trainer.View as Trainer

@@ -157,24 +157,39 @@ isDisabled isDisabled_ (Button config) =
 
 {-| Style it green
 -}
-green : Button msg -> Button msg
-green (Button config) =
-    Button { config | color = rgb 81 163 81 }
+green : Bool -> Button msg -> Button msg
+green shouldBeGreen (Button config) =
+    if shouldBeGreen
+    then
+        Button { config | color = rgb 81 163 81 }
+    else
+        Button config
 
 
 {-| Style it red
 -}
-red : Button msg -> Button msg
-red (Button config) =
-    Button { config | color = rgb 189 54 47 }
+red : Bool -> Button msg -> Button msg
+red shouldBeRed (Button config) =
+    if shouldBeRed
+    then
+        Button { config | color = rgb 189 54 47 }
+    else
+        Button config
 
 
 {-| Render the button
 -}
 render : Button msg -> Html msg
 render (Button config) =
-    case config.href of
-        Nothing ->
+    case (config.isDisabled, config.href) of
+        (True, _) ->
+            button
+                [ Css.button config.size config.content config.color config.isDisabled config.isLoading ]
+                [ Css.spinKeyFrames
+                , content config.content config.size config.color config.isLoading
+                ]
+
+        (False, Nothing) ->
             button
                 [ Css.button config.size config.content config.color config.isDisabled config.isLoading
                 , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
@@ -183,7 +198,7 @@ render (Button config) =
                 , content config.content config.size config.color config.isLoading
                 ]
 
-        Just href_ ->
+        (False, Just href_) ->
             a
                 [ Css.button config.size config.content config.color config.isDisabled config.isLoading
                 , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)

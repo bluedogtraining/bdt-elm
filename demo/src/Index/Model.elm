@@ -45,6 +45,7 @@ type alias Model =
     , modalLgOpen : Bool
     , modalResizeOpen : Bool
     , maybeBlockSelect : Select.Model MusicGenre
+    , isGridButtonGreen : Bool
     }
 
 
@@ -76,4 +77,5 @@ initialModel =
     , modalLgOpen = False
     , modalResizeOpen = False
     , maybeBlockSelect = Select.init MusicGenre.asNonempty
+    , isGridButtonGreen = False
     }

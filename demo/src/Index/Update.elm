@@ -142,3 +142,6 @@ update msg model =
                     Select.update selectMsg model.maybeBlockSelect
             in
             ( { model | maybeBlockSelect = newSelect }, Cmd.map SelectMsg cmd )
+
+        SetGridButtonGreen isGreen ->
+            ( { model | isGridButtonGreen = isGreen }, Cmd.none )

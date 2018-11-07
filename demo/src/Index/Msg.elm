@@ -42,3 +42,4 @@ type Msg
     | ToggleLgModal
     | ToggleResizeModal
     | UpdateMaybeBLockSelect (Select.Msg MusicGenre)
+    | SetGridButtonGreen Bool

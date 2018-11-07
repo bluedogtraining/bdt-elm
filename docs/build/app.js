@@ -7190,6 +7190,7 @@ var author$project$Index$Model$initialModel = {
 	floatInput: author$project$Form$FloatInput$init,
 	input: author$project$Form$Input$init,
 	intInput: author$project$Form$IntInput$init,
+	isGridButtonGreen: false,
 	maybeBlockSelect: author$project$Form$Select$init(author$project$Records$MusicGenre$asNonempty),
 	modalLgOpen: false,
 	modalResizeOpen: false,
@@ -13431,7 +13432,7 @@ var author$project$Index$Update$update = F2(
 						model,
 						{modalResizeOpen: !model.modalResizeOpen}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'UpdateMaybeBLockSelect':
 				var selectMsg = msg.a;
 				var _n10 = A2(author$project$Form$Select$update, selectMsg, model.maybeBlockSelect);
 				var newSelect = _n10.a;
@@ -13441,6 +13442,13 @@ var author$project$Index$Update$update = F2(
 						model,
 						{maybeBlockSelect: newSelect}),
 					A2(elm$core$Platform$Cmd$map, author$project$Index$Msg$SelectMsg, cmd));
+			default:
+				var isGreen = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{isGridButtonGreen: isGreen}),
+					elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Msg$IndexMsg = function (a) {
@@ -17056,15 +17064,16 @@ var rtfeldman$elm_css$Css$rgb = F3(
 						[r, g, b])))
 		};
 	});
-var author$project$Button$green = function (_n0) {
-	var config = _n0.a;
-	return author$project$Button$Button(
-		_Utils_update(
-			config,
-			{
-				color: A3(rtfeldman$elm_css$Css$rgb, 81, 163, 81)
-			}));
-};
+var author$project$Button$green = F2(
+	function (shouldBeGreen, _n0) {
+		var config = _n0.a;
+		return shouldBeGreen ? author$project$Button$Button(
+			_Utils_update(
+				config,
+				{
+					color: A3(rtfeldman$elm_css$Css$rgb, 81, 163, 81)
+				})) : author$project$Button$Button(config);
+	});
 var author$project$Button$href = F2(
 	function (url, _n0) {
 		var config = _n0.a;
@@ -17112,15 +17121,16 @@ var author$project$Button$onClick = F2(
 					onClick: elm$core$Maybe$Just(msg)
 				}));
 	});
-var author$project$Button$red = function (_n0) {
-	var config = _n0.a;
-	return author$project$Button$Button(
-		_Utils_update(
-			config,
-			{
-				color: A3(rtfeldman$elm_css$Css$rgb, 189, 54, 47)
-			}));
-};
+var author$project$Button$red = F2(
+	function (shouldBeRed, _n0) {
+		var config = _n0.a;
+		return shouldBeRed ? author$project$Button$Button(
+			_Utils_update(
+				config,
+				{
+					color: A3(rtfeldman$elm_css$Css$rgb, 189, 54, 47)
+				})) : author$project$Button$Button(config);
+	});
 var author$project$Button$iconSize = function (size) {
 	if (size.$ === 'Small') {
 		return 14;
@@ -17675,17 +17685,13 @@ var rtfeldman$elm_css$Html$Styled$button = rtfeldman$elm_css$Html$Styled$node('b
 var rtfeldman$elm_css$Html$Styled$Attributes$target = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('target');
 var author$project$Button$render = function (_n0) {
 	var config = _n0.a;
-	var _n1 = config.href;
-	if (_n1.$ === 'Nothing') {
+	var _n1 = _Utils_Tuple2(config.isDisabled, config.href);
+	if (_n1.a) {
 		return A2(
 			rtfeldman$elm_css$Html$Styled$button,
 			_List_fromArray(
 				[
-					A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
-					A2(
-					author$project$Html$Styled$Bdt$attributeIf,
-					!config.isDisabled,
-					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick))
+					A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading)
 				]),
 			_List_fromArray(
 				[
@@ -17693,30 +17699,49 @@ var author$project$Button$render = function (_n0) {
 					A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
 				]));
 	} else {
-		var href_ = _n1.a;
-		return A2(
-			rtfeldman$elm_css$Html$Styled$a,
-			_List_fromArray(
-				[
-					A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
-					A2(
-					author$project$Html$Styled$Bdt$attributeIf,
-					!config.isDisabled,
-					A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
-					A2(
-					author$project$Html$Styled$Bdt$attributeIf,
-					!_Utils_eq(config.href, elm$core$Maybe$Nothing),
-					rtfeldman$elm_css$Html$Styled$Attributes$href(href_.url)),
-					A2(
-					author$project$Html$Styled$Bdt$attributeIf,
-					href_.blank,
-					rtfeldman$elm_css$Html$Styled$Attributes$target('blank_'))
-				]),
-			_List_fromArray(
-				[
-					author$project$Button$Css$spinKeyFrames,
-					A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
-				]));
+		if (_n1.b.$ === 'Nothing') {
+			var _n2 = _n1.b;
+			return A2(
+				rtfeldman$elm_css$Html$Styled$button,
+				_List_fromArray(
+					[
+						A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						!config.isDisabled,
+						A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick))
+					]),
+				_List_fromArray(
+					[
+						author$project$Button$Css$spinKeyFrames,
+						A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
+					]));
+		} else {
+			var href_ = _n1.b.a;
+			return A2(
+				rtfeldman$elm_css$Html$Styled$a,
+				_List_fromArray(
+					[
+						A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						!config.isDisabled,
+						A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						!_Utils_eq(config.href, elm$core$Maybe$Nothing),
+						rtfeldman$elm_css$Html$Styled$Attributes$href(href_.url)),
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						href_.blank,
+						rtfeldman$elm_css$Html$Styled$Attributes$target('blank_'))
+					]),
+				_List_fromArray(
+					[
+						author$project$Button$Css$spinKeyFrames,
+						A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
+					]));
+		}
 	}
 };
 var author$project$Button$Size$Small = {$: 'Small'};
@@ -21527,11 +21552,8 @@ var author$project$Form$Select$setIsOptionDisabled = F2(
 			state,
 			A2(author$project$Form$Select$Internal$setIsOptionDisabled, isOptionDisabled, viewState));
 	});
-var author$project$Form$TextArea$Internal$Input = function (a) {
-	return {$: 'Input', a: a};
-};
 var rtfeldman$elm_css$Css$text_ = {cursor: rtfeldman$elm_css$Css$Structure$Compatible, value: 'text'};
-var author$project$Form$Textarea$Css$input = F2(
+var author$project$Form$TextArea$Css$input = F2(
 	function (isError, isLocked) {
 		return rtfeldman$elm_css$Html$Styled$Attributes$css(
 			_Utils_ap(
@@ -21545,6 +21567,9 @@ var author$project$Form$Textarea$Css$input = F2(
 						rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$text_)
 					])));
 	});
+var author$project$Form$TextArea$Internal$Input = function (a) {
+	return {$: 'Input', a: a};
+};
 var rtfeldman$elm_css$Html$Styled$textarea = rtfeldman$elm_css$Html$Styled$node('textarea');
 var author$project$Form$TextArea$Internal$inputField = F2(
 	function (state, viewState) {
@@ -21552,7 +21577,7 @@ var author$project$Form$TextArea$Internal$inputField = F2(
 			rtfeldman$elm_css$Html$Styled$textarea,
 			_List_fromArray(
 				[
-					A2(author$project$Form$Textarea$Css$input, viewState.isError, viewState.isLocked),
+					A2(author$project$Form$TextArea$Css$input, viewState.isError, viewState.isLocked),
 					rtfeldman$elm_css$Html$Styled$Attributes$disabled(viewState.isLocked),
 					rtfeldman$elm_css$Html$Styled$Attributes$value(
 					author$project$Resettable$getValue(state.value)),
@@ -21773,6 +21798,9 @@ var author$project$Index$Msg$InputMsg = function (a) {
 };
 var author$project$Index$Msg$IntInputMsg = function (a) {
 	return {$: 'IntInputMsg', a: a};
+};
+var author$project$Index$Msg$SetGridButtonGreen = function (a) {
+	return {$: 'SetGridButtonGreen', a: a};
 };
 var author$project$Index$Msg$TextAreaMsg = function (a) {
 	return {$: 'TextAreaMsg', a: a};
@@ -22677,6 +22705,154 @@ var feathericons$elm_feather$FeatherIcons$edit = A2(
 					_List_Nil)
 				]))
 		]));
+var feathericons$elm_feather$FeatherIcons$grid = A2(
+	feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'grid',
+	_List_fromArray(
+		[
+			A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
+					elm$svg$Svg$Attributes$width('24'),
+					elm$svg$Svg$Attributes$height('24'),
+					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+					elm$svg$Svg$Attributes$fill('none'),
+					elm$svg$Svg$Attributes$stroke('currentColor'),
+					elm$svg$Svg$Attributes$strokeWidth('2'),
+					elm$svg$Svg$Attributes$strokeLinecap('round'),
+					elm$svg$Svg$Attributes$strokeLinejoin('round'),
+					elm$svg$Svg$Attributes$class('feather feather-grid')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('3'),
+							elm$svg$Svg$Attributes$y('3'),
+							elm$svg$Svg$Attributes$width('7'),
+							elm$svg$Svg$Attributes$height('7')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('14'),
+							elm$svg$Svg$Attributes$y('3'),
+							elm$svg$Svg$Attributes$width('7'),
+							elm$svg$Svg$Attributes$height('7')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('14'),
+							elm$svg$Svg$Attributes$y('14'),
+							elm$svg$Svg$Attributes$width('7'),
+							elm$svg$Svg$Attributes$height('7')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('3'),
+							elm$svg$Svg$Attributes$y('14'),
+							elm$svg$Svg$Attributes$width('7'),
+							elm$svg$Svg$Attributes$height('7')
+						]),
+					_List_Nil)
+				]))
+		]));
+var feathericons$elm_feather$FeatherIcons$list = A2(
+	feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'list',
+	_List_fromArray(
+		[
+			A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
+					elm$svg$Svg$Attributes$width('24'),
+					elm$svg$Svg$Attributes$height('24'),
+					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+					elm$svg$Svg$Attributes$fill('none'),
+					elm$svg$Svg$Attributes$stroke('currentColor'),
+					elm$svg$Svg$Attributes$strokeWidth('2'),
+					elm$svg$Svg$Attributes$strokeLinecap('round'),
+					elm$svg$Svg$Attributes$strokeLinejoin('round'),
+					elm$svg$Svg$Attributes$class('feather feather-list')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('8'),
+							elm$svg$Svg$Attributes$y1('6'),
+							elm$svg$Svg$Attributes$x2('21'),
+							elm$svg$Svg$Attributes$y2('6')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('8'),
+							elm$svg$Svg$Attributes$y1('12'),
+							elm$svg$Svg$Attributes$x2('21'),
+							elm$svg$Svg$Attributes$y2('12')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('8'),
+							elm$svg$Svg$Attributes$y1('18'),
+							elm$svg$Svg$Attributes$x2('21'),
+							elm$svg$Svg$Attributes$y2('18')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('3'),
+							elm$svg$Svg$Attributes$y1('6'),
+							elm$svg$Svg$Attributes$x2('3'),
+							elm$svg$Svg$Attributes$y2('6')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('3'),
+							elm$svg$Svg$Attributes$y1('12'),
+							elm$svg$Svg$Attributes$x2('3'),
+							elm$svg$Svg$Attributes$y2('12')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('3'),
+							elm$svg$Svg$Attributes$y1('18'),
+							elm$svg$Svg$Attributes$x2('3'),
+							elm$svg$Svg$Attributes$y2('18')
+						]),
+					_List_Nil)
+				]))
+		]));
 var rtfeldman$elm_css$Html$Styled$h1 = rtfeldman$elm_css$Html$Styled$node('h1');
 var rtfeldman$elm_css$VirtualDom$Styled$style = F2(
 	function (key, val) {
@@ -23014,13 +23190,17 @@ var author$project$Index$View$view = function (model) {
 																A2(
 																	author$project$Button$onClick,
 																	author$project$Index$Msg$AddGreenToaster,
-																	author$project$Button$green(
+																	A2(
+																		author$project$Button$green,
+																		true,
 																		A2(author$project$Button$text, 'Add Green Toaster', author$project$Button$view)))),
 																author$project$Button$render(
 																A2(
 																	author$project$Button$onClick,
 																	author$project$Index$Msg$AddRedToaster,
-																	author$project$Button$red(
+																	A2(
+																		author$project$Button$red,
+																		true,
 																		A2(author$project$Button$text, 'Add Red Toaster', author$project$Button$view))))
 															]))
 													]),
@@ -23082,12 +23262,16 @@ var author$project$Index$View$view = function (model) {
 																	author$project$Modal$footer,
 																	_List_fromArray(
 																		[
-																			author$project$Button$red(
+																			A2(
+																			author$project$Button$red,
+																			true,
 																			A2(
 																				author$project$Button$onClick,
 																				author$project$Index$Msg$ToggleLgModal,
 																				A2(author$project$Button$text, 'Cancel', author$project$Button$view))),
-																			author$project$Button$green(
+																			A2(
+																			author$project$Button$green,
+																			true,
 																			A2(author$project$Button$text, 'Save', author$project$Button$view))
 																		]),
 																	A2(
@@ -23810,10 +23994,14 @@ var author$project$Index$View$view = function (model) {
 																author$project$Button$small(
 																	A2(author$project$Button$text, 'Small!', author$project$Button$view))),
 																author$project$Button$render(
-																author$project$Button$green(
+																A2(
+																	author$project$Button$green,
+																	true,
 																	A2(author$project$Button$text, 'Green!', author$project$Button$view))),
 																author$project$Button$render(
-																author$project$Button$red(
+																A2(
+																	author$project$Button$red,
+																	true,
 																	A2(author$project$Button$text, 'Red!', author$project$Button$view))),
 																author$project$Button$render(
 																A2(
@@ -23824,7 +24012,9 @@ var author$project$Index$View$view = function (model) {
 																A2(
 																	author$project$Button$isLoading,
 																	true,
-																	author$project$Button$green(
+																	A2(
+																		author$project$Button$green,
+																		true,
 																		author$project$Button$small(
 																			A2(author$project$Button$text, 'Small, green, loading!', author$project$Button$view))))),
 																author$project$Button$render(
@@ -23838,10 +24028,14 @@ var author$project$Index$View$view = function (model) {
 																author$project$Button$small(
 																	A2(author$project$Button$icon, feathericons$elm_feather$FeatherIcons$calendar, author$project$Button$view))),
 																author$project$Button$render(
-																author$project$Button$green(
+																A2(
+																	author$project$Button$green,
+																	true,
 																	A2(author$project$Button$icon, feathericons$elm_feather$FeatherIcons$calendar, author$project$Button$view))),
 																author$project$Button$render(
-																author$project$Button$red(
+																A2(
+																	author$project$Button$red,
+																	true,
 																	A2(author$project$Button$icon, feathericons$elm_feather$FeatherIcons$calendar, author$project$Button$view))),
 																author$project$Button$render(
 																A2(
@@ -23852,7 +24046,31 @@ var author$project$Index$View$view = function (model) {
 																A2(
 																	author$project$Button$text,
 																	'Google It',
-																	A2(author$project$Button$href, 'http://google.com', author$project$Button$view)))
+																	A2(author$project$Button$href, 'http://google.com', author$project$Button$view))),
+																author$project$Button$render(
+																A2(
+																	author$project$Button$isDisabled,
+																	true,
+																	A2(
+																		author$project$Button$text,
+																		'Google It',
+																		A2(author$project$Button$href, 'http://google.com', author$project$Button$view)))),
+																author$project$Button$render(
+																A2(
+																	author$project$Button$green,
+																	model.isGridButtonGreen,
+																	A2(
+																		author$project$Button$onClick,
+																		author$project$Index$Msg$SetGridButtonGreen(true),
+																		A2(author$project$Button$icon, feathericons$elm_feather$FeatherIcons$grid, author$project$Button$view)))),
+																author$project$Button$render(
+																A2(
+																	author$project$Button$green,
+																	!model.isGridButtonGreen,
+																	A2(
+																		author$project$Button$onClick,
+																		author$project$Index$Msg$SetGridButtonGreen(false),
+																		A2(author$project$Button$icon, feathericons$elm_feather$FeatherIcons$list, author$project$Button$view))))
 															]))
 													]),
 												A3(
@@ -23949,11 +24167,11 @@ var author$project$Index$View$view = function (model) {
 													A2(
 													author$project$Button$text,
 													'cancel',
-													author$project$Button$red(author$project$Button$view)),
+													A2(author$project$Button$red, true, author$project$Button$view)),
 													A2(
 													author$project$Button$text,
 													'save',
-													author$project$Button$green(author$project$Button$view))
+													A2(author$project$Button$green, true, author$project$Button$view))
 												]),
 											A2(
 												author$project$Card$body,
@@ -24161,4 +24379,4 @@ var author$project$Main$main = elm$browser$Browser$application(
 		view: author$project$View$view
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"SetGridButtonGreen":["Basics.Bool"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

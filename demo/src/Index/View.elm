@@ -178,12 +178,12 @@ view model =
                             [ Card.block Twelve
                                 [ Button.view
                                     |> Button.text "Add Green Toaster"
-                                    |> Button.green
+                                    |> Button.green True
                                     |> Button.onClick AddGreenToaster
                                     |> Button.render
                                 , Button.view
                                     |> Button.text "Add Red Toaster"
-                                    |> Button.red
+                                    |> Button.red True
                                     |> Button.onClick AddRedToaster
                                     |> Button.render
                                 ]
@@ -260,10 +260,10 @@ view model =
                                         [ Button.view
                                             |> Button.text "Cancel"
                                             |> Button.onClick ToggleLgModal
-                                            |> Button.red
+                                            |> Button.red True
                                         , Button.view
                                             |> Button.text "Save"
-                                            |> Button.green
+                                            |> Button.green True
                                         ]
                                     |> Modal.render
                                 , Modal.viewIf model.modalResizeOpen ToggleResizeModal
@@ -441,11 +441,11 @@ view model =
                                     |> Button.render
                                 , Button.view
                                     |> Button.text "Green!"
-                                    |> Button.green
+                                    |> Button.green True
                                     |> Button.render
                                 , Button.view
                                     |> Button.text "Red!"
-                                    |> Button.red
+                                    |> Button.red True
                                     |> Button.render
                                 , Button.view
                                     |> Button.text "Loading!"
@@ -454,7 +454,7 @@ view model =
                                 , Button.view
                                     |> Button.text "Small, green, loading!"
                                     |> Button.small
-                                    |> Button.green
+                                    |> Button.green True
                                     |> Button.isLoading True
                                     |> Button.render
                                 , Button.view
@@ -470,11 +470,11 @@ view model =
                                     |> Button.render
                                 , Button.view
                                     |> Button.icon FeatherIcons.calendar
-                                    |> Button.green
+                                    |> Button.green True
                                     |> Button.render
                                 , Button.view
                                     |> Button.icon FeatherIcons.calendar
-                                    |> Button.red
+                                    |> Button.red True
                                     |> Button.render
                                 , Button.view
                                     |> Button.icon FeatherIcons.calendar
@@ -483,6 +483,21 @@ view model =
                                 , Button.view
                                     |> Button.href "http://google.com"
                                     |> Button.text "Google It"
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.href "http://google.com"
+                                    |> Button.text "Google It"
+                                    |> Button.isDisabled True
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon FeatherIcons.grid
+                                    |> Button.onClick (SetGridButtonGreen True)
+                                    |> Button.green model.isGridButtonGreen
+                                    |> Button.render
+                                , Button.view
+                                    |> Button.icon FeatherIcons.list
+                                    |> Button.onClick (SetGridButtonGreen False)
+                                    |> Button.green (not model.isGridButtonGreen)
                                     |> Button.render
                                 ]
                             ]
@@ -571,8 +586,8 @@ view model =
                                 ]
                             ]
                         |> Card.footer
-                            [ Button.view |> Button.red |> Button.text "cancel"
-                            , Button.view |> Button.green |> Button.text "save"
+                            [ Button.view |> Button.red True |> Button.text "cancel"
+                            , Button.view |> Button.green True |> Button.text "save"
                             ]
                         |> Card.render
                     , Card.view

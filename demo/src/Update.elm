@@ -1,8 +1,6 @@
 module Update exposing (update)
 
 import Admin.Page as Admin
-import Admin.Update as Admin
-import BaseReturn as Return
 import Browser
 import Browser.Navigation as Navigation
 import Index.Model as Index

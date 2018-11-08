@@ -1,14 +1,12 @@
 module Model exposing (Model, initialModel)
 
 import Admin.Page as Admin
-import BaseReturn as Return
 import Browser.Navigation as Navigation
 import Dict exposing (Dict)
 import Entities exposing (Entities)
 import Index.Model as Index
 import Msg exposing (Msg)
 import Page exposing (Page)
-import Return exposing (Return)
 import Route exposing (Route(..))
 import Toasters
 import Trainer.Page as Trainer

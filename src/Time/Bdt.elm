@@ -31,31 +31,31 @@ module Time.Bdt exposing
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
-import Time exposing (Month(..), Posix)
+import Time exposing (Month(..), Posix, Zone)
 import Time.DateTime as DateTime
 
 
 {-| Returns a string as dd/mm/yyyy
 -}
-toDateString : Posix -> String
-toDateString date =
+toDateString : Zone -> Posix -> String
+toDateString zone posix =
     let
         day =
-            date
-                |> Time.toDay Time.utc
+            posix
+                |> Time.toDay zone
                 |> String.fromInt
                 |> String.pad 2 '0'
 
         month =
-            date
-                |> Time.toMonth Time.utc
+            posix
+                |> Time.toMonth zone
                 |> monthNumber
                 |> String.fromInt
                 |> String.pad 2 '0'
 
         year =
-            date
-                |> Time.toYear Time.utc
+            posix
+                |> Time.toYear zone
                 |> String.fromInt
     in
     [ day, month, year ]
@@ -64,24 +64,24 @@ toDateString date =
 
 {-| Returns a string as hh:mm:ss
 -}
-toTimeString : Posix -> String
-toTimeString posix =
+toTimeString : Zone -> Posix -> String
+toTimeString zone posix =
     let
         hour =
             posix
-                |> Time.toHour Time.utc
+                |> Time.toHour zone
                 |> String.fromInt
                 |> String.pad 2 '0'
 
         minute =
             posix
-                |> Time.toMinute Time.utc
+                |> Time.toMinute zone
                 |> String.fromInt
                 |> String.pad 2 '0'
 
         second =
             posix
-                |> Time.toSecond Time.utc
+                |> Time.toSecond zone
                 |> String.fromInt
                 |> String.pad 2 '0'
     in
@@ -91,34 +91,34 @@ toTimeString posix =
 
 {-| Returns a string as dd/mm/yyyy hh:mm:ss
 -}
-toDateTimeString : Posix -> String
-toDateTimeString posix =
-    toDateString posix ++ " " ++ toTimeString posix
+toDateTimeString : Zone -> Posix -> String
+toDateTimeString zone posix =
+    toDateString zone posix ++ " " ++ toTimeString zone posix
 
 
 {-| Returns a string as dd/mm/yyyy. Defaults to --/--/----
 -}
-maybeToDateString : Maybe Posix -> String
-maybeToDateString mPosix =
+maybeToDateString : Zone -> Maybe Posix -> String
+maybeToDateString zone mPosix =
     mPosix
-        |> Maybe.map toDateString
+        |> Maybe.map (toDateString zone)
         |> Maybe.withDefault "--/--/----"
 
 
 {-| Returns a string as hh:mm:ss. Defaults to 00:00:00
 -}
-maybeToTimeString : Maybe Posix -> String
-maybeToTimeString mPosix =
+maybeToTimeString : Zone -> Maybe Posix -> String
+maybeToTimeString zone mPosix =
     mPosix
-        |> Maybe.map toTimeString
+        |> Maybe.map (toTimeString zone)
         |> Maybe.withDefault "00:00:00"
 
 
 {-| Returns a string as hh:mm:ss dd/mm/yyyy. Defaults to --/--/---- 00:00:00
 -}
-maybeToDateTimeString : Maybe Posix -> String
-maybeToDateTimeString mPosix =
-    maybeToTimeString mPosix ++ " " ++ maybeToDateString mPosix
+maybeToDateTimeString : Zone -> Maybe Posix -> String
+maybeToDateTimeString zone mPosix =
+    maybeToTimeString zone mPosix ++ " " ++ maybeToDateString zone mPosix
 
 
 {-| Returns the Int representation of a month

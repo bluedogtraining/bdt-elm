@@ -18300,7 +18300,7 @@ var author$project$Form$DatePicker$Internal$closed = F2(
 										viewState.defaultLabel,
 										A2(
 											elm$core$Maybe$map,
-											viewState.toLabel,
+											viewState.toLabel(state.timeZone),
 											author$project$Resettable$getValue(state.selectedPosix))))
 								])),
 							A3(
@@ -20445,7 +20445,7 @@ var author$project$Form$DatePicker$Internal$open = F2(
 										viewState.defaultLabel,
 										A2(
 											elm$core$Maybe$map,
-											viewState.toLabel,
+											viewState.toLabel(state.timeZone),
 											author$project$Resettable$getValue(state.selectedPosix))))
 								])),
 							A3(
@@ -20497,56 +20497,59 @@ var elm$core$String$pad = F3(
 					elm$core$Basics$floor(half),
 					elm$core$String$fromChar(_char))));
 	});
-var author$project$Time$Bdt$toDateString = function (date) {
-	var year = elm$core$String$fromInt(
-		A2(elm$time$Time$toYear, elm$time$Time$utc, date));
-	var month = A3(
-		elm$core$String$pad,
-		2,
-		_Utils_chr('0'),
-		elm$core$String$fromInt(
-			author$project$Time$Bdt$monthNumber(
-				A2(elm$time$Time$toMonth, elm$time$Time$utc, date))));
-	var day = A3(
-		elm$core$String$pad,
-		2,
-		_Utils_chr('0'),
-		elm$core$String$fromInt(
-			A2(elm$time$Time$toDay, elm$time$Time$utc, date)));
-	return A2(
-		elm$core$String$join,
-		'/',
-		_List_fromArray(
-			[day, month, year]));
-};
-var author$project$Time$Bdt$toTimeString = function (posix) {
-	var second = A3(
-		elm$core$String$pad,
-		2,
-		_Utils_chr('0'),
-		elm$core$String$fromInt(
-			A2(elm$time$Time$toSecond, elm$time$Time$utc, posix)));
-	var minute = A3(
-		elm$core$String$pad,
-		2,
-		_Utils_chr('0'),
-		elm$core$String$fromInt(
-			A2(elm$time$Time$toMinute, elm$time$Time$utc, posix)));
-	var hour = A3(
-		elm$core$String$pad,
-		2,
-		_Utils_chr('0'),
-		elm$core$String$fromInt(
-			A2(elm$time$Time$toHour, elm$time$Time$utc, posix)));
-	return A2(
-		elm$core$String$join,
-		':',
-		_List_fromArray(
-			[hour, minute, second]));
-};
-var author$project$Time$Bdt$toDateTimeString = function (posix) {
-	return author$project$Time$Bdt$toDateString(posix) + (' ' + author$project$Time$Bdt$toTimeString(posix));
-};
+var author$project$Time$Bdt$toDateString = F2(
+	function (zone, posix) {
+		var year = elm$core$String$fromInt(
+			A2(elm$time$Time$toYear, zone, posix));
+		var month = A3(
+			elm$core$String$pad,
+			2,
+			_Utils_chr('0'),
+			elm$core$String$fromInt(
+				author$project$Time$Bdt$monthNumber(
+					A2(elm$time$Time$toMonth, zone, posix))));
+		var day = A3(
+			elm$core$String$pad,
+			2,
+			_Utils_chr('0'),
+			elm$core$String$fromInt(
+				A2(elm$time$Time$toDay, zone, posix)));
+		return A2(
+			elm$core$String$join,
+			'/',
+			_List_fromArray(
+				[day, month, year]));
+	});
+var author$project$Time$Bdt$toTimeString = F2(
+	function (zone, posix) {
+		var second = A3(
+			elm$core$String$pad,
+			2,
+			_Utils_chr('0'),
+			elm$core$String$fromInt(
+				A2(elm$time$Time$toSecond, zone, posix)));
+		var minute = A3(
+			elm$core$String$pad,
+			2,
+			_Utils_chr('0'),
+			elm$core$String$fromInt(
+				A2(elm$time$Time$toMinute, zone, posix)));
+		var hour = A3(
+			elm$core$String$pad,
+			2,
+			_Utils_chr('0'),
+			elm$core$String$fromInt(
+				A2(elm$time$Time$toHour, zone, posix)));
+		return A2(
+			elm$core$String$join,
+			':',
+			_List_fromArray(
+				[hour, minute, second]));
+	});
+var author$project$Time$Bdt$toDateTimeString = F2(
+	function (zone, posix) {
+		return A2(author$project$Time$Bdt$toDateString, zone, posix) + (' ' + A2(author$project$Time$Bdt$toTimeString, zone, posix));
+	});
 var author$project$Form$DatePicker$Internal$setIncludeTime = F2(
 	function (includeTime, viewState) {
 		if (includeTime) {

@@ -102,7 +102,7 @@ type alias ViewState =
     , isInput : Bool
     , minPosix : MinPosix
     , maxPosix : MaxPosix
-    , toLabel : Posix -> String
+    , toLabel : Time.Zone -> Posix -> String
     , defaultLabel : String
     , includeTime : Bool
     , id : Maybe String
@@ -397,7 +397,7 @@ closed state viewState =
             ]
             [ div
                 [ Css.title (Resettable.getValue state.selectedPosix == Nothing) ]
-                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedPosix) |> Maybe.withDefault viewState.defaultLabel) ]
+                [ text (Maybe.map (viewState.toLabel state.timeZone) (Resettable.getValue state.selectedPosix) |> Maybe.withDefault viewState.defaultLabel) ]
             , Html.divIf viewState.isInput
                 []
                 [ FeatherIcons.calendar |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
@@ -417,7 +417,7 @@ open state viewState =
             ]
             [ div
                 [ Css.title (Resettable.getValue state.selectedPosix == Nothing) ]
-                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedPosix) |> Maybe.withDefault viewState.defaultLabel) ]
+                [ text (Maybe.map (viewState.toLabel state.timeZone) (Resettable.getValue state.selectedPosix) |> Maybe.withDefault viewState.defaultLabel) ]
             , Html.divIf viewState.isInput
                 []
                 [ FeatherIcons.calendar |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]

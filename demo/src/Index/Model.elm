@@ -1,6 +1,5 @@
 module Index.Model exposing (Model, initialModel)
 
-import Content
 import FeatherIcons
 import Form.DatePicker as DatePicker
 import Form.FloatInput as FloatInput
@@ -64,10 +63,10 @@ initialModel =
     , toggle1 = False
     , toggle2 = False
     , toggle3 = False
-    , toolTip1 = ToolTip.init (Content.Text "ToolTip1") "This is the first ToolTip!"
-    , toolTip2 = ToolTip.init (Content.Icon FeatherIcons.compass) "This is the second ToolTip!"
-    , toolTip3 = ToolTip.init (Content.Text "help") "This is the third ToolTip!"
-    , toolTip4 = ToolTip.init (Content.Icon FeatherIcons.calendar) "This is the fourth ToolTip!"
+    , toolTip1 = ToolTip.init "This is the first ToolTip!"
+    , toolTip2 = ToolTip.init "This is the second ToolTip!"
+    , toolTip3 = ToolTip.init "This is the third ToolTip!"
+    , toolTip4 = ToolTip.init "This is the fourth ToolTip!"
     , name = Input.init
     , startDate = DatePicker.init
     , email = Input.init

@@ -1628,6 +1628,173 @@ var _Json_encodeNull = _Json_wrap(null);
 
 
 
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
+
+// STRINGS
+
+
+var _Parser_isSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var smallLength = smallString.length;
+	var isGood = offset + smallLength <= bigString.length;
+
+	for (var i = 0; isGood && i < smallLength; )
+	{
+		var code = bigString.charCodeAt(offset);
+		isGood =
+			smallString[i++] === bigString[offset++]
+			&& (
+				code === 0x000A /* \n */
+					? ( row++, col=1 )
+					: ( col++, (code & 0xF800) === 0xD800 ? smallString[i++] === bigString[offset++] : 1 )
+			)
+	}
+
+	return _Utils_Tuple3(isGood ? offset : -1, row, col);
+});
+
+
+
+// CHARS
+
+
+var _Parser_isSubChar = F3(function(predicate, offset, string)
+{
+	return (
+		string.length <= offset
+			? -1
+			:
+		(string.charCodeAt(offset) & 0xF800) === 0xD800
+			? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)
+			:
+		(predicate(_Utils_chr(string[offset]))
+			? ((string[offset] === '\n') ? -2 : (offset + 1))
+			: -1
+		)
+	);
+});
+
+
+var _Parser_isAsciiCode = F3(function(code, offset, string)
+{
+	return string.charCodeAt(offset) === code;
+});
+
+
+
+// NUMBERS
+
+
+var _Parser_chompBase10 = F2(function(offset, string)
+{
+	for (; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (code < 0x30 || 0x39 < code)
+		{
+			return offset;
+		}
+	}
+	return offset;
+});
+
+
+var _Parser_consumeBase = F3(function(base, offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var digit = string.charCodeAt(offset) - 0x30;
+		if (digit < 0 || base <= digit) break;
+		total = base * total + digit;
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+var _Parser_consumeBase16 = F2(function(offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (0x30 <= code && code <= 0x39)
+		{
+			total = 16 * total + code - 0x30;
+		}
+		else if (0x41 <= code && code <= 0x46)
+		{
+			total = 16 * total + code - 55;
+		}
+		else if (0x61 <= code && code <= 0x66)
+		{
+			total = 16 * total + code - 87;
+		}
+		else
+		{
+			break;
+		}
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+
+// FIND STRING
+
+
+var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var newOffset = bigString.indexOf(smallString, offset);
+	var target = newOffset < 0 ? bigString.length : newOffset + smallString.length;
+
+	while (offset < target)
+	{
+		var code = bigString.charCodeAt(offset++);
+		code === 0x000A /* \n */
+			? ( col=1, row++ )
+			: ( col++, (code & 0xF800) === 0xD800 && offset++ )
+	}
+
+	return _Utils_Tuple3(newOffset, row, col);
+});
+
+
+
 // TASKS
 
 function _Scheduler_succeed(value)
@@ -2294,6 +2461,52 @@ function _Platform_mergeExportsDebug(moduleName, obj, exports)
 				: _Platform_mergeExportsDebug(moduleName + '.' + name, obj[name], exports[name])
 			: (obj[name] = exports[name]);
 	}
+}
+
+
+
+function _Time_now(millisToPosix)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(millisToPosix(Date.now())));
+	});
+}
+
+var _Time_setInterval = F2(function(interval, task)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
+		return function() { clearInterval(id); };
+	});
+});
+
+function _Time_here()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(
+			A2(elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
+		));
+	});
+}
+
+
+function _Time_getZoneName()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			var name = elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
+		}
+		catch (e)
+		{
+			var name = elm$time$Time$Offset(new Date().getTimezoneOffset());
+		}
+		callback(_Scheduler_succeed(name));
+	});
 }
 
 
@@ -3852,219 +4065,6 @@ function _VirtualDom_dekey(keyedNode)
 }
 
 
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
-
-
-
-
-// STRINGS
-
-
-var _Parser_isSubString = F5(function(smallString, offset, row, col, bigString)
-{
-	var smallLength = smallString.length;
-	var isGood = offset + smallLength <= bigString.length;
-
-	for (var i = 0; isGood && i < smallLength; )
-	{
-		var code = bigString.charCodeAt(offset);
-		isGood =
-			smallString[i++] === bigString[offset++]
-			&& (
-				code === 0x000A /* \n */
-					? ( row++, col=1 )
-					: ( col++, (code & 0xF800) === 0xD800 ? smallString[i++] === bigString[offset++] : 1 )
-			)
-	}
-
-	return _Utils_Tuple3(isGood ? offset : -1, row, col);
-});
-
-
-
-// CHARS
-
-
-var _Parser_isSubChar = F3(function(predicate, offset, string)
-{
-	return (
-		string.length <= offset
-			? -1
-			:
-		(string.charCodeAt(offset) & 0xF800) === 0xD800
-			? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)
-			:
-		(predicate(_Utils_chr(string[offset]))
-			? ((string[offset] === '\n') ? -2 : (offset + 1))
-			: -1
-		)
-	);
-});
-
-
-var _Parser_isAsciiCode = F3(function(code, offset, string)
-{
-	return string.charCodeAt(offset) === code;
-});
-
-
-
-// NUMBERS
-
-
-var _Parser_chompBase10 = F2(function(offset, string)
-{
-	for (; offset < string.length; offset++)
-	{
-		var code = string.charCodeAt(offset);
-		if (code < 0x30 || 0x39 < code)
-		{
-			return offset;
-		}
-	}
-	return offset;
-});
-
-
-var _Parser_consumeBase = F3(function(base, offset, string)
-{
-	for (var total = 0; offset < string.length; offset++)
-	{
-		var digit = string.charCodeAt(offset) - 0x30;
-		if (digit < 0 || base <= digit) break;
-		total = base * total + digit;
-	}
-	return _Utils_Tuple2(offset, total);
-});
-
-
-var _Parser_consumeBase16 = F2(function(offset, string)
-{
-	for (var total = 0; offset < string.length; offset++)
-	{
-		var code = string.charCodeAt(offset);
-		if (0x30 <= code && code <= 0x39)
-		{
-			total = 16 * total + code - 0x30;
-		}
-		else if (0x41 <= code && code <= 0x46)
-		{
-			total = 16 * total + code - 55;
-		}
-		else if (0x61 <= code && code <= 0x66)
-		{
-			total = 16 * total + code - 87;
-		}
-		else
-		{
-			break;
-		}
-	}
-	return _Utils_Tuple2(offset, total);
-});
-
-
-
-// FIND STRING
-
-
-var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString)
-{
-	var newOffset = bigString.indexOf(smallString, offset);
-	var target = newOffset < 0 ? bigString.length : newOffset + smallString.length;
-
-	while (offset < target)
-	{
-		var code = bigString.charCodeAt(offset++);
-		code === 0x000A /* \n */
-			? ( col=1, row++ )
-			: ( col++, (code & 0xF800) === 0xD800 && offset++ )
-	}
-
-	return _Utils_Tuple3(newOffset, row, col);
-});
-
-
-
-function _Time_now(millisToPosix)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(millisToPosix(Date.now())));
-	});
-}
-
-var _Time_setInterval = F2(function(interval, task)
-{
-	return _Scheduler_binding(function(callback)
-	{
-		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
-		return function() { clearInterval(id); };
-	});
-});
-
-function _Time_here()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		callback(_Scheduler_succeed(
-			A2(elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
-		));
-	});
-}
-
-
-function _Time_getZoneName()
-{
-	return _Scheduler_binding(function(callback)
-	{
-		try
-		{
-			var name = elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
-		}
-		catch (e)
-		{
-			var name = elm$time$Time$Offset(new Date().getTimezoneOffset());
-		}
-		callback(_Scheduler_succeed(name));
-	});
-}
-
-
-
 
 // HELPERS
 
@@ -5220,13 +5220,7 @@ function _Url_percentDecode(string)
 	{
 		return elm$core$Maybe$Nothing;
 	}
-}var author$project$Content$Icon = function (a) {
-	return {$: 'Icon', a: a};
-};
-var author$project$Content$Text = function (a) {
-	return {$: 'Text', a: a};
-};
-var author$project$Form$DatePicker$Model = function (a) {
+}var author$project$Form$DatePicker$Model = function (a) {
 	return {$: 'Model', a: a};
 };
 var author$project$Form$Select$Model = function (a) {
@@ -5906,18 +5900,17 @@ var author$project$Records$MusicGenre$asNonempty = A2(
 	author$project$Records$MusicGenre$Rock,
 	_List_fromArray(
 		[author$project$Records$MusicGenre$Metal, author$project$Records$MusicGenre$Blues, author$project$Records$MusicGenre$Jazz, author$project$Records$MusicGenre$Pop, author$project$Records$MusicGenre$BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop]));
-var author$project$ToolTip$InternalState = F3(
-	function (content, tip, isOpen) {
-		return {content: content, isOpen: isOpen, tip: tip};
+var author$project$ToolTip$InternalState = F2(
+	function (tip, isOpen) {
+		return {isOpen: isOpen, tip: tip};
 	});
 var author$project$ToolTip$Model = function (a) {
 	return {$: 'Model', a: a};
 };
-var author$project$ToolTip$init = F2(
-	function (content, tip) {
-		return author$project$ToolTip$Model(
-			A3(author$project$ToolTip$InternalState, content, tip, false));
-	});
+var author$project$ToolTip$init = function (tip) {
+	return author$project$ToolTip$Model(
+		A2(author$project$ToolTip$InternalState, tip, false));
+};
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -5929,186 +5922,6 @@ var elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
 var elm$time$Time$millisToPosix = elm$time$Time$Posix;
-var elm$json$Json$Decode$map = _Json_map1;
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
-var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
-var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
-var elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
-var feathericons$elm_feather$FeatherIcons$Icon = function (a) {
-	return {$: 'Icon', a: a};
-};
-var feathericons$elm_feather$FeatherIcons$defaultAttributes = function (name) {
-	return {
-		_class: elm$core$Maybe$Just('feather feather-' + name),
-		size: 24,
-		sizeUnit: '',
-		strokeWidth: 2,
-		viewBox: '0 0 24 24'
-	};
-};
-var feathericons$elm_feather$FeatherIcons$makeBuilder = F2(
-	function (name, src) {
-		return feathericons$elm_feather$FeatherIcons$Icon(
-			{
-				attrs: feathericons$elm_feather$FeatherIcons$defaultAttributes(name),
-				src: src
-			});
-	});
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$virtual_dom$VirtualDom$property = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_property,
-			_VirtualDom_noInnerHtmlOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var feathericons$elm_feather$FeatherIcons$xmlns = function (s) {
-	return A2(
-		elm$virtual_dom$VirtualDom$property,
-		'xmlns',
-		elm$json$Json$Encode$string(s));
-};
-var feathericons$elm_feather$FeatherIcons$calendar = A2(
-	feathericons$elm_feather$FeatherIcons$makeBuilder,
-	'calendar',
-	_List_fromArray(
-		[
-			A2(
-			elm$svg$Svg$svg,
-			_List_fromArray(
-				[
-					feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					elm$svg$Svg$Attributes$width('24'),
-					elm$svg$Svg$Attributes$height('24'),
-					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					elm$svg$Svg$Attributes$fill('none'),
-					elm$svg$Svg$Attributes$stroke('currentColor'),
-					elm$svg$Svg$Attributes$strokeWidth('2'),
-					elm$svg$Svg$Attributes$strokeLinecap('round'),
-					elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					elm$svg$Svg$Attributes$class('feather feather-calendar')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x('3'),
-							elm$svg$Svg$Attributes$y('4'),
-							elm$svg$Svg$Attributes$width('18'),
-							elm$svg$Svg$Attributes$height('18'),
-							elm$svg$Svg$Attributes$rx('2'),
-							elm$svg$Svg$Attributes$ry('2')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x1('16'),
-							elm$svg$Svg$Attributes$y1('2'),
-							elm$svg$Svg$Attributes$x2('16'),
-							elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x1('8'),
-							elm$svg$Svg$Attributes$y1('2'),
-							elm$svg$Svg$Attributes$x2('8'),
-							elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$x1('3'),
-							elm$svg$Svg$Attributes$y1('10'),
-							elm$svg$Svg$Attributes$x2('21'),
-							elm$svg$Svg$Attributes$y2('10')
-						]),
-					_List_Nil)
-				]))
-		]));
-var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
-var elm$svg$Svg$polygon = elm$svg$Svg$trustedNode('polygon');
-var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
-var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
-var feathericons$elm_feather$FeatherIcons$compass = A2(
-	feathericons$elm_feather$FeatherIcons$makeBuilder,
-	'compass',
-	_List_fromArray(
-		[
-			A2(
-			elm$svg$Svg$svg,
-			_List_fromArray(
-				[
-					feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					elm$svg$Svg$Attributes$width('24'),
-					elm$svg$Svg$Attributes$height('24'),
-					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					elm$svg$Svg$Attributes$fill('none'),
-					elm$svg$Svg$Attributes$stroke('currentColor'),
-					elm$svg$Svg$Attributes$strokeWidth('2'),
-					elm$svg$Svg$Attributes$strokeLinecap('round'),
-					elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					elm$svg$Svg$Attributes$class('feather feather-compass')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$cx('12'),
-							elm$svg$Svg$Attributes$cy('12'),
-							elm$svg$Svg$Attributes$r('10')
-						]),
-					_List_Nil),
-					A2(
-					elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$points('16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76')
-						]),
-					_List_Nil)
-				]))
-		]));
 var elm$time$Time$posixToMillis = function (_n0) {
 	var millis = _n0.a;
 	return millis;
@@ -7211,22 +7024,10 @@ var author$project$Index$Model$initialModel = {
 	toggle1: false,
 	toggle2: false,
 	toggle3: false,
-	toolTip1: A2(
-		author$project$ToolTip$init,
-		author$project$Content$Text('ToolTip1'),
-		'This is the first ToolTip!'),
-	toolTip2: A2(
-		author$project$ToolTip$init,
-		author$project$Content$Icon(feathericons$elm_feather$FeatherIcons$compass),
-		'This is the second ToolTip!'),
-	toolTip3: A2(
-		author$project$ToolTip$init,
-		author$project$Content$Text('help'),
-		'This is the third ToolTip!'),
-	toolTip4: A2(
-		author$project$ToolTip$init,
-		author$project$Content$Icon(feathericons$elm_feather$FeatherIcons$calendar),
-		'This is the fourth ToolTip!')
+	toolTip1: author$project$ToolTip$init('This is the first ToolTip!'),
+	toolTip2: author$project$ToolTip$init('This is the second ToolTip!'),
+	toolTip3: author$project$ToolTip$init('This is the third ToolTip!'),
+	toolTip4: author$project$ToolTip$init('This is the fourth ToolTip!')
 };
 var author$project$Entities$courseIdToString = function (_n0) {
 	var id = _n0.a;
@@ -7422,6 +7223,7 @@ var elm$core$Basics$never = function (_n0) {
 		continue never;
 	}
 };
+var elm$json$Json$Decode$map = _Json_map1;
 var elm$browser$Debugger$Expando$ArraySeq = {$: 'ArraySeq'};
 var elm$browser$Debugger$Expando$Constructor = F3(
 	function (a, b, c) {
@@ -7479,6 +7281,18 @@ var elm$browser$Debugger$Overlay$Choose = F2(
 	});
 var elm$browser$Debugger$Overlay$goodNews1 = '\nThe good news is that having values like this in your message type is not\nso great in the long run. You are better off using simpler data, like\n';
 var elm$browser$Debugger$Overlay$goodNews2 = '\nfunction can pattern match on that data and call whatever functions, JSON\ndecoders, etc. you need. This makes the code much more explicit and easy to\nfollow for other readers (or you in a few months!)\n';
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
 var elm$html$Html$code = _VirtualDom_node('code');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
@@ -7556,6 +7370,7 @@ var elm$browser$Debugger$Overlay$viewProblemType = function (_n0) {
 var elm$html$Html$a = _VirtualDom_node('a');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
+var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -14189,6 +14004,13 @@ var rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
 var rtfeldman$elm_css$Css$px = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, rtfeldman$elm_css$Css$PxUnits, 'px');
 var rtfeldman$elm_css$Css$right = rtfeldman$elm_css$Css$prop1('right');
 var rtfeldman$elm_css$Css$top = rtfeldman$elm_css$Css$prop1('top');
+var elm$virtual_dom$VirtualDom$property = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_property,
+			_VirtualDom_noInnerHtmlOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
 var rtfeldman$elm_css$VirtualDom$Styled$Attribute = F3(
 	function (a, b, c) {
 		return {$: 'Attribute', a: a, b: b, c: c};
@@ -17085,6 +16907,9 @@ var author$project$Button$href = F2(
 						{blank: false, url: url})
 				}));
 	});
+var author$project$Content$Icon = function (a) {
+	return {$: 'Icon', a: a};
+};
 var author$project$Button$icon = F2(
 	function (icon_, _n0) {
 		var config = _n0.a;
@@ -17244,9 +17069,47 @@ var author$project$Button$Css$loadingTextContainer = rtfeldman$elm_css$Html$Styl
 			rtfeldman$elm_css$Css$alignItems(rtfeldman$elm_css$Css$center),
 			rtfeldman$elm_css$Css$justifyContent(rtfeldman$elm_css$Css$center)
 		]));
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$path = elm$svg$Svg$trustedNode('path');
 var elm$svg$Svg$polyline = elm$svg$Svg$trustedNode('polyline');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
+var elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var feathericons$elm_feather$FeatherIcons$Icon = function (a) {
+	return {$: 'Icon', a: a};
+};
+var feathericons$elm_feather$FeatherIcons$defaultAttributes = function (name) {
+	return {
+		_class: elm$core$Maybe$Just('feather feather-' + name),
+		size: 24,
+		sizeUnit: '',
+		strokeWidth: 2,
+		viewBox: '0 0 24 24'
+	};
+};
+var feathericons$elm_feather$FeatherIcons$makeBuilder = F2(
+	function (name, src) {
+		return feathericons$elm_feather$FeatherIcons$Icon(
+			{
+				attrs: feathericons$elm_feather$FeatherIcons$defaultAttributes(name),
+				src: src
+			});
+	});
+var feathericons$elm_feather$FeatherIcons$xmlns = function (s) {
+	return A2(
+		elm$virtual_dom$VirtualDom$property,
+		'xmlns',
+		elm$json$Json$Encode$string(s));
+};
 var feathericons$elm_feather$FeatherIcons$refreshCw = A2(
 	feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'refresh-cw',
@@ -17752,6 +17615,9 @@ var author$project$Button$small = function (_n0) {
 			config,
 			{size: author$project$Button$Size$Small}));
 };
+var author$project$Content$Text = function (a) {
+	return {$: 'Text', a: a};
+};
 var author$project$Button$text = F2(
 	function (text_, _n0) {
 		var config = _n0.a;
@@ -18226,6 +18092,82 @@ var author$project$Form$DatePicker$Internal$Open = F3(
 	function (a, b, c) {
 		return {$: 'Open', a: a, b: b, c: c};
 	});
+var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
+var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
+var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
+var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
+var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var feathericons$elm_feather$FeatherIcons$calendar = A2(
+	feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'calendar',
+	_List_fromArray(
+		[
+			A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
+					elm$svg$Svg$Attributes$width('24'),
+					elm$svg$Svg$Attributes$height('24'),
+					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+					elm$svg$Svg$Attributes$fill('none'),
+					elm$svg$Svg$Attributes$stroke('currentColor'),
+					elm$svg$Svg$Attributes$strokeWidth('2'),
+					elm$svg$Svg$Attributes$strokeLinecap('round'),
+					elm$svg$Svg$Attributes$strokeLinejoin('round'),
+					elm$svg$Svg$Attributes$class('feather feather-calendar')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('3'),
+							elm$svg$Svg$Attributes$y('4'),
+							elm$svg$Svg$Attributes$width('18'),
+							elm$svg$Svg$Attributes$height('18'),
+							elm$svg$Svg$Attributes$rx('2'),
+							elm$svg$Svg$Attributes$ry('2')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('16'),
+							elm$svg$Svg$Attributes$y1('2'),
+							elm$svg$Svg$Attributes$x2('16'),
+							elm$svg$Svg$Attributes$y2('6')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('8'),
+							elm$svg$Svg$Attributes$y1('2'),
+							elm$svg$Svg$Attributes$x2('8'),
+							elm$svg$Svg$Attributes$y2('6')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$line,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x1('3'),
+							elm$svg$Svg$Attributes$y1('10'),
+							elm$svg$Svg$Attributes$x2('21'),
+							elm$svg$Svg$Attributes$y2('10')
+						]),
+					_List_Nil)
+				]))
+		]));
 var elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -22445,6 +22387,19 @@ var author$project$ToolTip$green = function (_n0) {
 			viewState,
 			{color: author$project$ToolTip$Green}));
 };
+var author$project$ToolTip$icon = F2(
+	function (featherIcon, _n0) {
+		var state = _n0.a;
+		var viewState = _n0.b;
+		return A2(
+			author$project$ToolTip$View,
+			state,
+			_Utils_update(
+				viewState,
+				{
+					content: author$project$Content$Icon(featherIcon)
+				}));
+	});
 var author$project$ToolTip$Left = {$: 'Left'};
 var author$project$ToolTip$left = function (_n0) {
 	var state = _n0.a;
@@ -22505,9 +22460,9 @@ var author$project$ToolTip$contentWrapper = function (colorConfig) {
 var author$project$ToolTip$renderContent = F2(
 	function (colorConfig, content) {
 		if (content.$ === 'Icon') {
-			var icon = content.a;
+			var icon_ = content.a;
 			return rtfeldman$elm_css$Html$Styled$fromUnstyled(
-				A2(feathericons$elm_feather$FeatherIcons$toHtml, _List_Nil, icon));
+				A2(feathericons$elm_feather$FeatherIcons$toHtml, _List_Nil, icon_));
 		} else {
 			var string = content.a;
 			return rtfeldman$elm_css$Html$Styled$text(string);
@@ -22638,7 +22593,7 @@ var author$project$ToolTip$render = function (_n0) {
 			]),
 		_List_fromArray(
 			[
-				A2(author$project$ToolTip$renderContent, viewState.color, state.content),
+				A2(author$project$ToolTip$renderContent, viewState.color, viewState.content),
 				A3(
 				author$project$Html$Styled$Bdt$divIf,
 				state.isOpen,
@@ -22652,6 +22607,19 @@ var author$project$ToolTip$render = function (_n0) {
 					]))
 			]));
 };
+var author$project$ToolTip$text = F2(
+	function (contents, _n0) {
+		var state = _n0.a;
+		var viewState = _n0.b;
+		return A2(
+			author$project$ToolTip$View,
+			state,
+			_Utils_update(
+				viewState,
+				{
+					content: author$project$Content$Text(contents)
+				}));
+	});
 var author$project$ToolTip$Top = {$: 'Top'};
 var author$project$ToolTip$top = function (_n0) {
 	var state = _n0.a;
@@ -22665,11 +22633,60 @@ var author$project$ToolTip$top = function (_n0) {
 };
 var author$project$ToolTip$Default = {$: 'Default'};
 var author$project$ToolTip$Right = {$: 'Right'};
-var author$project$ToolTip$initialViewState = {color: author$project$ToolTip$Default, placement: author$project$ToolTip$Right};
+var author$project$ToolTip$initialViewState = {
+	color: author$project$ToolTip$Default,
+	content: author$project$Content$Text(''),
+	placement: author$project$ToolTip$Right
+};
 var author$project$ToolTip$view = function (_n0) {
 	var state = _n0.a;
 	return A2(author$project$ToolTip$View, state, author$project$ToolTip$initialViewState);
 };
+var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
+var elm$svg$Svg$polygon = elm$svg$Svg$trustedNode('polygon');
+var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var feathericons$elm_feather$FeatherIcons$compass = A2(
+	feathericons$elm_feather$FeatherIcons$makeBuilder,
+	'compass',
+	_List_fromArray(
+		[
+			A2(
+			elm$svg$Svg$svg,
+			_List_fromArray(
+				[
+					feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
+					elm$svg$Svg$Attributes$width('24'),
+					elm$svg$Svg$Attributes$height('24'),
+					elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+					elm$svg$Svg$Attributes$fill('none'),
+					elm$svg$Svg$Attributes$stroke('currentColor'),
+					elm$svg$Svg$Attributes$strokeWidth('2'),
+					elm$svg$Svg$Attributes$strokeLinecap('round'),
+					elm$svg$Svg$Attributes$strokeLinejoin('round'),
+					elm$svg$Svg$Attributes$class('feather feather-compass')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$cx('12'),
+							elm$svg$Svg$Attributes$cy('12'),
+							elm$svg$Svg$Attributes$r('10')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$polygon,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$points('16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76')
+						]),
+					_List_Nil)
+				]))
+		]));
 var feathericons$elm_feather$FeatherIcons$edit = A2(
 	feathericons$elm_feather$FeatherIcons$makeBuilder,
 	'edit',
@@ -24109,7 +24126,10 @@ var author$project$Index$View$view = function (model) {
 															rtfeldman$elm_css$Html$Styled$map,
 															author$project$Index$Msg$ToolTip1Msg,
 															author$project$ToolTip$render(
-																author$project$ToolTip$view(model.toolTip1)))
+																A2(
+																	author$project$ToolTip$text,
+																	'ToolTip1',
+																	author$project$ToolTip$view(model.toolTip1))))
 														])),
 													A2(
 													author$project$Card$block,
@@ -24122,7 +24142,10 @@ var author$project$Index$View$view = function (model) {
 															author$project$ToolTip$render(
 																author$project$ToolTip$green(
 																	author$project$ToolTip$bottom(
-																		author$project$ToolTip$view(model.toolTip2)))))
+																		A2(
+																			author$project$ToolTip$icon,
+																			feathericons$elm_feather$FeatherIcons$compass,
+																			author$project$ToolTip$view(model.toolTip2))))))
 														])),
 													A2(
 													author$project$Card$block,
@@ -24135,7 +24158,10 @@ var author$project$Index$View$view = function (model) {
 															author$project$ToolTip$render(
 																author$project$ToolTip$blue(
 																	author$project$ToolTip$left(
-																		author$project$ToolTip$view(model.toolTip3)))))
+																		A2(
+																			author$project$ToolTip$text,
+																			'help',
+																			author$project$ToolTip$view(model.toolTip3))))))
 														])),
 													A2(
 													author$project$Card$block,
@@ -24148,7 +24174,10 @@ var author$project$Index$View$view = function (model) {
 															author$project$ToolTip$render(
 																author$project$ToolTip$red(
 																	author$project$ToolTip$top(
-																		author$project$ToolTip$view(model.toolTip4)))))
+																		A2(
+																			author$project$ToolTip$icon,
+																			feathericons$elm_feather$FeatherIcons$calendar,
+																			author$project$ToolTip$view(model.toolTip4))))))
 														]))
 												]),
 											A3(author$project$Card$header, 'Example ToolTips', _List_Nil, author$project$Card$view)))

@@ -1,6 +1,7 @@
 module ToolTip exposing
     ( Model, init, Msg, update
     , view, render
+    , text, icon
     , top, left, bottom, green, red, blue
     )
 
@@ -19,7 +20,7 @@ module ToolTip exposing
 
 # View Setters
 
-@docs top, left, bottom, green, red, blue
+@docs text, icon, top, left, bottom, green, red, blue
 
 -}
 
@@ -45,8 +46,7 @@ type Model
 
 
 type alias InternalState =
-    { content : Content
-    , tip : String
+    { tip : String
     , isOpen : Bool
     }
 
@@ -58,6 +58,7 @@ type View
 type alias ViewState =
     { placement : Placement
     , color : ColorConfig
+    , content : Content
     }
 
 
@@ -65,6 +66,7 @@ initialViewState : ViewState
 initialViewState =
     { placement = Right
     , color = Default
+    , content = Content.Text ""
     }
 
 
@@ -93,9 +95,9 @@ type Placement
         }
 
 -}
-init : Content -> String -> Model
-init content tip =
-    Model <| InternalState content tip False
+init : String -> Model
+init tip =
+    Model <| InternalState tip False
 
 
 {-| Add a ToolTip.Msg to your Msg.
@@ -138,7 +140,7 @@ update msg (Model state) =
     myView model =
         div
             []
-            [ ToolTip.view model.myToolTip -- pipe view setters here, for example |> setPlacement Top
+            [ ToolTip.view model.myToolTip -- pipe view setters here, for example |> top
             ]
 
 -}
@@ -165,29 +167,36 @@ render (View state viewState) =
         , onMouseLeave MouseLeave
         , contentWrapper viewState.color
         ]
-        [ renderContent viewState.color state.content
+        [ renderContent viewState.color viewState.content
         , Html.divIf state.isOpen
             [ tooltip viewState.placement ]
-            [ text state.tip ]
+            [ Html.text state.tip ]
         ]
 
 
 renderContent : ColorConfig -> Content -> Html Msg
 renderContent colorConfig content =
     case content of
-        Icon icon ->
-            FeatherIcons.toHtml [] icon
+        Icon icon_ ->
+            FeatherIcons.toHtml [] icon_
                 |> Html.fromUnstyled
 
         Text string ->
             Html.text string
 
 
-{-| Set where the ToolTip will be placed relative to the icon
+{-| Set text for the tooltip content
 -}
-setPlacement : Placement -> View -> View
-setPlacement placement (View state viewState) =
-    View state { viewState | placement = placement }
+text : String -> View -> View
+text contents (View state viewState) =
+    View state { viewState | content = Content.Text contents }
+
+
+{-| Set icon for the tooltip content
+-}
+icon : Icon -> View -> View
+icon featherIcon (View state viewState) =
+    View state { viewState | content = Content.Icon featherIcon }
 
 
 {-| Render the tip above the content

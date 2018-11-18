@@ -511,11 +511,13 @@ view model =
                         |> Card.body
                             [ Card.block Three
                                 [ ToolTip.view model.toolTip1
+                                    |> ToolTip.text "ToolTip1"
                                     |> ToolTip.render
                                     |> Html.map ToolTip1Msg
                                 ]
                             , Card.block Three
                                 [ ToolTip.view model.toolTip2
+                                    |> ToolTip.icon FeatherIcons.compass
                                     |> ToolTip.bottom
                                     |> ToolTip.green
                                     |> ToolTip.render
@@ -523,6 +525,7 @@ view model =
                                 ]
                             , Card.block Three
                                 [ ToolTip.view model.toolTip3
+                                    |> ToolTip.text "help"
                                     |> ToolTip.left
                                     |> ToolTip.blue
                                     |> ToolTip.render
@@ -530,6 +533,7 @@ view model =
                                 ]
                             , Card.block Three
                                 [ ToolTip.view model.toolTip4
+                                    |> ToolTip.icon FeatherIcons.calendar
                                     |> ToolTip.top
                                     |> ToolTip.red
                                     |> ToolTip.render

@@ -231,6 +231,9 @@ update msg state =
                                         |> DateTime.setYear (Time.toYear state.timeZone posix)
                                         |> DateTime.setMonth (Time.toMonth state.timeZone posix |> Time.monthNumber)
                                         |> DateTime.setDay (Time.toDay state.timeZone posix)
+                                        |> DateTime.setHour 0
+                                        |> DateTime.setMinute 0
+                                        |> DateTime.setSecond 0
                                         |> DateTime.toPosix
                     in
                     ( { state | selectedPosix = Resettable.update (Just newPosix) state.selectedPosix, isOpen = False }, Cmd.none )

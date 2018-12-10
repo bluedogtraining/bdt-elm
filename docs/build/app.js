@@ -12344,16 +12344,25 @@ var author$project$Form$DatePicker$Internal$update = F2(
 							var currentPosix = _n3.a;
 							return isaacseymour$deprecated_time$Time$DateTime$toPosix(
 								A2(
-									isaacseymour$deprecated_time$Time$DateTime$setDay,
-									A2(elm$time$Time$toDay, state.timeZone, posix),
+									isaacseymour$deprecated_time$Time$DateTime$setSecond,
+									0,
 									A2(
-										isaacseymour$deprecated_time$Time$DateTime$setMonth,
-										author$project$Time$Bdt$monthNumber(
-											A2(elm$time$Time$toMonth, state.timeZone, posix)),
+										isaacseymour$deprecated_time$Time$DateTime$setMinute,
+										0,
 										A2(
-											isaacseymour$deprecated_time$Time$DateTime$setYear,
-											A2(elm$time$Time$toYear, state.timeZone, posix),
-											isaacseymour$deprecated_time$Time$DateTime$fromPosix(currentPosix)))));
+											isaacseymour$deprecated_time$Time$DateTime$setHour,
+											0,
+											A2(
+												isaacseymour$deprecated_time$Time$DateTime$setDay,
+												A2(elm$time$Time$toDay, state.timeZone, posix),
+												A2(
+													isaacseymour$deprecated_time$Time$DateTime$setMonth,
+													author$project$Time$Bdt$monthNumber(
+														A2(elm$time$Time$toMonth, state.timeZone, posix)),
+													A2(
+														isaacseymour$deprecated_time$Time$DateTime$setYear,
+														A2(elm$time$Time$toYear, state.timeZone, posix),
+														isaacseymour$deprecated_time$Time$DateTime$fromPosix(currentPosix))))))));
 						}
 					}();
 					return _Utils_Tuple2(

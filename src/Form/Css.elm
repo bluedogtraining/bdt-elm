@@ -32,7 +32,7 @@ input isError isLocked =
             else
                 "ffffff"
     , fontSize <| Css.rem 0.8
-    , whiteSpace normal
+    , whiteSpace noWrap
     , textOverflow ellipsis
     , overflowX hidden
     , focus

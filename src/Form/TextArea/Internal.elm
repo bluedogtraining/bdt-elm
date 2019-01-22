@@ -103,9 +103,8 @@ render state viewState =
 inputField : State -> ViewState -> Html Msg
 inputField state viewState =
     textarea
-        [ Css.input viewState.isError viewState.isLocked
+        [ Css.input viewState.isError viewState.isLocked viewState.shouldWrap
         , disabled viewState.isLocked
-        , Css.wrap viewState.shouldWrap
         , value <| Resettable.getValue state.value
         , onInput Input
         , placeholder viewState.placeholder

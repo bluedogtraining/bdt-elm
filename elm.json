@@ -3,7 +3,7 @@
     "name": "bluedogtraining/bdt-elm",
     "summary": "Elm modules commonly used at BDT",
     "license": "BSD-3-Clause",
-    "version": "26.1.1",
+    "version": "26.1.2",
     "exposed-modules": [
         "Resettable",
         "Form.Label",
@@ -48,7 +48,7 @@
         "feathericons/elm-feather": "1.0.0 <= v < 2.0.0",
         "isaacseymour/deprecated-time": "1.0.0 <= v < 2.0.0",
         "mgold/elm-nonempty-list": "4.0.0 <= v < 5.0.0",
-        "rtfeldman/elm-css": "15.1.0 <= v < 16.0.0",
+        "rtfeldman/elm-css": "16.0.0 <= v < 17.0.0",
         "turboMaCk/any-set": "1.0.0 <= v < 2.0.0"
     },
     "test-dependencies": {

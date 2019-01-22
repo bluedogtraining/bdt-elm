@@ -105,6 +105,7 @@ inputField state viewState =
     textarea
         [ Css.input viewState.isError viewState.isLocked
         , disabled viewState.isLocked
+        , Css.wrap viewState.shouldWrap
         , value <| Resettable.getValue state.value
         , onInput Input
         , placeholder viewState.placeholder

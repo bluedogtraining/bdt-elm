@@ -28,6 +28,7 @@ type alias Model =
     , datePicker2 : DatePicker.Model
     , datePicker3 : DatePicker.Model
     , textArea : TextArea.Model
+    , textAreaWrap : TextArea.Model
     , toggle1 : Bool
     , toggle2 : Bool
     , toggle3 : Bool
@@ -60,6 +61,7 @@ initialModel =
     , datePicker2 = DatePicker.init
     , datePicker3 = DatePicker.init
     , textArea = TextArea.init |> TextArea.setReplacements [ ( "[]", "☐" ) ]
+    , textAreaWrap = TextArea.init
     , toggle1 = False
     , toggle2 = False
     , toggle3 = False

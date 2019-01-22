@@ -1,4 +1,4 @@
-module Form.TextArea.Css exposing (input)
+module Form.TextArea.Css exposing (input, wrap)
 
 import Css exposing (..)
 import Form.Css as Css
@@ -14,3 +14,8 @@ input isError isLocked =
                , padding <| rem 0.4
                , cursor text_
                ]
+
+
+wrap : Bool -> Attribute msg
+wrap shouldWrap =
+    css [ if shouldWrap then whiteSpace normal else whiteSpace noWrap ]

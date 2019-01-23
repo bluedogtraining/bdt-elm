@@ -11323,7 +11323,6 @@ var author$project$Form$Select$Internal$filterOptions = F3(
 					elm$core$String$contains(searchText))),
 			options);
 	});
-var elm$core$Debug$log = _Debug_log;
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -11416,10 +11415,7 @@ var elm_community$list_extra$List$Extra$dropWhile = F2(
 	});
 var author$project$Form$Select$Internal$getNextOption = F4(
 	function (options, mFocusedOption, searchText, toLabel) {
-		var filteredOptions = A2(
-			elm$core$Debug$log,
-			'filter',
-			A3(author$project$Form$Select$Internal$filterOptions, searchText, toLabel, options));
+		var filteredOptions = A3(author$project$Form$Select$Internal$filterOptions, searchText, toLabel, options);
 		var mFilteredFocusOption = A2(
 			elm$core$Maybe$andThen,
 			function (option) {

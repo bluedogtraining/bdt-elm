@@ -369,11 +369,16 @@ getPreviousOption options focusedOption searchText toLabel =
 getNextOption : List option -> Maybe option -> String -> (option -> String) -> Maybe option
 getNextOption options mFocusedOption searchText toLabel =
     let
-        filteredOptions = filterOptions searchText toLabel options |> Debug.log "filter"
+        filteredOptions = filterOptions searchText toLabel options
 
         mFilteredFocusOption =
             mFocusedOption
-                |> Maybe.andThen (\option -> if List.member option filteredOptions then Just option else Nothing)
+                |> Maybe.andThen
+                    (\option ->
+                        if List.member option filteredOptions
+                        then Just option
+                        else Nothing
+                    )
     in
         case mFilteredFocusOption of
             Nothing ->

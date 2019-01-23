@@ -23,8 +23,6 @@ module Form.SearchSelect.Internal exposing
     , update
     )
 
-import Browser.Dom as Dom
-import Dict
 import Form.Helpers as Form
     exposing
         ( SelectKey(..)
@@ -40,10 +38,7 @@ import Html.Styled.Events exposing (..)
 import Html.Styled.Lazy exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline as Decode
-import List.Extra as List
 import Resettable exposing (Resettable)
-import Task
 
 
 

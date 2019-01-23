@@ -26,6 +26,7 @@ type Msg
     | DatePicker2Msg DatePicker.Msg
     | DatePicker3Msg DatePicker.Msg
     | TextAreaMsg TextArea.Msg
+    | TextAreaWrapMsg TextArea.Msg
     | ToolTip1Msg ToolTip.Msg
     | ToolTip2Msg ToolTip.Msg
     | ToolTip3Msg ToolTip.Msg

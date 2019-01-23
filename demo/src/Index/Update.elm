@@ -79,6 +79,9 @@ update msg model =
         TextAreaMsg textAreaMsg ->
             ( { model | textArea = TextArea.update textAreaMsg model.textArea }, Cmd.none )
 
+        TextAreaWrapMsg textAreaWrapMsg ->
+            ( { model | textAreaWrap = TextArea.update textAreaWrapMsg model.textAreaWrap }, Cmd.none )
+
         Toggle1 ->
             ( { model | toggle1 = not model.toggle1 }, Cmd.none )
 

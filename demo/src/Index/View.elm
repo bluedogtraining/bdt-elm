@@ -19,14 +19,11 @@ import Grid.Size exposing (..)
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Bdt as Html
-import Html.Styled.Events exposing (..)
 import Index.Model as Index
 import Index.Msg as Index exposing (Msg(..))
 import Modal
 import Records.MusicGenre as MusicGenre exposing (MusicGenre)
 import Time
-import Time.Date as Date
-import Toasters
 import Toggle
 import ToolTip
 
@@ -160,6 +157,8 @@ view model =
                                 [ div
                                     [ style "display" "flex", style "flex-direction" "column", style "height" "100%" ]
                                     [ TextArea.view model.textArea
+                                        |> TextArea.setShouldWrap True
+                                        |> TextArea.setPlaceholder "HELLO I AM A PLACEHOLDER"
                                         |> TextArea.render
                                         |> Html.map TextAreaMsg
                                     ]

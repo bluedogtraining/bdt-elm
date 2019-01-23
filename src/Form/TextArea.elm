@@ -4,7 +4,7 @@ module Form.TextArea exposing
     , reInitialise, reset, setInitialValue, setValue, setReplacements
     , setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
     , getInitialValue, getValue, getIsChanged, getId
-    )
+    , setShouldWrap)
 
 {-| This module is useful if you want to add an TextArea Form element to your app.
 
@@ -26,7 +26,7 @@ module Form.TextArea exposing
 
 # View Setters
 
-@docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId
+@docs setPlaceholder, setMaxLength, setIsError, setIsLocked, setId, setShouldWrap
 
 
 # Getters
@@ -191,6 +191,13 @@ setIsError isError (View state viewState) =
 setId : String -> View -> View
 setId id (View state viewState) =
     View state (Internal.setId id viewState)
+
+
+{-| Set whether you want text to wrap or not
+-}
+setShouldWrap : Bool -> View -> View
+setShouldWrap shouldWrap (View state viewState) =
+    View state (Internal.setShouldWrap shouldWrap viewState)
 
 
 {-| Whether your input was changed. Useful if you want to disable save buttons unless there were changes etc.

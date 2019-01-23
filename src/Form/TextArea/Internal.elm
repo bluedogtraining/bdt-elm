@@ -20,7 +20,7 @@ module Form.TextArea.Internal exposing
     , setReplacements
     , setValue
     , update
-    )
+    , setShouldWrap)
 
 import Form.TextArea.Css as Css
 import Html.Styled as Html exposing (..)
@@ -28,7 +28,6 @@ import Html.Styled.Attributes exposing (..)
 import Html.Styled.Bdt as Html
 import Html.Styled.Events exposing (..)
 import Html.Styled.Lazy exposing (..)
-import Json.Decode as Decode exposing (Decoder)
 import Resettable exposing (Resettable)
 
 
@@ -57,6 +56,7 @@ type alias ViewState =
     , isLocked : Bool
     , isError : Bool
     , id : Maybe String
+    , shouldWrap : Bool
     }
 
 
@@ -67,6 +67,7 @@ initialViewState =
     , isLocked = False
     , isError = False
     , id = Nothing
+    , shouldWrap = False
     }
 
 
@@ -102,7 +103,7 @@ render state viewState =
 inputField : State -> ViewState -> Html Msg
 inputField state viewState =
     textarea
-        [ Css.input viewState.isError viewState.isLocked
+        [ Css.input viewState.isError viewState.isLocked viewState.shouldWrap
         , disabled viewState.isLocked
         , value <| Resettable.getValue state.value
         , onInput Input
@@ -170,6 +171,10 @@ setId : String -> ViewState -> ViewState
 setId id viewState =
     { viewState | id = Just id }
 
+
+setShouldWrap : Bool -> ViewState -> ViewState
+setShouldWrap shouldWrap viewState =
+    { viewState | shouldWrap = shouldWrap }
 
 
 -- GETTERS --

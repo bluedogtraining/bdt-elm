@@ -128,6 +128,12 @@ update msg state =
         SelectKey _ Down ->
             ( { state | focusedOption = getNextOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none )
 
+        SelectKey _ Backspace ->
+            (state, Cmd.none)
+
+        SelectKey _ (AlphaNum _) ->
+            (state, Cmd.none)
+
         SelectKey isOptionDisabled _ ->
             case state.focusedOption of
                 Nothing ->

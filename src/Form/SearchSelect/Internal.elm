@@ -160,6 +160,12 @@ update msg state =
         SelectKey Down ->
             ( { state | focusedOption = getNextOption state.options state.focusedOption }, Cmd.none )
 
+        SelectKey Backspace ->
+            (state, Cmd.none)
+
+        SelectKey (AlphaNum _) ->
+            (state, Cmd.none)
+
         SelectKey _ ->
             case state.focusedOption of
                 Nothing ->

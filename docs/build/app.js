@@ -5237,6 +5237,7 @@ var author$project$Form$Select$Internal$init = function (options) {
 		focusedOption: elm$core$Maybe$Nothing,
 		isOpen: false,
 		options: options,
+		searchText: '',
 		selectedOption: author$project$Resettable$init(elm$core$Maybe$Nothing)
 	};
 };
@@ -11296,6 +11297,32 @@ var author$project$Form$Select$setInitialOption = F2(
 		return author$project$Form$Select$Model(
 			A2(author$project$Form$Select$Internal$setInitialOption, selectedOption, state));
 	});
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$String$toLower = _String_toLower;
+var author$project$Form$Select$Internal$filterOptions = F3(
+	function (searchText, toLabel, options) {
+		return A2(
+			elm$core$List$filter,
+			A2(
+				elm$core$Basics$composeR,
+				toLabel,
+				A2(
+					elm$core$Basics$composeR,
+					elm$core$String$toLower,
+					elm$core$String$contains(searchText))),
+			options);
+	});
+var elm$core$Debug$log = _Debug_log;
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -11326,6 +11353,45 @@ var elm$core$List$head = function (list) {
 		return elm$core$Maybe$Nothing;
 	}
 };
+var elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
 var elm_community$list_extra$List$Extra$dropWhile = F2(
 	function (predicate, list) {
 		dropWhile:
@@ -11347,12 +11413,22 @@ var elm_community$list_extra$List$Extra$dropWhile = F2(
 			}
 		}
 	});
-var author$project$Form$Helpers$getNextOption = F2(
-	function (options, mFocusedOption) {
-		if (mFocusedOption.$ === 'Nothing') {
-			return elm$core$List$head(options);
+var author$project$Form$Select$Internal$getNextOption = F4(
+	function (options, mFocusedOption, searchText, toLabel) {
+		var filteredOptions = A2(
+			elm$core$Debug$log,
+			'filter',
+			A3(author$project$Form$Select$Internal$filterOptions, searchText, toLabel, options));
+		var mFilteredFocusOption = A2(
+			elm$core$Maybe$andThen,
+			function (option) {
+				return A2(elm$core$List$member, option, filteredOptions) ? elm$core$Maybe$Just(option) : elm$core$Maybe$Nothing;
+			},
+			mFocusedOption);
+		if (mFilteredFocusOption.$ === 'Nothing') {
+			return elm$core$List$head(filteredOptions);
 		} else {
-			var focusedOption = mFocusedOption.a;
+			var focusedOption = mFilteredFocusOption.a;
 			return elm$core$List$head(
 				A2(
 					elm$core$List$drop,
@@ -11360,15 +11436,17 @@ var author$project$Form$Helpers$getNextOption = F2(
 					A2(
 						elm_community$list_extra$List$Extra$dropWhile,
 						elm$core$Basics$neq(focusedOption),
-						options)));
+						filteredOptions)));
 		}
 	});
-var author$project$Form$Helpers$getPreviousOption = F2(
-	function (options, focusedOption) {
-		return A2(
-			author$project$Form$Helpers$getNextOption,
+var author$project$Form$Select$Internal$getPreviousOption = F4(
+	function (options, focusedOption, searchText, toLabel) {
+		return A4(
+			author$project$Form$Select$Internal$getNextOption,
 			elm$core$List$reverse(options),
-			focusedOption);
+			focusedOption,
+			searchText,
+			toLabel);
 	});
 var author$project$Resettable$Updated = F2(
 	function (a, b) {
@@ -11401,6 +11479,24 @@ var author$project$Resettable$update = F2(
 			}
 		}
 	});
+var author$project$Form$Select$Internal$updateSelectedOption = F2(
+	function (option, state) {
+		return _Utils_update(
+			state,
+			{
+				focusedOption: elm$core$Maybe$Nothing,
+				isOpen: false,
+				searchText: '',
+				selectedOption: A2(
+					author$project$Resettable$update,
+					elm$core$Maybe$Just(option),
+					state.selectedOption)
+			});
+	});
+var elm$core$String$dropRight = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
+	});
 var mgold$elm_nonempty_list$List$Nonempty$toList = function (_n0) {
 	var x = _n0.a;
 	var xs = _n0.b;
@@ -11419,21 +11515,12 @@ var author$project$Form$Select$Internal$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						state,
-						{focusedOption: elm$core$Maybe$Nothing, isOpen: false}),
+						{focusedOption: elm$core$Maybe$Nothing, isOpen: false, searchText: ''}),
 					elm$core$Platform$Cmd$none);
 			case 'Select':
 				var option = msg.a;
 				return _Utils_Tuple2(
-					_Utils_update(
-						state,
-						{
-							focusedOption: elm$core$Maybe$Nothing,
-							isOpen: false,
-							selectedOption: A2(
-								author$project$Resettable$update,
-								elm$core$Maybe$Just(option),
-								state.selectedOption)
-						}),
+					A2(author$project$Form$Select$Internal$updateSelectedOption, option, state),
 					elm$core$Platform$Cmd$none);
 			case 'Clear':
 				return _Utils_Tuple2(
@@ -11444,53 +11531,69 @@ var author$project$Form$Select$Internal$update = F2(
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'SelectKey':
-				switch (msg.b.$) {
+				switch (msg.c.$) {
 					case 'Up':
-						var _n1 = msg.b;
+						var toLabel = msg.b;
+						var _n1 = msg.c;
 						return _Utils_Tuple2(
 							_Utils_update(
 								state,
 								{
-									focusedOption: A2(
-										author$project$Form$Helpers$getPreviousOption,
+									focusedOption: A4(
+										author$project$Form$Select$Internal$getPreviousOption,
 										mgold$elm_nonempty_list$List$Nonempty$toList(state.options),
-										state.focusedOption)
+										state.focusedOption,
+										state.searchText,
+										toLabel)
 								}),
 							elm$core$Platform$Cmd$none);
 					case 'Down':
-						var _n2 = msg.b;
+						var toLabel = msg.b;
+						var _n2 = msg.c;
 						return _Utils_Tuple2(
 							_Utils_update(
 								state,
 								{
-									focusedOption: A2(
-										author$project$Form$Helpers$getNextOption,
+									focusedOption: A4(
+										author$project$Form$Select$Internal$getNextOption,
 										mgold$elm_nonempty_list$List$Nonempty$toList(state.options),
-										state.focusedOption)
+										state.focusedOption,
+										state.searchText,
+										toLabel)
+								}),
+							elm$core$Platform$Cmd$none);
+					case 'Backspace':
+						var _n3 = msg.c;
+						return _Utils_Tuple2(
+							_Utils_update(
+								state,
+								{
+									searchText: A2(elm$core$String$dropRight, 1, state.searchText)
+								}),
+							elm$core$Platform$Cmd$none);
+					case 'AlphaNum':
+						var toLabel = msg.b;
+						var charString = msg.c.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								state,
+								{
+									searchText: _Utils_ap(state.searchText, charString)
 								}),
 							elm$core$Platform$Cmd$none);
 					default:
 						var isOptionDisabled = msg.a;
-						var _n3 = state.focusedOption;
-						if (_n3.$ === 'Nothing') {
+						var _n4 = state.focusedOption;
+						if (_n4.$ === 'Nothing') {
 							return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 						} else {
-							var focusedOption = _n3.a;
-							var _n4 = isOptionDisabled(focusedOption);
-							if (_n4) {
+							var focusedOption = _n4.a;
+							var _n5 = isOptionDisabled(focusedOption);
+							if (_n5) {
 								return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 							} else {
 								return _Utils_Tuple2(
-									_Utils_update(
-										state,
-										{
-											focusedOption: elm$core$Maybe$Nothing,
-											isOpen: false,
-											selectedOption: A2(
-												author$project$Resettable$update,
-												elm$core$Maybe$Just(focusedOption),
-												state.selectedOption)
-										}),
+									A2(author$project$Form$Select$Internal$updateSelectedOption, focusedOption, state),
 									elm$core$Platform$Cmd$none);
 							}
 						}
@@ -12594,46 +12697,28 @@ var author$project$Form$IntInput$update = F2(
 		return author$project$Form$IntInput$Model(
 			A2(author$project$Form$IntInput$Internal$update, msg, state));
 	});
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
+var author$project$Form$Helpers$getNextOption = F2(
+	function (options, mFocusedOption) {
+		if (mFocusedOption.$ === 'Nothing') {
+			return elm$core$List$head(options);
+		} else {
+			var focusedOption = mFocusedOption.a;
+			return elm$core$List$head(
+				A2(
+					elm$core$List$drop,
+					1,
+					A2(
+						elm_community$list_extra$List$Extra$dropWhile,
+						elm$core$Basics$neq(focusedOption),
+						options)));
 		}
 	});
-var elm$core$List$member = F2(
-	function (x, xs) {
+var author$project$Form$Helpers$getPreviousOption = F2(
+	function (options, focusedOption) {
 		return A2(
-			elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
+			author$project$Form$Helpers$getNextOption,
+			elm$core$List$reverse(options),
+			focusedOption);
 	});
 var author$project$Form$MultiSelect$Internal$toggleOption = F2(
 	function (option, selectedOptions) {
@@ -12709,15 +12794,20 @@ var author$project$Form$MultiSelect$Internal$update = F2(
 										state.focusedOption)
 								}),
 							elm$core$Platform$Cmd$none);
+					case 'Backspace':
+						var _n3 = msg.b;
+						return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
+					case 'AlphaNum':
+						return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 					default:
 						var isOptionDisabled = msg.a;
-						var _n3 = state.focusedOption;
-						if (_n3.$ === 'Nothing') {
+						var _n4 = state.focusedOption;
+						if (_n4.$ === 'Nothing') {
 							return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 						} else {
-							var focusedOption = _n3.a;
-							var _n4 = isOptionDisabled(focusedOption);
-							if (_n4) {
+							var focusedOption = _n4.a;
+							var _n5 = isOptionDisabled(focusedOption);
+							if (_n5) {
 								return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 							} else {
 								return _Utils_Tuple2(
@@ -12933,12 +13023,17 @@ var author$project$Form$SearchSelect$Internal$update = F2(
 									focusedOption: A2(author$project$Form$Helpers$getNextOption, state.options, state.focusedOption)
 								}),
 							elm$core$Platform$Cmd$none);
+					case 'Backspace':
+						var _n4 = msg.a;
+						return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
+					case 'AlphaNum':
+						return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 					default:
-						var _n4 = state.focusedOption;
-						if (_n4.$ === 'Nothing') {
+						var _n5 = state.focusedOption;
+						if (_n5.$ === 'Nothing') {
 							return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 						} else {
-							var focusedOption = _n4.a;
+							var focusedOption = _n5.a;
 							return _Utils_Tuple2(
 								_Utils_update(
 									state,
@@ -15773,7 +15868,6 @@ var rtfeldman$elm_css$Css$erroneousHex = function (str) {
 		value: rtfeldman$elm_css$Css$withPrecedingHash(str)
 	};
 };
-var elm$core$String$toLower = _String_toLower;
 var elm$core$Result$mapError = F2(
 	function (f, result) {
 		if (result.$ === 'Ok') {
@@ -19328,6 +19422,10 @@ var author$project$Form$Select$Internal$closed = F2(
 						]))
 				]));
 	});
+var author$project$Form$Helpers$AlphaNum = function (a) {
+	return {$: 'AlphaNum', a: a};
+};
+var author$project$Form$Helpers$Backspace = {$: 'Backspace'};
 var author$project$Form$Helpers$Down = {$: 'Down'};
 var author$project$Form$Helpers$Enter = {$: 'Enter'};
 var author$project$Form$Helpers$Space = {$: 'Space'};
@@ -19343,8 +19441,15 @@ var author$project$Form$Helpers$selectKeyDecoder = function (key) {
 			return elm$json$Json$Decode$succeed(author$project$Form$Helpers$Enter);
 		case ' ':
 			return elm$json$Json$Decode$succeed(author$project$Form$Helpers$Space);
+		case 'Backspace':
+			return elm$json$Json$Decode$succeed(author$project$Form$Helpers$Backspace);
 		default:
-			return elm$json$Json$Decode$fail('Not valid SelectKey');
+			var alphaNum = key;
+			return (A2(
+				elm$core$List$all,
+				elm$core$Char$isAlphaNum,
+				elm$core$String$toList(alphaNum)) && (elm$core$String$length(alphaNum) === 1)) ? elm$json$Json$Decode$succeed(
+				author$project$Form$Helpers$AlphaNum(alphaNum)) : elm$json$Json$Decode$fail('Not valid SelectKey');
 	}
 };
 var elm$json$Json$Decode$andThen = _Json_andThen;
@@ -19370,43 +19475,41 @@ var author$project$Form$Select$Css$container = rtfeldman$elm_css$Html$Styled$Att
 			rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$relative)
 		]));
 var author$project$Form$Select$Internal$Blur = {$: 'Blur'};
-var author$project$Form$Select$Internal$SelectKey = F2(
-	function (a, b) {
-		return {$: 'SelectKey', a: a, b: b};
+var author$project$Form$Select$Internal$SelectKey = F3(
+	function (a, b, c) {
+		return {$: 'SelectKey', a: a, b: b, c: c};
 	});
-var rtfeldman$elm_css$Css$borderTopColor = function (c) {
-	return A2(rtfeldman$elm_css$Css$property, 'border-top-color', c.value);
-};
-var rtfeldman$elm_css$Css$left = rtfeldman$elm_css$Css$prop1('left');
-var rtfeldman$elm_css$Css$maxHeight = rtfeldman$elm_css$Css$prop1('max-height');
-var rtfeldman$elm_css$Css$overflowY = rtfeldman$elm_css$Css$prop1('overflow-y');
-var author$project$Form$Css$selectOptionList = _List_fromArray(
-	[
-		rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$absolute),
-		rtfeldman$elm_css$Css$top(
-		rtfeldman$elm_css$Css$px(31)),
-		rtfeldman$elm_css$Css$left(
-		rtfeldman$elm_css$Css$px(0)),
-		rtfeldman$elm_css$Css$right(
-		rtfeldman$elm_css$Css$px(0)),
-		rtfeldman$elm_css$Css$zIndex(
-		rtfeldman$elm_css$Css$int(10)),
-		rtfeldman$elm_css$Css$maxHeight(
-		rtfeldman$elm_css$Css$px(200)),
-		rtfeldman$elm_css$Css$overflowY(rtfeldman$elm_css$Css$auto),
-		A3(
-		rtfeldman$elm_css$Css$border3,
-		rtfeldman$elm_css$Css$px(1),
-		rtfeldman$elm_css$Css$solid,
-		rtfeldman$elm_css$Css$hex('cccccc')),
-		rtfeldman$elm_css$Css$borderTopColor(
-		rtfeldman$elm_css$Css$hex('eeeeee')),
-		rtfeldman$elm_css$Css$padding(
-		rtfeldman$elm_css$Css$px(0)),
-		rtfeldman$elm_css$Css$backgroundColor(
-		rtfeldman$elm_css$Css$hex('ffffff'))
-	]);
-var author$project$Form$Select$Css$optionList = rtfeldman$elm_css$Html$Styled$Attributes$css(author$project$Form$Css$selectOptionList);
+var author$project$Form$Select$Internal$inputContents = F2(
+	function (state, viewState) {
+		return elm$core$String$isEmpty(state.searchText) ? A2(
+			rtfeldman$elm_css$Html$Styled$div,
+			_List_fromArray(
+				[
+					rtfeldman$elm_css$Html$Styled$Attributes$title(
+					A2(
+						elm$core$Maybe$withDefault,
+						viewState.defaultLabel,
+						A2(
+							elm$core$Maybe$map,
+							viewState.toLabel,
+							author$project$Resettable$getValue(state.selectedOption)))),
+					author$project$Form$Select$Css$title(
+					_Utils_eq(
+						author$project$Resettable$getValue(state.selectedOption),
+						elm$core$Maybe$Nothing))
+				]),
+			_List_fromArray(
+				[
+					rtfeldman$elm_css$Html$Styled$text(
+					A2(
+						elm$core$Maybe$withDefault,
+						viewState.defaultLabel,
+						A2(
+							elm$core$Maybe$map,
+							viewState.toLabel,
+							author$project$Resettable$getValue(state.selectedOption))))
+				])) : rtfeldman$elm_css$Html$Styled$text(state.searchText);
+	});
 var author$project$Form$Css$selectOptionItem = F2(
 	function (isDisabled, isFocused) {
 		return _List_fromArray(
@@ -19460,6 +19563,39 @@ var author$project$Form$Select$Css$optionItem = F2(
 		return rtfeldman$elm_css$Html$Styled$Attributes$css(
 			A2(author$project$Form$Css$selectOptionItem, isDisabled, isFocused));
 	});
+var rtfeldman$elm_css$Css$borderTopColor = function (c) {
+	return A2(rtfeldman$elm_css$Css$property, 'border-top-color', c.value);
+};
+var rtfeldman$elm_css$Css$left = rtfeldman$elm_css$Css$prop1('left');
+var rtfeldman$elm_css$Css$maxHeight = rtfeldman$elm_css$Css$prop1('max-height');
+var rtfeldman$elm_css$Css$overflowY = rtfeldman$elm_css$Css$prop1('overflow-y');
+var author$project$Form$Css$selectOptionList = _List_fromArray(
+	[
+		rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$absolute),
+		rtfeldman$elm_css$Css$top(
+		rtfeldman$elm_css$Css$px(31)),
+		rtfeldman$elm_css$Css$left(
+		rtfeldman$elm_css$Css$px(0)),
+		rtfeldman$elm_css$Css$right(
+		rtfeldman$elm_css$Css$px(0)),
+		rtfeldman$elm_css$Css$zIndex(
+		rtfeldman$elm_css$Css$int(10)),
+		rtfeldman$elm_css$Css$maxHeight(
+		rtfeldman$elm_css$Css$px(200)),
+		rtfeldman$elm_css$Css$overflowY(rtfeldman$elm_css$Css$auto),
+		A3(
+		rtfeldman$elm_css$Css$border3,
+		rtfeldman$elm_css$Css$px(1),
+		rtfeldman$elm_css$Css$solid,
+		rtfeldman$elm_css$Css$hex('cccccc')),
+		rtfeldman$elm_css$Css$borderTopColor(
+		rtfeldman$elm_css$Css$hex('eeeeee')),
+		rtfeldman$elm_css$Css$padding(
+		rtfeldman$elm_css$Css$px(0)),
+		rtfeldman$elm_css$Css$backgroundColor(
+		rtfeldman$elm_css$Css$hex('ffffff'))
+	]);
+var author$project$Form$Select$Css$optionList = rtfeldman$elm_css$Html$Styled$Attributes$css(author$project$Form$Css$selectOptionList);
 var author$project$Form$Select$Internal$NoOp = {$: 'NoOp'};
 var author$project$Form$Select$Internal$Select = function (a) {
 	return {$: 'Select', a: a};
@@ -19493,14 +19629,36 @@ var author$project$Form$Select$Internal$optionItem = F3(
 	});
 var author$project$Form$Select$Internal$optionList = F2(
 	function (state, viewState) {
-		return A2(
+		var filteredOptions = A3(
+			author$project$Form$Select$Internal$filterOptions,
+			state.searchText,
+			viewState.toLabel,
+			mgold$elm_nonempty_list$List$Nonempty$toList(state.options));
+		return elm$core$List$isEmpty(filteredOptions) ? A2(
+			rtfeldman$elm_css$Html$Styled$div,
+			_List_fromArray(
+				[author$project$Form$Select$Css$optionList]),
+			_List_fromArray(
+				[
+					A2(
+					rtfeldman$elm_css$Html$Styled$div,
+					_List_fromArray(
+						[
+							A2(author$project$Form$Select$Css$optionItem, false, false),
+							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1)
+						]),
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Html$Styled$text('No options containing - \"' + (state.searchText + '\"'))
+						]))
+				])) : A2(
 			rtfeldman$elm_css$Html$Styled$div,
 			_List_fromArray(
 				[author$project$Form$Select$Css$optionList]),
 			A2(
 				elm$core$List$map,
 				A2(author$project$Form$Select$Internal$optionItem, state, viewState),
-				mgold$elm_nonempty_list$List$Nonempty$toList(state.options)));
+				filteredOptions));
 	});
 var rtfeldman$elm_css$Html$Styled$Events$onBlur = function (msg) {
 	return A2(
@@ -19524,39 +19682,12 @@ var author$project$Form$Select$Internal$open = F2(
 							A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$id, viewState.id),
 							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1),
 							author$project$Form$Helpers$onSelectKey(
-							author$project$Form$Select$Internal$SelectKey(viewState.isOptionDisabled)),
+							A2(author$project$Form$Select$Internal$SelectKey, viewState.isOptionDisabled, viewState.toLabel)),
 							rtfeldman$elm_css$Html$Styled$Events$onBlur(author$project$Form$Select$Internal$Blur)
 						]),
 					_List_fromArray(
 						[
-							A2(
-							rtfeldman$elm_css$Html$Styled$div,
-							_List_fromArray(
-								[
-									rtfeldman$elm_css$Html$Styled$Attributes$title(
-									A2(
-										elm$core$Maybe$withDefault,
-										viewState.defaultLabel,
-										A2(
-											elm$core$Maybe$map,
-											viewState.toLabel,
-											author$project$Resettable$getValue(state.selectedOption)))),
-									author$project$Form$Select$Css$title(
-									_Utils_eq(
-										author$project$Resettable$getValue(state.selectedOption),
-										elm$core$Maybe$Nothing))
-								]),
-							_List_fromArray(
-								[
-									rtfeldman$elm_css$Html$Styled$text(
-									A2(
-										elm$core$Maybe$withDefault,
-										viewState.defaultLabel,
-										A2(
-											elm$core$Maybe$map,
-											viewState.toLabel,
-											author$project$Resettable$getValue(state.selectedOption))))
-								]))
+							A2(author$project$Form$Select$Internal$inputContents, state, viewState)
 						])),
 					A2(author$project$Form$Select$Internal$optionList, state, viewState)
 				]));
@@ -24420,4 +24551,4 @@ var author$project$Main$main = elm$browser$Browser$application(
 		view: author$project$View$view
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"SetGridButtonGreen":["Basics.Bool"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"SetGridButtonGreen":["Basics.Bool"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","option -> String.String","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[],"Backspace":[],"AlphaNum":["String.String"]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

@@ -23,17 +23,9 @@ module Form.Select.Internal exposing
     , update
     )
 
-import Browser.Dom as Dom
-import Dict
 import FeatherIcons
 import Form.Css as BaseCss
-import Form.Helpers as Form
-    exposing
-        ( SelectKey(..)
-        , getNextOption
-        , getPreviousOption
-        , onSelectKey
-        )
+import Form.Helpers as Form exposing (SelectKey(..), onSelectKey)
 import Form.Select.Css as Css
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attributes exposing (..)
@@ -41,10 +33,9 @@ import Html.Styled.Bdt as Html
 import Html.Styled.Events exposing (..)
 import Html.Styled.Lazy exposing (..)
 import Json.Decode as Decode exposing (Decoder)
+import List.Extra as List
 import List.Nonempty as Nonempty exposing (Nonempty)
 import Resettable exposing (Resettable)
-import Task
-
 
 
 -- MODEL --
@@ -55,6 +46,7 @@ type alias State option =
     , options : Nonempty option
     , selectedOption : Resettable (Maybe option)
     , focusedOption : Maybe option
+    , searchText : String
     }
 
 
@@ -64,6 +56,7 @@ init options =
     , options = options
     , selectedOption = Resettable.init Nothing
     , focusedOption = Nothing
+    , searchText = ""
     }
 
 
@@ -99,7 +92,7 @@ type Msg option
     | Blur
     | Select option
     | Clear
-    | SelectKey (option -> Bool) SelectKey
+    | SelectKey (option -> Bool) (option -> String) SelectKey
     | NoOp
 
 
@@ -114,27 +107,27 @@ update msg state =
             ( { state | isOpen = True }, Cmd.none )
 
         Blur ->
-            ( { state | isOpen = False, focusedOption = Nothing }, Cmd.none )
+            ( { state | isOpen = False, focusedOption = Nothing, searchText = "" }, Cmd.none )
 
         Select option ->
-            ( { state
-                | selectedOption = Resettable.update (Just option) state.selectedOption
-                , isOpen = False
-                , focusedOption = Nothing
-              }
-            , Cmd.none
-            )
+            ( updateSelectedOption option state, Cmd.none )
 
         Clear ->
             ( { state | selectedOption = Resettable.update Nothing state.selectedOption }, Cmd.none )
 
-        SelectKey _ Up ->
-            ( { state | focusedOption = getPreviousOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none )
+        SelectKey _ toLabel Up ->
+            ( { state | focusedOption = getPreviousOption (Nonempty.toList state.options) state.focusedOption state.searchText toLabel }, Cmd.none )
 
-        SelectKey _ Down ->
-            ( { state | focusedOption = getNextOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none )
+        SelectKey _ toLabel Down ->
+            ( { state | focusedOption = getNextOption (Nonempty.toList state.options) state.focusedOption state.searchText toLabel }, Cmd.none )
 
-        SelectKey isOptionDisabled _ ->
+        SelectKey _ _ Backspace ->
+            ( { state | searchText = String.dropRight 1 state.searchText }, Cmd.none )
+
+        SelectKey _ toLabel (AlphaNum charString) ->
+            ( { state | searchText = state.searchText ++ charString }, Cmd.none)
+
+        SelectKey isOptionDisabled _ _ ->
             case state.focusedOption of
                 Nothing ->
                     ( state, Cmd.none )
@@ -145,17 +138,20 @@ update msg state =
                             ( state, Cmd.none )
 
                         False ->
-                            ( { state
-                                | selectedOption = Resettable.update (Just focusedOption) state.selectedOption
-                                , isOpen = False
-                                , focusedOption = Nothing
-                              }
-                            , Cmd.none
-                            )
+                            ( updateSelectedOption focusedOption state, Cmd.none )
 
         NoOp ->
             ( state, Cmd.none )
 
+
+updateSelectedOption : option -> State option -> State option
+updateSelectedOption option state =
+    { state
+        | selectedOption = Resettable.update (Just option) state.selectedOption
+        , isOpen = False
+        , focusedOption = Nothing
+        , searchText = ""
+    }
 
 
 -- VIEW --
@@ -202,17 +198,25 @@ open state viewState =
             [ Css.input viewState.isError viewState.isLocked
             , Html.maybeAttribute id viewState.id
             , tabindex -1
-            , onSelectKey <| SelectKey viewState.isOptionDisabled
+            , onSelectKey <| SelectKey viewState.isOptionDisabled viewState.toLabel
             , onBlur Blur
             ]
-            [ div
-                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
-                , Css.title (Resettable.getValue state.selectedOption == Nothing)
-                ]
-                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
-            ]
+            [ inputContents state viewState ]
         , optionList state viewState
         ]
+
+
+inputContents : State option -> ViewState option -> Html (Msg option)
+inputContents state viewState =
+    if String.isEmpty state.searchText
+    then
+        div
+            [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+            , Css.title (Resettable.getValue state.selectedOption == Nothing)
+            ]
+            [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
+    else
+        text state.searchText
 
 
 clearButton : State option -> ViewState option -> Html (Msg option)
@@ -224,9 +228,27 @@ clearButton state viewState =
 
 optionList : State option -> ViewState option -> Html (Msg option)
 optionList state viewState =
-    div
-        [ Css.optionList ]
-        (List.map (optionItem state viewState) (Nonempty.toList state.options))
+    let
+        filteredOptions =
+            state.options
+                |> Nonempty.toList
+                |> filterOptions state.searchText viewState.toLabel
+
+    in
+        if List.isEmpty filteredOptions
+        then
+            div
+                [ Css.optionList ]
+                [ div
+                    [ Css.optionItem False False
+                    , tabindex -1
+                    ]
+                    [ text ("No options containing - \"" ++ state.searchText ++ "\"") ]
+                ]
+        else
+            div
+                [ Css.optionList ]
+                (List.map (optionItem state viewState) filteredOptions)
 
 
 optionItem : State option -> ViewState option -> option -> Html (Msg option)
@@ -332,3 +354,38 @@ getIsOpen =
 getId : ViewState option -> Maybe String
 getId =
     .id
+
+
+-- UTILITIES --
+-- @todo -- Have moved these here since they're distinct from the search select focused option logic
+-- @todo -- Should potentially move these back into the common utils to implement for multi select
+
+
+getPreviousOption : List option -> Maybe option -> String -> (option -> String) -> Maybe option
+getPreviousOption options focusedOption searchText toLabel =
+   getNextOption (List.reverse options) focusedOption searchText toLabel
+
+
+getNextOption : List option -> Maybe option -> String -> (option -> String) -> Maybe option
+getNextOption options mFocusedOption searchText toLabel =
+    let
+        filteredOptions = filterOptions searchText toLabel options |> Debug.log "filter"
+
+        mFilteredFocusOption =
+            mFocusedOption
+                |> Maybe.andThen (\option -> if List.member option filteredOptions then Just option else Nothing)
+    in
+        case mFilteredFocusOption of
+            Nothing ->
+                List.head filteredOptions
+
+            Just focusedOption ->
+                filteredOptions
+                    |> List.dropWhile ((/=) focusedOption)
+                    |> List.drop 1
+                    |> List.head
+
+
+filterOptions : String -> (option -> String) -> List option -> List option
+filterOptions searchText toLabel options =
+    List.filter (toLabel >> String.toLower >> String.contains searchText) options

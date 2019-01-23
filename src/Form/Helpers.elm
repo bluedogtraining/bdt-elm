@@ -17,6 +17,8 @@ type SelectKey
     | Down
     | Enter
     | Space
+    | Backspace
+    | AlphaNum String
 
 
 selectKeyDecoder : String -> Decoder SelectKey
@@ -34,8 +36,15 @@ selectKeyDecoder key =
         " " ->
             Decode.succeed Space
 
-        _ ->
-            Decode.fail "Not valid SelectKey"
+        "Backspace" ->
+            Decode.succeed Backspace
+
+        alphaNum ->
+            if (String.toList alphaNum |> List.all Char.isAlphaNum) && String.length alphaNum == 1
+            then
+                Decode.succeed <| AlphaNum alphaNum
+            else
+                Decode.fail "Not valid SelectKey"
 
 
 onSelectKey : (SelectKey -> msg) -> Attribute msg
@@ -61,3 +70,4 @@ getNextOption options mFocusedOption =
                 |> List.dropWhile ((/=) focusedOption)
                 |> List.drop 1
                 |> List.head
+

@@ -1,4 +1,4 @@
-module Form.DatePicker.Css exposing (applyButton, applyButtonContainer, arrowStyles, calendar, calendarDayItem, calendarDayItemColors, calendarDayRow, clearButton, colon, container, date, input, monthArrows, navigation, offsetYearArrow, select, selectContainer, timePickerContainer, title, weekDayItem, weekDayList, yearArrows)
+module Form.DatePicker.Css exposing (applyButton, applyButtonContainer, arrowStyles, calendar, calendarDaysGrid, calendarDayItem, calendarDayItemColors, calendarDayRow, clearButton, colon, container, date, input, monthArrows, navigation, offsetYearArrow, select, selectContainer, timePickerContainer, title, weekDayItem, weekDayList, yearArrows)
 
 import Css exposing (..)
 import Form.Css as Css
@@ -33,6 +33,13 @@ calendar =
         , position absolute
         , zIndex <| int 100
         , backgroundColor <| hex "ffffff"
+        ]
+
+
+calendarDaysGrid : Attribute msg
+calendarDaysGrid =
+    css
+        [ paddingTop <| px 15
         ]
 
 

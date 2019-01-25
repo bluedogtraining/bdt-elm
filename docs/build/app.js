@@ -17657,31 +17657,16 @@ var rtfeldman$elm_css$Html$Styled$button = rtfeldman$elm_css$Html$Styled$node('b
 var rtfeldman$elm_css$Html$Styled$Attributes$target = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('target');
 var author$project$Button$render = function (_n0) {
 	var config = _n0.a;
-	var _n1 = _Utils_Tuple2(config.isDisabled, config.href);
-	if (_n1.a) {
-		return A2(
-			rtfeldman$elm_css$Html$Styled$button,
-			_List_fromArray(
-				[
-					A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading)
-				]),
-			_List_fromArray(
-				[
-					author$project$Button$Css$spinKeyFrames,
-					A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
-				]));
+	var _n1 = _Utils_Tuple3(config.isShown, config.isDisabled, config.href);
+	if (!_n1.a) {
+		return rtfeldman$elm_css$Html$Styled$text('');
 	} else {
-		if (_n1.b.$ === 'Nothing') {
-			var _n2 = _n1.b;
+		if (_n1.b) {
 			return A2(
 				rtfeldman$elm_css$Html$Styled$button,
 				_List_fromArray(
 					[
-						A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						!config.isDisabled,
-						A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick))
+						A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading)
 					]),
 				_List_fromArray(
 					[
@@ -17689,30 +17674,49 @@ var author$project$Button$render = function (_n0) {
 						A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
 					]));
 		} else {
-			var href_ = _n1.b.a;
-			return A2(
-				rtfeldman$elm_css$Html$Styled$a,
-				_List_fromArray(
-					[
-						A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						!config.isDisabled,
-						A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						!_Utils_eq(config.href, elm$core$Maybe$Nothing),
-						rtfeldman$elm_css$Html$Styled$Attributes$href(href_.url)),
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						href_.blank,
-						rtfeldman$elm_css$Html$Styled$Attributes$target('blank_'))
-					]),
-				_List_fromArray(
-					[
-						author$project$Button$Css$spinKeyFrames,
-						A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
-					]));
+			if (_n1.c.$ === 'Nothing') {
+				var _n2 = _n1.c;
+				return A2(
+					rtfeldman$elm_css$Html$Styled$button,
+					_List_fromArray(
+						[
+							A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
+							A2(
+							author$project$Html$Styled$Bdt$attributeIf,
+							!config.isDisabled,
+							A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick))
+						]),
+					_List_fromArray(
+						[
+							author$project$Button$Css$spinKeyFrames,
+							A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
+						]));
+			} else {
+				var href_ = _n1.c.a;
+				return A2(
+					rtfeldman$elm_css$Html$Styled$a,
+					_List_fromArray(
+						[
+							A5(author$project$Button$Css$button, config.size, config.content, config.color, config.isDisabled, config.isLoading),
+							A2(
+							author$project$Html$Styled$Bdt$attributeIf,
+							!config.isDisabled,
+							A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Events$onClick, config.onClick)),
+							A2(
+							author$project$Html$Styled$Bdt$attributeIf,
+							!_Utils_eq(config.href, elm$core$Maybe$Nothing),
+							rtfeldman$elm_css$Html$Styled$Attributes$href(href_.url)),
+							A2(
+							author$project$Html$Styled$Bdt$attributeIf,
+							href_.blank,
+							rtfeldman$elm_css$Html$Styled$Attributes$target('blank_'))
+						]),
+					_List_fromArray(
+						[
+							author$project$Button$Css$spinKeyFrames,
+							A4(author$project$Button$content, config.content, config.size, config.color, config.isLoading)
+						]));
+			}
 		}
 	}
 };

@@ -181,15 +181,18 @@ red shouldBeRed (Button config) =
 -}
 render : Button msg -> Html msg
 render (Button config) =
-    case (config.isDisabled, config.href) of
-        (True, _) ->
+    case (config.isShown, config.isDisabled, config.href) of
+        (False, _, _) ->
+            Html.text ""
+
+        (True, True, _) ->
             button
                 [ Css.button config.size config.content config.color config.isDisabled config.isLoading ]
                 [ Css.spinKeyFrames
                 , content config.content config.size config.color config.isLoading
                 ]
 
-        (False, Nothing) ->
+        (True, False, Nothing) ->
             button
                 [ Css.button config.size config.content config.color config.isDisabled config.isLoading
                 , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)
@@ -198,7 +201,7 @@ render (Button config) =
                 , content config.content config.size config.color config.isLoading
                 ]
 
-        (False, Just href_) ->
+        (True, False, Just href_) ->
             a
                 [ Css.button config.size config.content config.color config.isDisabled config.isLoading
                 , Html.maybeAttribute Html.onClick config.onClick |> Html.attributeIf (not config.isDisabled)

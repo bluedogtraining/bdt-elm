@@ -21591,22 +21591,57 @@ var author$project$Form$Select$setIsOptionDisabled = F2(
 			state,
 			A2(author$project$Form$Select$Internal$setIsOptionDisabled, isOptionDisabled, viewState));
 	});
-var rtfeldman$elm_css$Css$normal = {featureTagValue: rtfeldman$elm_css$Css$Structure$Compatible, fontStyle: rtfeldman$elm_css$Css$Structure$Compatible, fontWeight: rtfeldman$elm_css$Css$Structure$Compatible, overflowWrap: rtfeldman$elm_css$Css$Structure$Compatible, value: 'normal', whiteSpace: rtfeldman$elm_css$Css$Structure$Compatible};
 var rtfeldman$elm_css$Css$text_ = {cursor: rtfeldman$elm_css$Css$Structure$Compatible, value: 'text'};
 var author$project$Form$TextArea$Css$input = F3(
 	function (isError, isLocked, shouldWrap) {
 		return rtfeldman$elm_css$Html$Styled$Attributes$css(
-			_Utils_ap(
-				A2(author$project$Form$Css$select, isError, isLocked),
-				_List_fromArray(
-					[
-						rtfeldman$elm_css$Css$flexGrow(
-						rtfeldman$elm_css$Css$int(1)),
-						rtfeldman$elm_css$Css$padding(
-						rtfeldman$elm_css$Css$rem(0.4)),
-						rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$text_),
-						shouldWrap ? rtfeldman$elm_css$Css$whiteSpace(rtfeldman$elm_css$Css$normal) : rtfeldman$elm_css$Css$whiteSpace(rtfeldman$elm_css$Css$noWrap)
-					])));
+			_List_fromArray(
+				[
+					rtfeldman$elm_css$Css$boxSizing(rtfeldman$elm_css$Css$borderBox),
+					A3(
+					rtfeldman$elm_css$Css$border3,
+					rtfeldman$elm_css$Css$px(1),
+					rtfeldman$elm_css$Css$solid,
+					rtfeldman$elm_css$Css$hex(
+						(isError && (!isLocked)) ? 'd9534f' : 'cccccc')),
+					rtfeldman$elm_css$Css$width(
+					rtfeldman$elm_css$Css$pct(100)),
+					rtfeldman$elm_css$Css$maxWidth(
+					rtfeldman$elm_css$Css$pct(100)),
+					rtfeldman$elm_css$Css$height(
+					rtfeldman$elm_css$Css$rem(2)),
+					A2(
+					rtfeldman$elm_css$Css$padding2,
+					rtfeldman$elm_css$Css$rem(0),
+					rtfeldman$elm_css$Css$rem(0.4)),
+					A2(
+					rtfeldman$elm_css$Css$margin2,
+					rtfeldman$elm_css$Css$rem(0.5),
+					rtfeldman$elm_css$Css$rem(0)),
+					rtfeldman$elm_css$Css$color(
+					rtfeldman$elm_css$Css$hex('555555')),
+					rtfeldman$elm_css$Css$backgroundColor(
+					rtfeldman$elm_css$Css$hex(
+						isLocked ? 'dddddd' : 'ffffff')),
+					rtfeldman$elm_css$Css$fontSize(
+					rtfeldman$elm_css$Css$rem(0.8)),
+					rtfeldman$elm_css$Css$textOverflow(rtfeldman$elm_css$Css$ellipsis),
+					rtfeldman$elm_css$Css$overflowX(rtfeldman$elm_css$Css$hidden),
+					rtfeldman$elm_css$Css$focus(
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$outlineWidth(
+							rtfeldman$elm_css$Css$rem(0))
+						])),
+					rtfeldman$elm_css$Css$displayFlex,
+					rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$pointer),
+					rtfeldman$elm_css$Css$alignItems(rtfeldman$elm_css$Css$center),
+					rtfeldman$elm_css$Css$flexGrow(
+					rtfeldman$elm_css$Css$int(1)),
+					rtfeldman$elm_css$Css$padding(
+					rtfeldman$elm_css$Css$rem(0.4)),
+					rtfeldman$elm_css$Css$cursor(rtfeldman$elm_css$Css$text_)
+				]));
 	});
 var author$project$Form$TextArea$Internal$Input = function (a) {
 	return {$: 'Input', a: a};

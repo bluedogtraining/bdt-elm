@@ -18,6 +18,8 @@ module Time.Bdt exposing
 
 @docs monthNumber, monthString, monthFromNumber, addMonths, clamp, maybeClamp
 
+# Setters
+@docs setDay
 
 # Sort Times
 
@@ -326,6 +328,8 @@ decoder =
     Decode.map Time.millisToPosix Decode.int
 
 
+{-| Set the day of the month for posix
+-}
 setDay : Time.Zone -> Int -> Posix -> Posix
 setDay timeZone day posix =
     let

@@ -218,25 +218,6 @@ update msg state =
         SelectDay posix includeTime ->
             case includeTime of
                 False ->
--- -- -- -- -- -- Don't think we need any of the below since we're now accounting for timezones everywhere
---                    let
---                        newPosix =
---                            case Resettable.getValue state.selectedPosix of
---                                Nothing ->
---                                    posix
---
---                                Just currentPosix ->
---                                    Date.day
-----                                    currentPosix
-----                                        |> DateTime.fromPosix
-----                                        |> DateTime.setYear (Time.toYear state.timeZone posix)
-----                                        |> DateTime.setMonth (Time.toMonth state.timeZone posix |> Time.monthNumber)
-----                                        |> DateTime.setDay (Time.toDay state.timeZone posix)
-----                                        |> DateTime.setHour 0
-----                                        |> DateTime.setMinute 0
-----                                        |> DateTime.setSecond 0
-----                                        |> DateTime.toPosix
---                    in
                     ( { state | selectedPosix = Resettable.update (Just posix) state.selectedPosix, isOpen = False }, Cmd.none )
 
                 True ->

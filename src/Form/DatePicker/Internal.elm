@@ -28,11 +28,9 @@ module Form.DatePicker.Internal exposing
     )
 
 import Browser.Dom as Dom
-import Dict
 import FeatherIcons
 import Form.DatePicker.Css as Css
 import Form.DatePicker.Helpers as Helpers
-import Form.Helpers as Form
 import Form.Select as Select
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attributes exposing (..)
@@ -50,7 +48,15 @@ import Time.Extra as Time
 
 -- MODEL --
 
-
+{-
+@todo
+    This datepicker is based on posix but this introduces a whole range of issues in the comparison of posix millis
+    v.s. the comparison of days/months/years in a date. For the sake of date-time comparison where the amounts are
+    zero'd for time selection, this is less of an issue, but for the raw comparison of days it may be worth-while instead
+    storing or referencing dates for the date part to prevent undesirable behavior. If 'includeTime' was a state setter
+    that could be controlled on initialization we could confidently zero the time part of posix on init, but since
+    it is a view setter, if we did so on initialization we may lose valuable time information
+-}
 type alias State =
     { isOpen : Bool
     , timeZone : Time.Zone
@@ -569,7 +575,10 @@ calendarDay state viewState navigationPosix posix =
         isInRange =
             posix
                 |> Time.maybeClamp viewState.minPosix viewState.maxPosix
-                |> (\clamped -> Time.posixToMillis posix == Time.posixToMillis clamped)
+                {-  The below needs to check that we're on the same `day`. Comparing the millis from posix doesn't
+                    work as we only need the days to match, not down to the millis
+                -}
+                |> (\clampedPosix -> Time.toYear state.timeZone posix == Time.toYear state.timeZone clampedPosix && Time.toMonth state.timeZone posix == Time.toMonth state.timeZone clampedPosix && Time.toDay state.timeZone posix == Time.toDay state.timeZone clampedPosix)
     in
     div
         [ Css.calendarDayItem isSelectedPosix isDesiredPosix (isCurrentMonth && isInRange)

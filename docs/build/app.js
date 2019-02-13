@@ -36365,10 +36365,14 @@ var author$project$Form$DatePicker$Internal$calendarDay = F4(
 					elm$time$Time$posixToMillis(selectedPosix));
 			}
 		}();
-		var isInRange = function (clamped) {
+		var isInRange = function (clampedPosix) {
 			return _Utils_eq(
-				elm$time$Time$posixToMillis(posix),
-				elm$time$Time$posixToMillis(clamped));
+				A2(elm$time$Time$toYear, state.timeZone, posix),
+				A2(elm$time$Time$toYear, state.timeZone, clampedPosix)) && (_Utils_eq(
+				A2(elm$time$Time$toMonth, state.timeZone, posix),
+				A2(elm$time$Time$toMonth, state.timeZone, clampedPosix)) && _Utils_eq(
+				A2(elm$time$Time$toDay, state.timeZone, posix),
+				A2(elm$time$Time$toDay, state.timeZone, clampedPosix)));
 		}(
 			A3(author$project$Time$Bdt$maybeClamp, viewState.minPosix, viewState.maxPosix, posix));
 		var isDesiredPosix = function () {

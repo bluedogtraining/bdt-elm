@@ -19,12 +19,12 @@ module Time.Bdt exposing
 @docs monthNumber, monthString, monthFromNumber, addMonths, clamp, maybeClamp
 
 # Setters
+
 @docs setDay
 
 # Sort Times
 
 @docs order
-
 
 # Encode/Decode Times
 
@@ -288,6 +288,19 @@ maybeClamp mMinPosix mMaxPosix posix =
             posix
 
 
+{-| Set the day of the month for posix
+-}
+setDay : Time.Zone -> Int -> Posix -> Posix
+setDay timeZone day posix =
+    let
+        parts = Time.posixToParts timeZone posix
+
+        updatedParts = { parts | day = day }
+    in
+        Time.partsToPosix timeZone updatedParts
+
+
+
 {-| Orders 2 dates. This comes in handy with List.sortWith:
 
     List.sortWith Time.order [ date1, date2, date3 ]
@@ -326,15 +339,3 @@ encodeMaybe maybeTime =
 decoder : Decoder Posix
 decoder =
     Decode.map Time.millisToPosix Decode.int
-
-
-{-| Set the day of the month for posix
--}
-setDay : Time.Zone -> Int -> Posix -> Posix
-setDay timeZone day posix =
-    let
-        parts = Time.posixToParts timeZone posix
-
-        updatedParts = { parts | day = day }
-    in
-        Time.partsToPosix timeZone updatedParts

@@ -35969,12 +35969,29 @@ var author$project$Form$DatePicker$Css$calendar = rtfeldman$elm_css$Html$Styled$
 			rtfeldman$elm_css$Css$backgroundColor(
 			rtfeldman$elm_css$Css$hex('ffffff'))
 		]));
-var rtfeldman$elm_css$Css$paddingTop = rtfeldman$elm_css$Css$prop1('padding-top');
-var author$project$Form$DatePicker$Css$calendarDaysGrid = rtfeldman$elm_css$Html$Styled$Attributes$css(
+var rtfeldman$elm_css$Css$borderWidth2 = rtfeldman$elm_css$Css$prop2('border-width');
+var rtfeldman$elm_css$Css$dashed = {borderStyle: rtfeldman$elm_css$Css$Structure$Compatible, textDecorationStyle: rtfeldman$elm_css$Css$Structure$Compatible, value: 'dashed'};
+var author$project$Form$DatePicker$Css$weekDayList = rtfeldman$elm_css$Html$Styled$Attributes$css(
 	_List_fromArray(
 		[
-			rtfeldman$elm_css$Css$paddingTop(
-			rtfeldman$elm_css$Css$px(15))
+			A3(
+			rtfeldman$elm_css$Css$border3,
+			rtfeldman$elm_css$Css$px(1),
+			rtfeldman$elm_css$Css$dashed,
+			rtfeldman$elm_css$Css$hex('dddddd')),
+			A2(
+			rtfeldman$elm_css$Css$borderWidth2,
+			rtfeldman$elm_css$Css$px(1),
+			rtfeldman$elm_css$Css$px(0)),
+			A2(
+			rtfeldman$elm_css$Css$margin2,
+			rtfeldman$elm_css$Css$px(10),
+			rtfeldman$elm_css$Css$px(0)),
+			A2(
+			rtfeldman$elm_css$Css$padding2,
+			rtfeldman$elm_css$Css$px(5),
+			rtfeldman$elm_css$Css$px(0)),
+			rtfeldman$elm_css$Css$displayFlex
 		]));
 var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
 	function (zone, posix) {
@@ -36707,6 +36724,41 @@ var author$project$Form$DatePicker$Internal$calendarNavigation = F3(
 					A3(author$project$Form$DatePicker$Internal$nextYearArrow, state, viewState, navigationPosix)
 				]));
 	});
+var rtfeldman$elm_css$Css$PtUnits = {$: 'PtUnits'};
+var rtfeldman$elm_css$Css$pt = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, rtfeldman$elm_css$Css$PtUnits, 'pt');
+var rtfeldman$elm_css$Css$textAlign = function (fn) {
+	return A3(
+		rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
+		'textAlign',
+		'text-align',
+		fn(rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
+};
+var rtfeldman$elm_css$Css$textTransform = rtfeldman$elm_css$Css$prop1('text-transform');
+var rtfeldman$elm_css$Css$uppercase = {textTransform: rtfeldman$elm_css$Css$Structure$Compatible, value: 'uppercase'};
+var author$project$Form$DatePicker$Css$weekDayItem = rtfeldman$elm_css$Html$Styled$Attributes$css(
+	_List_fromArray(
+		[
+			rtfeldman$elm_css$Css$flexGrow(
+			rtfeldman$elm_css$Css$int(1)),
+			rtfeldman$elm_css$Css$textTransform(rtfeldman$elm_css$Css$uppercase),
+			rtfeldman$elm_css$Css$fontWeight(
+			rtfeldman$elm_css$Css$int(600)),
+			rtfeldman$elm_css$Css$fontSize(
+			rtfeldman$elm_css$Css$pt(8)),
+			rtfeldman$elm_css$Css$color(
+			rtfeldman$elm_css$Css$hex('999999')),
+			rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center)
+		]));
+var author$project$Form$DatePicker$Internal$calendarWeekDay = function (day) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$div,
+		_List_fromArray(
+			[author$project$Form$DatePicker$Css$weekDayItem]),
+		_List_fromArray(
+			[
+				rtfeldman$elm_css$Html$Styled$text(day)
+			]));
+};
 var rtfeldman$elm_css$Css$borderTopWidth = rtfeldman$elm_css$Css$prop1('border-top-width');
 var rtfeldman$elm_css$Css$margin4 = rtfeldman$elm_css$Css$prop4('margin');
 var rtfeldman$elm_css$Css$padding4 = rtfeldman$elm_css$Css$prop4('padding');
@@ -38113,7 +38165,15 @@ var author$project$Form$DatePicker$Internal$calendar = F2(
 						A2(
 						rtfeldman$elm_css$Html$Styled$div,
 						_List_fromArray(
-							[author$project$Form$DatePicker$Css$calendarDaysGrid]),
+							[author$project$Form$DatePicker$Css$weekDayList]),
+						A2(
+							elm$core$List$map,
+							author$project$Form$DatePicker$Internal$calendarWeekDay,
+							_List_fromArray(
+								['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']))),
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_Nil,
 						_List_fromArray(
 							[
 								A3(author$project$Form$DatePicker$Internal$calendarDays, state, viewState, posix)

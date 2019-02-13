@@ -444,7 +444,10 @@ calendar state viewState =
                 ]
                 [ calendarNavigation state viewState posix
                 , div
-                    [ Css.calendarDaysGrid ]
+                    [ Css.weekDayList ]
+                    (List.map calendarWeekDay [ "mon", "tue", "wed", "thu", "fri", "sat", "sun" ])
+                , div
+                    []
                     [ calendarDays state viewState posix ]
                 , timePickerContainer state viewState.includeTime
                 , clearDateContainer state viewState

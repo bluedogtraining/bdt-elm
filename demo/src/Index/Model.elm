@@ -1,6 +1,5 @@
 module Index.Model exposing (Model, initialModel)
 
-import FeatherIcons
 import Form.DatePicker as DatePicker
 import Form.FloatInput as FloatInput
 import Form.Input as Input
@@ -11,10 +10,9 @@ import Form.Select as Select
 import Form.TextArea as TextArea
 import Records.Country as Country exposing (Country)
 import Records.MusicGenre as MusicGenre exposing (MusicGenre)
-import Time
-import Time.TimeZone as TimeZone
-import Time.TimeZones as TimeZones
+import TimeZone
 import ToolTip
+import Dict
 
 
 type alias Model =
@@ -51,13 +49,24 @@ type alias Model =
 
 initialModel : Model
 initialModel =
+    let
+        maybeBrisbaneTimeZone = Dict.get "Australia/Brisbane" TimeZone.zones
+
+        brisbaneTimeZone =
+            case maybeBrisbaneTimeZone of
+                Nothing ->
+                    Debug.todo "Couldn't get Brisbane time zone"
+
+                Just timeZone ->
+                    timeZone ()
+    in
     { input = Input.init
     , intInput = IntInput.init
     , floatInput = FloatInput.init
     , select = Select.init MusicGenre.asNonempty
     , multiSelect = MultiSelect.init MusicGenre.asNonempty
     , searchSelect = SearchSelect.init "https://restcountries.eu/rest/v2/name/" Country.countryDecoder
-    , datePicker = DatePicker.init |> DatePicker.setTimeZone (Time.customZone (TimeZone.offset (Time.millisToPosix 0) TimeZones.australia_brisbane // 1000 // 60 |> abs) [])
+    , datePicker = DatePicker.init |> DatePicker.setTimeZone brisbaneTimeZone
     , datePicker2 = DatePicker.init
     , datePicker3 = DatePicker.init
     , textArea = TextArea.init |> TextArea.setReplacements [ ( "[]", "☐" ) ]

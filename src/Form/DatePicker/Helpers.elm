@@ -2,9 +2,9 @@ module Form.DatePicker.Helpers exposing (isSameMonthAndYear, visibleDays)
 
 import List.Extra as List
 import Time exposing (Month(..), Posix)
-import Time.Date as Date exposing (Weekday(..))
-import Time.DateTime as DateTime
-
+import Time.Extra as Time
+import Time.Bdt as Time
+import Date
 
 isSameMonthAndYear : Time.Zone -> Posix -> Maybe Posix -> Bool
 isSameMonthAndYear timeZone posix1 mPosix2 =
@@ -16,28 +16,31 @@ isSameMonthAndYear timeZone posix1 mPosix2 =
             False
 
 
-visibleDays : Posix -> List (List Posix)
-visibleDays navigationPosix =
+visibleDays : Time.Zone -> Posix -> List (List Posix)
+visibleDays timeZone navigationPosix =
     let
         date =
             navigationPosix
-                |> DateTime.fromPosix
-                |> DateTime.date
+                |> Date.fromPosix timeZone
 
         firstOfMonth =
-            Date.setDay 1 date
+            Date.floor Date.Month date
 
         startNumber =
             firstOfMonth
                 |> Date.weekday
-                |> weekDayOnCalendar
+                |> Date.weekdayToNumber
+                -- We need zero-starting weekdays, but this library starts Monday as 1
+                |> (\weekdayNumber -> weekdayNumber - 1)
 
         daysInMonth =
-            Date.daysInMonth (Date.year date) (Date.month date)
+            Date.diff Date.Days firstOfMonth (Date.ceiling Date.Month date)
+
+        previousMonth =
+            Date.add Date.Months -1 date
 
         daysInPreviousMonth =
-            Date.addMonths 1 date
-                |> (\newDate -> Date.daysInMonth (Date.year newDate) (Date.month newDate))
+            Date.diff Date.Days (Date.floor Date.Month previousMonth) (Date.ceiling Date.Month previousMonth)
 
         {-
            the 3 lists we're interested in:
@@ -47,44 +50,19 @@ visibleDays navigationPosix =
         -}
         currentMonth =
             List.range 1 daysInMonth
-                |> List.map (\day -> DateTime.fromPosix navigationPosix |> DateTime.setDay day |> DateTime.toPosix)
+                |> List.map (\day -> navigationPosix |> Time.setDay timeZone day)
 
         tailOfPreviousMonth =
             List.range 1 daysInPreviousMonth
                 |> List.drop (daysInPreviousMonth - startNumber)
-                |> List.map (\day -> DateTime.fromPosix navigationPosix |> DateTime.addMonths -1 |> DateTime.setDay day |> DateTime.toPosix)
+                |> List.map (\day -> navigationPosix |> Time.addMonths timeZone -1 |> Time.setDay timeZone day)
 
         headOfNextMonth =
             List.range 1 (6 * 7 - startNumber - daysInMonth)
-                |> List.map (\day -> DateTime.fromPosix navigationPosix |> DateTime.addMonths 1 |> DateTime.setDay day |> DateTime.toPosix)
+                |> List.map (\day -> navigationPosix |> Time.addMonths timeZone 1 |> Time.setDay timeZone day)
     in
     -- bundle them up and split them in groups for each week
     tailOfPreviousMonth
         ++ currentMonth
         ++ headOfNextMonth
         |> List.groupsOf 7
-
-
-weekDayOnCalendar : Weekday -> Int
-weekDayOnCalendar weekday =
-    case weekday of
-        Mon ->
-            0
-
-        Tue ->
-            1
-
-        Wed ->
-            2
-
-        Thu ->
-            3
-
-        Fri ->
-            4
-
-        Sat ->
-            5
-
-        Sun ->
-            6

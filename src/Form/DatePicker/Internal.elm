@@ -45,8 +45,7 @@ import Resettable exposing (Resettable)
 import Task
 import Time exposing (Posix)
 import Time.Bdt as Time
-import Time.DateTime as DateTime exposing (DateTime)
-
+import Time.Extra as Time
 
 
 -- MODEL --
@@ -205,38 +204,40 @@ update msg state =
             ( { state | navigationPosix = Just <| Time.maybeClamp minPosix maxPosix posix }, Cmd.none )
 
         PreviousYear minPosix ->
-            ( { state | navigationPosix = Maybe.map (Time.addMonths -12 >> Time.maybeClamp minPosix state.navigationPosix) state.navigationPosix }, Cmd.none )
+            ( { state | navigationPosix = Maybe.map (Time.addMonths state.timeZone -12 >> Time.maybeClamp minPosix state.navigationPosix) state.navigationPosix }, Cmd.none )
 
         PreviousMonth ->
-            ( { state | navigationPosix = Maybe.map (Time.addMonths -1) state.navigationPosix }, Cmd.none )
+            ( { state | navigationPosix = Maybe.map (Time.addMonths state.timeZone -1) state.navigationPosix }, Cmd.none )
 
         NextYear maxPosix ->
-            ( { state | navigationPosix = Maybe.map (Time.addMonths 12 >> Time.maybeClamp state.navigationPosix maxPosix) state.navigationPosix }, Cmd.none )
+            ( { state | navigationPosix = Maybe.map (Time.addMonths state.timeZone 12 >> Time.maybeClamp state.navigationPosix maxPosix) state.navigationPosix }, Cmd.none )
 
         NextMonth ->
-            ( { state | navigationPosix = Maybe.map (Time.addMonths 1) state.navigationPosix }, Cmd.none )
+            ( { state | navigationPosix = Maybe.map (Time.addMonths state.timeZone 1) state.navigationPosix }, Cmd.none )
 
         SelectDay posix includeTime ->
             case includeTime of
                 False ->
-                    let
-                        newPosix =
-                            case Resettable.getValue state.selectedPosix of
-                                Nothing ->
-                                    posix
-
-                                Just currentPosix ->
-                                    currentPosix
-                                        |> DateTime.fromPosix
-                                        |> DateTime.setYear (Time.toYear state.timeZone posix)
-                                        |> DateTime.setMonth (Time.toMonth state.timeZone posix |> Time.monthNumber)
-                                        |> DateTime.setDay (Time.toDay state.timeZone posix)
-                                        |> DateTime.setHour 0
-                                        |> DateTime.setMinute 0
-                                        |> DateTime.setSecond 0
-                                        |> DateTime.toPosix
-                    in
-                    ( { state | selectedPosix = Resettable.update (Just newPosix) state.selectedPosix, isOpen = False }, Cmd.none )
+-- -- -- -- -- -- Don't think we need any of the below since we're now accounting for timezones everywhere
+--                    let
+--                        newPosix =
+--                            case Resettable.getValue state.selectedPosix of
+--                                Nothing ->
+--                                    posix
+--
+--                                Just currentPosix ->
+--                                    Date.day
+----                                    currentPosix
+----                                        |> DateTime.fromPosix
+----                                        |> DateTime.setYear (Time.toYear state.timeZone posix)
+----                                        |> DateTime.setMonth (Time.toMonth state.timeZone posix |> Time.monthNumber)
+----                                        |> DateTime.setDay (Time.toDay state.timeZone posix)
+----                                        |> DateTime.setHour 0
+----                                        |> DateTime.setMinute 0
+----                                        |> DateTime.setSecond 0
+----                                        |> DateTime.toPosix
+--                    in
+                    ( { state | selectedPosix = Resettable.update (Just posix) state.selectedPosix, isOpen = False }, Cmd.none )
 
                 True ->
                     ( { state | desiredPosix = Just posix }, Cmd.none )
@@ -249,14 +250,15 @@ update msg state =
                 Just desiredPosix ->
                     let
                         newPosix =
-                            DateTime.epoch
-                                |> DateTime.setYear (Time.toYear state.timeZone desiredPosix)
-                                |> DateTime.setMonth (Time.toMonth state.timeZone desiredPosix |> Time.monthNumber)
-                                |> DateTime.setDay (Time.toDay state.timeZone desiredPosix)
-                                |> DateTime.setHour (Select.getSelectedOption state.hours |> Maybe.withDefault 0)
-                                |> DateTime.setMinute (Select.getSelectedOption state.minutes |> Maybe.withDefault 0)
-                                |> DateTime.setSecond (Select.getSelectedOption state.seconds |> Maybe.withDefault 0)
-                                |> DateTime.toPosix
+                            Time.partsToPosix state.timeZone
+                                { year = Time.toYear state.timeZone desiredPosix
+                                , month = Time.toMonth state.timeZone desiredPosix
+                                , day = Time.toDay state.timeZone desiredPosix
+                                , hour = (Select.getSelectedOption state.hours |> Maybe.withDefault 0)
+                                , minute = (Select.getSelectedOption state.minutes |> Maybe.withDefault 0)
+                                , second = (Select.getSelectedOption state.seconds |> Maybe.withDefault 0)
+                                , millisecond = 0
+                                }
                     in
                     ( { state | selectedPosix = Resettable.update (Just newPosix) state.selectedPosix, isOpen = False }, Cmd.none )
 
@@ -544,7 +546,7 @@ calendarDays : State -> ViewState -> Posix -> Html Msg
 calendarDays state viewState navigationPosix =
     let
         rows =
-            Helpers.visibleDays navigationPosix
+            Helpers.visibleDays state.timeZone navigationPosix
     in
     div
         []

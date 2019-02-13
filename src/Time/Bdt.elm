@@ -1,6 +1,7 @@
 module Time.Bdt exposing
     ( toDateString, toTimeString, toDateTimeString, maybeToDateString, maybeToTimeString, maybeToDateTimeString
     , monthNumber, monthString, monthFromNumber, addMonths, clamp, maybeClamp
+    , setDay
     , order
     , encode, encodeMaybe, decoder
     )
@@ -32,8 +33,7 @@ module Time.Bdt exposing
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
 import Time exposing (Month(..), Posix, Zone)
-import Time.DateTime as DateTime
-
+import Time.Extra as Time
 
 {-| Returns a string as dd/mm/yyyy
 -}
@@ -249,12 +249,9 @@ monthFromNumber n =
 
 {-| Add months to a posix
 -}
-addMonths : Int -> Posix -> Posix
-addMonths number posix =
-    posix
-        |> DateTime.fromPosix
-        |> DateTime.addMonths number
-        |> DateTime.toPosix
+addMonths : Zone -> Int -> Posix -> Posix
+addMonths timeZone number posix =
+    Time.add Time.Month number timeZone posix
 
 
 {-| Clamp a posix
@@ -327,3 +324,13 @@ encodeMaybe maybeTime =
 decoder : Decoder Posix
 decoder =
     Decode.map Time.millisToPosix Decode.int
+
+
+setDay : Time.Zone -> Int -> Posix -> Posix
+setDay timeZone day posix =
+    let
+        parts = Time.posixToParts timeZone posix
+
+        updatedParts = { parts | day = day }
+    in
+        Time.partsToPosix timeZone updatedParts

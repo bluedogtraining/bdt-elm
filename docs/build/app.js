@@ -35993,43 +35993,6 @@ var author$project$Form$DatePicker$Css$weekDayList = rtfeldman$elm_css$Html$Styl
 			rtfeldman$elm_css$Css$px(0)),
 			rtfeldman$elm_css$Css$displayFlex
 		]));
-var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
-	function (zone, posix) {
-		return {
-			day: A2(elm$time$Time$toDay, zone, posix),
-			hour: A2(elm$time$Time$toHour, zone, posix),
-			millisecond: A2(elm$time$Time$toMillis, zone, posix),
-			minute: A2(elm$time$Time$toMinute, zone, posix),
-			month: A2(elm$time$Time$toMonth, zone, posix),
-			second: A2(elm$time$Time$toSecond, zone, posix),
-			year: A2(elm$time$Time$toYear, zone, posix)
-		};
-	});
-var author$project$Time$Bdt$setDay = F3(
-	function (timeZone, day, posix) {
-		var parts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, posix);
-		var updatedParts = _Utils_update(
-			parts,
-			{day: day});
-		return A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, updatedParts);
-	});
-var elm_community$list_extra$List$Extra$groupsOfWithStep = F3(
-	function (size, step, xs) {
-		var xs_ = A2(elm$core$List$drop, step, xs);
-		var thisGroup = A2(elm$core$List$take, size, xs);
-		var okayLength = _Utils_eq(
-			size,
-			elm$core$List$length(thisGroup));
-		var okayArgs = (size > 0) && (step > 0);
-		return (okayArgs && okayLength) ? A2(
-			elm$core$List$cons,
-			thisGroup,
-			A3(elm_community$list_extra$List$Extra$groupsOfWithStep, size, step, xs_)) : _List_Nil;
-	});
-var elm_community$list_extra$List$Extra$groupsOf = F2(
-	function (size, xs) {
-		return A3(elm_community$list_extra$List$Extra$groupsOfWithStep, size, size, xs);
-	});
 var justinmimbs$date$Date$Month = {$: 'Month'};
 var elm$time$Time$Tue = {$: 'Tue'};
 var elm$time$Time$Wed = {$: 'Wed'};
@@ -36136,34 +36099,52 @@ var justinmimbs$date$Date$floor = F2(
 				return date;
 		}
 	});
-var justinmimbs$date$Date$Weeks = {$: 'Weeks'};
-var justinmimbs$date$Date$Years = {$: 'Years'};
-var justinmimbs$date$Date$intervalToUnits = function (interval) {
-	switch (interval.$) {
-		case 'Year':
-			return _Utils_Tuple2(1, justinmimbs$date$Date$Years);
-		case 'Quarter':
-			return _Utils_Tuple2(3, justinmimbs$date$Date$Months);
-		case 'Month':
-			return _Utils_Tuple2(1, justinmimbs$date$Date$Months);
-		case 'Day':
-			return _Utils_Tuple2(1, justinmimbs$date$Date$Days);
-		default:
-			var week = interval;
-			return _Utils_Tuple2(1, justinmimbs$date$Date$Weeks);
-	}
+var author$project$Date$Bdt$firstOfMonth = function (date) {
+	return A2(justinmimbs$date$Date$floor, justinmimbs$date$Date$Month, date);
 };
-var justinmimbs$date$Date$ceiling = F2(
-	function (interval, date) {
-		var floored = A2(justinmimbs$date$Date$floor, interval, date);
-		if (_Utils_eq(date, floored)) {
-			return date;
-		} else {
-			var _n0 = justinmimbs$date$Date$intervalToUnits(interval);
-			var n = _n0.a;
-			var unit = _n0.b;
-			return A3(justinmimbs$date$Date$add, unit, n, floored);
-		}
+var author$project$Date$Bdt$firstOfNextMonth = function (date) {
+	return A3(
+		justinmimbs$date$Date$add,
+		justinmimbs$date$Date$Months,
+		1,
+		author$project$Date$Bdt$firstOfMonth(date));
+};
+var justinmimbs$time_extra$Time$Extra$posixToParts = F2(
+	function (zone, posix) {
+		return {
+			day: A2(elm$time$Time$toDay, zone, posix),
+			hour: A2(elm$time$Time$toHour, zone, posix),
+			millisecond: A2(elm$time$Time$toMillis, zone, posix),
+			minute: A2(elm$time$Time$toMinute, zone, posix),
+			month: A2(elm$time$Time$toMonth, zone, posix),
+			second: A2(elm$time$Time$toSecond, zone, posix),
+			year: A2(elm$time$Time$toYear, zone, posix)
+		};
+	});
+var author$project$Time$Bdt$setDay = F3(
+	function (timeZone, day, posix) {
+		var parts = A2(justinmimbs$time_extra$Time$Extra$posixToParts, timeZone, posix);
+		var updatedParts = _Utils_update(
+			parts,
+			{day: day});
+		return A2(justinmimbs$time_extra$Time$Extra$partsToPosix, timeZone, updatedParts);
+	});
+var elm_community$list_extra$List$Extra$groupsOfWithStep = F3(
+	function (size, step, xs) {
+		var xs_ = A2(elm$core$List$drop, step, xs);
+		var thisGroup = A2(elm$core$List$take, size, xs);
+		var okayLength = _Utils_eq(
+			size,
+			elm$core$List$length(thisGroup));
+		var okayArgs = (size > 0) && (step > 0);
+		return (okayArgs && okayLength) ? A2(
+			elm$core$List$cons,
+			thisGroup,
+			A3(elm_community$list_extra$List$Extra$groupsOfWithStep, size, step, xs_)) : _List_Nil;
+	});
+var elm_community$list_extra$List$Extra$groupsOf = F2(
+	function (size, xs) {
+		return A3(elm_community$list_extra$List$Extra$groupsOfWithStep, size, size, xs);
 	});
 var elm$core$Basics$truncate = _Basics_truncate;
 var justinmimbs$date$Date$toMonths = function (rd) {
@@ -36210,12 +36191,12 @@ var justinmimbs$date$Date$weekday = A2(elm$core$Basics$composeR, justinmimbs$dat
 var author$project$Form$DatePicker$Helpers$visibleDays = F2(
 	function (timeZone, navigationPosix) {
 		var date = A2(justinmimbs$date$Date$fromPosix, timeZone, navigationPosix);
-		var firstOfMonth = A2(justinmimbs$date$Date$floor, justinmimbs$date$Date$Month, date);
+		var firstOfMonth = author$project$Date$Bdt$firstOfMonth(date);
 		var daysInMonth = A3(
 			justinmimbs$date$Date$diff,
 			justinmimbs$date$Date$Days,
 			firstOfMonth,
-			A2(justinmimbs$date$Date$ceiling, justinmimbs$date$Date$Month, date));
+			author$project$Date$Bdt$firstOfNextMonth(date));
 		var startNumber = function (weekdayNumber) {
 			return weekdayNumber - 1;
 		}(
@@ -36235,8 +36216,8 @@ var author$project$Form$DatePicker$Helpers$visibleDays = F2(
 		var daysInPreviousMonth = A3(
 			justinmimbs$date$Date$diff,
 			justinmimbs$date$Date$Days,
-			A2(justinmimbs$date$Date$floor, justinmimbs$date$Date$Month, previousMonth),
-			A2(justinmimbs$date$Date$ceiling, justinmimbs$date$Date$Month, previousMonth));
+			author$project$Date$Bdt$firstOfMonth(previousMonth),
+			author$project$Date$Bdt$firstOfNextMonth(previousMonth));
 		var tailOfPreviousMonth = A2(
 			elm$core$List$map,
 			function (day) {

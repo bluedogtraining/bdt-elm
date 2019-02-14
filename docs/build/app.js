@@ -24775,8 +24775,8 @@ var author$project$Index$Model$initialModel = function () {
 	return {
 		countryOfBirth: A2(author$project$Form$SearchSelect$init, 'https://restcountries.eu/rest/v2/name/', author$project$Records$Country$countryDecoder),
 		datePicker: A2(author$project$Form$DatePicker$setTimeZone, brisbaneTimeZone, author$project$Form$DatePicker$init),
-		datePicker2: author$project$Form$DatePicker$init,
-		datePicker3: author$project$Form$DatePicker$init,
+		datePicker2: A2(author$project$Form$DatePicker$setTimeZone, brisbaneTimeZone, author$project$Form$DatePicker$init),
+		datePicker3: A2(author$project$Form$DatePicker$setTimeZone, brisbaneTimeZone, author$project$Form$DatePicker$init),
 		email: author$project$Form$Input$init,
 		floatInput: author$project$Form$FloatInput$init,
 		input: author$project$Form$Input$init,
@@ -41043,11 +41043,11 @@ var author$project$Index$View$view = function (model) {
 																	A2(
 																		author$project$Form$DatePicker$setMaxPosix,
 																		elm$core$Maybe$Just(
-																			elm$time$Time$millisToPosix(1588822890 * 1000)),
+																			elm$time$Time$millisToPosix(1617235200000)),
 																		A2(
 																			author$project$Form$DatePicker$setMinPosix,
 																			elm$core$Maybe$Just(
-																				elm$time$Time$millisToPosix(1511822890 * 1000)),
+																				elm$time$Time$millisToPosix(1522108800000)),
 																			A2(
 																				author$project$Form$DatePicker$setIsClearable,
 																				true,

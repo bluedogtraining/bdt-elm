@@ -133,8 +133,8 @@ view model =
                                     |> Label.render
                                 , DatePicker.view model.datePicker2
                                     |> DatePicker.setIsClearable True
-                                    |> DatePicker.setMinPosix (Just <| Time.millisToPosix <| 1511822890 * 1000)
-                                    |> DatePicker.setMaxPosix (Just <| Time.millisToPosix <| 1588822890 * 1000)
+                                    |> DatePicker.setMinPosix (Just <| Time.millisToPosix <| 1522108800000)
+                                    |> DatePicker.setMaxPosix (Just <| Time.millisToPosix <| 1617235200000)
                                     |> DatePicker.render
                                     |> Html.map DatePicker2Msg
                                 ]

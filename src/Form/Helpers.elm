@@ -3,6 +3,7 @@ module Form.Helpers exposing
     , getNextOption
     , getPreviousOption
     , onSelectKey
+    , onElementFocus
     )
 
 import Html.Styled exposing (..)
@@ -70,4 +71,11 @@ getNextOption options mFocusedOption =
                 |> List.dropWhile ((/=) focusedOption)
                 |> List.drop 1
                 |> List.head
+
+
+onElementFocus : msg -> Attribute (msg)
+onElementFocus msg =
+    Decode.at ["relatedTarget", "id"] Decode.string
+        |> Decode.map (always msg)
+        |> on "focus"
 

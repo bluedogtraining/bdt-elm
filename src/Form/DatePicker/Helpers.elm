@@ -4,6 +4,7 @@ import List.Extra as List
 import Time exposing (Month(..), Posix)
 import Time.Extra as Time
 import Time.Bdt as Time
+import Date.Bdt as Date
 import Date
 
 isSameMonthAndYear : Time.Zone -> Posix -> Maybe Posix -> Bool
@@ -24,7 +25,7 @@ visibleDays timeZone navigationPosix =
                 |> Date.fromPosix timeZone
 
         firstOfMonth =
-            Date.floor Date.Month date
+            Date.firstOfMonth date
 
         startNumber =
             firstOfMonth
@@ -34,13 +35,13 @@ visibleDays timeZone navigationPosix =
                 |> (\weekdayNumber -> weekdayNumber - 1)
 
         daysInMonth =
-            Date.diff Date.Days firstOfMonth (Date.ceiling Date.Month date)
+            Date.diff Date.Days (firstOfMonth) (Date.firstOfNextMonth date)
 
         previousMonth =
             Date.add Date.Months -1 date
 
         daysInPreviousMonth =
-            Date.diff Date.Days (Date.floor Date.Month previousMonth) (Date.ceiling Date.Month previousMonth)
+            Date.diff Date.Days (Date.firstOfMonth previousMonth) (Date.firstOfNextMonth previousMonth)
 
         {-
            the 3 lists we're interested in:

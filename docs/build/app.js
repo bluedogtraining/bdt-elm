@@ -37162,7 +37162,6 @@ var author$project$Form$Select$Css$container = rtfeldman$elm_css$Html$Styled$Att
 		[
 			rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$relative)
 		]));
-var author$project$Form$Select$Internal$Blur = {$: 'Blur'};
 var author$project$Form$Select$Internal$SelectKey = F3(
 	function (a, b, c) {
 		return {$: 'SelectKey', a: a, b: b, c: c};
@@ -37256,6 +37255,7 @@ var rtfeldman$elm_css$Css$borderTopColor = function (c) {
 };
 var rtfeldman$elm_css$Css$left = rtfeldman$elm_css$Css$prop1('left');
 var rtfeldman$elm_css$Css$maxHeight = rtfeldman$elm_css$Css$prop1('max-height');
+var rtfeldman$elm_css$Css$minWidth = rtfeldman$elm_css$Css$prop1('min-width');
 var rtfeldman$elm_css$Css$overflowY = rtfeldman$elm_css$Css$prop1('overflow-y');
 var author$project$Form$Css$selectOptionList = _List_fromArray(
 	[
@@ -37264,6 +37264,8 @@ var author$project$Form$Css$selectOptionList = _List_fromArray(
 		rtfeldman$elm_css$Css$px(31)),
 		rtfeldman$elm_css$Css$left(
 		rtfeldman$elm_css$Css$px(0)),
+		rtfeldman$elm_css$Css$minWidth(
+		rtfeldman$elm_css$Css$pct(99.8)),
 		rtfeldman$elm_css$Css$zIndex(
 		rtfeldman$elm_css$Css$int(10)),
 		rtfeldman$elm_css$Css$maxHeight(
@@ -37346,12 +37348,6 @@ var author$project$Form$Select$Internal$optionList = F2(
 				A2(author$project$Form$Select$Internal$optionItem, state, viewState),
 				filteredOptions));
 	});
-var rtfeldman$elm_css$Html$Styled$Events$onBlur = function (msg) {
-	return A2(
-		rtfeldman$elm_css$Html$Styled$Events$on,
-		'blur',
-		elm$json$Json$Decode$succeed(msg));
-};
 var author$project$Form$Select$Internal$open = F2(
 	function (state, viewState) {
 		return A2(
@@ -37368,8 +37364,7 @@ var author$project$Form$Select$Internal$open = F2(
 							A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$id, viewState.id),
 							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1),
 							author$project$Form$Helpers$onSelectKey(
-							A2(author$project$Form$Select$Internal$SelectKey, viewState.isOptionDisabled, viewState.toLabel)),
-							rtfeldman$elm_css$Html$Styled$Events$onBlur(author$project$Form$Select$Internal$Blur)
+							A2(author$project$Form$Select$Internal$SelectKey, viewState.isOptionDisabled, viewState.toLabel))
 						]),
 					_List_fromArray(
 						[
@@ -38177,6 +38172,12 @@ var author$project$Form$DatePicker$Internal$calendar = F2(
 					]));
 		}
 	});
+var rtfeldman$elm_css$Html$Styled$Events$onBlur = function (msg) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$on,
+		'blur',
+		elm$json$Json$Decode$succeed(msg));
+};
 var author$project$Form$DatePicker$Internal$open = F2(
 	function (state, viewState) {
 		return A2(

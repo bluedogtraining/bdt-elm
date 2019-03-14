@@ -69,7 +69,6 @@ selectOptionList =
     [ position absolute
     , top <| px 31
     , left <| px 0
-    , right <| px 0
     , zIndex <| int 10
     , maxHeight <| px 200
     , overflowY auto

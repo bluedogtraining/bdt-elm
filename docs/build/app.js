@@ -37253,8 +37253,6 @@ var author$project$Form$Css$selectOptionList = _List_fromArray(
 		rtfeldman$elm_css$Css$px(31)),
 		rtfeldman$elm_css$Css$left(
 		rtfeldman$elm_css$Css$px(0)),
-		rtfeldman$elm_css$Css$right(
-		rtfeldman$elm_css$Css$px(0)),
 		rtfeldman$elm_css$Css$zIndex(
 		rtfeldman$elm_css$Css$int(10)),
 		rtfeldman$elm_css$Css$maxHeight(

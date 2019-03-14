@@ -31,6 +31,7 @@ import Browser.Dom as Dom
 import FeatherIcons
 import Form.DatePicker.Css as Css
 import Form.DatePicker.Helpers as Helpers
+import Form.Helpers as Form
 import Form.Select as Select
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attributes exposing (..)
@@ -384,7 +385,7 @@ closed state viewState =
         [ div
             [ Css.input viewState.isError viewState.isLocked
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
-            , onFocus (Open viewState.minPosix viewState.maxPosix viewState.includeTime) |> Html.attributeIf (not viewState.isLocked)
+            , Form.onElementFocus (Open viewState.minPosix viewState.maxPosix viewState.includeTime) |> Html.attributeIf (not viewState.isLocked)
             , onClick (Open viewState.minPosix viewState.maxPosix viewState.includeTime) |> Html.attributeIf (not viewState.isLocked)
             ]
             [ div

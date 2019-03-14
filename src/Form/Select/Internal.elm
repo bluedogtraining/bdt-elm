@@ -176,7 +176,7 @@ closed state viewState =
             , Html.maybeAttribute id viewState.id
             , disabled viewState.isLocked
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
-            , onFocus Open |> Html.attributeIf (not viewState.isLocked)
+            , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
             , onClick Open |> Html.attributeIf (not viewState.isLocked)
             ]
             [ div

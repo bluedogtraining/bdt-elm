@@ -228,7 +228,7 @@ closed state viewState =
             , type_ "text"
             , disabled viewState.isLocked
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
-            , onFocus Open |> Html.attributeIf (not viewState.isLocked)
+            , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
             , onClick Open |> Html.attributeIf (not viewState.isLocked)
             , value (state.selectedOption |> Resettable.getValue |> Maybe.map viewState.toLabel |> Maybe.withDefault "")
             ]

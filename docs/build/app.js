@@ -35779,6 +35779,23 @@ var author$project$Form$DatePicker$Internal$Open = F3(
 	function (a, b, c) {
 		return {$: 'Open', a: a, b: b, c: c};
 	});
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var author$project$Form$Helpers$onElementFocus = function (msg) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$on,
+		'focus',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$core$Basics$always(msg),
+			A2(
+				elm$json$Json$Decode$at,
+				_List_fromArray(
+					['relatedTarget', 'id']),
+				elm$json$Json$Decode$string)));
+};
 var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
 var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
 var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
@@ -35876,12 +35893,6 @@ var rtfeldman$elm_css$Html$Styled$Attributes$tabindex = function (n) {
 		'tabIndex',
 		elm$core$String$fromInt(n));
 };
-var rtfeldman$elm_css$Html$Styled$Events$onFocus = function (msg) {
-	return A2(
-		rtfeldman$elm_css$Html$Styled$Events$on,
-		'focus',
-		elm$json$Json$Decode$succeed(msg));
-};
 var author$project$Form$DatePicker$Internal$closed = F2(
 	function (state, viewState) {
 		return A2(
@@ -35902,7 +35913,7 @@ var author$project$Form$DatePicker$Internal$closed = F2(
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,
-							rtfeldman$elm_css$Html$Styled$Events$onFocus(
+							author$project$Form$Helpers$onElementFocus(
 								A3(author$project$Form$DatePicker$Internal$Open, viewState.minPosix, viewState.maxPosix, viewState.includeTime))),
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
@@ -37054,7 +37065,7 @@ var author$project$Form$Select$Internal$closed = F2(
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,
-							rtfeldman$elm_css$Html$Styled$Events$onFocus(author$project$Form$Select$Internal$Open)),
+							author$project$Form$Helpers$onElementFocus(author$project$Form$Select$Internal$Open)),
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,
@@ -38446,10 +38457,6 @@ var rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn = F2(
 			event,
 			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
 var rtfeldman$elm_css$Html$Styled$Events$targetValue = A2(
 	elm$json$Json$Decode$at,
 	_List_fromArray(
@@ -38758,7 +38765,11 @@ var author$project$Form$MultiSelect$Internal$closed = F2(
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,
-							rtfeldman$elm_css$Html$Styled$Events$onFocus(author$project$Form$MultiSelect$Internal$Open))
+							author$project$Form$Helpers$onElementFocus(author$project$Form$MultiSelect$Internal$Open)),
+							A2(
+							author$project$Html$Styled$Bdt$attributeIf,
+							!viewState.isLocked,
+							rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Form$MultiSelect$Internal$Open))
 						]),
 					_List_fromArray(
 						[
@@ -39088,7 +39099,7 @@ var author$project$Form$SearchSelect$Internal$closed = F2(
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,
-							rtfeldman$elm_css$Html$Styled$Events$onFocus(author$project$Form$SearchSelect$Internal$Open)),
+							author$project$Form$Helpers$onElementFocus(author$project$Form$SearchSelect$Internal$Open)),
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,

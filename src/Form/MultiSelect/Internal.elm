@@ -191,7 +191,8 @@ closed state viewState =
         [ div
             [ Css.input viewState.isError viewState.isLocked
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
-            , onFocus Open |> Html.attributeIf (not viewState.isLocked)
+            , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
+            , onClick Open |> Html.attributeIf (not viewState.isLocked)
             ]
             [ div
                 [ Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)

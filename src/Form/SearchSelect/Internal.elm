@@ -142,6 +142,21 @@ update msg state =
         SelectKey _ Down ->
             ( { state | focusedOption = getNextOption state.options state.focusedOption }, Cmd.none )
 
+        SelectKey _ Space ->
+            case state.focusedOption of
+                Nothing ->
+                    ( { state | input = state.input ++ " " }
+                    , Cmd.none
+                    )
+                Just focusedOption ->
+                    ( { state
+                        | input = ""
+                        , selectedOption = Resettable.update (Just focusedOption) state.selectedOption
+                        , isOpen = False
+                      }
+                    , Cmd.none
+                    )
+
         SelectKey inputMinimum Backspace ->
             let
                 newValue = String.dropRight 1 state.input

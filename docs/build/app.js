@@ -30573,9 +30573,33 @@ var author$project$Form$SearchSelect$Internal$update = F2(
 									focusedOption: A2(author$project$Form$Helpers$getNextOption, state.options, state.focusedOption)
 								}),
 							elm$core$Platform$Cmd$none);
+					case 'Space':
+						var _n4 = msg.b;
+						var _n5 = state.focusedOption;
+						if (_n5.$ === 'Nothing') {
+							return _Utils_Tuple2(
+								_Utils_update(
+									state,
+									{input: state.input + ' '}),
+								elm$core$Platform$Cmd$none);
+						} else {
+							var focusedOption = _n5.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									state,
+									{
+										input: '',
+										isOpen: false,
+										selectedOption: A2(
+											author$project$Resettable$update,
+											elm$core$Maybe$Just(focusedOption),
+											state.selectedOption)
+									}),
+								elm$core$Platform$Cmd$none);
+						}
 					case 'Backspace':
 						var inputMinimum = msg.a;
-						var _n4 = msg.b;
+						var _n6 = msg.b;
 						var newValue = A2(elm$core$String$dropRight, 1, state.input);
 						return _Utils_Tuple2(
 							_Utils_update(
@@ -30598,11 +30622,11 @@ var author$project$Form$SearchSelect$Internal$update = F2(
 								}),
 							A2(author$project$Form$SearchSelect$Internal$shouldSearch, inputMinimum, newValue) ? A3(author$project$Form$SearchSelect$Internal$searchRequest, state.searchUrl, newValue, state.optionDecoder) : elm$core$Platform$Cmd$none);
 					default:
-						var _n5 = state.focusedOption;
-						if (_n5.$ === 'Nothing') {
+						var _n7 = state.focusedOption;
+						if (_n7.$ === 'Nothing') {
 							return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 						} else {
-							var focusedOption = _n5.a;
+							var focusedOption = _n7.a;
 							return _Utils_Tuple2(
 								_Utils_update(
 									state,
@@ -37162,6 +37186,7 @@ var author$project$Form$Select$Css$container = rtfeldman$elm_css$Html$Styled$Att
 		[
 			rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$relative)
 		]));
+var author$project$Form$Select$Internal$Blur = {$: 'Blur'};
 var author$project$Form$Select$Internal$SelectKey = F3(
 	function (a, b, c) {
 		return {$: 'SelectKey', a: a, b: b, c: c};
@@ -37348,6 +37373,12 @@ var author$project$Form$Select$Internal$optionList = F2(
 				A2(author$project$Form$Select$Internal$optionItem, state, viewState),
 				filteredOptions));
 	});
+var rtfeldman$elm_css$Html$Styled$Events$onBlur = function (msg) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$on,
+		'blur',
+		elm$json$Json$Decode$succeed(msg));
+};
 var author$project$Form$Select$Internal$open = F2(
 	function (state, viewState) {
 		return A2(
@@ -37364,7 +37395,8 @@ var author$project$Form$Select$Internal$open = F2(
 							A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$id, viewState.id),
 							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1),
 							author$project$Form$Helpers$onSelectKey(
-							A2(author$project$Form$Select$Internal$SelectKey, viewState.isOptionDisabled, viewState.toLabel))
+							A2(author$project$Form$Select$Internal$SelectKey, viewState.isOptionDisabled, viewState.toLabel)),
+							rtfeldman$elm_css$Html$Styled$Events$onBlur(author$project$Form$Select$Internal$Blur)
 						]),
 					_List_fromArray(
 						[
@@ -38172,12 +38204,6 @@ var author$project$Form$DatePicker$Internal$calendar = F2(
 					]));
 		}
 	});
-var rtfeldman$elm_css$Html$Styled$Events$onBlur = function (msg) {
-	return A2(
-		rtfeldman$elm_css$Html$Styled$Events$on,
-		'blur',
-		elm$json$Json$Decode$succeed(msg));
-};
 var author$project$Form$DatePicker$Internal$open = F2(
 	function (state, viewState) {
 		return A2(

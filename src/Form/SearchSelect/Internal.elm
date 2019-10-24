@@ -102,10 +102,11 @@ initialViewState toLabel =
 type Msg option
     = Open
     | Blur
+    | UpdateSearchInput Int String
     | Response (Result Http.Error (List option))
     | Select option
     | Clear
-    | SelectKey Int SelectKey
+    | SelectKey SelectKey
 
 
 update : Msg option -> State option -> ( State option, Cmd (Msg option) )
@@ -116,6 +117,18 @@ update msg state =
 
         Blur ->
             ( { state | isOpen = False, input = "", focusedOption = Nothing }, Cmd.none )
+
+        UpdateSearchInput inputMinimum value ->
+            ( { state
+                | input = value
+                , isSearching = shouldSearch inputMinimum value
+              }
+            , if shouldSearch inputMinimum value then
+                searchRequest state.searchUrl value state.optionDecoder
+
+              else
+                Cmd.none
+            )
 
         Response result ->
             case result of
@@ -136,58 +149,13 @@ update msg state =
             , Cmd.none
             )
 
-        SelectKey _ Up ->
+        SelectKey Up ->
             ( { state | focusedOption = getPreviousOption state.options state.focusedOption }, Cmd.none )
 
-        SelectKey _ Down ->
+        SelectKey Down ->
             ( { state | focusedOption = getNextOption state.options state.focusedOption }, Cmd.none )
 
-        SelectKey _ Space ->
-            case state.focusedOption of
-                Nothing ->
-                    ( { state | input = state.input ++ " " }
-                    , Cmd.none
-                    )
-                Just focusedOption ->
-                    ( { state
-                        | input = ""
-                        , selectedOption = Resettable.update (Just focusedOption) state.selectedOption
-                        , isOpen = False
-                      }
-                    , Cmd.none
-                    )
-
-        SelectKey inputMinimum Backspace ->
-            let
-                newValue = String.dropRight 1 state.input
-            in
-            ( { state
-                | input = newValue
-                , isSearching = shouldSearch inputMinimum newValue
-            }
-            , if shouldSearch inputMinimum newValue then
-                searchRequest state.searchUrl newValue state.optionDecoder
-
-              else
-                Cmd.none
-            )
-
-        SelectKey inputMinimum (AlphaNum value) ->
-            let
-                newValue = state.input ++ value
-            in
-            ( { state
-                | input = newValue
-                , isSearching = shouldSearch inputMinimum newValue
-              }
-            , if shouldSearch inputMinimum newValue then
-                searchRequest state.searchUrl newValue state.optionDecoder
-
-              else
-                Cmd.none
-            )
-
-        SelectKey _ _ ->
+        SelectKey _ ->
             case state.focusedOption of
                 Nothing ->
                     ( state, Cmd.none )
@@ -262,8 +230,9 @@ open state viewState =
             , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault "")
             , tabindex -1
             , disabled viewState.isLocked
+            , onInput <| UpdateSearchInput viewState.inputMinimum
             , onBlur Blur
-            , onSelectKey (SelectKey viewState.inputMinimum)
+            , onSelectKey SelectKey
             , value state.input
             ]
             []

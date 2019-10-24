@@ -34,18 +34,8 @@ selectKeyDecoder key =
         "Enter" ->
             Decode.succeed Enter
 
-        " " ->
-            Decode.succeed Space
-
-        "Backspace" ->
-            Decode.succeed Backspace
-
-        alphaNum ->
-            if (String.toList alphaNum |> List.all Char.isAlphaNum) && String.length alphaNum == 1
-            then
-                Decode.succeed <| AlphaNum alphaNum
-            else
-                Decode.fail "Not valid SelectKey"
+        _ ->
+            Decode.fail "Not valid SelectKey"
 
 
 onSelectKey : (SelectKey -> msg) -> Attribute msg

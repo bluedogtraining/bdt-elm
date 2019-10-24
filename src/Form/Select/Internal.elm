@@ -90,6 +90,7 @@ initialViewState toLabel =
 type Msg option
     = Open
     | Blur
+    | UpdateSearchText String
     | Select option
     | Clear
     | SelectKey (option -> Bool) (option -> String) SelectKey
@@ -109,23 +110,20 @@ update msg state =
         Blur ->
             ( { state | isOpen = False, focusedOption = Nothing, searchText = "" }, Cmd.none )
 
+        UpdateSearchText value ->
+             ( { state | searchText = value }, Cmd.none)
+
         Select option ->
             ( updateSelectedOption option state, Cmd.none )
 
         Clear ->
-            ( { state | selectedOption = Resettable.update Nothing state.selectedOption }, Cmd.none )
+            ( { state | selectedOption = Resettable.update Nothing state.selectedOption, searchText = "" }, Cmd.none )
 
         SelectKey _ toLabel Up ->
             ( { state | focusedOption = getPreviousOption (Nonempty.toList state.options) state.focusedOption state.searchText toLabel }, Cmd.none )
 
         SelectKey _ toLabel Down ->
             ( { state | focusedOption = getNextOption (Nonempty.toList state.options) state.focusedOption state.searchText toLabel }, Cmd.none )
-
-        SelectKey _ _ Backspace ->
-            ( { state | searchText = String.dropRight 1 state.searchText }, Cmd.none )
-
-        SelectKey _ toLabel (AlphaNum charString) ->
-            ( { state | searchText = state.searchText ++ charString }, Cmd.none)
 
         SelectKey isOptionDisabled _ _ ->
             case state.focusedOption of
@@ -161,31 +159,36 @@ render : State option -> ViewState option -> Html (Msg option)
 render state viewState =
     case state.isOpen of
         False ->
-            lazy2 closed state viewState
+            closed state viewState
 
         True ->
-            lazy2 open state viewState
+            open state viewState
 
 
 closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
     div
-        []
-        [ div
+        [ Css.relativePosition ]
+        [ input
             [ Css.input viewState.isError viewState.isLocked
             , Html.maybeAttribute id viewState.id
             , disabled viewState.isLocked
+            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
             , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
             , onClick Open |> Html.attributeIf (not viewState.isLocked)
+            , value state.searchText
             ]
-            [ div
-                [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
-                , Css.title (Resettable.getValue state.selectedOption == Nothing)
-                ]
-                [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
-            , clearButton state viewState
-            , FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled
+            [
+            ]
+        , div
+            [ Css.carets ]
+            [ span
+                [ Css.displayInline ]
+                [ clearButton state viewState ]
+            , span
+                [ Css.displayInline, onClick Open |> Html.attributeIf (not viewState.isLocked) ]
+                [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
             ]
         ]
 
@@ -194,10 +197,12 @@ open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
     div
         [ Css.container ]
-        [ div
+        [ input
             [ Css.input viewState.isError viewState.isLocked
             , Html.maybeAttribute id viewState.id
+            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
             , tabindex -1
+            , onInput UpdateSearchText
             , onSelectKey <| SelectKey viewState.isOptionDisabled viewState.toLabel
             , onBlur Blur
             ]
@@ -208,14 +213,7 @@ open state viewState =
 
 inputContents : State option -> ViewState option -> Html (Msg option)
 inputContents state viewState =
-    if String.isEmpty state.searchText
-    then
-        div
-            [ title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
-            , Css.title (Resettable.getValue state.selectedOption == Nothing)
-            ]
-            [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel) ]
-    else
+
         text state.searchText
 
 

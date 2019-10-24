@@ -29189,10 +29189,6 @@ var author$project$Form$Select$Internal$updateSelectedOption = F2(
 					state.selectedOption)
 			});
 	});
-var elm$core$String$dropRight = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(elm$core$String$slice, 0, -n, string);
-	});
 var mgold$elm_nonempty_list$List$Nonempty$toList = function (_n0) {
 	var x = _n0.a;
 	var xs = _n0.b;
@@ -29213,6 +29209,13 @@ var author$project$Form$Select$Internal$update = F2(
 						state,
 						{focusedOption: elm$core$Maybe$Nothing, isOpen: false, searchText: ''}),
 					elm$core$Platform$Cmd$none);
+			case 'UpdateSearchText':
+				var value = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						state,
+						{searchText: value}),
+					elm$core$Platform$Cmd$none);
 			case 'Select':
 				var option = msg.a;
 				return _Utils_Tuple2(
@@ -29223,6 +29226,7 @@ var author$project$Form$Select$Internal$update = F2(
 					_Utils_update(
 						state,
 						{
+							searchText: '',
 							selectedOption: A2(author$project$Resettable$update, elm$core$Maybe$Nothing, state.selectedOption)
 						}),
 					elm$core$Platform$Cmd$none);
@@ -29258,34 +29262,15 @@ var author$project$Form$Select$Internal$update = F2(
 										toLabel)
 								}),
 							elm$core$Platform$Cmd$none);
-					case 'Backspace':
-						var _n3 = msg.c;
-						return _Utils_Tuple2(
-							_Utils_update(
-								state,
-								{
-									searchText: A2(elm$core$String$dropRight, 1, state.searchText)
-								}),
-							elm$core$Platform$Cmd$none);
-					case 'AlphaNum':
-						var toLabel = msg.b;
-						var charString = msg.c.a;
-						return _Utils_Tuple2(
-							_Utils_update(
-								state,
-								{
-									searchText: _Utils_ap(state.searchText, charString)
-								}),
-							elm$core$Platform$Cmd$none);
 					default:
 						var isOptionDisabled = msg.a;
-						var _n4 = state.focusedOption;
-						if (_n4.$ === 'Nothing') {
+						var _n3 = state.focusedOption;
+						if (_n3.$ === 'Nothing') {
 							return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 						} else {
-							var focusedOption = _n4.a;
-							var _n5 = isOptionDisabled(focusedOption);
-							if (_n5) {
+							var focusedOption = _n3.a;
+							var _n4 = isOptionDisabled(focusedOption);
+							if (_n4) {
 								return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 							} else {
 								return _Utils_Tuple2(
@@ -30515,6 +30500,17 @@ var author$project$Form$SearchSelect$Internal$update = F2(
 						state,
 						{focusedOption: elm$core$Maybe$Nothing, input: '', isOpen: false}),
 					elm$core$Platform$Cmd$none);
+			case 'UpdateSearchInput':
+				var inputMinimum = msg.a;
+				var value = msg.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						state,
+						{
+							input: value,
+							isSearching: A2(author$project$Form$SearchSelect$Internal$shouldSearch, inputMinimum, value)
+						}),
+					A2(author$project$Form$SearchSelect$Internal$shouldSearch, inputMinimum, value) ? A3(author$project$Form$SearchSelect$Internal$searchRequest, state.searchUrl, value, state.optionDecoder) : elm$core$Platform$Cmd$none);
 			case 'Response':
 				var result = msg.a;
 				if (result.$ === 'Err') {
@@ -30554,9 +30550,9 @@ var author$project$Form$SearchSelect$Internal$update = F2(
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
-				switch (msg.b.$) {
+				switch (msg.a.$) {
 					case 'Up':
-						var _n2 = msg.b;
+						var _n2 = msg.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								state,
@@ -30565,7 +30561,7 @@ var author$project$Form$SearchSelect$Internal$update = F2(
 								}),
 							elm$core$Platform$Cmd$none);
 					case 'Down':
-						var _n3 = msg.b;
+						var _n3 = msg.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								state,
@@ -30573,60 +30569,12 @@ var author$project$Form$SearchSelect$Internal$update = F2(
 									focusedOption: A2(author$project$Form$Helpers$getNextOption, state.options, state.focusedOption)
 								}),
 							elm$core$Platform$Cmd$none);
-					case 'Space':
-						var _n4 = msg.b;
-						var _n5 = state.focusedOption;
-						if (_n5.$ === 'Nothing') {
-							return _Utils_Tuple2(
-								_Utils_update(
-									state,
-									{input: state.input + ' '}),
-								elm$core$Platform$Cmd$none);
-						} else {
-							var focusedOption = _n5.a;
-							return _Utils_Tuple2(
-								_Utils_update(
-									state,
-									{
-										input: '',
-										isOpen: false,
-										selectedOption: A2(
-											author$project$Resettable$update,
-											elm$core$Maybe$Just(focusedOption),
-											state.selectedOption)
-									}),
-								elm$core$Platform$Cmd$none);
-						}
-					case 'Backspace':
-						var inputMinimum = msg.a;
-						var _n6 = msg.b;
-						var newValue = A2(elm$core$String$dropRight, 1, state.input);
-						return _Utils_Tuple2(
-							_Utils_update(
-								state,
-								{
-									input: newValue,
-									isSearching: A2(author$project$Form$SearchSelect$Internal$shouldSearch, inputMinimum, newValue)
-								}),
-							A2(author$project$Form$SearchSelect$Internal$shouldSearch, inputMinimum, newValue) ? A3(author$project$Form$SearchSelect$Internal$searchRequest, state.searchUrl, newValue, state.optionDecoder) : elm$core$Platform$Cmd$none);
-					case 'AlphaNum':
-						var inputMinimum = msg.a;
-						var value = msg.b.a;
-						var newValue = _Utils_ap(state.input, value);
-						return _Utils_Tuple2(
-							_Utils_update(
-								state,
-								{
-									input: newValue,
-									isSearching: A2(author$project$Form$SearchSelect$Internal$shouldSearch, inputMinimum, newValue)
-								}),
-							A2(author$project$Form$SearchSelect$Internal$shouldSearch, inputMinimum, newValue) ? A3(author$project$Form$SearchSelect$Internal$searchRequest, state.searchUrl, newValue, state.optionDecoder) : elm$core$Platform$Cmd$none);
 					default:
-						var _n7 = state.focusedOption;
-						if (_n7.$ === 'Nothing') {
+						var _n4 = state.focusedOption;
+						if (_n4.$ === 'Nothing') {
 							return _Utils_Tuple2(state, elm$core$Platform$Cmd$none);
 						} else {
-							var focusedOption = _n7.a;
+							var focusedOption = _n4.a;
 							return _Utils_Tuple2(
 								_Utils_update(
 									state,
@@ -36943,15 +36891,31 @@ var author$project$Form$DatePicker$Internal$Apply = {$: 'Apply'};
 var author$project$Form$DatePicker$Internal$OpenTimeSelect = function (a) {
 	return {$: 'OpenTimeSelect', a: a};
 };
+var author$project$Form$Select$Css$carets = rtfeldman$elm_css$Html$Styled$Attributes$css(
+	_List_fromArray(
+		[
+			rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$absolute),
+			rtfeldman$elm_css$Css$top(
+			rtfeldman$elm_css$Css$px(5)),
+			rtfeldman$elm_css$Css$right(
+			rtfeldman$elm_css$Css$px(7.5))
+		]));
+var rtfeldman$elm_css$Css$inlineBlock = {display: rtfeldman$elm_css$Css$Structure$Compatible, value: 'inline-block'};
+var author$project$Form$Select$Css$displayInline = rtfeldman$elm_css$Html$Styled$Attributes$css(
+	_List_fromArray(
+		[
+			rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock)
+		]));
 var author$project$Form$Select$Css$input = F2(
 	function (isError, isLocked) {
 		return rtfeldman$elm_css$Html$Styled$Attributes$css(
 			A2(author$project$Form$Css$select, isError, isLocked));
 	});
-var author$project$Form$Select$Css$title = function (isFaded) {
-	return rtfeldman$elm_css$Html$Styled$Attributes$css(
-		author$project$Form$Css$title(isFaded));
-};
+var author$project$Form$Select$Css$relativePosition = rtfeldman$elm_css$Html$Styled$Attributes$css(
+	_List_fromArray(
+		[
+			rtfeldman$elm_css$Css$position(rtfeldman$elm_css$Css$relative)
+		]));
 var author$project$Form$Select$Internal$Open = {$: 'Open'};
 var author$project$Form$Css$clearIcon = rtfeldman$elm_css$Html$Styled$Attributes$css(
 	_List_fromArray(
@@ -37057,6 +37021,7 @@ var feathericons$elm_feather$FeatherIcons$chevronDown = A2(
 					_List_Nil)
 				]))
 		]));
+var rtfeldman$elm_css$Html$Styled$input = rtfeldman$elm_css$Html$Styled$node('input');
 var elm$json$Json$Encode$bool = _Json_wrap;
 var rtfeldman$elm_css$Html$Styled$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -37067,21 +37032,31 @@ var rtfeldman$elm_css$Html$Styled$Attributes$boolProperty = F2(
 	});
 var rtfeldman$elm_css$Html$Styled$Attributes$disabled = rtfeldman$elm_css$Html$Styled$Attributes$boolProperty('disabled');
 var rtfeldman$elm_css$Html$Styled$Attributes$id = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
-var rtfeldman$elm_css$Html$Styled$Attributes$title = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('title');
+var rtfeldman$elm_css$Html$Styled$Attributes$placeholder = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('placeholder');
+var rtfeldman$elm_css$Html$Styled$Attributes$value = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('value');
 var author$project$Form$Select$Internal$closed = F2(
 	function (state, viewState) {
 		return A2(
 			rtfeldman$elm_css$Html$Styled$div,
-			_List_Nil,
+			_List_fromArray(
+				[author$project$Form$Select$Css$relativePosition]),
 			_List_fromArray(
 				[
 					A2(
-					rtfeldman$elm_css$Html$Styled$div,
+					rtfeldman$elm_css$Html$Styled$input,
 					_List_fromArray(
 						[
 							A2(author$project$Form$Select$Css$input, viewState.isError, viewState.isLocked),
 							A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$id, viewState.id),
 							rtfeldman$elm_css$Html$Styled$Attributes$disabled(viewState.isLocked),
+							rtfeldman$elm_css$Html$Styled$Attributes$placeholder(
+							A2(
+								elm$core$Maybe$withDefault,
+								viewState.defaultLabel,
+								A2(
+									elm$core$Maybe$map,
+									viewState.toLabel,
+									author$project$Resettable$getValue(state.selectedOption)))),
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,
@@ -37093,54 +37068,47 @@ var author$project$Form$Select$Internal$closed = F2(
 							A2(
 							author$project$Html$Styled$Bdt$attributeIf,
 							!viewState.isLocked,
-							rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Form$Select$Internal$Open))
+							rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Form$Select$Internal$Open)),
+							rtfeldman$elm_css$Html$Styled$Attributes$value(state.searchText)
 						]),
+					_List_Nil),
+					A2(
+					rtfeldman$elm_css$Html$Styled$div,
+					_List_fromArray(
+						[author$project$Form$Select$Css$carets]),
 					_List_fromArray(
 						[
 							A2(
-							rtfeldman$elm_css$Html$Styled$div,
+							rtfeldman$elm_css$Html$Styled$span,
+							_List_fromArray(
+								[author$project$Form$Select$Css$displayInline]),
 							_List_fromArray(
 								[
-									rtfeldman$elm_css$Html$Styled$Attributes$title(
+									A2(author$project$Form$Select$Internal$clearButton, state, viewState)
+								])),
+							A2(
+							rtfeldman$elm_css$Html$Styled$span,
+							_List_fromArray(
+								[
+									author$project$Form$Select$Css$displayInline,
 									A2(
-										elm$core$Maybe$withDefault,
-										viewState.defaultLabel,
-										A2(
-											elm$core$Maybe$map,
-											viewState.toLabel,
-											author$project$Resettable$getValue(state.selectedOption)))),
-									author$project$Form$Select$Css$title(
-									_Utils_eq(
-										author$project$Resettable$getValue(state.selectedOption),
-										elm$core$Maybe$Nothing))
+									author$project$Html$Styled$Bdt$attributeIf,
+									!viewState.isLocked,
+									rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Form$Select$Internal$Open))
 								]),
 							_List_fromArray(
 								[
-									rtfeldman$elm_css$Html$Styled$text(
+									rtfeldman$elm_css$Html$Styled$fromUnstyled(
 									A2(
-										elm$core$Maybe$withDefault,
-										viewState.defaultLabel,
-										A2(
-											elm$core$Maybe$map,
-											viewState.toLabel,
-											author$project$Resettable$getValue(state.selectedOption))))
-								])),
-							A2(author$project$Form$Select$Internal$clearButton, state, viewState),
-							rtfeldman$elm_css$Html$Styled$fromUnstyled(
-							A2(
-								feathericons$elm_feather$FeatherIcons$toHtml,
-								_List_Nil,
-								A2(feathericons$elm_feather$FeatherIcons$withSize, 18, feathericons$elm_feather$FeatherIcons$chevronDown)))
+										feathericons$elm_feather$FeatherIcons$toHtml,
+										_List_Nil,
+										A2(feathericons$elm_feather$FeatherIcons$withSize, 18, feathericons$elm_feather$FeatherIcons$chevronDown)))
+								]))
 						]))
 				]));
 	});
-var author$project$Form$Helpers$AlphaNum = function (a) {
-	return {$: 'AlphaNum', a: a};
-};
-var author$project$Form$Helpers$Backspace = {$: 'Backspace'};
 var author$project$Form$Helpers$Down = {$: 'Down'};
 var author$project$Form$Helpers$Enter = {$: 'Enter'};
-var author$project$Form$Helpers$Space = {$: 'Space'};
 var author$project$Form$Helpers$Up = {$: 'Up'};
 var elm$json$Json$Decode$fail = _Json_fail;
 var author$project$Form$Helpers$selectKeyDecoder = function (key) {
@@ -37151,17 +37119,8 @@ var author$project$Form$Helpers$selectKeyDecoder = function (key) {
 			return elm$json$Json$Decode$succeed(author$project$Form$Helpers$Down);
 		case 'Enter':
 			return elm$json$Json$Decode$succeed(author$project$Form$Helpers$Enter);
-		case ' ':
-			return elm$json$Json$Decode$succeed(author$project$Form$Helpers$Space);
-		case 'Backspace':
-			return elm$json$Json$Decode$succeed(author$project$Form$Helpers$Backspace);
 		default:
-			var alphaNum = key;
-			return (A2(
-				elm$core$List$all,
-				elm$core$Char$isAlphaNum,
-				elm$core$String$toList(alphaNum)) && (elm$core$String$length(alphaNum) === 1)) ? elm$json$Json$Decode$succeed(
-				author$project$Form$Helpers$AlphaNum(alphaNum)) : elm$json$Json$Decode$fail('Not valid SelectKey');
+			return elm$json$Json$Decode$fail('Not valid SelectKey');
 	}
 };
 var elm$json$Json$Decode$andThen = _Json_andThen;
@@ -37191,36 +37150,12 @@ var author$project$Form$Select$Internal$SelectKey = F3(
 	function (a, b, c) {
 		return {$: 'SelectKey', a: a, b: b, c: c};
 	});
+var author$project$Form$Select$Internal$UpdateSearchText = function (a) {
+	return {$: 'UpdateSearchText', a: a};
+};
 var author$project$Form$Select$Internal$inputContents = F2(
 	function (state, viewState) {
-		return elm$core$String$isEmpty(state.searchText) ? A2(
-			rtfeldman$elm_css$Html$Styled$div,
-			_List_fromArray(
-				[
-					rtfeldman$elm_css$Html$Styled$Attributes$title(
-					A2(
-						elm$core$Maybe$withDefault,
-						viewState.defaultLabel,
-						A2(
-							elm$core$Maybe$map,
-							viewState.toLabel,
-							author$project$Resettable$getValue(state.selectedOption)))),
-					author$project$Form$Select$Css$title(
-					_Utils_eq(
-						author$project$Resettable$getValue(state.selectedOption),
-						elm$core$Maybe$Nothing))
-				]),
-			_List_fromArray(
-				[
-					rtfeldman$elm_css$Html$Styled$text(
-					A2(
-						elm$core$Maybe$withDefault,
-						viewState.defaultLabel,
-						A2(
-							elm$core$Maybe$map,
-							viewState.toLabel,
-							author$project$Resettable$getValue(state.selectedOption))))
-				])) : rtfeldman$elm_css$Html$Styled$text(state.searchText);
+		return rtfeldman$elm_css$Html$Styled$text(state.searchText);
 	});
 var author$project$Form$Css$selectOptionItem = F2(
 	function (isDisabled, isFocused) {
@@ -37379,6 +37314,33 @@ var rtfeldman$elm_css$Html$Styled$Events$onBlur = function (msg) {
 		'blur',
 		elm$json$Json$Decode$succeed(msg));
 };
+var rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			rtfeldman$elm_css$VirtualDom$Styled$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var rtfeldman$elm_css$Html$Styled$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			rtfeldman$elm_css$Html$Styled$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, rtfeldman$elm_css$Html$Styled$Events$targetValue)));
+};
 var author$project$Form$Select$Internal$open = F2(
 	function (state, viewState) {
 		return A2(
@@ -37388,12 +37350,21 @@ var author$project$Form$Select$Internal$open = F2(
 			_List_fromArray(
 				[
 					A2(
-					rtfeldman$elm_css$Html$Styled$div,
+					rtfeldman$elm_css$Html$Styled$input,
 					_List_fromArray(
 						[
 							A2(author$project$Form$Select$Css$input, viewState.isError, viewState.isLocked),
 							A2(author$project$Html$Styled$Bdt$maybeAttribute, rtfeldman$elm_css$Html$Styled$Attributes$id, viewState.id),
+							rtfeldman$elm_css$Html$Styled$Attributes$placeholder(
+							A2(
+								elm$core$Maybe$withDefault,
+								viewState.defaultLabel,
+								A2(
+									elm$core$Maybe$map,
+									viewState.toLabel,
+									author$project$Resettable$getValue(state.selectedOption)))),
 							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1),
+							rtfeldman$elm_css$Html$Styled$Events$onInput(author$project$Form$Select$Internal$UpdateSearchText),
 							author$project$Form$Helpers$onSelectKey(
 							A2(author$project$Form$Select$Internal$SelectKey, viewState.isOptionDisabled, viewState.toLabel)),
 							rtfeldman$elm_css$Html$Styled$Events$onBlur(author$project$Form$Select$Internal$Blur)
@@ -37403,6 +37374,373 @@ var author$project$Form$Select$Internal$open = F2(
 							A2(author$project$Form$Select$Internal$inputContents, state, viewState)
 						])),
 					A2(author$project$Form$Select$Internal$optionList, state, viewState)
+				]));
+	});
+var author$project$Form$Select$Internal$render = F2(
+	function (state, viewState) {
+		var _n0 = state.isOpen;
+		if (!_n0) {
+			return A2(author$project$Form$Select$Internal$closed, state, viewState);
+		} else {
+			return A2(author$project$Form$Select$Internal$open, state, viewState);
+		}
+	});
+var author$project$Form$Select$render = function (_n0) {
+	var state = _n0.a;
+	var viewState = _n0.b;
+	return A2(author$project$Form$Select$Internal$render, state, viewState);
+};
+var author$project$Form$Select$View = F2(
+	function (a, b) {
+		return {$: 'View', a: a, b: b};
+	});
+var author$project$Form$Select$Internal$setId = F2(
+	function (id, viewState) {
+		return _Utils_update(
+			viewState,
+			{
+				id: elm$core$Maybe$Just(id)
+			});
+	});
+var author$project$Form$Select$setId = F2(
+	function (id, _n0) {
+		var state = _n0.a;
+		var viewState = _n0.b;
+		return A2(
+			author$project$Form$Select$View,
+			state,
+			A2(author$project$Form$Select$Internal$setId, id, viewState));
+	});
+var author$project$Form$Select$Internal$initialViewState = function (toLabel) {
+	return {
+		defaultLabel: '-- Nothing Selected --',
+		id: elm$core$Maybe$Nothing,
+		isClearable: false,
+		isError: false,
+		isLocked: false,
+		isOptionDisabled: elm$core$Basics$always(false),
+		toLabel: toLabel
+	};
+};
+var author$project$Form$Select$view = F2(
+	function (toLabel, _n0) {
+		var state = _n0.a;
+		return A2(
+			author$project$Form$Select$View,
+			state,
+			author$project$Form$Select$Internal$initialViewState(toLabel));
+	});
+var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3(elm$core$String$repeatHelp, n, chunk, '');
+	});
+var elm$core$String$padLeft = F3(
+	function (n, _char, string) {
+		return _Utils_ap(
+			A2(
+				elm$core$String$repeat,
+				n - elm$core$String$length(string),
+				elm$core$String$fromChar(_char)),
+			string);
+	});
+var rtfeldman$elm_css$Html$Styled$Events$onMouseDown = function (msg) {
+	return A2(
+		rtfeldman$elm_css$Html$Styled$Events$on,
+		'mousedown',
+		elm$json$Json$Decode$succeed(msg));
+};
+var author$project$Form$DatePicker$Internal$timePicker = function (state) {
+	var isDesiredDateSelected = !_Utils_eq(state.desiredPosix, elm$core$Maybe$Nothing);
+	var isDateSelected = !_Utils_eq(
+		author$project$Resettable$getValue(state.selectedPosix),
+		elm$core$Maybe$Nothing);
+	return A2(
+		rtfeldman$elm_css$Html$Styled$div,
+		_List_fromArray(
+			[author$project$Form$DatePicker$Css$timePickerContainer]),
+		_List_fromArray(
+			[
+				A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						author$project$Form$DatePicker$Css$selectContainer,
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						!_Utils_eq(
+							state.focusedSelect,
+							elm$core$Maybe$Just(author$project$Form$DatePicker$Internal$Hours)),
+						rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
+							author$project$Form$DatePicker$Internal$OpenTimeSelect(author$project$Form$DatePicker$Internal$Hours)))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_fromArray(
+							[author$project$Form$DatePicker$Css$select]),
+						_List_fromArray(
+							[
+								A2(
+								rtfeldman$elm_css$Html$Styled$map,
+								author$project$Form$DatePicker$Internal$UpdateHours,
+								author$project$Form$Select$render(
+									A2(
+										author$project$Form$Select$setId,
+										'FORM_DATEPICKER_HOURS',
+										A2(
+											author$project$Form$Select$view,
+											A2(
+												elm$core$Basics$composeR,
+												elm$core$String$fromInt,
+												A2(
+													elm$core$String$padLeft,
+													2,
+													_Utils_chr('0'))),
+											state.hours))))
+							]))
+					])),
+				A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[author$project$Form$DatePicker$Css$colon]),
+				_List_fromArray(
+					[
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								rtfeldman$elm_css$Html$Styled$text(':')
+							]))
+					])),
+				A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						author$project$Form$DatePicker$Css$selectContainer,
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						!_Utils_eq(
+							state.focusedSelect,
+							elm$core$Maybe$Just(author$project$Form$DatePicker$Internal$Minutes)),
+						rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
+							author$project$Form$DatePicker$Internal$OpenTimeSelect(author$project$Form$DatePicker$Internal$Minutes)))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_fromArray(
+							[author$project$Form$DatePicker$Css$select]),
+						_List_fromArray(
+							[
+								A2(
+								rtfeldman$elm_css$Html$Styled$map,
+								author$project$Form$DatePicker$Internal$UpdateMinutes,
+								author$project$Form$Select$render(
+									A2(
+										author$project$Form$Select$setId,
+										'FORM_DATEPICKER_MINUTES',
+										A2(
+											author$project$Form$Select$view,
+											A2(
+												elm$core$Basics$composeR,
+												elm$core$String$fromInt,
+												A2(
+													elm$core$String$padLeft,
+													2,
+													_Utils_chr('0'))),
+											state.minutes))))
+							]))
+					])),
+				A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[author$project$Form$DatePicker$Css$colon]),
+				_List_fromArray(
+					[
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								rtfeldman$elm_css$Html$Styled$text(':')
+							]))
+					])),
+				A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						author$project$Form$DatePicker$Css$selectContainer,
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						!_Utils_eq(
+							state.focusedSelect,
+							elm$core$Maybe$Just(author$project$Form$DatePicker$Internal$Seconds)),
+						rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
+							author$project$Form$DatePicker$Internal$OpenTimeSelect(author$project$Form$DatePicker$Internal$Seconds)))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_fromArray(
+							[author$project$Form$DatePicker$Css$select]),
+						_List_fromArray(
+							[
+								A2(
+								rtfeldman$elm_css$Html$Styled$map,
+								author$project$Form$DatePicker$Internal$UpdateSeconds,
+								author$project$Form$Select$render(
+									A2(
+										author$project$Form$Select$setId,
+										'FORM_DATEPICKER_SECONDS',
+										A2(
+											author$project$Form$Select$view,
+											A2(
+												elm$core$Basics$composeR,
+												elm$core$String$fromInt,
+												A2(
+													elm$core$String$padLeft,
+													2,
+													_Utils_chr('0'))),
+											state.seconds))))
+							]))
+					])),
+				A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[author$project$Form$DatePicker$Css$applyButtonContainer]),
+				_List_fromArray(
+					[
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_fromArray(
+							[
+								author$project$Form$DatePicker$Css$applyButton(isDesiredDateSelected || isDateSelected),
+								A2(
+								author$project$Html$Styled$Bdt$attributeIf,
+								isDesiredDateSelected || isDateSelected,
+								rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Form$DatePicker$Internal$Apply))
+							]),
+						_List_fromArray(
+							[
+								rtfeldman$elm_css$Html$Styled$text('Apply')
+							]))
+					]))
+			]));
+};
+var author$project$Form$DatePicker$Internal$timePickerContainer = F2(
+	function (state, includeTime) {
+		return A2(
+			author$project$Html$Styled$Bdt$viewIf,
+			includeTime,
+			author$project$Form$DatePicker$Internal$timePicker(state));
+	});
+var author$project$Form$DatePicker$Internal$calendar = F2(
+	function (state, viewState) {
+		var _n0 = state.navigationPosix;
+		if (_n0.$ === 'Nothing') {
+			return rtfeldman$elm_css$Html$Styled$text('');
+		} else {
+			var posix = _n0.a;
+			return A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						author$project$Form$DatePicker$Css$calendar,
+						A2(
+						author$project$Html$Styled$Bdt$attributeIf,
+						_Utils_eq(state.focusedSelect, elm$core$Maybe$Nothing),
+						author$project$Form$DatePicker$Internal$disableMouseDown)
+					]),
+				_List_fromArray(
+					[
+						A3(author$project$Form$DatePicker$Internal$calendarNavigation, state, viewState, posix),
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_fromArray(
+							[author$project$Form$DatePicker$Css$weekDayList]),
+						A2(
+							elm$core$List$map,
+							author$project$Form$DatePicker$Internal$calendarWeekDay,
+							_List_fromArray(
+								['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']))),
+						A2(
+						rtfeldman$elm_css$Html$Styled$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A3(author$project$Form$DatePicker$Internal$calendarDays, state, viewState, posix)
+							])),
+						A2(author$project$Form$DatePicker$Internal$timePickerContainer, state, viewState.includeTime),
+						A2(author$project$Form$DatePicker$Internal$clearDateContainer, state, viewState)
+					]));
+		}
+	});
+var author$project$Form$DatePicker$Internal$open = F2(
+	function (state, viewState) {
+		return A2(
+			rtfeldman$elm_css$Html$Styled$div,
+			_List_fromArray(
+				[author$project$Form$DatePicker$Css$container]),
+			_List_fromArray(
+				[
+					A2(
+					rtfeldman$elm_css$Html$Styled$div,
+					_List_fromArray(
+						[
+							A2(author$project$Form$DatePicker$Css$input, viewState.isLocked, viewState.isError),
+							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(0),
+							rtfeldman$elm_css$Html$Styled$Attributes$id('FORM_DATEPICKER'),
+							rtfeldman$elm_css$Html$Styled$Events$onBlur(author$project$Form$DatePicker$Internal$Blur)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							rtfeldman$elm_css$Html$Styled$div,
+							_List_fromArray(
+								[
+									author$project$Form$DatePicker$Css$title(
+									_Utils_eq(
+										author$project$Resettable$getValue(state.selectedPosix),
+										elm$core$Maybe$Nothing))
+								]),
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Html$Styled$text(
+									A2(
+										elm$core$Maybe$withDefault,
+										viewState.defaultLabel,
+										A2(
+											elm$core$Maybe$map,
+											viewState.toLabel(state.timeZone),
+											author$project$Resettable$getValue(state.selectedPosix))))
+								])),
+							A3(
+							author$project$Html$Styled$Bdt$divIf,
+							viewState.isInput,
+							_List_Nil,
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Html$Styled$fromUnstyled(
+									A2(
+										feathericons$elm_feather$FeatherIcons$toHtml,
+										_List_Nil,
+										A2(feathericons$elm_feather$FeatherIcons$withSize, 18, feathericons$elm_feather$FeatherIcons$calendar)))
+								]))
+						])),
+					A2(author$project$Form$DatePicker$Internal$calendar, state, viewState)
 				]));
 	});
 var elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
@@ -37892,373 +38230,6 @@ var rtfeldman$elm_css$VirtualDom$Styled$lazy2 = F3(
 			A4(elm$virtual_dom$VirtualDom$lazy3, rtfeldman$elm_css$VirtualDom$Styled$lazyHelp2, fn, arg1, arg2));
 	});
 var rtfeldman$elm_css$Html$Styled$Lazy$lazy2 = rtfeldman$elm_css$VirtualDom$Styled$lazy2;
-var author$project$Form$Select$Internal$render = F2(
-	function (state, viewState) {
-		var _n0 = state.isOpen;
-		if (!_n0) {
-			return A3(rtfeldman$elm_css$Html$Styled$Lazy$lazy2, author$project$Form$Select$Internal$closed, state, viewState);
-		} else {
-			return A3(rtfeldman$elm_css$Html$Styled$Lazy$lazy2, author$project$Form$Select$Internal$open, state, viewState);
-		}
-	});
-var author$project$Form$Select$render = function (_n0) {
-	var state = _n0.a;
-	var viewState = _n0.b;
-	return A2(author$project$Form$Select$Internal$render, state, viewState);
-};
-var author$project$Form$Select$View = F2(
-	function (a, b) {
-		return {$: 'View', a: a, b: b};
-	});
-var author$project$Form$Select$Internal$setId = F2(
-	function (id, viewState) {
-		return _Utils_update(
-			viewState,
-			{
-				id: elm$core$Maybe$Just(id)
-			});
-	});
-var author$project$Form$Select$setId = F2(
-	function (id, _n0) {
-		var state = _n0.a;
-		var viewState = _n0.b;
-		return A2(
-			author$project$Form$Select$View,
-			state,
-			A2(author$project$Form$Select$Internal$setId, id, viewState));
-	});
-var author$project$Form$Select$Internal$initialViewState = function (toLabel) {
-	return {
-		defaultLabel: '-- Nothing Selected --',
-		id: elm$core$Maybe$Nothing,
-		isClearable: false,
-		isError: false,
-		isLocked: false,
-		isOptionDisabled: elm$core$Basics$always(false),
-		toLabel: toLabel
-	};
-};
-var author$project$Form$Select$view = F2(
-	function (toLabel, _n0) {
-		var state = _n0.a;
-		return A2(
-			author$project$Form$Select$View,
-			state,
-			author$project$Form$Select$Internal$initialViewState(toLabel));
-	});
-var elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
-var elm$core$String$repeatHelp = F3(
-	function (n, chunk, result) {
-		return (n <= 0) ? result : A3(
-			elm$core$String$repeatHelp,
-			n >> 1,
-			_Utils_ap(chunk, chunk),
-			(!(n & 1)) ? result : _Utils_ap(result, chunk));
-	});
-var elm$core$String$repeat = F2(
-	function (n, chunk) {
-		return A3(elm$core$String$repeatHelp, n, chunk, '');
-	});
-var elm$core$String$padLeft = F3(
-	function (n, _char, string) {
-		return _Utils_ap(
-			A2(
-				elm$core$String$repeat,
-				n - elm$core$String$length(string),
-				elm$core$String$fromChar(_char)),
-			string);
-	});
-var rtfeldman$elm_css$Html$Styled$Events$onMouseDown = function (msg) {
-	return A2(
-		rtfeldman$elm_css$Html$Styled$Events$on,
-		'mousedown',
-		elm$json$Json$Decode$succeed(msg));
-};
-var author$project$Form$DatePicker$Internal$timePicker = function (state) {
-	var isDesiredDateSelected = !_Utils_eq(state.desiredPosix, elm$core$Maybe$Nothing);
-	var isDateSelected = !_Utils_eq(
-		author$project$Resettable$getValue(state.selectedPosix),
-		elm$core$Maybe$Nothing);
-	return A2(
-		rtfeldman$elm_css$Html$Styled$div,
-		_List_fromArray(
-			[author$project$Form$DatePicker$Css$timePickerContainer]),
-		_List_fromArray(
-			[
-				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						author$project$Form$DatePicker$Css$selectContainer,
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						!_Utils_eq(
-							state.focusedSelect,
-							elm$core$Maybe$Just(author$project$Form$DatePicker$Internal$Hours)),
-						rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
-							author$project$Form$DatePicker$Internal$OpenTimeSelect(author$project$Form$DatePicker$Internal$Hours)))
-					]),
-				_List_fromArray(
-					[
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_fromArray(
-							[author$project$Form$DatePicker$Css$select]),
-						_List_fromArray(
-							[
-								A2(
-								rtfeldman$elm_css$Html$Styled$map,
-								author$project$Form$DatePicker$Internal$UpdateHours,
-								author$project$Form$Select$render(
-									A2(
-										author$project$Form$Select$setId,
-										'FORM_DATEPICKER_HOURS',
-										A2(
-											author$project$Form$Select$view,
-											A2(
-												elm$core$Basics$composeR,
-												elm$core$String$fromInt,
-												A2(
-													elm$core$String$padLeft,
-													2,
-													_Utils_chr('0'))),
-											state.hours))))
-							]))
-					])),
-				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[author$project$Form$DatePicker$Css$colon]),
-				_List_fromArray(
-					[
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								rtfeldman$elm_css$Html$Styled$text(':')
-							]))
-					])),
-				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						author$project$Form$DatePicker$Css$selectContainer,
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						!_Utils_eq(
-							state.focusedSelect,
-							elm$core$Maybe$Just(author$project$Form$DatePicker$Internal$Minutes)),
-						rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
-							author$project$Form$DatePicker$Internal$OpenTimeSelect(author$project$Form$DatePicker$Internal$Minutes)))
-					]),
-				_List_fromArray(
-					[
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_fromArray(
-							[author$project$Form$DatePicker$Css$select]),
-						_List_fromArray(
-							[
-								A2(
-								rtfeldman$elm_css$Html$Styled$map,
-								author$project$Form$DatePicker$Internal$UpdateMinutes,
-								author$project$Form$Select$render(
-									A2(
-										author$project$Form$Select$setId,
-										'FORM_DATEPICKER_MINUTES',
-										A2(
-											author$project$Form$Select$view,
-											A2(
-												elm$core$Basics$composeR,
-												elm$core$String$fromInt,
-												A2(
-													elm$core$String$padLeft,
-													2,
-													_Utils_chr('0'))),
-											state.minutes))))
-							]))
-					])),
-				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[author$project$Form$DatePicker$Css$colon]),
-				_List_fromArray(
-					[
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								rtfeldman$elm_css$Html$Styled$text(':')
-							]))
-					])),
-				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						author$project$Form$DatePicker$Css$selectContainer,
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						!_Utils_eq(
-							state.focusedSelect,
-							elm$core$Maybe$Just(author$project$Form$DatePicker$Internal$Seconds)),
-						rtfeldman$elm_css$Html$Styled$Events$onMouseDown(
-							author$project$Form$DatePicker$Internal$OpenTimeSelect(author$project$Form$DatePicker$Internal$Seconds)))
-					]),
-				_List_fromArray(
-					[
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_fromArray(
-							[author$project$Form$DatePicker$Css$select]),
-						_List_fromArray(
-							[
-								A2(
-								rtfeldman$elm_css$Html$Styled$map,
-								author$project$Form$DatePicker$Internal$UpdateSeconds,
-								author$project$Form$Select$render(
-									A2(
-										author$project$Form$Select$setId,
-										'FORM_DATEPICKER_SECONDS',
-										A2(
-											author$project$Form$Select$view,
-											A2(
-												elm$core$Basics$composeR,
-												elm$core$String$fromInt,
-												A2(
-													elm$core$String$padLeft,
-													2,
-													_Utils_chr('0'))),
-											state.seconds))))
-							]))
-					])),
-				A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[author$project$Form$DatePicker$Css$applyButtonContainer]),
-				_List_fromArray(
-					[
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_fromArray(
-							[
-								author$project$Form$DatePicker$Css$applyButton(isDesiredDateSelected || isDateSelected),
-								A2(
-								author$project$Html$Styled$Bdt$attributeIf,
-								isDesiredDateSelected || isDateSelected,
-								rtfeldman$elm_css$Html$Styled$Events$onClick(author$project$Form$DatePicker$Internal$Apply))
-							]),
-						_List_fromArray(
-							[
-								rtfeldman$elm_css$Html$Styled$text('Apply')
-							]))
-					]))
-			]));
-};
-var author$project$Form$DatePicker$Internal$timePickerContainer = F2(
-	function (state, includeTime) {
-		return A2(
-			author$project$Html$Styled$Bdt$viewIf,
-			includeTime,
-			author$project$Form$DatePicker$Internal$timePicker(state));
-	});
-var author$project$Form$DatePicker$Internal$calendar = F2(
-	function (state, viewState) {
-		var _n0 = state.navigationPosix;
-		if (_n0.$ === 'Nothing') {
-			return rtfeldman$elm_css$Html$Styled$text('');
-		} else {
-			var posix = _n0.a;
-			return A2(
-				rtfeldman$elm_css$Html$Styled$div,
-				_List_fromArray(
-					[
-						author$project$Form$DatePicker$Css$calendar,
-						A2(
-						author$project$Html$Styled$Bdt$attributeIf,
-						_Utils_eq(state.focusedSelect, elm$core$Maybe$Nothing),
-						author$project$Form$DatePicker$Internal$disableMouseDown)
-					]),
-				_List_fromArray(
-					[
-						A3(author$project$Form$DatePicker$Internal$calendarNavigation, state, viewState, posix),
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_fromArray(
-							[author$project$Form$DatePicker$Css$weekDayList]),
-						A2(
-							elm$core$List$map,
-							author$project$Form$DatePicker$Internal$calendarWeekDay,
-							_List_fromArray(
-								['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']))),
-						A2(
-						rtfeldman$elm_css$Html$Styled$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A3(author$project$Form$DatePicker$Internal$calendarDays, state, viewState, posix)
-							])),
-						A2(author$project$Form$DatePicker$Internal$timePickerContainer, state, viewState.includeTime),
-						A2(author$project$Form$DatePicker$Internal$clearDateContainer, state, viewState)
-					]));
-		}
-	});
-var author$project$Form$DatePicker$Internal$open = F2(
-	function (state, viewState) {
-		return A2(
-			rtfeldman$elm_css$Html$Styled$div,
-			_List_fromArray(
-				[author$project$Form$DatePicker$Css$container]),
-			_List_fromArray(
-				[
-					A2(
-					rtfeldman$elm_css$Html$Styled$div,
-					_List_fromArray(
-						[
-							A2(author$project$Form$DatePicker$Css$input, viewState.isLocked, viewState.isError),
-							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(0),
-							rtfeldman$elm_css$Html$Styled$Attributes$id('FORM_DATEPICKER'),
-							rtfeldman$elm_css$Html$Styled$Events$onBlur(author$project$Form$DatePicker$Internal$Blur)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							rtfeldman$elm_css$Html$Styled$div,
-							_List_fromArray(
-								[
-									author$project$Form$DatePicker$Css$title(
-									_Utils_eq(
-										author$project$Resettable$getValue(state.selectedPosix),
-										elm$core$Maybe$Nothing))
-								]),
-							_List_fromArray(
-								[
-									rtfeldman$elm_css$Html$Styled$text(
-									A2(
-										elm$core$Maybe$withDefault,
-										viewState.defaultLabel,
-										A2(
-											elm$core$Maybe$map,
-											viewState.toLabel(state.timeZone),
-											author$project$Resettable$getValue(state.selectedPosix))))
-								])),
-							A3(
-							author$project$Html$Styled$Bdt$divIf,
-							viewState.isInput,
-							_List_Nil,
-							_List_fromArray(
-								[
-									rtfeldman$elm_css$Html$Styled$fromUnstyled(
-									A2(
-										feathericons$elm_feather$FeatherIcons$toHtml,
-										_List_Nil,
-										A2(feathericons$elm_feather$FeatherIcons$withSize, 18, feathericons$elm_feather$FeatherIcons$calendar)))
-								]))
-						])),
-					A2(author$project$Form$DatePicker$Internal$calendar, state, viewState)
-				]));
-	});
 var author$project$Form$DatePicker$Internal$render = F2(
 	function (state, viewState) {
 		var _n0 = state.isOpen;
@@ -38462,41 +38433,11 @@ var author$project$Form$FloatInput$Css$input = F2(
 var author$project$Form$FloatInput$Internal$Input = function (a) {
 	return {$: 'Input', a: a};
 };
-var rtfeldman$elm_css$Html$Styled$input = rtfeldman$elm_css$Html$Styled$node('input');
 var rtfeldman$elm_css$Html$Styled$Attributes$maxlength = function (n) {
 	return A2(
 		rtfeldman$elm_css$VirtualDom$Styled$attribute,
 		'maxlength',
 		elm$core$String$fromInt(n));
-};
-var rtfeldman$elm_css$Html$Styled$Attributes$placeholder = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('placeholder');
-var rtfeldman$elm_css$Html$Styled$Attributes$value = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('value');
-var rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			rtfeldman$elm_css$VirtualDom$Styled$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var rtfeldman$elm_css$Html$Styled$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var rtfeldman$elm_css$Html$Styled$Events$onInput = function (tagger) {
-	return A2(
-		rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			rtfeldman$elm_css$Html$Styled$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, rtfeldman$elm_css$Html$Styled$Events$targetValue)));
 };
 var author$project$Form$FloatInput$Internal$inputField = F2(
 	function (state, viewState) {
@@ -38769,6 +38710,7 @@ var author$project$Form$MultiSelect$Internal$optionText = F3(
 					author$project$Resettable$getValue(selectedOptions))))));
 		}
 	});
+var rtfeldman$elm_css$Html$Styled$Attributes$title = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('title');
 var author$project$Form$MultiSelect$Internal$closed = F2(
 	function (state, viewState) {
 		return A2(
@@ -39144,9 +39086,12 @@ var author$project$Form$SearchSelect$Internal$closed = F2(
 				]));
 	});
 var author$project$Form$SearchSelect$Internal$Blur = {$: 'Blur'};
-var author$project$Form$SearchSelect$Internal$SelectKey = F2(
+var author$project$Form$SearchSelect$Internal$SelectKey = function (a) {
+	return {$: 'SelectKey', a: a};
+};
+var author$project$Form$SearchSelect$Internal$UpdateSearchInput = F2(
 	function (a, b) {
-		return {$: 'SelectKey', a: a, b: b};
+		return {$: 'UpdateSearchInput', a: a, b: b};
 	});
 var author$project$Form$SearchSelect$Internal$InputMinimum = function (a) {
 	return {$: 'InputMinimum', a: a};
@@ -39297,9 +39242,10 @@ var author$project$Form$SearchSelect$Internal$open = F2(
 									author$project$Resettable$getValue(state.selectedOption)))),
 							rtfeldman$elm_css$Html$Styled$Attributes$tabindex(-1),
 							rtfeldman$elm_css$Html$Styled$Attributes$disabled(viewState.isLocked),
+							rtfeldman$elm_css$Html$Styled$Events$onInput(
+							author$project$Form$SearchSelect$Internal$UpdateSearchInput(viewState.inputMinimum)),
 							rtfeldman$elm_css$Html$Styled$Events$onBlur(author$project$Form$SearchSelect$Internal$Blur),
-							author$project$Form$Helpers$onSelectKey(
-							author$project$Form$SearchSelect$Internal$SelectKey(viewState.inputMinimum)),
+							author$project$Form$Helpers$onSelectKey(author$project$Form$SearchSelect$Internal$SelectKey),
 							rtfeldman$elm_css$Html$Styled$Attributes$value(state.input)
 						]),
 					_List_Nil),
@@ -40167,7 +40113,6 @@ var rtfeldman$elm_css$Css$pseudoElement = function (element) {
 var rtfeldman$elm_css$Css$after = rtfeldman$elm_css$Css$pseudoElement('after');
 var rtfeldman$elm_css$Css$before = rtfeldman$elm_css$Css$pseudoElement('before');
 var rtfeldman$elm_css$Css$block = {display: rtfeldman$elm_css$Css$Structure$Compatible, value: 'block'};
-var rtfeldman$elm_css$Css$inlineBlock = {display: rtfeldman$elm_css$Css$Structure$Compatible, value: 'inline-block'};
 var rtfeldman$elm_css$Css$Transitions$BackgroundColor = {$: 'BackgroundColor'};
 var rtfeldman$elm_css$Css$Transitions$backgroundColor = rtfeldman$elm_css$Css$Transitions$durationTransition(rtfeldman$elm_css$Css$Transitions$BackgroundColor);
 var rtfeldman$elm_css$Css$Transitions$BorderColor = {$: 'BorderColor'};
@@ -42361,4 +42306,4 @@ var author$project$Main$main = elm$browser$Browser$application(
 		view: author$project$View$view
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"TextAreaWrapMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"SetGridButtonGreen":["Basics.Bool"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Basics.Int","Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","option -> String.String","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[],"Backspace":[],"AlphaNum":["String.String"]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.0"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"TextAreaWrapMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"SetGridButtonGreen":["Basics.Bool"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchText":["String.String"],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","option -> String.String","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[],"Backspace":[],"AlphaNum":["String.String"]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

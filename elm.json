@@ -3,7 +3,7 @@
     "name": "bluedogtraining/bdt-elm",
     "summary": "Elm modules commonly used at BDT",
     "license": "BSD-3-Clause",
-    "version": "27.0.7",
+    "version": "27.0.8",
     "exposed-modules": [
         "Resettable",
         "Form.Label",

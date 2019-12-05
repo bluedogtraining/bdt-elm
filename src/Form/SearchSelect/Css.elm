@@ -1,4 +1,4 @@
-module Form.SearchSelect.Css exposing (container, infoMessage, input, optionItem, optionList, title)
+module Form.SearchSelect.Css exposing (container, infoMessage, input, optionItem, optionList, title, carets, displayInline, relativePosition)
 
 import Css exposing (..)
 import Form.Css as Css
@@ -29,6 +29,25 @@ optionList =
         Css.selectOptionList
             ++ [ top <| px 39
                ]
+
+carets : Attribute msg
+carets =
+    css
+        [ position absolute
+        , top <| px 16
+        , right <| px 7.5
+        ]
+
+displayInline : Attribute msg
+displayInline =
+    css
+        [ display inlineBlock ]
+
+
+relativePosition : Attribute msg
+relativePosition =
+    css
+        [ position relative ]
 
 
 optionItem : Bool -> Attribute msg

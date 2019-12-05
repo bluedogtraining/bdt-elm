@@ -104,6 +104,7 @@ view model =
                                     |> Label.render
                                 , model.searchSelect
                                     |> SearchSelect.view .name
+                                    |> SearchSelect.setIsClearable True
                                     |> SearchSelect.render
                                     |> Html.map SearchSelectMsg
                                 , Html.maybeView

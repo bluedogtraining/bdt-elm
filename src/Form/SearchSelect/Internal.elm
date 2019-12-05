@@ -23,6 +23,8 @@ module Form.SearchSelect.Internal exposing
     , update
     )
 
+import FeatherIcons
+import Form.Css as BaseCss
 import Form.Helpers as Form
     exposing
         ( SelectKey(..)
@@ -216,6 +218,12 @@ closed state viewState =
             , value (state.selectedOption |> Resettable.getValue |> Maybe.map viewState.toLabel |> Maybe.withDefault "")
             ]
             []
+        , div
+            [ Css.carets ]
+            [ span
+                [ Css.displayInline ]
+                [ clearButton state viewState ]
+            ]
         ]
 
 
@@ -258,6 +266,13 @@ searchResults state viewState =
 
                         False ->
                             searchResultList state viewState
+
+
+clearButton : State option -> ViewState option -> Html (Msg option)
+clearButton state viewState =
+    Html.divIf (viewState.isClearable && Resettable.getValue state.selectedOption /= Nothing)
+        [ preventDefaultOn "mousedown" <| Decode.succeed ( Clear, True ), BaseCss.clearIcon ]
+        [ FeatherIcons.x |> FeatherIcons.withSize 14 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 
 
 type InfoMessage

@@ -99,6 +99,7 @@ initialViewState toLabel =
 type Msg option
     = Open
     | Blur
+    | UpdateSearchText String
     | Select option
     | Clear
     | SelectKey (option -> Bool) SelectKey
@@ -116,7 +117,7 @@ update msg state =
             ( { state | isOpen = True }, Cmd.none )
 
         Blur ->
-            ( { state | isOpen = False }, Cmd.none )
+            ( { state | isOpen = False, searchText = "" }, Cmd.none )
 
         Select option ->
             ( { state | selectedOptions = toggleOption option state.selectedOptions }, Cmd.none )
@@ -149,6 +150,9 @@ update msg state =
                         False ->
                             ( { state | selectedOptions = toggleOption focusedOption state.selectedOptions }, Cmd.none )
 
+        UpdateSearchText value ->
+             ( { state | searchText = value }, Cmd.none)
+
         NoOp ->
             ( state, Cmd.none )
 
@@ -170,7 +174,6 @@ toggleOption option selectedOptions =
     Resettable.update newOptions selectedOptions
 
 
-
 -- VIEW --
 
 
@@ -187,23 +190,27 @@ render state viewState =
 closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
     div
-        [ Css.container
-        , tabindex -1
+        [ Css.relativePosition
         ]
-        [ div
+        [ input
             [ Css.input viewState.isError viewState.isLocked
+            , Html.maybeAttribute id viewState.id
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
             , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
             , onClick Open |> Html.attributeIf (not viewState.isLocked)
+            , placeholder (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
+            , value state.searchText
             ]
-            [ div
-                [ Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)
-                , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
-                ]
-                [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
-            , clearButton state viewState
-            , Html.divIf (not viewState.isLocked) [] [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
-            ]
+            []
+        , div
+              [ Css.carets ]
+              [ span
+                  [ Css.displayInline ]
+                  [ clearButton state viewState ]
+              , span
+                  [ Css.displayInline, onClick Open |> Html.attributeIf (not viewState.isLocked) ]
+                  [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+              ]
         ]
 
 
@@ -211,15 +218,19 @@ open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
     div
         [ Css.container ]
-        [ div
+        [ input
             [ Css.input viewState.isError viewState.isLocked
+            , Html.maybeAttribute id viewState.id
+            , placeholder (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
+
             , tabindex -1
             , onBlur Blur
             , onSelectKey <| SelectKey viewState.isOptionDisabled
-            , Css.title <| List.isEmpty <| Resettable.getValue state.selectedOptions
-            , title <| optionText viewState.defaultLabel viewState.toLabel state.selectedOptions
+            , onInput UpdateSearchText
+            --, Css.title <| List.isEmpty <| Resettable.getValue state.selectedOptions
+            --, title <| optionText viewState.defaultLabel viewState.toLabel state.selectedOptions
             ]
-            [ text <| optionText viewState.defaultLabel viewState.toLabel state.selectedOptions ]
+            [ text state.searchText ]
         , optionList state viewState
         ]
 
@@ -252,10 +263,38 @@ optionText defaultLabel toLabel selectedOptions =
 
 optionList : State option -> ViewState option -> Html (Msg option)
 optionList state viewState =
+    let
+        filteredOptions =
+            state.options
+                |> Nonempty.toList
+                |> filterOptionsBySearchText state.searchText viewState.toLabel
+                |> filterBySelected (Resettable.getValue state.selectedOptions)
+    in
     div
-        [ Css.optionList ]
-        (List.map (optionItem state viewState) (Nonempty.toList state.options))
+        []
+        [div
+            [ Css.optionList ]
+            (selectedGroup state viewState :: List.map (optionItem state viewState) filteredOptions)
+        ]
 
+
+selectedGroup : State option -> ViewState option -> Html (Msg option)
+selectedGroup state viewState =
+    if not <| List.isEmpty <| Resettable.getValue state.selectedOptions then
+        div
+            []
+            [ div
+                [ Css.optGroupLabel ]
+                [ text "selected"]
+            , div
+                []
+                (List.map (optionItem state viewState) (Resettable.getValue state.selectedOptions))
+            , hr
+                [ Css.groupDivider ]
+                []
+            ]
+    else
+     text ""
 
 optionItem : State option -> ViewState option -> option -> Html (Msg option)
 optionItem state viewState option =
@@ -286,6 +325,14 @@ optionItem state viewState option =
         ]
 
 
+filterOptionsBySearchText : String -> (option -> String) -> List option -> List option
+filterOptionsBySearchText searchText toLabel options =
+    List.filter (toLabel >> String.toLower >> String.contains searchText) options
+
+
+filterBySelected : List option -> List option -> List option
+filterBySelected selectedOptions options =
+    List.filter (\option -> not <| List.member option selectedOptions) options
 
 -- STATE SETTERS --
 

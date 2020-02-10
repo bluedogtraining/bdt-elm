@@ -55,6 +55,7 @@ type alias State option =
     , options : Nonempty option
     , selectedOptions : Resettable (List option)
     , focusedOption : Maybe option
+    , searchText : String
     }
 
 
@@ -64,6 +65,7 @@ init options =
     , options = options
     , selectedOptions = Resettable.init []
     , focusedOption = Nothing
+    , searchText = ""
     }
 
 
@@ -224,7 +226,7 @@ open state viewState =
 
 clearButton : State option -> ViewState option -> Html (Msg option)
 clearButton state viewState =
-    Html.divIf (viewState.isClearable && List.isEmpty (Resettable.getValue state.selectedOptions))
+    Html.divIf (viewState.isClearable && (not <| List.isEmpty (Resettable.getValue state.selectedOptions)))
         [ preventDefaultOn "mousedown" <| Decode.succeed ( Clear, True ), BaseCss.clearIcon ]
         [ FeatherIcons.x |> FeatherIcons.withSize 14 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
 

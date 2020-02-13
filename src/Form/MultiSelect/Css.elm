@@ -1,4 +1,4 @@
-module Form.MultiSelect.Css exposing (..)
+module Form.MultiSelect.Css exposing (caret, checkBox, container, contentEditableContainer, groupDivider, input, noFocus, optGroupLabel, optionItem, optionList, title)
 
 import Css exposing (..)
 import Form.Css as Css
@@ -17,25 +17,20 @@ input : Bool -> Bool -> Attribute msg
 input isError isLocked =
     css <| Css.select isError isLocked
 
-carets : Attribute msg
-carets =
-    css
-        [ position absolute
-        , top <| px 5
-        , right <| px 7.5
-        ]
+
+caret : Attribute msg
+caret =
+    Css.caret
 
 
-displayInline : Attribute msg
-displayInline =
-    css
-        [ display inlineBlock ]
+contentEditableContainer : Attribute msg
+contentEditableContainer =
+    Css.contentEditableContainer
 
 
-relativePosition : Attribute msg
-relativePosition =
-    css
-        [ position relative ]
+noFocus : Attribute msg
+noFocus =
+    Css.noFocus
 
 
 title : Bool -> Attribute msg

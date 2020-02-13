@@ -35,10 +35,12 @@ import Form.Helpers as Form
         , onSelectKey
         )
 import Form.MultiSelect.Css as Css
+import Html.Events
 import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attributes exposing (..)
 import Html.Styled.Bdt as Html
 import Html.Styled.Events exposing (..)
+import Html.Styled.Events.Bdt exposing (onContentEditableInput)
 import Html.Styled.Lazy exposing (..)
 import Json.Decode as Decode exposing (Decoder)
 import List.Nonempty as Nonempty exposing (Nonempty)
@@ -132,10 +134,10 @@ update msg state =
             ( { state | focusedOption = getNextOption (Nonempty.toList state.options) state.focusedOption }, Cmd.none )
 
         SelectKey _ Backspace ->
-            (state, Cmd.none)
+            ( state, Cmd.none )
 
         SelectKey _ (AlphaNum _) ->
-            (state, Cmd.none)
+            ( state, Cmd.none )
 
         SelectKey isOptionDisabled _ ->
             case state.focusedOption of
@@ -151,7 +153,7 @@ update msg state =
                             ( { state | selectedOptions = toggleOption focusedOption state.selectedOptions }, Cmd.none )
 
         UpdateSearchText value ->
-             ( { state | searchText = value }, Cmd.none)
+            ( { state | searchText = value }, Cmd.none )
 
         NoOp ->
             ( state, Cmd.none )
@@ -174,6 +176,7 @@ toggleOption option selectedOptions =
     Resettable.update newOptions selectedOptions
 
 
+
 -- VIEW --
 
 
@@ -190,27 +193,29 @@ render state viewState =
 closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
     div
-        [ Css.relativePosition
+        [ Css.container
+        , tabindex -1
         ]
-        [ input
+        [ div
             [ Css.input viewState.isError viewState.isLocked
-            , Html.maybeAttribute id viewState.id
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
             , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
             , onClick Open |> Html.attributeIf (not viewState.isLocked)
-            , placeholder (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
-            , value state.searchText
             ]
-            []
-        , div
-              [ Css.carets ]
-              [ span
-                  [ Css.displayInline ]
-                  [ clearButton state viewState ]
-              , span
-                  [ Css.displayInline, onClick Open |> Html.attributeIf (not viewState.isLocked) ]
-                  [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
-              ]
+            [ div
+                [ Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)
+                , Css.contentEditableContainer
+                , Css.noFocus
+                , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
+                , contenteditable True
+                ]
+                [ span
+                    []
+                    [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
+                , Html.divIf (not viewState.isLocked) [ Css.caret ] [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                ]
+            , clearButton state viewState
+            ]
         ]
 
 
@@ -218,19 +223,26 @@ open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
     div
         [ Css.container ]
-        [ input
+        [ div
             [ Css.input viewState.isError viewState.isLocked
-            , Html.maybeAttribute id viewState.id
-            , placeholder (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
-
             , tabindex -1
             , onBlur Blur
             , onSelectKey <| SelectKey viewState.isOptionDisabled
-            , onInput UpdateSearchText
-            --, Css.title <| List.isEmpty <| Resettable.getValue state.selectedOptions
-            --, title <| optionText viewState.defaultLabel viewState.toLabel state.selectedOptions
+            , Css.title <| List.isEmpty <| Resettable.getValue state.selectedOptions
+            , title <| optionText viewState.defaultLabel viewState.toLabel state.selectedOptions
             ]
-            [ text state.searchText ]
+            [ div
+                [ Css.title (Resettable.getValue state.selectedOptions |> List.isEmpty)
+                , Css.contentEditableContainer
+                , Css.noFocus
+                , onBlur Blur
+                , title (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions)
+                , contenteditable True
+                , onContentEditableInput UpdateSearchText
+                , placeholder state.searchText
+                ]
+                [ text "" ]
+            ]
         , optionList state viewState
         ]
 
@@ -270,12 +282,23 @@ optionList state viewState =
                 |> filterOptionsBySearchText state.searchText viewState.toLabel
                 |> filterBySelected (Resettable.getValue state.selectedOptions)
     in
-    div
-        []
-        [div
+    if List.isEmpty filteredOptions then
+        div
             [ Css.optionList ]
-            (selectedGroup state viewState :: List.map (optionItem state viewState) filteredOptions)
-        ]
+            [ div
+                [ Css.optionItem False False
+                , tabindex -1
+                ]
+                [ text ("No options containing - \"" ++ state.searchText ++ "\"") ]
+            ]
+
+    else
+        div
+            []
+            [ div
+                [ Css.optionList ]
+                (selectedGroup state viewState :: List.map (optionItem state viewState) filteredOptions)
+            ]
 
 
 selectedGroup : State option -> ViewState option -> Html (Msg option)
@@ -285,7 +308,18 @@ selectedGroup state viewState =
             []
             [ div
                 [ Css.optGroupLabel ]
-                [ text "selected"]
+                [ text
+                    ((String.fromInt <| List.length <| Resettable.getValue state.selectedOptions)
+                        ++ " option"
+                        ++ (if List.length (Resettable.getValue state.selectedOptions) == 1 then
+                                ""
+
+                            else
+                                "s"
+                           )
+                        ++ " selected"
+                    )
+                ]
             , div
                 []
                 (List.map (optionItem state viewState) (Resettable.getValue state.selectedOptions))
@@ -293,8 +327,10 @@ selectedGroup state viewState =
                 [ Css.groupDivider ]
                 []
             ]
+
     else
-     text ""
+        text ""
+
 
 optionItem : State option -> ViewState option -> option -> Html (Msg option)
 optionItem state viewState option =
@@ -333,6 +369,8 @@ filterOptionsBySearchText searchText toLabel options =
 filterBySelected : List option -> List option -> List option
 filterBySelected selectedOptions options =
     List.filter (\option -> not <| List.member option selectedOptions) options
+
+
 
 -- STATE SETTERS --
 

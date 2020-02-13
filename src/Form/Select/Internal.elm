@@ -31,11 +31,13 @@ import Html.Styled as Html exposing (..)
 import Html.Styled.Attributes as Attributes exposing (..)
 import Html.Styled.Bdt as Html
 import Html.Styled.Events exposing (..)
+import Html.Styled.Events.Bdt exposing (onContentEditableInput)
 import Html.Styled.Lazy exposing (..)
 import Json.Decode as Decode exposing (Decoder)
 import List.Extra as List
 import List.Nonempty as Nonempty exposing (Nonempty)
 import Resettable exposing (Resettable)
+
 
 
 -- MODEL --
@@ -111,7 +113,7 @@ update msg state =
             ( { state | isOpen = False, focusedOption = Nothing, searchText = "" }, Cmd.none )
 
         UpdateSearchText value ->
-             ( { state | searchText = value }, Cmd.none)
+            ( { state | searchText = value }, Cmd.none )
 
         Select option ->
             ( updateSelectedOption option state, Cmd.none )
@@ -152,6 +154,7 @@ updateSelectedOption option state =
     }
 
 
+
 -- VIEW --
 
 
@@ -165,56 +168,113 @@ render state viewState =
             open state viewState
 
 
+
+--closed : State option -> ViewState option -> Html (Msg option)
+--closed state viewState =
+--    div
+--        [ Css.relativePosition ]
+--        [ input
+--            [ Css.input viewState.isError viewState.isLocked
+--            , Html.maybeAttribute id viewState.id
+--            , disabled viewState.isLocked
+--            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+--            , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
+--            , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
+--            , onClick Open |> Html.attributeIf (not viewState.isLocked)
+--            , value state.searchText
+--            ]
+--            []
+--        , div
+--            [ Css.carets ]
+--            [ span
+--                [ Css.displayInline ]
+--                [ clearButton state viewState ]
+--            , span
+--                [ Css.displayInline, onClick Open |> Html.attributeIf (not viewState.isLocked) ]
+--                [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+--            ]
+--        ]
+
+
 closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
     div
-        [ Css.relativePosition ]
-        [ input
+        [ Css.container
+        ]
+        [ div
             [ Css.input viewState.isError viewState.isLocked
+            , tabindex -1
+            , onBlur Blur
             , Html.maybeAttribute id viewState.id
-            , disabled viewState.isLocked
-            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
             , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
             , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
             , onClick Open |> Html.attributeIf (not viewState.isLocked)
-            , value state.searchText
             ]
-            [
-            ]
-        , div
-            [ Css.carets ]
-            [ span
-                [ Css.displayInline ]
-                [ clearButton state viewState ]
-            , span
-                [ Css.displayInline, onClick Open |> Html.attributeIf (not viewState.isLocked) ]
-                [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+            [ div
+                [ Css.title (Resettable.getValue state.selectedOption == Nothing)
+                , Css.contentEditableContainer
+                , Css.noFocus
+                , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+                , contenteditable True
+                ]
+                [ span
+                    []
+                    [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+                    ]
+                , Html.divIf (not viewState.isLocked) [ Css.caret ] [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
+                ]
+            , clearButton state viewState
             ]
         ]
+
+
+
+--
+--
+--open : State option -> ViewState option -> Html (Msg option)
+--open state viewState =
+--    div
+--        [ Css.container ]
+--        [ input
+--            [ Css.input viewState.isError viewState.isLocked
+--            , Html.maybeAttribute id viewState.id
+--            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+--            , tabindex -1
+--            , onInput UpdateSearchText
+--            , onSelectKey <| SelectKey viewState.isOptionDisabled viewState.toLabel
+--            , onBlur Blur
+--            ]
+--            [ inputContents state viewState ]
+--        , optionList state viewState
+--        ]
 
 
 open : State option -> ViewState option -> Html (Msg option)
 open state viewState =
     div
         [ Css.container ]
-        [ input
+        [ div
             [ Css.input viewState.isError viewState.isLocked
-            , Html.maybeAttribute id viewState.id
-            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
             , tabindex -1
-            , onInput UpdateSearchText
-            , onSelectKey <| SelectKey viewState.isOptionDisabled viewState.toLabel
             , onBlur Blur
+            , onSelectKey <| SelectKey viewState.isOptionDisabled viewState.toLabel
+            , Css.title <| Resettable.getValue state.selectedOption == Nothing
+            , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
             ]
-            [ inputContents state viewState ]
+            [ div
+                [ Css.title (Resettable.getValue state.selectedOption == Nothing)
+                , Css.contentEditableContainer
+                , Css.noFocus
+                , onBlur Blur
+                , title (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
+                , contenteditable True
+                , onContentEditableInput UpdateSearchText
+                , placeholder state.searchText
+                ]
+                [ text "" ]
+            ]
         , optionList state viewState
         ]
-
-
-inputContents : State option -> ViewState option -> Html (Msg option)
-inputContents state viewState =
-
-        text state.searchText
 
 
 clearButton : State option -> ViewState option -> Html (Msg option)
@@ -231,22 +291,21 @@ optionList state viewState =
             state.options
                 |> Nonempty.toList
                 |> filterOptions state.searchText viewState.toLabel
-
     in
-        if List.isEmpty filteredOptions
-        then
-            div
-                [ Css.optionList ]
-                [ div
-                    [ Css.optionItem False False
-                    , tabindex -1
-                    ]
-                    [ text ("No options containing - \"" ++ state.searchText ++ "\"") ]
+    if List.isEmpty filteredOptions then
+        div
+            [ Css.optionList ]
+            [ div
+                [ Css.optionItem False False
+                , tabindex -1
                 ]
-        else
-            div
-                [ Css.optionList ]
-                (List.map (optionItem state viewState) filteredOptions)
+                [ text ("No options containing - \"" ++ state.searchText ++ "\"") ]
+            ]
+
+    else
+        div
+            [ Css.optionList ]
+            (List.map (optionItem state viewState) filteredOptions)
 
 
 optionItem : State option -> ViewState option -> option -> Html (Msg option)
@@ -254,15 +313,11 @@ optionItem state viewState option =
     div
         [ Css.optionItem (viewState.isOptionDisabled option) (state.focusedOption == Just option)
         , tabindex -1
-        , preventDefaultOn "mousedown" <|
-            Decode.succeed
-                ( if viewState.isOptionDisabled option then
-                    NoOp
+        , if viewState.isOptionDisabled option then
+            preventDefaultOn "mousedown" (Decode.succeed ( NoOp, True ))
 
-                  else
-                    Select option
-                , True
-                )
+          else
+            onMouseDown <| Select option
         ]
         [ text (viewState.toLabel option) ]
 
@@ -354,6 +409,7 @@ getId =
     .id
 
 
+
 -- UTILITIES --
 -- @todo -- Have moved these here since they're distinct from the search select focused option logic
 -- @todo -- Should potentially move these back into the common utils to implement for multi select
@@ -361,32 +417,35 @@ getId =
 
 getPreviousOption : List option -> Maybe option -> String -> (option -> String) -> Maybe option
 getPreviousOption options focusedOption searchText toLabel =
-   getNextOption (List.reverse options) focusedOption searchText toLabel
+    getNextOption (List.reverse options) focusedOption searchText toLabel
 
 
 getNextOption : List option -> Maybe option -> String -> (option -> String) -> Maybe option
 getNextOption options mFocusedOption searchText toLabel =
     let
-        filteredOptions = filterOptions searchText toLabel options
+        filteredOptions =
+            filterOptions searchText toLabel options
 
         mFilteredFocusOption =
             mFocusedOption
                 |> Maybe.andThen
                     (\option ->
-                        if List.member option filteredOptions
-                        then Just option
-                        else Nothing
+                        if List.member option filteredOptions then
+                            Just option
+
+                        else
+                            Nothing
                     )
     in
-        case mFilteredFocusOption of
-            Nothing ->
-                List.head filteredOptions
+    case mFilteredFocusOption of
+        Nothing ->
+            List.head filteredOptions
 
-            Just focusedOption ->
-                filteredOptions
-                    |> List.dropWhile ((/=) focusedOption)
-                    |> List.drop 1
-                    |> List.head
+        Just focusedOption ->
+            filteredOptions
+                |> List.dropWhile ((/=) focusedOption)
+                |> List.drop 1
+                |> List.head
 
 
 filterOptions : String -> (option -> String) -> List option -> List option

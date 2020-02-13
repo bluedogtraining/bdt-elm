@@ -1,4 +1,4 @@
-module Form.Select.Css exposing (container, input, optionItem, optionList, title, carets, displayInline, relativePosition)
+module Form.Select.Css exposing (caret, container, contentEditableContainer, input, noFocus, optionItem, optionList, title)
 
 import Css exposing (..)
 import Form.Css as Css
@@ -13,30 +13,24 @@ container =
         ]
 
 
+caret : Attribute msg
+caret =
+    Css.caret
+
+
 input : Bool -> Bool -> Attribute msg
 input isError isLocked =
     css <| Css.select isError isLocked
 
 
-carets : Attribute msg
-carets =
-    css
-        [ position absolute
-        , top <| px 5
-        , right <| px 7.5
-        ]
+contentEditableContainer : Attribute msg
+contentEditableContainer =
+    Css.contentEditableContainer
 
 
-displayInline : Attribute msg
-displayInline =
-    css
-        [ display inlineBlock ]
-
-
-relativePosition : Attribute msg
-relativePosition =
-    css
-        [ position relative ]
+noFocus : Attribute msg
+noFocus =
+    Css.noFocus
 
 
 title : Bool -> Attribute msg

@@ -1,4 +1,4 @@
-module Form.Css exposing (clearIcon, input, select, selectOptionItem, selectOptionList, title)
+module Form.Css exposing (caret, clearIcon, contentEditableContainer, input, noFocus, select, selectOptionItem, selectOptionList, title)
 
 import Css exposing (..)
 import Css.Bdt as Css
@@ -59,6 +59,7 @@ title isFaded =
         [ "-apple-system", "system-ui", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif" ]
     , whiteSpace noWrap
     , textOverflow ellipsis
+    , alignItems center
     , overflowX hidden
     , maxWidth <| pct 100
     ]
@@ -107,4 +108,30 @@ clearIcon : Attribute msg
 clearIcon =
     css
         [ displayFlex
+        ]
+
+
+noFocus : Attribute msg
+noFocus =
+    css
+        [ focus
+            [ outlineWidth (Css.rem 0)
+            ]
+        ]
+
+
+caret : Attribute msg
+caret =
+    css
+        [ displayFlex
+        , alignItems center
+        ]
+
+
+contentEditableContainer : Attribute msg
+contentEditableContainer =
+    css
+        [ displayFlex
+        , justifyContent spaceBetween
+        , alignItems center
         ]

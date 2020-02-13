@@ -95,6 +95,7 @@ view model =
                                     |> Label.render
                                 , model.multiSelect
                                     |> MultiSelect.view MusicGenre.toLabel
+                                    |> MultiSelect.setIsClearable True
                                     |> MultiSelect.setIsOptionDisabled ((==) MusicGenre.Pop)
                                     |> MultiSelect.render
                                     |> Html.map MultiSelectMsg

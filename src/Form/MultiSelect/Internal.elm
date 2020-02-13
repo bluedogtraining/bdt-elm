@@ -210,7 +210,7 @@ closed state viewState =
                 , contenteditable True
                 ]
                 [ span
-                    []
+                    [ Css.inputLabelSpan ]
                     [ text (optionText viewState.defaultLabel viewState.toLabel state.selectedOptions) ]
                 , Html.divIf (not viewState.isLocked) [ Css.caret ] [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
                 ]
@@ -300,8 +300,11 @@ optionList state viewState =
                                 ""
 
                             else
-                                "other " ++ "options containing - \"" ++ state.searchText ++ "\""
+                                "other "
                            )
+                        ++ "options containing - \""
+                        ++ state.searchText
+                        ++ "\""
                     )
                 ]
             ]

@@ -218,7 +218,7 @@ closed state viewState =
                 , contenteditable True
                 ]
                 [ span
-                    []
+                    [ Css.inputLabelSpan ]
                     [ text (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
                     ]
                 , Html.divIf (not viewState.isLocked) [ Css.caret ] [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
@@ -226,27 +226,6 @@ closed state viewState =
             , clearButton state viewState
             ]
         ]
-
-
-
---
---
---open : State option -> ViewState option -> Html (Msg option)
---open state viewState =
---    div
---        [ Css.container ]
---        [ input
---            [ Css.input viewState.isError viewState.isLocked
---            , Html.maybeAttribute id viewState.id
---            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
---            , tabindex -1
---            , onInput UpdateSearchText
---            , onSelectKey <| SelectKey viewState.isOptionDisabled viewState.toLabel
---            , onBlur Blur
---            ]
---            [ inputContents state viewState ]
---        , optionList state viewState
---        ]
 
 
 open : State option -> ViewState option -> Html (Msg option)

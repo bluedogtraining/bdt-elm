@@ -1,4 +1,4 @@
-module Form.Css exposing (caret, clearIcon, contentEditableContainer, input, noFocus, select, selectOptionItem, selectOptionList, title)
+module Form.Css exposing (caret, clearIcon, contentEditableContainer, input, inputLabelSpan, noFocus, select, selectOptionItem, selectOptionList, title)
 
 import Css exposing (..)
 import Css.Bdt as Css
@@ -39,6 +39,14 @@ input isError isLocked =
         [ outlineWidth (Css.rem 0)
         ]
     ]
+
+
+inputLabelSpan : Attribute msg
+inputLabelSpan =
+    css
+        [ overflow hidden
+        , flexBasis <| pct 96
+        ]
 
 
 select : Bool -> Bool -> List Style

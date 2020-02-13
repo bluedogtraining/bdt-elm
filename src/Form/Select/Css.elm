@@ -1,4 +1,4 @@
-module Form.Select.Css exposing (caret, container, contentEditableContainer, input, noFocus, optionItem, optionList, title)
+module Form.Select.Css exposing (caret, container, contentEditableContainer, input, inputLabelSpan, noFocus, optionItem, optionList, title)
 
 import Css exposing (..)
 import Form.Css as Css
@@ -21,6 +21,11 @@ caret =
 input : Bool -> Bool -> Attribute msg
 input isError isLocked =
     css <| Css.select isError isLocked
+
+
+inputLabelSpan : Attribute msg
+inputLabelSpan =
+    Css.inputLabelSpan
 
 
 contentEditableContainer : Attribute msg

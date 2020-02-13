@@ -37664,6 +37664,14 @@ var $author$project$Form$Select$Css$input = F2(
 		return $rtfeldman$elm_css$Html$Styled$Attributes$css(
 			A2($author$project$Form$Css$select, isError, isLocked));
 	});
+var $author$project$Form$Css$inputLabelSpan = $rtfeldman$elm_css$Html$Styled$Attributes$css(
+	_List_fromArray(
+		[
+			$rtfeldman$elm_css$Css$overflow($rtfeldman$elm_css$Css$hidden),
+			$rtfeldman$elm_css$Css$flexBasis(
+			$rtfeldman$elm_css$Css$pct(96))
+		]));
+var $author$project$Form$Select$Css$inputLabelSpan = $author$project$Form$Css$inputLabelSpan;
 var $author$project$Form$Css$noFocus = $rtfeldman$elm_css$Html$Styled$Attributes$css(
 	_List_fromArray(
 		[
@@ -37741,7 +37749,8 @@ var $author$project$Form$Select$Internal$closed = F2(
 								[
 									A2(
 									$rtfeldman$elm_css$Html$Styled$span,
-									_List_Nil,
+									_List_fromArray(
+										[$author$project$Form$Select$Css$inputLabelSpan]),
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Html$Styled$text(
@@ -38712,6 +38721,7 @@ var $author$project$Form$MultiSelect$Css$input = F2(
 		return $rtfeldman$elm_css$Html$Styled$Attributes$css(
 			A2($author$project$Form$Css$select, isError, isLocked));
 	});
+var $author$project$Form$MultiSelect$Css$inputLabelSpan = $author$project$Form$Css$inputLabelSpan;
 var $author$project$Form$MultiSelect$Css$noFocus = $author$project$Form$Css$noFocus;
 var $author$project$Form$MultiSelect$Internal$optionText = F3(
 	function (defaultLabel, toLabel, selectedOptions) {
@@ -38784,7 +38794,8 @@ var $author$project$Form$MultiSelect$Internal$closed = F2(
 								[
 									A2(
 									$rtfeldman$elm_css$Html$Styled$span,
-									_List_Nil,
+									_List_fromArray(
+										[$author$project$Form$MultiSelect$Css$inputLabelSpan]),
 									_List_fromArray(
 										[
 											$rtfeldman$elm_css$Html$Styled$text(
@@ -39078,7 +39089,7 @@ var $author$project$Form$MultiSelect$Internal$optionList = F2(
 					_List_fromArray(
 						[
 							$rtfeldman$elm_css$Html$Styled$text(
-							'No ' + ((!$elm$core$List$length(selectedOptions)) ? '' : ('other ' + ('options containing - \"' + (state.searchText + '\"')))))
+							'No ' + (((!$elm$core$List$length(selectedOptions)) ? '' : 'other ') + ('options containing - \"' + (state.searchText + '\"'))))
 						]))
 				])) : A2(
 			$rtfeldman$elm_css$Html$Styled$div,

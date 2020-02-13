@@ -1,4 +1,4 @@
-module Form.MultiSelect.Css exposing (caret, checkBox, container, contentEditableContainer, groupDivider, input, noFocus, optGroupLabel, optionItem, optionList, title)
+module Form.MultiSelect.Css exposing (caret, checkBox, container, contentEditableContainer, groupDivider, input, inputLabelSpan, noFocus, optGroupLabel, optionItem, optionList, title)
 
 import Css exposing (..)
 import Form.Css as Css
@@ -16,6 +16,11 @@ container =
 input : Bool -> Bool -> Attribute msg
 input isError isLocked =
     css <| Css.select isError isLocked
+
+
+inputLabelSpan : Attribute msg
+inputLabelSpan =
+    Css.inputLabelSpan
 
 
 caret : Attribute msg

@@ -281,15 +281,29 @@ optionList state viewState =
                 |> Nonempty.toList
                 |> filterOptionsBySearchText state.searchText viewState.toLabel
                 |> filterBySelected (Resettable.getValue state.selectedOptions)
+
+        selectedOptions =
+            Resettable.getValue state.selectedOptions
+                |> filterOptionsBySearchText state.searchText viewState.toLabel
     in
     if List.isEmpty filteredOptions then
         div
             [ Css.optionList ]
-            [ div
+            [ selectedGroup state viewState
+            , div
                 [ Css.optionItem False False
                 , tabindex -1
                 ]
-                [ text ("No options containing - \"" ++ state.searchText ++ "\"") ]
+                [ text
+                    ("No "
+                        ++ (if List.length selectedOptions == 0 then
+                                ""
+
+                            else
+                                "other " ++ "options containing - \"" ++ state.searchText ++ "\""
+                           )
+                    )
+                ]
             ]
 
     else

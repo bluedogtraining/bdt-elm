@@ -168,34 +168,6 @@ render state viewState =
             open state viewState
 
 
-
---closed : State option -> ViewState option -> Html (Msg option)
---closed state viewState =
---    div
---        [ Css.relativePosition ]
---        [ input
---            [ Css.input viewState.isError viewState.isLocked
---            , Html.maybeAttribute id viewState.id
---            , disabled viewState.isLocked
---            , placeholder (Maybe.map viewState.toLabel (Resettable.getValue state.selectedOption) |> Maybe.withDefault viewState.defaultLabel)
---            , tabindex 0 |> Html.attributeIf (not viewState.isLocked)
---            , Form.onElementFocus Open |> Html.attributeIf (not viewState.isLocked)
---            , onClick Open |> Html.attributeIf (not viewState.isLocked)
---            , value state.searchText
---            ]
---            []
---        , div
---            [ Css.carets ]
---            [ span
---                [ Css.displayInline ]
---                [ clearButton state viewState ]
---            , span
---                [ Css.displayInline, onClick Open |> Html.attributeIf (not viewState.isLocked) ]
---                [ FeatherIcons.chevronDown |> FeatherIcons.withSize 18 |> FeatherIcons.toHtml [] |> Html.fromUnstyled ]
---            ]
---        ]
-
-
 closed : State option -> ViewState option -> Html (Msg option)
 closed state viewState =
     div

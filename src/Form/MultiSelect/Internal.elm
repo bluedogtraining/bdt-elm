@@ -289,7 +289,7 @@ optionList state viewState =
     if List.isEmpty filteredOptions then
         div
             [ Css.optionList ]
-            [ selectedGroup state viewState
+            [ selectedGroup selectedOptions state viewState
             , div
                 [ Css.optionItem False False
                 , tabindex -1
@@ -314,12 +314,12 @@ optionList state viewState =
             []
             [ div
                 [ Css.optionList ]
-                (selectedGroup state viewState :: List.map (optionItem state viewState) filteredOptions)
+                (selectedGroup selectedOptions state viewState :: List.map (optionItem state viewState) filteredOptions)
             ]
 
 
-selectedGroup : State option -> ViewState option -> Html (Msg option)
-selectedGroup state viewState =
+selectedGroup : List option -> State option -> ViewState option -> Html (Msg option)
+selectedGroup selectedOptions state viewState =
     if not <| List.isEmpty <| Resettable.getValue state.selectedOptions then
         div
             []
@@ -339,7 +339,7 @@ selectedGroup state viewState =
                 ]
             , div
                 []
-                (List.map (optionItem state viewState) (Resettable.getValue state.selectedOptions))
+                (List.map (optionItem state viewState) selectedOptions)
             , hr
                 [ Css.groupDivider ]
                 []

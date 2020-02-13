@@ -39023,8 +39023,8 @@ var $author$project$Form$MultiSelect$Css$optGroupLabel = $rtfeldman$elm_css$Html
 			A3($rtfeldman$elm_css$Css$rgb, 111, 111, 111)),
 			$rtfeldman$elm_css$Css$textTransform($rtfeldman$elm_css$Css$uppercase)
 		]));
-var $author$project$Form$MultiSelect$Internal$selectedGroup = F2(
-	function (state, viewState) {
+var $author$project$Form$MultiSelect$Internal$selectedGroup = F3(
+	function (selectedOptions, state, viewState) {
 		return (!$elm$core$List$isEmpty(
 			$author$project$Resettable$getValue(state.selectedOptions))) ? A2(
 			$rtfeldman$elm_css$Html$Styled$div,
@@ -39049,7 +39049,7 @@ var $author$project$Form$MultiSelect$Internal$selectedGroup = F2(
 					A2(
 						$elm$core$List$map,
 						A2($author$project$Form$MultiSelect$Internal$optionItem, state, viewState),
-						$author$project$Resettable$getValue(state.selectedOptions))),
+						selectedOptions)),
 					A2(
 					$rtfeldman$elm_css$Html$Styled$hr,
 					_List_fromArray(
@@ -39078,7 +39078,7 @@ var $author$project$Form$MultiSelect$Internal$optionList = F2(
 				[$author$project$Form$MultiSelect$Css$optionList]),
 			_List_fromArray(
 				[
-					A2($author$project$Form$MultiSelect$Internal$selectedGroup, state, viewState),
+					A3($author$project$Form$MultiSelect$Internal$selectedGroup, selectedOptions, state, viewState),
 					A2(
 					$rtfeldman$elm_css$Html$Styled$div,
 					_List_fromArray(
@@ -39102,7 +39102,7 @@ var $author$project$Form$MultiSelect$Internal$optionList = F2(
 						[$author$project$Form$MultiSelect$Css$optionList]),
 					A2(
 						$elm$core$List$cons,
-						A2($author$project$Form$MultiSelect$Internal$selectedGroup, state, viewState),
+						A3($author$project$Form$MultiSelect$Internal$selectedGroup, selectedOptions, state, viewState),
 						A2(
 							$elm$core$List$map,
 							A2($author$project$Form$MultiSelect$Internal$optionItem, state, viewState),

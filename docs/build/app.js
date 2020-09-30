@@ -96,12 +96,6 @@ function _Utils_eq(x, y)
 
 function _Utils_eqHelp(x, y, depth, stack)
 {
-	if (depth > 100)
-	{
-		stack.push(_Utils_Tuple2(x,y));
-		return true;
-	}
-
 	if (x === y)
 	{
 		return true;
@@ -111,6 +105,12 @@ function _Utils_eqHelp(x, y, depth, stack)
 	{
 		typeof x === 'function' && _Debug_crash(5);
 		return false;
+	}
+
+	if (depth > 100)
+	{
+		stack.push(_Utils_Tuple2(x,y));
+		return true;
 	}
 
 	/**/
@@ -171,7 +171,7 @@ function _Utils_cmp(x, y, ord)
 	//*/
 
 	/**_UNUSED/
-	if (!x.$)
+	if (typeof x.$ === 'undefined')
 	//*/
 	/**/
 	if (x.$[0] === '#')
@@ -633,6 +633,16 @@ function _Debug_toAnsiString(ansi, value)
 		return _Debug_ctorColor(ansi, tag) + output;
 	}
 
+	if (typeof DataView === 'function' && value instanceof DataView)
+	{
+		return _Debug_stringColor(ansi, '<' + value.byteLength + ' bytes>');
+	}
+
+	if (typeof File !== 'undefined' && value instanceof File)
+	{
+		return _Debug_internalColor(ansi, '<' + value.name + '>');
+	}
+
 	if (typeof value === 'object')
 	{
 		var output = [];
@@ -698,9 +708,13 @@ function _Debug_fadeColor(ansi, string)
 
 function _Debug_internalColor(ansi, string)
 {
-	return ansi ? '\x1b[94m' + string + '\x1b[0m' : string;
+	return ansi ? '\x1b[36m' + string + '\x1b[0m' : string;
 }
 
+function _Debug_toHexDigit(n)
+{
+	return String.fromCharCode(n < 10 ? 48 + n : 55 + n);
+}
 
 
 // CRASH
@@ -847,7 +861,7 @@ var _String_cons = F2(function(chr, str)
 function _String_uncons(string)
 {
 	var word = string.charCodeAt(0);
-	return word
+	return !isNaN(word)
 		? $elm$core$Maybe$Just(
 			0xD800 <= word && word <= 0xDBFF
 				? _Utils_Tuple2(_Utils_chr(string[0] + string[1]), string.slice(2))
@@ -1171,9 +1185,7 @@ function _Char_fromCode(code)
 			? String.fromCharCode(code)
 			:
 		(code -= 0x10000,
-			String.fromCharCode(Math.floor(code / 0x400) + 0xD800)
-			+
-			String.fromCharCode(code % 0x400 + 0xDC00)
+			String.fromCharCode(Math.floor(code / 0x400) + 0xD800, code % 0x400 + 0xDC00)
 		)
 	);
 }
@@ -1226,21 +1238,56 @@ function _Json_fail(msg)
 	};
 }
 
-var _Json_decodeInt = { $: 2 };
-var _Json_decodeBool = { $: 3 };
-var _Json_decodeFloat = { $: 4 };
-var _Json_decodeValue = { $: 5 };
-var _Json_decodeString = { $: 6 };
+function _Json_decodePrim(decoder)
+{
+	return { $: 2, b: decoder };
+}
 
-function _Json_decodeList(decoder) { return { $: 7, b: decoder }; }
-function _Json_decodeArray(decoder) { return { $: 8, b: decoder }; }
+var _Json_decodeInt = _Json_decodePrim(function(value) {
+	return (typeof value !== 'number')
+		? _Json_expecting('an INT', value)
+		:
+	(-2147483647 < value && value < 2147483647 && (value | 0) === value)
+		? $elm$core$Result$Ok(value)
+		:
+	(isFinite(value) && !(value % 1))
+		? $elm$core$Result$Ok(value)
+		: _Json_expecting('an INT', value);
+});
 
-function _Json_decodeNull(value) { return { $: 9, c: value }; }
+var _Json_decodeBool = _Json_decodePrim(function(value) {
+	return (typeof value === 'boolean')
+		? $elm$core$Result$Ok(value)
+		: _Json_expecting('a BOOL', value);
+});
+
+var _Json_decodeFloat = _Json_decodePrim(function(value) {
+	return (typeof value === 'number')
+		? $elm$core$Result$Ok(value)
+		: _Json_expecting('a FLOAT', value);
+});
+
+var _Json_decodeValue = _Json_decodePrim(function(value) {
+	return $elm$core$Result$Ok(_Json_wrap(value));
+});
+
+var _Json_decodeString = _Json_decodePrim(function(value) {
+	return (typeof value === 'string')
+		? $elm$core$Result$Ok(value)
+		: (value instanceof String)
+			? $elm$core$Result$Ok(value + '')
+			: _Json_expecting('a STRING', value);
+});
+
+function _Json_decodeList(decoder) { return { $: 3, b: decoder }; }
+function _Json_decodeArray(decoder) { return { $: 4, b: decoder }; }
+
+function _Json_decodeNull(value) { return { $: 5, c: value }; }
 
 var _Json_decodeField = F2(function(field, decoder)
 {
 	return {
-		$: 10,
+		$: 6,
 		d: field,
 		b: decoder
 	};
@@ -1249,7 +1296,7 @@ var _Json_decodeField = F2(function(field, decoder)
 var _Json_decodeIndex = F2(function(index, decoder)
 {
 	return {
-		$: 11,
+		$: 7,
 		e: index,
 		b: decoder
 	};
@@ -1258,7 +1305,7 @@ var _Json_decodeIndex = F2(function(index, decoder)
 function _Json_decodeKeyValuePairs(decoder)
 {
 	return {
-		$: 12,
+		$: 8,
 		b: decoder
 	};
 }
@@ -1266,7 +1313,7 @@ function _Json_decodeKeyValuePairs(decoder)
 function _Json_mapMany(f, decoders)
 {
 	return {
-		$: 13,
+		$: 9,
 		f: f,
 		g: decoders
 	};
@@ -1275,7 +1322,7 @@ function _Json_mapMany(f, decoders)
 var _Json_andThen = F2(function(callback, decoder)
 {
 	return {
-		$: 14,
+		$: 10,
 		b: decoder,
 		h: callback
 	};
@@ -1284,7 +1331,7 @@ var _Json_andThen = F2(function(callback, decoder)
 function _Json_oneOf(decoders)
 {
 	return {
-		$: 15,
+		$: 11,
 		g: decoders
 	};
 }
@@ -1357,61 +1404,29 @@ function _Json_runHelp(decoder, value)
 {
 	switch (decoder.$)
 	{
-		case 3:
-			return (typeof value === 'boolean')
-				? $elm$core$Result$Ok(value)
-				: _Json_expecting('a BOOL', value);
-
 		case 2:
-			if (typeof value !== 'number') {
-				return _Json_expecting('an INT', value);
-			}
+			return decoder.b(value);
 
-			if (-2147483647 < value && value < 2147483647 && (value | 0) === value) {
-				return $elm$core$Result$Ok(value);
-			}
-
-			if (isFinite(value) && !(value % 1)) {
-				return $elm$core$Result$Ok(value);
-			}
-
-			return _Json_expecting('an INT', value);
-
-		case 4:
-			return (typeof value === 'number')
-				? $elm$core$Result$Ok(value)
-				: _Json_expecting('a FLOAT', value);
-
-		case 6:
-			return (typeof value === 'string')
-				? $elm$core$Result$Ok(value)
-				: (value instanceof String)
-					? $elm$core$Result$Ok(value + '')
-					: _Json_expecting('a STRING', value);
-
-		case 9:
+		case 5:
 			return (value === null)
 				? $elm$core$Result$Ok(decoder.c)
 				: _Json_expecting('null', value);
 
-		case 5:
-			return $elm$core$Result$Ok(_Json_wrap(value));
-
-		case 7:
-			if (!Array.isArray(value))
+		case 3:
+			if (!_Json_isArray(value))
 			{
 				return _Json_expecting('a LIST', value);
 			}
 			return _Json_runArrayDecoder(decoder.b, value, _List_fromArray);
 
-		case 8:
-			if (!Array.isArray(value))
+		case 4:
+			if (!_Json_isArray(value))
 			{
 				return _Json_expecting('an ARRAY', value);
 			}
 			return _Json_runArrayDecoder(decoder.b, value, _Json_toElmArray);
 
-		case 10:
+		case 6:
 			var field = decoder.d;
 			if (typeof value !== 'object' || value === null || !(field in value))
 			{
@@ -1420,9 +1435,9 @@ function _Json_runHelp(decoder, value)
 			var result = _Json_runHelp(decoder.b, value[field]);
 			return ($elm$core$Result$isOk(result)) ? result : $elm$core$Result$Err(A2($elm$json$Json$Decode$Field, field, result.a));
 
-		case 11:
+		case 7:
 			var index = decoder.e;
-			if (!Array.isArray(value))
+			if (!_Json_isArray(value))
 			{
 				return _Json_expecting('an ARRAY', value);
 			}
@@ -1433,8 +1448,8 @@ function _Json_runHelp(decoder, value)
 			var result = _Json_runHelp(decoder.b, value[index]);
 			return ($elm$core$Result$isOk(result)) ? result : $elm$core$Result$Err(A2($elm$json$Json$Decode$Index, index, result.a));
 
-		case 12:
-			if (typeof value !== 'object' || value === null || Array.isArray(value))
+		case 8:
+			if (typeof value !== 'object' || value === null || _Json_isArray(value))
 			{
 				return _Json_expecting('an OBJECT', value);
 			}
@@ -1455,7 +1470,7 @@ function _Json_runHelp(decoder, value)
 			}
 			return $elm$core$Result$Ok($elm$core$List$reverse(keyValuePairs));
 
-		case 13:
+		case 9:
 			var answer = decoder.f;
 			var decoders = decoder.g;
 			for (var i = 0; i < decoders.length; i++)
@@ -1469,13 +1484,13 @@ function _Json_runHelp(decoder, value)
 			}
 			return $elm$core$Result$Ok(answer);
 
-		case 14:
+		case 10:
 			var result = _Json_runHelp(decoder.b, value);
 			return (!$elm$core$Result$isOk(result))
 				? result
 				: _Json_runHelp(decoder.h(result.a), value);
 
-		case 15:
+		case 11:
 			var errors = _List_Nil;
 			for (var temp = decoder.g; temp.b; temp = temp.b) // WHILE_CONS
 			{
@@ -1512,6 +1527,11 @@ function _Json_runArrayDecoder(decoder, value, toElmValue)
 	return $elm$core$Result$Ok(toElmValue(array));
 }
 
+function _Json_isArray(value)
+{
+	return Array.isArray(value) || (typeof FileList !== 'undefined' && value instanceof FileList);
+}
+
 function _Json_toElmArray(array)
 {
 	return A2($elm$core$Array$initialize, array.length, function(i) { return array[i]; });
@@ -1543,34 +1563,30 @@ function _Json_equality(x, y)
 		case 1:
 			return x.a === y.a;
 
-		case 3:
 		case 2:
-		case 4:
-		case 6:
-		case 5:
-			return true;
+			return x.b === y.b;
 
-		case 9:
+		case 5:
 			return x.c === y.c;
 
-		case 7:
+		case 3:
+		case 4:
 		case 8:
-		case 12:
 			return _Json_equality(x.b, y.b);
 
-		case 10:
+		case 6:
 			return x.d === y.d && _Json_equality(x.b, y.b);
 
-		case 11:
+		case 7:
 			return x.e === y.e && _Json_equality(x.b, y.b);
 
-		case 13:
+		case 9:
 			return x.f === y.f && _Json_listEquality(x.g, y.g);
 
-		case 14:
+		case 10:
 			return x.h === y.h && _Json_equality(x.b, y.b);
 
-		case 15:
+		case 11:
 			return _Json_listEquality(x.g, y.g);
 	}
 }
@@ -1858,19 +1874,19 @@ function _Platform_initialize(flagDecoder, args, init, update, subscriptions, st
 	var result = A2(_Json_run, flagDecoder, _Json_wrap(args ? args['flags'] : undefined));
 	$elm$core$Result$isOk(result) || _Debug_crash(2 /**/, _Json_errorToString(result.a) /**/);
 	var managers = {};
-	result = init(result.a);
-	var model = result.a;
+	var initPair = init(result.a);
+	var model = initPair.a;
 	var stepper = stepperBuilder(sendToApp, model);
 	var ports = _Platform_setupEffects(managers, sendToApp);
 
 	function sendToApp(msg, viewMetadata)
 	{
-		result = A2(update, msg, model);
-		stepper(model = result.a, viewMetadata);
-		_Platform_dispatchEffects(managers, result.b, subscriptions(model));
+		var pair = A2(update, msg, model);
+		stepper(model = pair.a, viewMetadata);
+		_Platform_enqueueEffects(managers, pair.b, subscriptions(model));
 	}
 
-	_Platform_dispatchEffects(managers, result.b, subscriptions(model));
+	_Platform_enqueueEffects(managers, initPair.b, subscriptions(model));
 
 	return ports ? { ports: ports } : {};
 }
@@ -2028,6 +2044,51 @@ var _Platform_map = F2(function(tagger, bag)
 
 
 // PIPE BAGS INTO EFFECT MANAGERS
+//
+// Effects must be queued!
+//
+// Say your init contains a synchronous command, like Time.now or Time.here
+//
+//   - This will produce a batch of effects (FX_1)
+//   - The synchronous task triggers the subsequent `update` call
+//   - This will produce a batch of effects (FX_2)
+//
+// If we just start dispatching FX_2, subscriptions from FX_2 can be processed
+// before subscriptions from FX_1. No good! Earlier versions of this code had
+// this problem, leading to these reports:
+//
+//   https://github.com/elm/core/issues/980
+//   https://github.com/elm/core/pull/981
+//   https://github.com/elm/compiler/issues/1776
+//
+// The queue is necessary to avoid ordering issues for synchronous commands.
+
+
+// Why use true/false here? Why not just check the length of the queue?
+// The goal is to detect "are we currently dispatching effects?" If we
+// are, we need to bail and let the ongoing while loop handle things.
+//
+// Now say the queue has 1 element. When we dequeue the final element,
+// the queue will be empty, but we are still actively dispatching effects.
+// So you could get queue jumping in a really tricky category of cases.
+//
+var _Platform_effectsQueue = [];
+var _Platform_effectsActive = false;
+
+
+function _Platform_enqueueEffects(managers, cmdBag, subBag)
+{
+	_Platform_effectsQueue.push({ p: managers, q: cmdBag, r: subBag });
+
+	if (_Platform_effectsActive) return;
+
+	_Platform_effectsActive = true;
+	for (var fx; fx = _Platform_effectsQueue.shift(); )
+	{
+		_Platform_dispatchEffects(fx.p, fx.q, fx.r);
+	}
+	_Platform_effectsActive = false;
+}
 
 
 function _Platform_dispatchEffects(managers, cmdBag, subBag)
@@ -2065,8 +2126,8 @@ function _Platform_gatherEffects(isCmd, bag, effectsDict, taggers)
 
 		case 3:
 			_Platform_gatherEffects(isCmd, bag.o, effectsDict, {
-				p: bag.n,
-				q: taggers
+				s: bag.n,
+				t: taggers
 			});
 			return;
 	}
@@ -2077,9 +2138,9 @@ function _Platform_toEffect(isCmd, home, taggers, value)
 {
 	function applyTaggers(x)
 	{
-		for (var temp = taggers; temp; temp = temp.q)
+		for (var temp = taggers; temp; temp = temp.t)
 		{
-			x = temp.p(x);
+			x = temp.s(x);
 		}
 		return x;
 	}
@@ -2126,7 +2187,7 @@ function _Platform_outgoingPort(name, converter)
 	_Platform_checkPortName(name);
 	_Platform_effectManagers[name] = {
 		e: _Platform_outgoingPortMap,
-		r: converter,
+		u: converter,
 		a: _Platform_setupOutgoingPort
 	};
 	return _Platform_leaf(name);
@@ -2139,7 +2200,7 @@ var _Platform_outgoingPortMap = F2(function(tagger, value) { return value; });
 function _Platform_setupOutgoingPort(name)
 {
 	var subs = [];
-	var converter = _Platform_effectManagers[name].r;
+	var converter = _Platform_effectManagers[name].u;
 
 	// CREATE MANAGER
 
@@ -2196,7 +2257,7 @@ function _Platform_incomingPort(name, converter)
 	_Platform_checkPortName(name);
 	_Platform_effectManagers[name] = {
 		f: _Platform_incomingPortMap,
-		r: converter,
+		u: converter,
 		a: _Platform_setupIncomingPort
 	};
 	return _Platform_leaf(name);
@@ -2215,7 +2276,7 @@ var _Platform_incomingPortMap = F2(function(tagger, finalTagger)
 function _Platform_setupIncomingPort(name, sendToApp)
 {
 	var subs = _List_Nil;
-	var converter = _Platform_effectManagers[name].r;
+	var converter = _Platform_effectManagers[name].u;
 
 	// CREATE MANAGER
 
@@ -2778,7 +2839,7 @@ function _VirtualDom_applyFacts(domNode, eventNode, facts)
 		key === 'a4'
 			? _VirtualDom_applyAttrsNS(domNode, value)
 			:
-		(key !== 'value' || key !== 'checked' || domNode[key] !== value) && (domNode[key] = value);
+		((key !== 'value' && key !== 'checked') || domNode[key] !== value) && (domNode[key] = value);
 	}
 }
 
@@ -2807,7 +2868,7 @@ function _VirtualDom_applyAttrs(domNode, attrs)
 	for (var key in attrs)
 	{
 		var value = attrs[key];
-		value
+		typeof value !== 'undefined'
 			? domNode.setAttribute(key, value)
 			: domNode.removeAttribute(key);
 	}
@@ -2826,7 +2887,7 @@ function _VirtualDom_applyAttrsNS(domNode, nsAttrs)
 		var namespace = pair.f;
 		var value = pair.o;
 
-		value
+		typeof value !== 'undefined'
 			? domNode.setAttributeNS(namespace, key, value)
 			: domNode.removeAttributeNS(namespace, key);
 	}
@@ -3289,6 +3350,9 @@ function _VirtualDom_diffKeyedKids(xParent, yParent, patches, rootIndex)
 		var xNode = x.b;
 		var yNode = y.b;
 
+		var newMatch = undefined;
+		var oldMatch = undefined;
+
 		// check if keys match
 
 		if (xKey === yKey)
@@ -3311,14 +3375,14 @@ function _VirtualDom_diffKeyedKids(xParent, yParent, patches, rootIndex)
 		{
 			var xNextKey = xNext.a;
 			var xNextNode = xNext.b;
-			var oldMatch = yKey === xNextKey;
+			oldMatch = yKey === xNextKey;
 		}
 
 		if (yNext)
 		{
 			var yNextKey = yNext.a;
 			var yNextNode = yNext.b;
-			var newMatch = xKey === yNextKey;
+			newMatch = xKey === yNextKey;
 		}
 
 
@@ -3852,6 +3916,7 @@ function _VirtualDom_dekey(keyedNode)
 }
 
 
+
 var _Bitwise_and = F2(function(a, b)
 {
 	return a & b;
@@ -3941,12 +4006,13 @@ var _Debugger_element = F4(function(impl, flagDecoder, debugMetadata, args)
 
 				// view corner
 
+				var cornerNext = $elm$browser$Debugger$Main$cornerView(model);
+				var cornerPatches = _VirtualDom_diff(cornerCurr, cornerNext);
+				cornerNode = _VirtualDom_applyPatches(cornerNode, cornerCurr, cornerPatches, sendToApp);
+				cornerCurr = cornerNext;
+
 				if (!model.popout.b)
 				{
-					var cornerNext = $elm$browser$Debugger$Main$cornerView(model);
-					var cornerPatches = _VirtualDom_diff(cornerCurr, cornerNext);
-					cornerNode = _VirtualDom_applyPatches(cornerNode, cornerCurr, cornerPatches, sendToApp);
-					cornerCurr = cornerNext;
 					currPopout = undefined;
 					return;
 				}
@@ -4049,7 +4115,11 @@ function _Debugger_open(popout)
 
 function _Debugger_openWindow(popout)
 {
-	var w = 900, h = 360, x = screen.width - w, y = screen.height - h;
+	var w = $elm$browser$Debugger$Main$initialWindowWidth,
+		h = $elm$browser$Debugger$Main$initialWindowHeight,
+	 	x = screen.width - w,
+		y = screen.height - h;
+
 	var debuggerWindow = window.open('', '', 'width=' + w + ',height=' + h + ',left=' + x + ',top=' + y);
 	var doc = debuggerWindow.document;
 	doc.title = 'Elm Debugger';
@@ -4057,8 +4127,8 @@ function _Debugger_openWindow(popout)
 	// handle arrow keys
 	doc.addEventListener('keydown', function(event) {
 		event.metaKey && event.which === 82 && window.location.reload();
-		event.which === 38 && (popout.a($elm$browser$Debugger$Main$Up), event.preventDefault());
-		event.which === 40 && (popout.a($elm$browser$Debugger$Main$Down), event.preventDefault());
+		event.key === 'ArrowUp'   && (popout.a($elm$browser$Debugger$Main$Up  ), event.preventDefault());
+		event.key === 'ArrowDown' && (popout.a($elm$browser$Debugger$Main$Down), event.preventDefault());
 	});
 
 	// handle window close
@@ -4068,6 +4138,7 @@ function _Debugger_openWindow(popout)
 		popout.a($elm$browser$Debugger$Main$NoOp);
 		window.removeEventListener('unload', close);
 	});
+
 	function close() {
 		popout.b = undefined;
 		popout.a($elm$browser$Debugger$Main$NoOp);
@@ -4090,9 +4161,9 @@ function _Debugger_scroll(popout)
 		if (popout.b)
 		{
 			var msgs = popout.b.getElementById('elm-debugger-sidebar');
-			if (msgs)
+			if (msgs && msgs.scrollTop !== 0)
 			{
-				msgs.scrollTop = msgs.scrollHeight;
+				msgs.scrollTop = 0;
 			}
 		}
 		callback(_Scheduler_succeed(_Utils_Tuple0));
@@ -4100,15 +4171,33 @@ function _Debugger_scroll(popout)
 }
 
 
+var _Debugger_scrollTo = F2(function(id, popout)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		if (popout.b)
+		{
+			var msg = popout.b.getElementById(id);
+			if (msg)
+			{
+				msg.scrollIntoView(false);
+			}
+		}
+		callback(_Scheduler_succeed(_Utils_Tuple0));
+	});
+});
+
+
 
 // UPLOAD
 
 
-function _Debugger_upload()
+function _Debugger_upload(popout)
 {
 	return _Scheduler_binding(function(callback)
 	{
-		var element = document.createElement('input');
+		var doc = popout.b || document;
+		var element = doc.createElement('input');
 		element.setAttribute('type', 'file');
 		element.setAttribute('accept', 'text/json');
 		element.style.display = 'none';
@@ -4120,9 +4209,9 @@ function _Debugger_upload()
 				callback(_Scheduler_succeed(e.target.result));
 			};
 			fileReader.readAsText(event.target.files[0]);
-			document.body.removeChild(element);
+			doc.body.removeChild(element);
 		});
-		document.body.appendChild(element);
+		doc.body.appendChild(element);
 		element.click();
 	});
 }
@@ -4412,7 +4501,6 @@ var _Debugger_allEvents = _Debugger_mostEvents.concat('wheel', 'scroll');
 
 
 
-
 // ELEMENT
 
 
@@ -4488,10 +4576,15 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 // ANIMATION
 
 
+var _Browser_cancelAnimationFrame =
+	typeof cancelAnimationFrame !== 'undefined'
+		? cancelAnimationFrame
+		: function(id) { clearTimeout(id); };
+
 var _Browser_requestAnimationFrame =
 	typeof requestAnimationFrame !== 'undefined'
 		? requestAnimationFrame
-		: function(callback) { setTimeout(callback, 1000 / 60); };
+		: function(callback) { return setTimeout(callback, 1000 / 60); };
 
 
 function _Browser_makeAnimator(model, draw)
@@ -4541,7 +4634,7 @@ function _Browser_application(impl)
 
 			return F2(function(domNode, event)
 			{
-				if (!event.ctrlKey && !event.metaKey && !event.shiftKey && event.button < 1 && !domNode.target && !domNode.download)
+				if (!event.ctrlKey && !event.metaKey && !event.shiftKey && event.button < 1 && !domNode.target && !domNode.hasAttribute('download'))
 				{
 					event.preventDefault();
 					var href = domNode.href;
@@ -4653,12 +4746,12 @@ function _Browser_rAF()
 {
 	return _Scheduler_binding(function(callback)
 	{
-		var id = requestAnimationFrame(function() {
+		var id = _Browser_requestAnimationFrame(function() {
 			callback(_Scheduler_succeed(Date.now()));
 		});
 
 		return function() {
-			cancelAnimationFrame(id);
+			_Browser_cancelAnimationFrame(id);
 		};
 	});
 }
@@ -4913,63 +5006,37 @@ function _Time_getZoneName()
 
 // SEND REQUEST
 
-var _Http_toTask = F2(function(request, maybeProgress)
+var _Http_toTask = F3(function(router, toTask, request)
 {
 	return _Scheduler_binding(function(callback)
 	{
-		var xhr = new XMLHttpRequest();
-
-		_Http_configureProgress(xhr, maybeProgress);
-
-		xhr.addEventListener('error', function() {
-			callback(_Scheduler_fail($elm$http$Http$NetworkError));
-		});
-		xhr.addEventListener('timeout', function() {
-			callback(_Scheduler_fail($elm$http$Http$Timeout));
-		});
-		xhr.addEventListener('load', function() {
-			callback(_Http_handleResponse(xhr, request.expect.a));
-		});
-
-		try
-		{
-			xhr.open(request.method, request.url, true);
+		function done(response) {
+			callback(toTask(request.expect.a(response)));
 		}
-		catch (e)
-		{
-			return callback(_Scheduler_fail($elm$http$Http$BadUrl(request.url)));
+
+		var xhr = new XMLHttpRequest();
+		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
+		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.expect.b, xhr)); });
+		$elm$core$Maybe$isJust(request.tracker) && _Http_track(router, xhr, request.tracker.a);
+
+		try {
+			xhr.open(request.method, request.url, true);
+		} catch (e) {
+			return done($elm$http$Http$BadUrl_(request.url));
 		}
 
 		_Http_configureRequest(xhr, request);
 
-		var body = request.body;
-		xhr.send($elm$http$Http$Internal$isStringBody(body)
-			? (xhr.setRequestHeader('Content-Type', body.a), body.b)
-			: body.a
-		);
+		request.body.a && xhr.setRequestHeader('Content-Type', request.body.a);
+		xhr.send(request.body.b);
 
-		return function() { xhr.abort(); };
+		return function() { xhr.c = true; xhr.abort(); };
 	});
 });
 
-function _Http_configureProgress(xhr, maybeProgress)
-{
-	if (!$elm$core$Maybe$isJust(maybeProgress))
-	{
-		return;
-	}
 
-	xhr.addEventListener('progress', function(event) {
-		if (!event.lengthComputable)
-		{
-			return;
-		}
-		_Scheduler_rawSpawn(maybeProgress.a({
-			bytes: event.loaded,
-			bytesExpected: event.total
-		}));
-	});
-}
+// CONFIGURE
 
 function _Http_configureRequest(xhr, request)
 {
@@ -4977,63 +5044,52 @@ function _Http_configureRequest(xhr, request)
 	{
 		xhr.setRequestHeader(headers.a.a, headers.a.b);
 	}
-
-	xhr.responseType = request.expect.b;
-	xhr.withCredentials = request.withCredentials;
-
-	$elm$core$Maybe$isJust(request.timeout) && (xhr.timeout = request.timeout.a);
+	xhr.timeout = request.timeout.a || 0;
+	xhr.responseType = request.expect.d;
+	xhr.withCredentials = request.allowCookiesFromOtherDomains;
 }
 
 
 // RESPONSES
 
-function _Http_handleResponse(xhr, responseToResult)
+function _Http_toResponse(toBody, xhr)
 {
-	var response = _Http_toResponse(xhr);
-
-	if (xhr.status < 200 || 300 <= xhr.status)
-	{
-		response.body = xhr.responseText;
-		return _Scheduler_fail($elm$http$Http$BadStatus(response));
-	}
-
-	var result = responseToResult(response);
-
-	if ($elm$core$Result$isOk(result))
-	{
-		return _Scheduler_succeed(result.a);
-	}
-	else
-	{
-		response.body = xhr.responseText;
-		return _Scheduler_fail(A2($elm$http$Http$BadPayload, result.a, response));
-	}
+	return A2(
+		200 <= xhr.status && xhr.status < 300 ? $elm$http$Http$GoodStatus_ : $elm$http$Http$BadStatus_,
+		_Http_toMetadata(xhr),
+		toBody(xhr.response)
+	);
 }
 
-function _Http_toResponse(xhr)
+
+// METADATA
+
+function _Http_toMetadata(xhr)
 {
 	return {
 		url: xhr.responseURL,
-		status: { code: xhr.status, message: xhr.statusText },
-		headers: _Http_parseHeaders(xhr.getAllResponseHeaders()),
-		body: xhr.response
+		statusCode: xhr.status,
+		statusText: xhr.statusText,
+		headers: _Http_parseHeaders(xhr.getAllResponseHeaders())
 	};
 }
 
+
+// HEADERS
+
 function _Http_parseHeaders(rawHeaders)
 {
-	var headers = $elm$core$Dict$empty;
-
 	if (!rawHeaders)
 	{
-		return headers;
+		return $elm$core$Dict$empty;
 	}
 
-	var headerPairs = rawHeaders.split('\u000d\u000a');
+	var headers = $elm$core$Dict$empty;
+	var headerPairs = rawHeaders.split('\r\n');
 	for (var i = headerPairs.length; i--; )
 	{
 		var headerPair = headerPairs[i];
-		var index = headerPair.indexOf('\u003a\u0020');
+		var index = headerPair.indexOf(': ');
 		if (index > 0)
 		{
 			var key = headerPair.substring(0, index);
@@ -5047,50 +5103,80 @@ function _Http_parseHeaders(rawHeaders)
 			}, headers);
 		}
 	}
-
 	return headers;
 }
 
 
-// EXPECTORS
+// EXPECT
 
-function _Http_expectStringResponse(responseToResult)
+var _Http_expect = F3(function(type, toBody, toValue)
 {
 	return {
 		$: 0,
-		b: 'text',
-		a: responseToResult
+		d: type,
+		b: toBody,
+		a: toValue
 	};
-}
+});
 
 var _Http_mapExpect = F2(function(func, expect)
 {
 	return {
 		$: 0,
+		d: expect.d,
 		b: expect.b,
-		a: function(response) {
-			var convertedResponse = expect.a(response);
-			return A2($elm$core$Result$map, func, convertedResponse);
-		}
+		a: function(x) { return func(expect.a(x)); }
 	};
 });
 
-
-// BODY
-
-function _Http_multipart(parts)
+function _Http_toDataView(arrayBuffer)
 {
+	return new DataView(arrayBuffer);
+}
 
 
+// BODY and PARTS
+
+var _Http_emptyBody = { $: 0 };
+var _Http_pair = F2(function(a, b) { return { $: 0, a: a, b: b }; });
+
+function _Http_toFormData(parts)
+{
 	for (var formData = new FormData(); parts.b; parts = parts.b) // WHILE_CONS
 	{
 		var part = parts.a;
 		formData.append(part.a, part.b);
 	}
-
-	return $elm$http$Http$Internal$FormDataBody(formData);
+	return formData;
 }
-var $author$project$Msg$Navigate = function (a) {
+
+var _Http_bytesToBlob = F2(function(mime, bytes)
+{
+	return new Blob([bytes], { type: mime });
+});
+
+
+// PROGRESS
+
+function _Http_track(router, xhr, tracker)
+{
+	// TODO check out lengthComputable on loadstart event
+
+	xhr.upload.addEventListener('progress', function(event) {
+		if (xhr.c) { return; }
+		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Sending({
+			sent: event.loaded,
+			size: event.total
+		}))));
+	});
+	xhr.addEventListener('progress', function(event) {
+		if (xhr.c) { return; }
+		_Scheduler_rawSpawn(A2($elm$core$Platform$sendToSelf, router, _Utils_Tuple2(tracker, $elm$http$Http$Receiving({
+			received: event.loaded,
+			size: event.lengthComputable ? $elm$core$Maybe$Just(event.total) : $elm$core$Maybe$Nothing
+		}))));
+	});
+}var $author$project$Msg$Navigate = function (a) {
 	return {$: 'Navigate', a: a};
 };
 var $author$project$Msg$UrlChange = function (a) {
@@ -5648,6 +5734,15 @@ var $elm$browser$Debugger$Overlay$Choose = F2(
 		return {$: 'Choose', a: a, b: b};
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5665,6 +5760,7 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -5672,14 +5768,6 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$browser$Debugger$Overlay$goodNews1 = '\nThe good news is that having values like this in your message type is not\nso great in the long run. You are better off using simpler data, like\n';
 var $elm$browser$Debugger$Overlay$goodNews2 = '\nfunction can pattern match on that data and call whatever functions, JSON\ndecoders, etc. you need. This makes the code much more explicit and easy to\nfollow for other readers (or you in a few months!)\n';
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
 var $elm$html$Html$Attributes$href = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
@@ -5864,11 +5952,11 @@ var $elm$browser$Debugger$Overlay$viewBadMetadata = function (_v0) {
 					$elm$html$Html$a,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$href('https://guide.elm-lang.org/types/union_types.html')
+							$elm$html$Html$Attributes$href('https://guide.elm-lang.org/types/custom_types.html')
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('union types')
+							$elm$html$Html$text('custom types')
 						])),
 					$elm$html$Html$text(', in your messages. From there, your '),
 					$elm$browser$Debugger$Overlay$viewCode('update'),
@@ -5876,7 +5964,6 @@ var $elm$browser$Debugger$Overlay$viewBadMetadata = function (_v0) {
 				]))
 		]);
 };
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$browser$Debugger$Overlay$Cancel = {$: 'Cancel'};
@@ -5935,8 +6022,8 @@ var $elm$browser$Debugger$Overlay$viewMessage = F4(
 					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 					A2($elm$html$Html$Attributes$style, 'top', '0'),
 					A2($elm$html$Html$Attributes$style, 'left', '0'),
-					A2($elm$html$Html$Attributes$style, 'width', '100%'),
-					A2($elm$html$Html$Attributes$style, 'height', '100%'),
+					A2($elm$html$Html$Attributes$style, 'width', '100vw'),
+					A2($elm$html$Html$Attributes$style, 'height', '100vh'),
 					A2($elm$html$Html$Attributes$style, 'color', 'white'),
 					A2($elm$html$Html$Attributes$style, 'pointer-events', 'none'),
 					A2($elm$html$Html$Attributes$style, 'font-family', '\'Trebuchet MS\', \'Lucida Grande\', \'Bitstream Vera Sans\', \'Helvetica Neue\', sans-serif'),
@@ -5950,7 +6037,7 @@ var $elm$browser$Debugger$Overlay$viewMessage = F4(
 						[
 							A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 							A2($elm$html$Html$Attributes$style, 'width', '600px'),
-							A2($elm$html$Html$Attributes$style, 'height', '100%'),
+							A2($elm$html$Html$Attributes$style, 'height', '100vh'),
 							A2($elm$html$Html$Attributes$style, 'padding-left', 'calc(50% - 300px)'),
 							A2($elm$html$Html$Attributes$style, 'padding-right', 'calc(50% - 300px)'),
 							A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(200, 200, 200, 0.7)'),
@@ -5980,7 +6067,7 @@ var $elm$browser$Debugger$Overlay$viewMessage = F4(
 									$elm$html$Html$Attributes$id('elm-debugger-details'),
 									A2($elm$html$Html$Attributes$style, 'padding', ' 8px 20px'),
 									A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
-									A2($elm$html$Html$Attributes$style, 'max-height', 'calc(100% - 156px)'),
+									A2($elm$html$Html$Attributes$style, 'max-height', 'calc(100vh - 156px)'),
 									A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(61, 61, 61)')
 								]),
 							details),
@@ -5991,77 +6078,110 @@ var $elm$browser$Debugger$Overlay$viewMessage = F4(
 						]))
 				]));
 	});
-var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$browser$Debugger$Overlay$button = F2(
-	function (msg, label) {
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
 		return A2(
-			$elm$html$Html$span,
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
+	return _VirtualDom_nodeNS(
+		_VirtualDom_noScript(tag));
+};
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$browser$Debugger$Overlay$viewShape = F4(
+	function (x, y, angle, coordinates) {
+		return A4(
+			$elm$virtual_dom$VirtualDom$nodeNS,
+			'http://www.w3.org/2000/svg',
+			'polygon',
 			_List_fromArray(
 				[
-					$elm$html$Html$Events$onClick(msg),
-					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer')
+					A2($elm$virtual_dom$VirtualDom$attribute, 'points', coordinates),
+					A2(
+					$elm$virtual_dom$VirtualDom$attribute,
+					'transform',
+					'translate(' + ($elm$core$String$fromFloat(x) + (' ' + ($elm$core$String$fromFloat(y) + (') rotate(' + ($elm$core$String$fromFloat(-angle) + ')'))))))
+				]),
+			_List_Nil);
+	});
+var $elm$browser$Debugger$Overlay$elmLogo = A4(
+	$elm$virtual_dom$VirtualDom$nodeNS,
+	'http://www.w3.org/2000/svg',
+	'svg',
+	_List_fromArray(
+		[
+			A2($elm$virtual_dom$VirtualDom$attribute, 'viewBox', '-300 -300 600 600'),
+			A2($elm$virtual_dom$VirtualDom$attribute, 'xmlns', 'http://www.w3.org/2000/svg'),
+			A2($elm$virtual_dom$VirtualDom$attribute, 'fill', 'currentColor'),
+			A2($elm$virtual_dom$VirtualDom$attribute, 'width', '24px'),
+			A2($elm$virtual_dom$VirtualDom$attribute, 'height', '24px')
+		]),
+	_List_fromArray(
+		[
+			A4(
+			$elm$virtual_dom$VirtualDom$nodeNS,
+			'http://www.w3.org/2000/svg',
+			'g',
+			_List_fromArray(
+				[
+					A2($elm$virtual_dom$VirtualDom$attribute, 'transform', 'scale(1 -1)')
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text(label)
-				]));
-	});
-var $elm$browser$Debugger$Overlay$viewImportExport = F3(
-	function (props, importMsg, exportMsg) {
-		return A2(
-			$elm$html$Html$div,
-			props,
-			_List_fromArray(
-				[
-					A2($elm$browser$Debugger$Overlay$button, importMsg, 'Import'),
-					$elm$html$Html$text(' / '),
-					A2($elm$browser$Debugger$Overlay$button, exportMsg, 'Export')
-				]));
-	});
+					A4($elm$browser$Debugger$Overlay$viewShape, 0, -210, 0, '-280,-90 0,190 280,-90'),
+					A4($elm$browser$Debugger$Overlay$viewShape, -210, 0, 90, '-280,-90 0,190 280,-90'),
+					A4($elm$browser$Debugger$Overlay$viewShape, 207, 207, 45, '-198,-66 0,132 198,-66'),
+					A4($elm$browser$Debugger$Overlay$viewShape, 150, 0, 0, '-130,0 0,-130 130,0 0,130'),
+					A4($elm$browser$Debugger$Overlay$viewShape, -89, 239, 0, '-191,61 69,61 191,-61 -69,-61'),
+					A4($elm$browser$Debugger$Overlay$viewShape, 0, 106, 180, '-130,-44 0,86  130,-44'),
+					A4($elm$browser$Debugger$Overlay$viewShape, 256, -150, 270, '-130,-44 0,86  130,-44')
+				]))
+		]));
+var $elm$core$String$length = _String_length;
 var $elm$browser$Debugger$Overlay$viewMiniControls = F2(
 	function (config, numMsgs) {
+		var string = $elm$core$String$fromInt(numMsgs);
+		var width = $elm$core$String$fromInt(
+			2 + $elm$core$String$length(string));
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
 					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-					A2($elm$html$Html$Attributes$style, 'bottom', '0'),
-					A2($elm$html$Html$Attributes$style, 'right', '6px'),
-					A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-					A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(61, 61, 61)'),
+					A2($elm$html$Html$Attributes$style, 'bottom', '2em'),
+					A2($elm$html$Html$Attributes$style, 'right', '2em'),
+					A2($elm$html$Html$Attributes$style, 'width', 'calc(42px + ' + (width + 'ch)')),
+					A2($elm$html$Html$Attributes$style, 'height', '36px'),
+					A2($elm$html$Html$Attributes$style, 'background-color', '#1293D8'),
 					A2($elm$html$Html$Attributes$style, 'color', 'white'),
 					A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
 					A2($elm$html$Html$Attributes$style, 'pointer-events', 'auto'),
-					A2($elm$html$Html$Attributes$style, 'z-index', '2147483647')
+					A2($elm$html$Html$Attributes$style, 'z-index', '2147483647'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+					$elm$html$Html$Events$onClick(config.open)
 				]),
 			_List_fromArray(
 				[
+					$elm$browser$Debugger$Overlay$elmLogo,
 					A2(
-					$elm$html$Html$div,
+					$elm$html$Html$span,
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$style, 'padding', '6px'),
-							A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-							A2($elm$html$Html$Attributes$style, 'min-width', '24ch'),
-							$elm$html$Html$Events$onClick(config.open)
+							A2($elm$html$Html$Attributes$style, 'padding-left', 'calc(1ch + 6px)'),
+							A2($elm$html$Html$Attributes$style, 'padding-right', '1ch')
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(
-							'Explore History (' + ($elm$core$String$fromInt(numMsgs) + ')'))
-						])),
-					A3(
-					$elm$browser$Debugger$Overlay$viewImportExport,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'padding', '4px 0'),
-							A2($elm$html$Html$Attributes$style, 'font-size', '0.8em'),
-							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-							A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(50, 50, 50)')
-						]),
-					config.importHistory,
-					config.exportHistory)
+							$elm$html$Html$text(string)
+						]))
 				]));
 	});
 var $elm$browser$Debugger$Overlay$explanationBad = '\nThe messages in this history do not match the messages handled by your\nprogram. I noticed changes in the following types:\n';
@@ -6260,10 +6380,16 @@ var $elm$browser$Debugger$Overlay$view = F5(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							A2($elm$html$Html$Attributes$style, 'width', '100%'),
-							A2($elm$html$Html$Attributes$style, 'height', '100%'),
+							$elm$html$Html$Attributes$id('elm-debugger-overlay'),
+							A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+							A2($elm$html$Html$Attributes$style, 'top', '0'),
+							A2($elm$html$Html$Attributes$style, 'left', '0'),
+							A2($elm$html$Html$Attributes$style, 'width', '100vw'),
+							A2($elm$html$Html$Attributes$style, 'height', '100vh'),
 							A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-							A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+							A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+							A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+							A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
 							A2($elm$html$Html$Attributes$style, 'pointer-events', 'auto'),
 							A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(200, 200, 200, 0.7)'),
 							A2($elm$html$Html$Attributes$style, 'color', 'white'),
@@ -6274,15 +6400,10 @@ var $elm$browser$Debugger$Overlay$view = F5(
 					_List_fromArray(
 						[
 							A2(
-							$elm$html$Html$div,
+							$elm$html$Html$span,
 							_List_fromArray(
 								[
-									A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-									A2($elm$html$Html$Attributes$style, 'top', 'calc(50% - 40px)'),
-									A2($elm$html$Html$Attributes$style, 'font-size', '80px'),
-									A2($elm$html$Html$Attributes$style, 'line-height', '80px'),
-									A2($elm$html$Html$Attributes$style, 'height', '80px'),
-									A2($elm$html$Html$Attributes$style, 'width', '100%')
+									A2($elm$html$Html$Attributes$style, 'font-size', '80px')
 								]),
 							_List_fromArray(
 								[
@@ -6351,6 +6472,8 @@ var $elm$browser$Debugger$Main$getCurrentModel = function (state) {
 var $elm$browser$Debugger$Main$getUserModel = function (model) {
 	return $elm$browser$Debugger$Main$getCurrentModel(model.state);
 };
+var $elm$browser$Debugger$Main$initialWindowHeight = 420;
+var $elm$browser$Debugger$Main$initialWindowWidth = 900;
 var $elm$core$Dict$Black = {$: 'Black'};
 var $elm$core$Dict$RBNode_elm_builtin = F5(
 	function (a, b, c, d, e) {
@@ -6460,14 +6583,177 @@ var $elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
-var $elm$browser$Debugger$Main$ExpandoMsg = function (a) {
-	return {$: 'ExpandoMsg', a: a};
+var $elm$browser$Debugger$Main$cachedHistory = function (model) {
+	var _v0 = model.state;
+	if (_v0.$ === 'Running') {
+		return model.history;
+	} else {
+		var history = _v0.e;
+		return history;
+	}
 };
 var $elm$virtual_dom$VirtualDom$node = function (tag) {
 	return _VirtualDom_node(
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
+var $elm$browser$Debugger$Main$DragEnd = {$: 'DragEnd'};
+var $elm$browser$Debugger$Main$getDragStatus = function (layout) {
+	if (layout.$ === 'Horizontal') {
+		var status = layout.a;
+		return status;
+	} else {
+		var status = layout.a;
+		return status;
+	}
+};
+var $elm$browser$Debugger$Main$Drag = function (a) {
+	return {$: 'Drag', a: a};
+};
+var $elm$browser$Debugger$Main$DragInfo = F5(
+	function (x, y, down, width, height) {
+		return {down: down, height: height, width: width, x: x, y: y};
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$float = _Json_decodeFloat;
+var $elm$browser$Debugger$Main$decodeDimension = function (field) {
+	return A2(
+		$elm$json$Json$Decode$at,
+		_List_fromArray(
+			['currentTarget', 'ownerDocument', 'defaultView', field]),
+		$elm$json$Json$Decode$float);
+};
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$json$Json$Decode$map5 = _Json_map5;
+var $elm$browser$Debugger$Main$onMouseMove = A2(
+	$elm$html$Html$Events$on,
+	'mousemove',
+	A2(
+		$elm$json$Json$Decode$map,
+		$elm$browser$Debugger$Main$Drag,
+		A6(
+			$elm$json$Json$Decode$map5,
+			$elm$browser$Debugger$Main$DragInfo,
+			A2($elm$json$Json$Decode$field, 'pageX', $elm$json$Json$Decode$float),
+			A2($elm$json$Json$Decode$field, 'pageY', $elm$json$Json$Decode$float),
+			A2(
+				$elm$json$Json$Decode$field,
+				'buttons',
+				A2(
+					$elm$json$Json$Decode$map,
+					function (v) {
+						return v === 1;
+					},
+					$elm$json$Json$Decode$int)),
+			$elm$browser$Debugger$Main$decodeDimension('innerWidth'),
+			$elm$browser$Debugger$Main$decodeDimension('innerHeight'))));
+var $elm$html$Html$Events$onMouseUp = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mouseup',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$browser$Debugger$Main$toDragListeners = function (layout) {
+	var _v0 = $elm$browser$Debugger$Main$getDragStatus(layout);
+	if (_v0.$ === 'Static') {
+		return _List_Nil;
+	} else {
+		return _List_fromArray(
+			[
+				$elm$browser$Debugger$Main$onMouseMove,
+				$elm$html$Html$Events$onMouseUp($elm$browser$Debugger$Main$DragEnd)
+			]);
+	}
+};
+var $elm$browser$Debugger$Main$toFlexDirection = function (layout) {
+	if (layout.$ === 'Horizontal') {
+		return 'row';
+	} else {
+		return 'column-reverse';
+	}
+};
+var $elm$browser$Debugger$Main$DragStart = {$: 'DragStart'};
+var $elm$html$Html$Events$onMouseDown = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'mousedown',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$browser$Debugger$Main$toPercent = function (fraction) {
+	return $elm$core$String$fromFloat(100 * fraction) + '%';
+};
+var $elm$browser$Debugger$Main$viewDragZone = function (layout) {
+	if (layout.$ === 'Horizontal') {
+		var x = layout.b;
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+					A2($elm$html$Html$Attributes$style, 'top', '0'),
+					A2(
+					$elm$html$Html$Attributes$style,
+					'left',
+					$elm$browser$Debugger$Main$toPercent(x)),
+					A2($elm$html$Html$Attributes$style, 'margin-left', '-5px'),
+					A2($elm$html$Html$Attributes$style, 'width', '10px'),
+					A2($elm$html$Html$Attributes$style, 'height', '100%'),
+					A2($elm$html$Html$Attributes$style, 'cursor', 'col-resize'),
+					$elm$html$Html$Events$onMouseDown($elm$browser$Debugger$Main$DragStart)
+				]),
+			_List_Nil);
+	} else {
+		var y = layout.c;
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+					A2(
+					$elm$html$Html$Attributes$style,
+					'top',
+					$elm$browser$Debugger$Main$toPercent(y)),
+					A2($elm$html$Html$Attributes$style, 'left', '0'),
+					A2($elm$html$Html$Attributes$style, 'margin-top', '-5px'),
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '10px'),
+					A2($elm$html$Html$Attributes$style, 'cursor', 'row-resize'),
+					$elm$html$Html$Events$onMouseDown($elm$browser$Debugger$Main$DragStart)
+				]),
+			_List_Nil);
+	}
+};
+var $elm$browser$Debugger$Main$TweakExpandoModel = function (a) {
+	return {$: 'TweakExpandoModel', a: a};
+};
+var $elm$browser$Debugger$Main$TweakExpandoMsg = function (a) {
+	return {$: 'TweakExpandoMsg', a: a};
+};
+var $elm$browser$Debugger$Main$toExpandoPercents = function (layout) {
+	if (layout.$ === 'Horizontal') {
+		var x = layout.b;
+		return _Utils_Tuple2(
+			$elm$browser$Debugger$Main$toPercent(1 - x),
+			'100%');
+	} else {
+		var y = layout.c;
+		return _Utils_Tuple2(
+			'100%',
+			$elm$browser$Debugger$Main$toPercent(y));
+	}
+};
+var $elm$browser$Debugger$Main$toMouseBlocker = function (layout) {
+	var _v0 = $elm$browser$Debugger$Main$getDragStatus(layout);
+	if (_v0.$ === 'Static') {
+		return 'auto';
+	} else {
+		return 'none';
+	}
+};
 var $elm$browser$Debugger$Expando$Field = F2(
 	function (a, b) {
 		return {$: 'Field', a: a, b: b};
@@ -6569,10 +6855,6 @@ var $elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3($elm$core$String$slice, 0, n, string);
 	});
-var $elm$core$String$length = _String_length;
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $elm$core$String$right = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(
@@ -7207,81 +7489,86 @@ var $elm$browser$Debugger$Expando$viewSequenceOpen = function (values) {
 		_List_Nil,
 		A2($elm$core$List$indexedMap, $elm$browser$Debugger$Expando$viewConstructorEntry, values));
 };
-var $elm$browser$Debugger$Main$Jump = function (a) {
-	return {$: 'Jump', a: a};
-};
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$browser$Debugger$Main$resumeStyle = '\n\n.elm-debugger-resume {\n  width: 100%;\n  height: 30px;\n  line-height: 30px;\n  cursor: pointer;\n}\n\n.elm-debugger-resume:hover {\n  background-color: rgb(41, 41, 41);\n}\n\n';
-var $elm$browser$Debugger$Main$viewResumeButton = function (maybeIndex) {
-	if (maybeIndex.$ === 'Nothing') {
-		return $elm$html$Html$text('');
-	} else {
+var $elm$browser$Debugger$Main$viewExpando = F3(
+	function (expandoMsg, expandoModel, layout) {
+		var block = $elm$browser$Debugger$Main$toMouseBlocker(layout);
+		var _v0 = $elm$browser$Debugger$Main$toExpandoPercents(layout);
+		var w = _v0.a;
+		var h = _v0.b;
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Events$onClick($elm$browser$Debugger$Main$Resume),
-					$elm$html$Html$Attributes$class('elm-debugger-resume')
+					A2($elm$html$Html$Attributes$style, 'display', 'block'),
+					A2($elm$html$Html$Attributes$style, 'width', 'calc(' + (w + ' - 4em)')),
+					A2($elm$html$Html$Attributes$style, 'height', 'calc(' + (h + ' - 4em)')),
+					A2($elm$html$Html$Attributes$style, 'padding', '2em'),
+					A2($elm$html$Html$Attributes$style, 'margin', '0'),
+					A2($elm$html$Html$Attributes$style, 'overflow', 'auto'),
+					A2($elm$html$Html$Attributes$style, 'pointer-events', block),
+					A2($elm$html$Html$Attributes$style, '-webkit-user-select', block),
+					A2($elm$html$Html$Attributes$style, '-moz-user-select', block),
+					A2($elm$html$Html$Attributes$style, '-ms-user-select', block),
+					A2($elm$html$Html$Attributes$style, 'user-select', block)
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text('Resume'),
-					A3(
-					$elm$html$Html$node,
-					'style',
-					_List_Nil,
+					A2(
+					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$text($elm$browser$Debugger$Main$resumeStyle)
-						]))
-				]));
-	}
-};
-var $elm$browser$Debugger$Main$viewTextButton = F2(
-	function (msg, label) {
-		return A2(
-			$elm$html$Html$span,
-			_List_fromArray(
-				[
-					$elm$html$Html$Events$onClick(msg),
-					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text(label)
+							A2($elm$html$Html$Attributes$style, 'color', '#ccc'),
+							A2($elm$html$Html$Attributes$style, 'padding', '0 0 1em 0')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('-- MESSAGE')
+						])),
+					A2(
+					$elm$html$Html$map,
+					$elm$browser$Debugger$Main$TweakExpandoMsg,
+					A2($elm$browser$Debugger$Expando$view, $elm$core$Maybe$Nothing, expandoMsg)),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'color', '#ccc'),
+							A2($elm$html$Html$Attributes$style, 'padding', '1em 0')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('-- MODEL')
+						])),
+					A2(
+					$elm$html$Html$map,
+					$elm$browser$Debugger$Main$TweakExpandoModel,
+					A2($elm$browser$Debugger$Expando$view, $elm$core$Maybe$Nothing, expandoModel))
 				]));
 	});
-var $elm$browser$Debugger$Main$playButton = function (maybeIndex) {
-	return A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-				A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(50, 50, 50)')
-			]),
-		_List_fromArray(
-			[
-				$elm$browser$Debugger$Main$viewResumeButton(maybeIndex),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'width', '100%'),
-						A2($elm$html$Html$Attributes$style, 'height', '24px'),
-						A2($elm$html$Html$Attributes$style, 'line-height', '24px'),
-						A2($elm$html$Html$Attributes$style, 'font-size', '12px')
-					]),
-				_List_fromArray(
-					[
-						A2($elm$browser$Debugger$Main$viewTextButton, $elm$browser$Debugger$Main$Import, 'Import'),
-						$elm$html$Html$text(' / '),
-						A2($elm$browser$Debugger$Main$viewTextButton, $elm$browser$Debugger$Main$Export, 'Export')
-					]))
-			]));
+var $elm$browser$Debugger$Main$Jump = function (a) {
+	return {$: 'Jump', a: a};
+};
+var $elm$virtual_dom$VirtualDom$lazy = _VirtualDom_lazy;
+var $elm$html$Html$Lazy$lazy = $elm$virtual_dom$VirtualDom$lazy;
+var $elm$browser$Debugger$Main$toHistoryPercents = function (layout) {
+	if (layout.$ === 'Horizontal') {
+		var x = layout.b;
+		return _Utils_Tuple2(
+			$elm$browser$Debugger$Main$toPercent(x),
+			'100%');
+	} else {
+		var y = layout.c;
+		return _Utils_Tuple2(
+			'100%',
+			$elm$browser$Debugger$Main$toPercent(1 - y));
+	}
 };
 var $elm$virtual_dom$VirtualDom$lazy3 = _VirtualDom_lazy3;
 var $elm$html$Html$Lazy$lazy3 = $elm$virtual_dom$VirtualDom$lazy3;
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$browser$Debugger$History$idForMessageIndex = function (index) {
+	return 'msg-' + $elm$core$String$fromInt(index);
+};
 var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('title');
 var $elm$browser$Debugger$History$viewMessage = F3(
 	function (currentIndex, index, msg) {
@@ -7291,6 +7578,8 @@ var $elm$browser$Debugger$History$viewMessage = F3(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
+					$elm$html$Html$Attributes$id(
+					$elm$browser$Debugger$History$idForMessageIndex(index)),
 					$elm$html$Html$Attributes$class(className),
 					$elm$html$Html$Events$onClick(index)
 				]),
@@ -7325,23 +7614,92 @@ var $elm$browser$Debugger$History$consMsg = F3(
 		var index = _v0.a;
 		var rest = _v0.b;
 		return _Utils_Tuple2(
-			index - 1,
+			index + 1,
 			A2(
 				$elm$core$List$cons,
-				A4($elm$html$Html$Lazy$lazy3, $elm$browser$Debugger$History$viewMessage, currentIndex, index, msg),
+				_Utils_Tuple2(
+					$elm$core$String$fromInt(index),
+					A4($elm$html$Html$Lazy$lazy3, $elm$browser$Debugger$History$viewMessage, currentIndex, index, msg)),
 				rest));
 	});
-var $elm$virtual_dom$VirtualDom$lazy2 = _VirtualDom_lazy2;
-var $elm$html$Html$Lazy$lazy2 = $elm$virtual_dom$VirtualDom$lazy2;
+var $elm$core$Array$length = function (_v0) {
+	var len = _v0.a;
+	return len;
+};
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
+	return _VirtualDom_keyedNode(
+		_VirtualDom_noScript(tag));
+};
+var $elm$html$Html$Keyed$node = $elm$virtual_dom$VirtualDom$keyedNode;
+var $elm$browser$Debugger$History$maxSnapshotSize = 31;
+var $elm$browser$Debugger$History$showMoreButton = function (numMessages) {
+	var nextIndex = (numMessages - 1) - ($elm$browser$Debugger$History$maxSnapshotSize * 2);
+	var labelText = 'View more messages';
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('elm-debugger-entry'),
+				$elm$html$Html$Events$onClick(nextIndex)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$span,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$title(labelText),
+						$elm$html$Html$Attributes$class('elm-debugger-entry-content')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(labelText)
+					])),
+				A2(
+				$elm$html$Html$span,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('elm-debugger-entry-index')
+					]),
+				_List_Nil)
+			]));
+};
 var $elm$browser$Debugger$History$styles = A3(
 	$elm$html$Html$node,
 	'style',
 	_List_Nil,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('\n\n.elm-debugger-entry {\n  cursor: pointer;\n  width: 100%;\n}\n\n.elm-debugger-entry:hover {\n  background-color: rgb(41, 41, 41);\n}\n\n.elm-debugger-entry-selected, .elm-debugger-entry-selected:hover {\n  background-color: rgb(10, 10, 10);\n}\n\n.elm-debugger-entry-content {\n  width: calc(100% - 7ch);\n  padding-top: 4px;\n  padding-bottom: 4px;\n  padding-left: 1ch;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n  display: inline-block;\n}\n\n.elm-debugger-entry-index {\n  color: #666;\n  width: 5ch;\n  padding-top: 4px;\n  padding-bottom: 4px;\n  padding-right: 1ch;\n  text-align: right;\n  display: block;\n  float: right;\n}\n\n')
+			$elm$html$Html$text('\n\n.elm-debugger-entry {\n  cursor: pointer;\n  width: 100%;\n  box-sizing: border-box;\n  padding: 8px;\n}\n\n.elm-debugger-entry:hover {\n  background-color: rgb(41, 41, 41);\n}\n\n.elm-debugger-entry-selected, .elm-debugger-entry-selected:hover {\n  background-color: rgb(10, 10, 10);\n}\n\n.elm-debugger-entry-content {\n  width: calc(100% - 40px);\n  padding: 0 5px;\n  box-sizing: border-box;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n  display: inline-block;\n}\n\n.elm-debugger-entry-index {\n  color: #666;\n  width: 40px;\n  text-align: right;\n  display: block;\n  float: right;\n}\n\n')
 		]));
-var $elm$browser$Debugger$History$maxSnapshotSize = 64;
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$browser$Debugger$History$viewSnapshot = F3(
+	function (selectedIndex, index, _v0) {
+		var messages = _v0.messages;
+		return A3(
+			$elm$html$Html$Keyed$node,
+			'div',
+			_List_Nil,
+			A3(
+				$elm$core$Array$foldr,
+				$elm$browser$Debugger$History$consMsg(selectedIndex),
+				_Utils_Tuple2(index, _List_Nil),
+				messages).b);
+	});
+var $elm$browser$Debugger$History$consSnapshot = F3(
+	function (selectedIndex, snapshot, _v0) {
+		var index = _v0.a;
+		var rest = _v0.b;
+		var nextIndex = index + $elm$core$Array$length(snapshot.messages);
+		var selectedIndexHelp = ((_Utils_cmp(nextIndex, selectedIndex) > 0) && (_Utils_cmp(selectedIndex, index) > -1)) ? selectedIndex : (-1);
+		return _Utils_Tuple2(
+			nextIndex,
+			A2(
+				$elm$core$List$cons,
+				A4($elm$html$Html$Lazy$lazy3, $elm$browser$Debugger$History$viewSnapshot, selectedIndexHelp, index, snapshot),
+				rest));
+	});
 var $elm$core$Elm$JsArray$foldl = _JsArray_foldl;
 var $elm$core$Array$foldl = F3(
 	function (func, baseCase, _v0) {
@@ -7363,68 +7721,362 @@ var $elm$core$Array$foldl = F3(
 			A3($elm$core$Elm$JsArray$foldl, helper, baseCase, tree),
 			tail);
 	});
-var $elm$browser$Debugger$History$viewSnapshot = F3(
-	function (currentIndex, index, _v0) {
-		var messages = _v0.messages;
+var $elm$browser$Debugger$History$viewAllSnapshots = F3(
+	function (selectedIndex, startIndex, snapshots) {
 		return A2(
 			$elm$html$Html$div,
 			_List_Nil,
 			A3(
 				$elm$core$Array$foldl,
-				$elm$browser$Debugger$History$consMsg(currentIndex),
-				_Utils_Tuple2(index - 1, _List_Nil),
-				messages).b);
-	});
-var $elm$browser$Debugger$History$consSnapshot = F3(
-	function (currentIndex, snapshot, _v0) {
-		var index = _v0.a;
-		var rest = _v0.b;
-		var nextIndex = index - $elm$browser$Debugger$History$maxSnapshotSize;
-		var currentIndexHelp = ((_Utils_cmp(nextIndex, currentIndex) < 1) && (_Utils_cmp(currentIndex, index) < 0)) ? currentIndex : (-1);
-		return _Utils_Tuple2(
-			index - $elm$browser$Debugger$History$maxSnapshotSize,
-			A2(
-				$elm$core$List$cons,
-				A4($elm$html$Html$Lazy$lazy3, $elm$browser$Debugger$History$viewSnapshot, currentIndexHelp, index, snapshot),
-				rest));
-	});
-var $elm$core$Array$length = function (_v0) {
-	var len = _v0.a;
-	return len;
-};
-var $elm$browser$Debugger$History$viewSnapshots = F2(
-	function (currentIndex, snapshots) {
-		var highIndex = $elm$browser$Debugger$History$maxSnapshotSize * $elm$core$Array$length(snapshots);
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			A3(
-				$elm$core$Array$foldr,
-				$elm$browser$Debugger$History$consSnapshot(currentIndex),
-				_Utils_Tuple2(highIndex, _List_Nil),
+				$elm$browser$Debugger$History$consSnapshot(selectedIndex),
+				_Utils_Tuple2(startIndex, _List_Nil),
 				snapshots).b);
+	});
+var $elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
+			var jsArray = _v0.a;
+			var remainingItems = _v0.b;
+			if (_Utils_cmp(
+				$elm$core$Elm$JsArray$length(jsArray),
+				$elm$core$Array$branchFactor) < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					true,
+					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					$elm$core$List$cons,
+					$elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var $elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return $elm$core$Array$empty;
+	} else {
+		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var $elm$core$Elm$JsArray$appendN = _JsArray_appendN;
+var $elm$core$Elm$JsArray$slice = _JsArray_slice;
+var $elm$core$Array$appendHelpBuilder = F2(
+	function (tail, builder) {
+		var tailLen = $elm$core$Elm$JsArray$length(tail);
+		var notAppended = ($elm$core$Array$branchFactor - $elm$core$Elm$JsArray$length(builder.tail)) - tailLen;
+		var appended = A3($elm$core$Elm$JsArray$appendN, $elm$core$Array$branchFactor, builder.tail, tail);
+		return (notAppended < 0) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: A3($elm$core$Elm$JsArray$slice, notAppended, tailLen, tail)
+		} : ((!notAppended) ? {
+			nodeList: A2(
+				$elm$core$List$cons,
+				$elm$core$Array$Leaf(appended),
+				builder.nodeList),
+			nodeListSize: builder.nodeListSize + 1,
+			tail: $elm$core$Elm$JsArray$empty
+		} : {nodeList: builder.nodeList, nodeListSize: builder.nodeListSize, tail: appended});
+	});
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$core$Array$sliceLeft = F2(
+	function (from, array) {
+		var len = array.a;
+		var tree = array.c;
+		var tail = array.d;
+		if (!from) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				from,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					len - from,
+					$elm$core$Array$shiftStep,
+					$elm$core$Elm$JsArray$empty,
+					A3(
+						$elm$core$Elm$JsArray$slice,
+						from - $elm$core$Array$tailIndex(len),
+						$elm$core$Elm$JsArray$length(tail),
+						tail));
+			} else {
+				var skipNodes = (from / $elm$core$Array$branchFactor) | 0;
+				var helper = F2(
+					function (node, acc) {
+						if (node.$ === 'SubTree') {
+							var subTree = node.a;
+							return A3($elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+						} else {
+							var leaf = node.a;
+							return A2($elm$core$List$cons, leaf, acc);
+						}
+					});
+				var leafNodes = A3(
+					$elm$core$Elm$JsArray$foldr,
+					helper,
+					_List_fromArray(
+						[tail]),
+					tree);
+				var nodesToInsert = A2($elm$core$List$drop, skipNodes, leafNodes);
+				if (!nodesToInsert.b) {
+					return $elm$core$Array$empty;
+				} else {
+					var head = nodesToInsert.a;
+					var rest = nodesToInsert.b;
+					var firstSlice = from - (skipNodes * $elm$core$Array$branchFactor);
+					var initialBuilder = {
+						nodeList: _List_Nil,
+						nodeListSize: 0,
+						tail: A3(
+							$elm$core$Elm$JsArray$slice,
+							firstSlice,
+							$elm$core$Elm$JsArray$length(head),
+							head)
+					};
+					return A2(
+						$elm$core$Array$builderToArray,
+						true,
+						A3($elm$core$List$foldl, $elm$core$Array$appendHelpBuilder, initialBuilder, rest));
+				}
+			}
+		}
+	});
+var $elm$core$Array$fetchNewTail = F4(
+	function (shift, end, treeEnd, tree) {
+		fetchNewTail:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (treeEnd >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var sub = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$end = end,
+					$temp$treeEnd = treeEnd,
+					$temp$tree = sub;
+				shift = $temp$shift;
+				end = $temp$end;
+				treeEnd = $temp$treeEnd;
+				tree = $temp$tree;
+				continue fetchNewTail;
+			} else {
+				var values = _v0.a;
+				return A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, values);
+			}
+		}
+	});
+var $elm$core$Array$hoistTree = F3(
+	function (oldShift, newShift, tree) {
+		hoistTree:
+		while (true) {
+			if ((_Utils_cmp(oldShift, newShift) < 1) || (!$elm$core$Elm$JsArray$length(tree))) {
+				return tree;
+			} else {
+				var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, 0, tree);
+				if (_v0.$ === 'SubTree') {
+					var sub = _v0.a;
+					var $temp$oldShift = oldShift - $elm$core$Array$shiftStep,
+						$temp$newShift = newShift,
+						$temp$tree = sub;
+					oldShift = $temp$oldShift;
+					newShift = $temp$newShift;
+					tree = $temp$tree;
+					continue hoistTree;
+				} else {
+					return tree;
+				}
+			}
+		}
+	});
+var $elm$core$Elm$JsArray$unsafeSet = _JsArray_unsafeSet;
+var $elm$core$Array$sliceTree = F3(
+	function (shift, endIdx, tree) {
+		var lastPos = $elm$core$Array$bitMask & (endIdx >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, lastPos, tree);
+		if (_v0.$ === 'SubTree') {
+			var sub = _v0.a;
+			var newSub = A3($elm$core$Array$sliceTree, shift - $elm$core$Array$shiftStep, endIdx, sub);
+			return (!$elm$core$Elm$JsArray$length(newSub)) ? A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree) : A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				lastPos,
+				$elm$core$Array$SubTree(newSub),
+				A3($elm$core$Elm$JsArray$slice, 0, lastPos + 1, tree));
+		} else {
+			return A3($elm$core$Elm$JsArray$slice, 0, lastPos, tree);
+		}
+	});
+var $elm$core$Array$sliceRight = F2(
+	function (end, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		if (_Utils_eq(end, len)) {
+			return array;
+		} else {
+			if (_Utils_cmp(
+				end,
+				$elm$core$Array$tailIndex(len)) > -1) {
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					startShift,
+					tree,
+					A3($elm$core$Elm$JsArray$slice, 0, $elm$core$Array$bitMask & end, tail));
+			} else {
+				var endIdx = $elm$core$Array$tailIndex(end);
+				var depth = $elm$core$Basics$floor(
+					A2(
+						$elm$core$Basics$logBase,
+						$elm$core$Array$branchFactor,
+						A2($elm$core$Basics$max, 1, endIdx - 1)));
+				var newShift = A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep);
+				return A4(
+					$elm$core$Array$Array_elm_builtin,
+					end,
+					newShift,
+					A3(
+						$elm$core$Array$hoistTree,
+						startShift,
+						newShift,
+						A3($elm$core$Array$sliceTree, startShift, endIdx, tree)),
+					A4($elm$core$Array$fetchNewTail, startShift, end, endIdx, tree));
+			}
+		}
+	});
+var $elm$core$Array$translateIndex = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var posIndex = (index < 0) ? (len + index) : index;
+		return (posIndex < 0) ? 0 : ((_Utils_cmp(posIndex, len) > 0) ? len : posIndex);
+	});
+var $elm$core$Array$slice = F3(
+	function (from, to, array) {
+		var correctTo = A2($elm$core$Array$translateIndex, to, array);
+		var correctFrom = A2($elm$core$Array$translateIndex, from, array);
+		return (_Utils_cmp(correctFrom, correctTo) > 0) ? $elm$core$Array$empty : A2(
+			$elm$core$Array$sliceLeft,
+			correctFrom,
+			A2($elm$core$Array$sliceRight, correctTo, array));
+	});
+var $elm$browser$Debugger$History$viewRecentSnapshots = F3(
+	function (selectedIndex, recentMessagesNum, snapshots) {
+		var messagesToFill = $elm$browser$Debugger$History$maxSnapshotSize - recentMessagesNum;
+		var arrayLength = $elm$core$Array$length(snapshots);
+		var snapshotsToRender = function () {
+			var _v0 = _Utils_Tuple2(
+				A2($elm$core$Array$get, arrayLength - 2, snapshots),
+				A2($elm$core$Array$get, arrayLength - 1, snapshots));
+			if ((_v0.a.$ === 'Just') && (_v0.b.$ === 'Just')) {
+				var fillerSnapshot = _v0.a.a;
+				var recentSnapshot = _v0.b.a;
+				return $elm$core$Array$fromList(
+					_List_fromArray(
+						[
+							{
+							messages: A3($elm$core$Array$slice, 0, messagesToFill, fillerSnapshot.messages),
+							model: fillerSnapshot.model
+						},
+							recentSnapshot
+						]));
+			} else {
+				return snapshots;
+			}
+		}();
+		var startingIndex = ((arrayLength * $elm$browser$Debugger$History$maxSnapshotSize) - $elm$browser$Debugger$History$maxSnapshotSize) - messagesToFill;
+		return A3($elm$browser$Debugger$History$viewAllSnapshots, selectedIndex, startingIndex, snapshotsToRender);
 	});
 var $elm$browser$Debugger$History$view = F2(
 	function (maybeIndex, _v0) {
 		var snapshots = _v0.snapshots;
 		var recent = _v0.recent;
 		var numMessages = _v0.numMessages;
-		var _v1 = function () {
-			if (maybeIndex.$ === 'Nothing') {
-				return _Utils_Tuple2(-1, 'calc(100% - 24px)');
-			} else {
-				var i = maybeIndex.a;
-				return _Utils_Tuple2(i, 'calc(100% - 54px)');
-			}
-		}();
-		var index = _v1.a;
-		var height = _v1.b;
+		var recentMessageStartIndex = numMessages - recent.numMessages;
+		var index = A2($elm$core$Maybe$withDefault, -1, maybeIndex);
 		var newStuff = A3(
-			$elm$core$List$foldl,
-			$elm$browser$Debugger$History$consMsg(index),
-			_Utils_Tuple2(numMessages - 1, _List_Nil),
-			recent.messages).b;
-		var oldStuff = A3($elm$html$Html$Lazy$lazy2, $elm$browser$Debugger$History$viewSnapshots, index, snapshots);
+			$elm$html$Html$Keyed$node,
+			'div',
+			_List_Nil,
+			A3(
+				$elm$core$List$foldr,
+				$elm$browser$Debugger$History$consMsg(index),
+				_Utils_Tuple2(recentMessageStartIndex, _List_Nil),
+				recent.messages).b);
+		var onlyRenderRecentMessages = (!_Utils_eq(index, -1)) || ($elm$core$Array$length(snapshots) < 2);
+		var oldStuff = onlyRenderRecentMessages ? A4($elm$html$Html$Lazy$lazy3, $elm$browser$Debugger$History$viewAllSnapshots, index, 0, snapshots) : A4($elm$html$Html$Lazy$lazy3, $elm$browser$Debugger$History$viewRecentSnapshots, index, recent.numMessages, snapshots);
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -7432,81 +8084,298 @@ var $elm$browser$Debugger$History$view = F2(
 					$elm$html$Html$Attributes$id('elm-debugger-sidebar'),
 					A2($elm$html$Html$Attributes$style, 'width', '100%'),
 					A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
-					A2($elm$html$Html$Attributes$style, 'height', height)
+					A2($elm$html$Html$Attributes$style, 'height', 'calc(100% - 72px)')
 				]),
 			A2(
 				$elm$core$List$cons,
 				$elm$browser$Debugger$History$styles,
-				A2($elm$core$List$cons, oldStuff, newStuff)));
+				A2(
+					$elm$core$List$cons,
+					newStuff,
+					A2(
+						$elm$core$List$cons,
+						oldStuff,
+						onlyRenderRecentMessages ? _List_Nil : _List_fromArray(
+							[
+								$elm$browser$Debugger$History$showMoreButton(numMessages)
+							])))));
 	});
-var $elm$browser$Debugger$Main$viewSidebar = F2(
-	function (state, history) {
-		var maybeIndex = function () {
-			if (state.$ === 'Running') {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var index = state.a;
-				return $elm$core$Maybe$Just(index);
-			}
-		}();
+var $elm$browser$Debugger$Main$SwapLayout = {$: 'SwapLayout'};
+var $elm$browser$Debugger$Main$toHistoryIcon = function (layout) {
+	if (layout.$ === 'Horizontal') {
+		return 'M13 1a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3z M13 3h-10a1 1 0 0 0-1 1v5h12v-5a1 1 0 0 0-1-1z M14 10h-12v2a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1z';
+	} else {
+		return 'M0 4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3z M2 4v8a1 1 0 0 0 1 1h2v-10h-2a1 1 0 0 0-1 1z M6 3v10h7a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1z';
+	}
+};
+var $elm$browser$Debugger$Main$icon = function (path) {
+	return A4(
+		$elm$virtual_dom$VirtualDom$nodeNS,
+		'http://www.w3.org/2000/svg',
+		'svg',
+		_List_fromArray(
+			[
+				A2($elm$virtual_dom$VirtualDom$attribute, 'viewBox', '0 0 16 16'),
+				A2($elm$virtual_dom$VirtualDom$attribute, 'xmlns', 'http://www.w3.org/2000/svg'),
+				A2($elm$virtual_dom$VirtualDom$attribute, 'fill', 'currentColor'),
+				A2($elm$virtual_dom$VirtualDom$attribute, 'width', '16px'),
+				A2($elm$virtual_dom$VirtualDom$attribute, 'height', '16px')
+			]),
+		_List_fromArray(
+			[
+				A4(
+				$elm$virtual_dom$VirtualDom$nodeNS,
+				'http://www.w3.org/2000/svg',
+				'path',
+				_List_fromArray(
+					[
+						A2($elm$virtual_dom$VirtualDom$attribute, 'd', path)
+					]),
+				_List_Nil)
+			]));
+};
+var $elm$browser$Debugger$Main$viewHistoryButton = F3(
+	function (label, msg, path) {
+		return A2(
+			$elm$html$Html$button,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'background', 'none'),
+					A2($elm$html$Html$Attributes$style, 'border', 'none'),
+					A2($elm$html$Html$Attributes$style, 'color', 'inherit'),
+					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+					$elm$html$Html$Events$onClick(msg)
+				]),
+			_List_fromArray(
+				[
+					$elm$browser$Debugger$Main$icon(path),
+					A2(
+					$elm$html$Html$span,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'padding-left', '6px')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(label)
+						]))
+				]));
+	});
+var $elm$browser$Debugger$Main$viewHistoryOptions = function (layout) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'width', '100%'),
+				A2($elm$html$Html$Attributes$style, 'height', '36px'),
+				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+				A2($elm$html$Html$Attributes$style, 'justify-content', 'space-between'),
+				A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(50, 50, 50)')
+			]),
+		_List_fromArray(
+			[
+				A3(
+				$elm$browser$Debugger$Main$viewHistoryButton,
+				'Swap Layout',
+				$elm$browser$Debugger$Main$SwapLayout,
+				$elm$browser$Debugger$Main$toHistoryIcon(layout)),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+						A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+						A2($elm$html$Html$Attributes$style, 'justify-content', 'space-between')
+					]),
+				_List_fromArray(
+					[
+						A3($elm$browser$Debugger$Main$viewHistoryButton, 'Import', $elm$browser$Debugger$Main$Import, 'M5 1a1 1 0 0 1 0 2h-2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1a1 1 0 0 1 2 0a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3z M10 2a1 1 0 0 0 -2 0v6a1 1 0 0 0 1 1h6a1 1 0 0 0 0-2h-3.586l4.293-4.293a1 1 0 0 0-1.414-1.414l-4.293 4.293z'),
+						A3($elm$browser$Debugger$Main$viewHistoryButton, 'Export', $elm$browser$Debugger$Main$Export, 'M5 1a1 1 0 0 1 0 2h-2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1 a1 1 0 0 1 2 0a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3z M9 3a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-3.586l-5.293 5.293 a1 1 0 0 1-1.414-1.414l5.293 -5.293z')
+					]))
+			]));
+};
+var $elm$browser$Debugger$Main$SliderJump = function (a) {
+	return {$: 'SliderJump', a: a};
+};
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$browser$Debugger$Main$isPlaying = function (maybeIndex) {
+	if (maybeIndex.$ === 'Nothing') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$core$String$toInt = _String_toInt;
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $elm$browser$Debugger$Main$viewPlayButton = function (playing) {
+	return A2(
+		$elm$html$Html$button,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'background', '#1293D8'),
+				A2($elm$html$Html$Attributes$style, 'border', 'none'),
+				A2($elm$html$Html$Attributes$style, 'color', 'white'),
+				A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+				A2($elm$html$Html$Attributes$style, 'width', '36px'),
+				A2($elm$html$Html$Attributes$style, 'height', '36px'),
+				$elm$html$Html$Events$onClick($elm$browser$Debugger$Main$Resume)
+			]),
+		_List_fromArray(
+			[
+				playing ? $elm$browser$Debugger$Main$icon('M2 2h4v12h-4v-12z M10 2h4v12h-4v-12z') : $elm$browser$Debugger$Main$icon('M2 2l12 7l-12 7z')
+			]));
+};
+var $elm$browser$Debugger$Main$viewHistorySlider = F2(
+	function (history, maybeIndex) {
+		var lastIndex = $elm$browser$Debugger$History$size(history) - 1;
+		var selectedIndex = A2($elm$core$Maybe$withDefault, lastIndex, maybeIndex);
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					A2($elm$html$Html$Attributes$style, 'display', 'block'),
-					A2($elm$html$Html$Attributes$style, 'float', 'left'),
-					A2($elm$html$Html$Attributes$style, 'width', '30ch'),
-					A2($elm$html$Html$Attributes$style, 'height', '100%'),
-					A2($elm$html$Html$Attributes$style, 'color', 'white'),
-					A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(61, 61, 61)')
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '36px'),
+					A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(50, 50, 50)')
 				]),
 			_List_fromArray(
 				[
 					A2(
+					$elm$html$Html$Lazy$lazy,
+					$elm$browser$Debugger$Main$viewPlayButton,
+					$elm$browser$Debugger$Main$isPlaying(maybeIndex)),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('range'),
+							A2($elm$html$Html$Attributes$style, 'width', 'calc(100% - 56px)'),
+							A2($elm$html$Html$Attributes$style, 'height', '36px'),
+							A2($elm$html$Html$Attributes$style, 'margin', '0 10px'),
+							$elm$html$Html$Attributes$min('0'),
+							$elm$html$Html$Attributes$max(
+							$elm$core$String$fromInt(lastIndex)),
+							$elm$html$Html$Attributes$value(
+							$elm$core$String$fromInt(selectedIndex)),
+							$elm$html$Html$Events$onInput(
+							A2(
+								$elm$core$Basics$composeR,
+								$elm$core$String$toInt,
+								A2(
+									$elm$core$Basics$composeR,
+									$elm$core$Maybe$withDefault(lastIndex),
+									$elm$browser$Debugger$Main$SliderJump)))
+						]),
+					_List_Nil)
+				]));
+	});
+var $elm$browser$Debugger$Main$viewHistory = F3(
+	function (maybeIndex, history, layout) {
+		var block = $elm$browser$Debugger$Main$toMouseBlocker(layout);
+		var _v0 = $elm$browser$Debugger$Main$toHistoryPercents(layout);
+		var w = _v0.a;
+		var h = _v0.b;
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'width', w),
+					A2($elm$html$Html$Attributes$style, 'height', h),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+					A2($elm$html$Html$Attributes$style, 'color', '#DDDDDD'),
+					A2($elm$html$Html$Attributes$style, 'background-color', 'rgb(61, 61, 61)'),
+					A2($elm$html$Html$Attributes$style, 'pointer-events', block),
+					A2($elm$html$Html$Attributes$style, 'user-select', block)
+				]),
+			_List_fromArray(
+				[
+					A2($elm$browser$Debugger$Main$viewHistorySlider, history, maybeIndex),
+					A2(
 					$elm$html$Html$map,
 					$elm$browser$Debugger$Main$Jump,
 					A2($elm$browser$Debugger$History$view, maybeIndex, history)),
-					$elm$browser$Debugger$Main$playButton(maybeIndex)
+					A2($elm$html$Html$Lazy$lazy, $elm$browser$Debugger$Main$viewHistoryOptions, layout)
 				]));
 	});
-var $elm$browser$Debugger$Main$popoutView = function (_v0) {
-	var history = _v0.history;
-	var state = _v0.state;
-	var expando = _v0.expando;
+var $elm$browser$Debugger$Main$popoutView = function (model) {
+	var maybeIndex = function () {
+		var _v0 = model.state;
+		if (_v0.$ === 'Running') {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var index = _v0.a;
+			return $elm$core$Maybe$Just(index);
+		}
+	}();
+	var historyToRender = $elm$browser$Debugger$Main$cachedHistory(model);
 	return A3(
 		$elm$html$Html$node,
 		'body',
+		_Utils_ap(
+			$elm$browser$Debugger$Main$toDragListeners(model.layout),
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'margin', '0'),
+					A2($elm$html$Html$Attributes$style, 'padding', '0'),
+					A2($elm$html$Html$Attributes$style, 'width', '100%'),
+					A2($elm$html$Html$Attributes$style, 'height', '100%'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2(
+					$elm$html$Html$Attributes$style,
+					'flex-direction',
+					$elm$browser$Debugger$Main$toFlexDirection(model.layout))
+				])),
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'margin', '0'),
-				A2($elm$html$Html$Attributes$style, 'padding', '0'),
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
-				A2($elm$html$Html$Attributes$style, 'overflow', 'auto')
-			]),
-		_List_fromArray(
-			[
-				A2($elm$browser$Debugger$Main$viewSidebar, state, history),
-				A2(
-				$elm$html$Html$map,
-				$elm$browser$Debugger$Main$ExpandoMsg,
-				A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'display', 'block'),
-							A2($elm$html$Html$Attributes$style, 'float', 'left'),
-							A2($elm$html$Html$Attributes$style, 'height', '100%'),
-							A2($elm$html$Html$Attributes$style, 'width', 'calc(100% - 30ch)'),
-							A2($elm$html$Html$Attributes$style, 'margin', '0'),
-							A2($elm$html$Html$Attributes$style, 'overflow', 'auto'),
-							A2($elm$html$Html$Attributes$style, 'cursor', 'default')
-						]),
-					_List_fromArray(
-						[
-							A2($elm$browser$Debugger$Expando$view, $elm$core$Maybe$Nothing, expando)
-						])))
+				A3($elm$browser$Debugger$Main$viewHistory, maybeIndex, historyToRender, model.layout),
+				$elm$browser$Debugger$Main$viewDragZone(model.layout),
+				A3($elm$browser$Debugger$Main$viewExpando, model.expandoMsg, model.expandoModel, model.layout)
 			]));
 };
 var $elm$browser$Debugger$Overlay$BlockAll = {$: 'BlockAll'};
@@ -7529,9 +8398,14 @@ var $elm$browser$Debugger$Main$toBlockerType = function (model) {
 		$elm$browser$Debugger$Main$isPaused(model.state),
 		model.overlay);
 };
+var $elm$browser$Debugger$Main$Horizontal = F3(
+	function (a, b, c) {
+		return {$: 'Horizontal', a: a, b: b, c: c};
+	});
 var $elm$browser$Debugger$Main$Running = function (a) {
 	return {$: 'Running', a: a};
 };
+var $elm$browser$Debugger$Main$Static = {$: 'Static'};
 var $elm$browser$Debugger$Metadata$Error = F2(
 	function (message, problems) {
 		return {message: message, problems: problems};
@@ -7549,9 +8423,7 @@ var $elm$browser$Debugger$Metadata$Alias = F2(
 	function (args, tipe) {
 		return {args: args, tipe: tipe};
 	});
-var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$json$Json$Decode$string = _Json_decodeString;
 var $elm$browser$Debugger$Metadata$decodeAlias = A3(
 	$elm$json$Json$Decode$map2,
 	$elm$browser$Debugger$Metadata$Alias,
@@ -7918,8 +8790,10 @@ var $elm$browser$Debugger$Main$wrapInit = F4(
 		var userCommands = _v0.b;
 		return _Utils_Tuple2(
 			{
-				expando: $elm$browser$Debugger$Expando$init(userModel),
+				expandoModel: $elm$browser$Debugger$Expando$init(userModel),
+				expandoMsg: $elm$browser$Debugger$Expando$init(_Utils_Tuple0),
 				history: $elm$browser$Debugger$History$empty(userModel),
+				layout: A3($elm$browser$Debugger$Main$Horizontal, $elm$browser$Debugger$Main$Static, 0.3, 0.5),
 				metadata: $elm$browser$Debugger$Metadata$decode(metadata),
 				overlay: $elm$browser$Debugger$Overlay$none,
 				popout: popout,
@@ -7945,49 +8819,15 @@ var $elm$browser$Debugger$Main$wrapSubs = F2(
 			subscriptions(
 				$elm$browser$Debugger$Main$getLatestModel(model.state)));
 	});
-var $elm$browser$Debugger$Main$Paused = F3(
-	function (a, b, c) {
-		return {$: 'Paused', a: a, b: b, c: c};
+var $elm$browser$Debugger$Main$Moving = {$: 'Moving'};
+var $elm$browser$Debugger$Main$Paused = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Paused', a: a, b: b, c: c, d: d, e: e};
 	});
 var $elm$browser$Debugger$History$Snapshot = F2(
 	function (model, messages) {
 		return {messages: messages, model: model};
 	});
-var $elm$core$Array$fromListHelp = F3(
-	function (list, nodeList, nodeListSize) {
-		fromListHelp:
-		while (true) {
-			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
-			var jsArray = _v0.a;
-			var remainingItems = _v0.b;
-			if (_Utils_cmp(
-				$elm$core$Elm$JsArray$length(jsArray),
-				$elm$core$Array$branchFactor) < 0) {
-				return A2(
-					$elm$core$Array$builderToArray,
-					true,
-					{nodeList: nodeList, nodeListSize: nodeListSize, tail: jsArray});
-			} else {
-				var $temp$list = remainingItems,
-					$temp$nodeList = A2(
-					$elm$core$List$cons,
-					$elm$core$Array$Leaf(jsArray),
-					nodeList),
-					$temp$nodeListSize = nodeListSize + 1;
-				list = $temp$list;
-				nodeList = $temp$nodeList;
-				nodeListSize = $temp$nodeListSize;
-				continue fromListHelp;
-			}
-		}
-	});
-var $elm$core$Array$fromList = function (list) {
-	if (!list.b) {
-		return $elm$core$Array$empty;
-	} else {
-		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
-	}
-};
 var $elm$browser$Debugger$History$addRecent = F3(
 	function (msg, newModel, _v0) {
 		var model = _v0.model;
@@ -8013,13 +8853,7 @@ var $elm$browser$Debugger$History$addRecent = F3(
 				numMessages + 1));
 	});
 var $elm$core$Elm$JsArray$push = _JsArray_push;
-var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
-var $elm$core$Basics$ge = _Utils_ge;
 var $elm$core$Elm$JsArray$singleton = _JsArray_singleton;
-var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
-var $elm$core$Elm$JsArray$unsafeSet = _JsArray_unsafeSet;
 var $elm$core$Array$insertTailInTree = F4(
 	function (shift, index, tail, tree) {
 		var pos = $elm$core$Array$bitMask & (index >>> shift);
@@ -8055,7 +8889,6 @@ var $elm$core$Array$insertTailInTree = F4(
 			}
 		}
 	});
-var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
 var $elm$core$Array$unsafeReplaceTail = F2(
 	function (newTail, _v0) {
 		var len = _v0.a;
@@ -8266,7 +9099,6 @@ var $elm$browser$Debugger$Metadata$ignore = F3(
 	function (key, value, report) {
 		return report;
 	});
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$browser$Debugger$Metadata$checkTypes = F2(
 	function (old, _new) {
 		return (!_Utils_eq(old.message, _new.message)) ? A2($elm$browser$Debugger$Report$MessageChanged, old.message, _new.message) : $elm$browser$Debugger$Report$SomethingChanged(
@@ -8409,7 +9241,7 @@ var $elm$browser$Debugger$Overlay$close = F2(
 				}
 		}
 	});
-var $elm$browser$Debugger$History$elmToJs = _Debugger_unsafeCoerce;
+var $elm$browser$Debugger$History$elmToJs = A2($elm$core$Basics$composeR, _Json_wrap, _Debugger_unsafeCoerce);
 var $elm$browser$Debugger$History$encodeHelp = F2(
 	function (snapshot, allMessages) {
 		return A3($elm$core$Array$foldl, $elm$core$List$cons, allMessages, snapshot.messages);
@@ -8617,63 +9449,46 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Debugger$Main$download = F2(
 	function (metadata, history) {
-		var json = $elm$json$Json$Encode$object(
-			_List_fromArray(
-				[
-					_Utils_Tuple2(
-					'metadata',
-					$elm$browser$Debugger$Metadata$encode(metadata)),
-					_Utils_Tuple2(
-					'history',
-					$elm$browser$Debugger$History$encode(history))
-				]));
 		var historyLength = $elm$browser$Debugger$History$size(history);
 		return A2(
 			$elm$core$Task$perform,
 			function (_v0) {
 				return $elm$browser$Debugger$Main$NoOp;
 			},
-			A2(_Debugger_download, historyLength, json));
+			A2(
+				_Debugger_download,
+				historyLength,
+				_Json_unwrap(
+					$elm$json$Json$Encode$object(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'metadata',
+								$elm$browser$Debugger$Metadata$encode(metadata)),
+								_Utils_Tuple2(
+								'history',
+								$elm$browser$Debugger$History$encode(history))
+							])))));
+	});
+var $elm$browser$Debugger$Main$Vertical = F3(
+	function (a, b, c) {
+		return {$: 'Vertical', a: a, b: b, c: c};
+	});
+var $elm$browser$Debugger$Main$drag = F2(
+	function (info, layout) {
+		if (layout.$ === 'Horizontal') {
+			var status = layout.a;
+			var y = layout.c;
+			return A3($elm$browser$Debugger$Main$Horizontal, status, info.x / info.width, y);
+		} else {
+			var status = layout.a;
+			var x = layout.b;
+			return A3($elm$browser$Debugger$Main$Vertical, status, x, info.y / info.height);
+		}
 	});
 var $elm$browser$Debugger$History$Stepping = F2(
 	function (a, b) {
 		return {$: 'Stepping', a: a, b: b};
-	});
-var $elm$core$Array$getHelp = F3(
-	function (shift, index, tree) {
-		getHelp:
-		while (true) {
-			var pos = $elm$core$Array$bitMask & (index >>> shift);
-			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
-			if (_v0.$ === 'SubTree') {
-				var subTree = _v0.a;
-				var $temp$shift = shift - $elm$core$Array$shiftStep,
-					$temp$index = index,
-					$temp$tree = subTree;
-				shift = $temp$shift;
-				index = $temp$index;
-				tree = $temp$tree;
-				continue getHelp;
-			} else {
-				var values = _v0.a;
-				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
-			}
-		}
-	});
-var $elm$core$Array$tailIndex = function (len) {
-	return (len >>> 5) << 5;
-};
-var $elm$core$Array$get = F2(
-	function (index, _v0) {
-		var len = _v0.a;
-		var startShift = _v0.b;
-		var tree = _v0.c;
-		var tail = _v0.d;
-		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
-			index,
-			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
-			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
-			A3($elm$core$Array$getHelp, startShift, index, tree)));
 	});
 var $elm$browser$Debugger$History$Done = F2(
 	function (a, b) {
@@ -8745,75 +9560,20 @@ var $elm$browser$Debugger$History$get = F3(
 			}
 		}
 	});
-var $elm$browser$Debugger$History$jsToElm = _Debugger_unsafeCoerce;
-var $elm$browser$Debugger$History$decoder = F2(
-	function (initialModel, update) {
-		var addMessage = F2(
-			function (rawMsg, _v0) {
-				var model = _v0.a;
-				var history = _v0.b;
-				var msg = $elm$browser$Debugger$History$jsToElm(rawMsg);
-				return _Utils_Tuple2(
-					A2(update, msg, model),
-					A3($elm$browser$Debugger$History$add, msg, model, history));
-			});
-		var updateModel = function (rawMsgs) {
-			return A3(
-				$elm$core$List$foldl,
-				addMessage,
-				_Utils_Tuple2(
-					initialModel,
-					$elm$browser$Debugger$History$empty(initialModel)),
-				rawMsgs);
-		};
-		return A2(
-			$elm$json$Json$Decode$map,
-			updateModel,
-			$elm$json$Json$Decode$list($elm$json$Json$Decode$value));
-	});
-var $elm$browser$Debugger$History$getInitialModel = function (_v0) {
-	var snapshots = _v0.snapshots;
-	var recent = _v0.recent;
-	var _v1 = A2($elm$core$Array$get, 0, snapshots);
-	if (_v1.$ === 'Just') {
-		var model = _v1.a.model;
-		return model;
-	} else {
-		return recent.model;
+var $elm$browser$Debugger$History$getRecentMsg = function (history) {
+	getRecentMsg:
+	while (true) {
+		var _v0 = history.recent.messages;
+		if (!_v0.b) {
+			var $temp$history = history;
+			history = $temp$history;
+			continue getRecentMsg;
+		} else {
+			var first = _v0.a;
+			return first;
+		}
 	}
 };
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$browser$Debugger$Main$loadNewHistory = F3(
-	function (rawHistory, update, model) {
-		var pureUserUpdate = F2(
-			function (msg, userModel) {
-				return A2(update, msg, userModel).a;
-			});
-		var initialUserModel = $elm$browser$Debugger$History$getInitialModel(model.history);
-		var decoder = A2($elm$browser$Debugger$History$decoder, initialUserModel, pureUserUpdate);
-		var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, rawHistory);
-		if (_v0.$ === 'Err') {
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{overlay: $elm$browser$Debugger$Overlay$corruptImport}),
-				$elm$core$Platform$Cmd$none);
-		} else {
-			var _v1 = _v0.a;
-			var latestUserModel = _v1.a;
-			var newHistory = _v1.b;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{
-						expando: $elm$browser$Debugger$Expando$init(latestUserModel),
-						history: newHistory,
-						overlay: $elm$browser$Debugger$Overlay$none,
-						state: $elm$browser$Debugger$Main$Running(latestUserModel)
-					}),
-				$elm$core$Platform$Cmd$none);
-		}
-	});
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -8957,11 +9717,130 @@ var $elm$browser$Debugger$Expando$merge = F2(
 			expando,
 			_Debugger_init(value));
 	});
+var $elm$browser$Debugger$Main$jumpUpdate = F3(
+	function (update, index, model) {
+		var history = $elm$browser$Debugger$Main$cachedHistory(model);
+		var currentMsg = $elm$browser$Debugger$History$getRecentMsg(history);
+		var currentModel = $elm$browser$Debugger$Main$getLatestModel(model.state);
+		var _v0 = A3($elm$browser$Debugger$History$get, update, index, history);
+		var indexModel = _v0.a;
+		var indexMsg = _v0.b;
+		return _Utils_update(
+			model,
+			{
+				expandoModel: A2($elm$browser$Debugger$Expando$merge, indexModel, model.expandoModel),
+				expandoMsg: A2($elm$browser$Debugger$Expando$merge, indexMsg, model.expandoMsg),
+				state: A5($elm$browser$Debugger$Main$Paused, index, indexModel, currentModel, currentMsg, history)
+			});
+	});
+var $elm$browser$Debugger$History$jsToElm = A2($elm$core$Basics$composeR, _Json_unwrap, _Debugger_unsafeCoerce);
+var $elm$browser$Debugger$History$decoder = F2(
+	function (initialModel, update) {
+		var addMessage = F2(
+			function (rawMsg, _v0) {
+				var model = _v0.a;
+				var history = _v0.b;
+				var msg = $elm$browser$Debugger$History$jsToElm(rawMsg);
+				return _Utils_Tuple2(
+					A2(update, msg, model),
+					A3($elm$browser$Debugger$History$add, msg, model, history));
+			});
+		var updateModel = function (rawMsgs) {
+			return A3(
+				$elm$core$List$foldl,
+				addMessage,
+				_Utils_Tuple2(
+					initialModel,
+					$elm$browser$Debugger$History$empty(initialModel)),
+				rawMsgs);
+		};
+		return A2(
+			$elm$json$Json$Decode$map,
+			updateModel,
+			$elm$json$Json$Decode$list($elm$json$Json$Decode$value));
+	});
+var $elm$browser$Debugger$History$getInitialModel = function (_v0) {
+	var snapshots = _v0.snapshots;
+	var recent = _v0.recent;
+	var _v1 = A2($elm$core$Array$get, 0, snapshots);
+	if (_v1.$ === 'Just') {
+		var model = _v1.a.model;
+		return model;
+	} else {
+		return recent.model;
+	}
+};
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$browser$Debugger$Main$loadNewHistory = F3(
+	function (rawHistory, update, model) {
+		var pureUserUpdate = F2(
+			function (msg, userModel) {
+				return A2(update, msg, userModel).a;
+			});
+		var initialUserModel = $elm$browser$Debugger$History$getInitialModel(model.history);
+		var decoder = A2($elm$browser$Debugger$History$decoder, initialUserModel, pureUserUpdate);
+		var _v0 = A2($elm$json$Json$Decode$decodeValue, decoder, rawHistory);
+		if (_v0.$ === 'Err') {
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{overlay: $elm$browser$Debugger$Overlay$corruptImport}),
+				$elm$core$Platform$Cmd$none);
+		} else {
+			var _v1 = _v0.a;
+			var latestUserModel = _v1.a;
+			var newHistory = _v1.b;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						expandoModel: $elm$browser$Debugger$Expando$init(latestUserModel),
+						expandoMsg: $elm$browser$Debugger$Expando$init(
+							$elm$browser$Debugger$History$getRecentMsg(newHistory)),
+						history: newHistory,
+						overlay: $elm$browser$Debugger$Overlay$none,
+						state: $elm$browser$Debugger$Main$Running(latestUserModel)
+					}),
+				$elm$core$Platform$Cmd$none);
+		}
+	});
 var $elm$browser$Debugger$Main$scroll = function (popout) {
 	return A2(
 		$elm$core$Task$perform,
 		$elm$core$Basics$always($elm$browser$Debugger$Main$NoOp),
 		_Debugger_scroll(popout));
+};
+var $elm$browser$Debugger$Main$scrollTo = F2(
+	function (id, popout) {
+		return A2(
+			$elm$core$Task$perform,
+			$elm$core$Basics$always($elm$browser$Debugger$Main$NoOp),
+			A2(_Debugger_scrollTo, id, popout));
+	});
+var $elm$browser$Debugger$Main$setDragStatus = F2(
+	function (status, layout) {
+		if (layout.$ === 'Horizontal') {
+			var x = layout.b;
+			var y = layout.c;
+			return A3($elm$browser$Debugger$Main$Horizontal, status, x, y);
+		} else {
+			var x = layout.b;
+			var y = layout.c;
+			return A3($elm$browser$Debugger$Main$Vertical, status, x, y);
+		}
+	});
+var $elm$browser$Debugger$Main$swapLayout = function (layout) {
+	if (layout.$ === 'Horizontal') {
+		var s = layout.a;
+		var x = layout.b;
+		var y = layout.c;
+		return A3($elm$browser$Debugger$Main$Vertical, s, x, y);
+	} else {
+		var s = layout.a;
+		var x = layout.b;
+		var y = layout.c;
+		return A3($elm$browser$Debugger$Main$Horizontal, s, x, y);
+	}
 };
 var $elm$core$Dict$getMin = function (dict) {
 	getMin:
@@ -9495,10 +10374,12 @@ var $elm$browser$Debugger$Expando$updateField = F2(
 var $elm$browser$Debugger$Main$Upload = function (a) {
 	return {$: 'Upload', a: a};
 };
-var $elm$browser$Debugger$Main$upload = A2(
-	$elm$core$Task$perform,
-	$elm$browser$Debugger$Main$Upload,
-	_Debugger_upload(_Utils_Tuple0));
+var $elm$browser$Debugger$Main$upload = function (popout) {
+	return A2(
+		$elm$core$Task$perform,
+		$elm$browser$Debugger$Main$Upload,
+		_Debugger_upload(popout));
+};
 var $elm$browser$Debugger$Overlay$BadMetadata = function (a) {
 	return {$: 'BadMetadata', a: a};
 };
@@ -9541,7 +10422,8 @@ var $elm$browser$Debugger$Main$wrapUpdate = F3(
 							_Utils_update(
 								model,
 								{
-									expando: A2($elm$browser$Debugger$Expando$merge, newUserModel, model.expando),
+									expandoModel: A2($elm$browser$Debugger$Expando$merge, newUserModel, model.expandoModel),
+									expandoMsg: A2($elm$browser$Debugger$Expando$merge, userMsg, model.expandoMsg),
 									history: newHistory,
 									state: $elm$browser$Debugger$Main$Running(newUserModel)
 								}),
@@ -9554,22 +10436,32 @@ var $elm$browser$Debugger$Main$wrapUpdate = F3(
 					} else {
 						var index = _v2.a;
 						var indexModel = _v2.b;
+						var history = _v2.e;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
 									history: newHistory,
-									state: A3($elm$browser$Debugger$Main$Paused, index, indexModel, newUserModel)
+									state: A5($elm$browser$Debugger$Main$Paused, index, indexModel, newUserModel, userMsg, history)
 								}),
 							commands);
 					}
-				case 'ExpandoMsg':
+				case 'TweakExpandoMsg':
 					var eMsg = msg.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								expando: A2($elm$browser$Debugger$Expando$update, eMsg, model.expando)
+								expandoMsg: A2($elm$browser$Debugger$Expando$update, eMsg, model.expandoMsg)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 'TweakExpandoModel':
+					var eMsg = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								expandoModel: A2($elm$browser$Debugger$Expando$update, eMsg, model.expandoModel)
 							}),
 						$elm$core$Platform$Cmd$none);
 				case 'Resume':
@@ -9578,72 +10470,56 @@ var $elm$browser$Debugger$Main$wrapUpdate = F3(
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					} else {
 						var userModel = _v3.c;
+						var userMsg = _v3.d;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
-									expando: A2($elm$browser$Debugger$Expando$merge, userModel, model.expando),
+									expandoModel: A2($elm$browser$Debugger$Expando$merge, userModel, model.expandoModel),
+									expandoMsg: A2($elm$browser$Debugger$Expando$merge, userMsg, model.expandoMsg),
 									state: $elm$browser$Debugger$Main$Running(userModel)
 								}),
 							$elm$browser$Debugger$Main$scroll(model.popout));
 					}
 				case 'Jump':
 					var index = msg.a;
-					var _v4 = A3($elm$browser$Debugger$History$get, update, index, model.history);
-					var indexModel = _v4.a;
-					var indexMsg = _v4.b;
 					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								expando: A2($elm$browser$Debugger$Expando$merge, indexModel, model.expando),
-								state: A3(
-									$elm$browser$Debugger$Main$Paused,
-									index,
-									indexModel,
-									$elm$browser$Debugger$Main$getLatestModel(model.state))
-							}),
+						A3($elm$browser$Debugger$Main$jumpUpdate, update, index, model),
 						$elm$core$Platform$Cmd$none);
+				case 'SliderJump':
+					var index = msg.a;
+					return _Utils_Tuple2(
+						A3($elm$browser$Debugger$Main$jumpUpdate, update, index, model),
+						A2(
+							$elm$browser$Debugger$Main$scrollTo,
+							$elm$browser$Debugger$History$idForMessageIndex(index),
+							model.popout));
 				case 'Open':
 					return _Utils_Tuple2(
 						model,
 						A2(
 							$elm$core$Task$perform,
-							function (_v5) {
-								return $elm$browser$Debugger$Main$NoOp;
-							},
+							$elm$core$Basics$always($elm$browser$Debugger$Main$NoOp),
 							_Debugger_open(model.popout)));
 				case 'Up':
-					var index = function () {
-						var _v6 = model.state;
-						if (_v6.$ === 'Paused') {
-							var i = _v6.a;
-							return i;
+					var _v4 = model.state;
+					if (_v4.$ === 'Running') {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var i = _v4.a;
+						var history = _v4.e;
+						var targetIndex = i + 1;
+						if (_Utils_cmp(
+							targetIndex,
+							$elm$browser$Debugger$History$size(history)) < 0) {
+							var $temp$update = update,
+								$temp$msg = $elm$browser$Debugger$Main$SliderJump(targetIndex),
+								$temp$model = model;
+							update = $temp$update;
+							msg = $temp$msg;
+							model = $temp$model;
+							continue wrapUpdate;
 						} else {
-							return $elm$browser$Debugger$History$size(model.history);
-						}
-					}();
-					if (index > 0) {
-						var $temp$update = update,
-							$temp$msg = $elm$browser$Debugger$Main$Jump(index - 1),
-							$temp$model = model;
-						update = $temp$update;
-						msg = $temp$msg;
-						model = $temp$model;
-						continue wrapUpdate;
-					} else {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					}
-				case 'Down':
-					var _v7 = model.state;
-					if (_v7.$ === 'Running') {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					} else {
-						var index = _v7.a;
-						var userModel = _v7.c;
-						if (_Utils_eq(
-							index,
-							$elm$browser$Debugger$History$size(model.history) - 1)) {
 							var $temp$update = update,
 								$temp$msg = $elm$browser$Debugger$Main$Resume,
 								$temp$model = model;
@@ -9651,22 +10527,41 @@ var $elm$browser$Debugger$Main$wrapUpdate = F3(
 							msg = $temp$msg;
 							model = $temp$model;
 							continue wrapUpdate;
-						} else {
+						}
+					}
+				case 'Down':
+					var _v5 = model.state;
+					if (_v5.$ === 'Running') {
+						var $temp$update = update,
+							$temp$msg = $elm$browser$Debugger$Main$Jump(
+							$elm$browser$Debugger$History$size(model.history) - 1),
+							$temp$model = model;
+						update = $temp$update;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue wrapUpdate;
+					} else {
+						var index = _v5.a;
+						if (index > 0) {
 							var $temp$update = update,
-								$temp$msg = $elm$browser$Debugger$Main$Jump(index + 1),
+								$temp$msg = $elm$browser$Debugger$Main$SliderJump(index - 1),
 								$temp$model = model;
 							update = $temp$update;
 							msg = $temp$msg;
 							model = $temp$model;
 							continue wrapUpdate;
+						} else {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 						}
 					}
 				case 'Import':
 					return A2(
 						$elm$browser$Debugger$Main$withGoodMetadata,
 						model,
-						function (_v8) {
-							return _Utils_Tuple2(model, $elm$browser$Debugger$Main$upload);
+						function (_v6) {
+							return _Utils_Tuple2(
+								model,
+								$elm$browser$Debugger$Main$upload(model.popout));
 						});
 				case 'Export':
 					return A2(
@@ -9683,32 +10578,65 @@ var $elm$browser$Debugger$Main$wrapUpdate = F3(
 						$elm$browser$Debugger$Main$withGoodMetadata,
 						model,
 						function (metadata) {
-							var _v9 = A2($elm$browser$Debugger$Overlay$assessImport, metadata, jsonString);
-							if (_v9.$ === 'Err') {
-								var newOverlay = _v9.a;
+							var _v7 = A2($elm$browser$Debugger$Overlay$assessImport, metadata, jsonString);
+							if (_v7.$ === 'Err') {
+								var newOverlay = _v7.a;
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
 										{overlay: newOverlay}),
 									$elm$core$Platform$Cmd$none);
 							} else {
-								var rawHistory = _v9.a;
+								var rawHistory = _v7.a;
 								return A3($elm$browser$Debugger$Main$loadNewHistory, rawHistory, update, model);
 							}
 						});
-				default:
+				case 'OverlayMsg':
 					var overlayMsg = msg.a;
-					var _v10 = A2($elm$browser$Debugger$Overlay$close, overlayMsg, model.overlay);
-					if (_v10.$ === 'Nothing') {
+					var _v8 = A2($elm$browser$Debugger$Overlay$close, overlayMsg, model.overlay);
+					if (_v8.$ === 'Nothing') {
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{overlay: $elm$browser$Debugger$Overlay$none}),
 							$elm$core$Platform$Cmd$none);
 					} else {
-						var rawHistory = _v10.a;
+						var rawHistory = _v8.a;
 						return A3($elm$browser$Debugger$Main$loadNewHistory, rawHistory, update, model);
 					}
+				case 'SwapLayout':
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								layout: $elm$browser$Debugger$Main$swapLayout(model.layout)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 'DragStart':
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								layout: A2($elm$browser$Debugger$Main$setDragStatus, $elm$browser$Debugger$Main$Moving, model.layout)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 'Drag':
+					var info = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								layout: A2($elm$browser$Debugger$Main$drag, info, model.layout)
+							}),
+						$elm$core$Platform$Cmd$none);
+				default:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								layout: A2($elm$browser$Debugger$Main$setDragStatus, $elm$browser$Debugger$Main$Static, model.layout)
+							}),
+						$elm$core$Platform$Cmd$none);
 			}
 		}
 	});
@@ -9739,7 +10667,6 @@ var $elm$core$String$indexes = _String_indexes;
 var $elm$core$String$isEmpty = function (string) {
 	return string === '';
 };
-var $elm$core$String$toInt = _String_toInt;
 var $elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {
 		if ($elm$core$String$isEmpty(str) || A2($elm$core$String$contains, '@', str)) {
@@ -9904,7 +10831,6 @@ var $author$project$Records$Country$Country = F5(
 	function (name, altSpellings, capital, region, population) {
 		return {altSpellings: altSpellings, capital: capital, name: name, population: population, region: region};
 	});
-var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 	function (key, valDecoder, decoder) {
@@ -9940,11 +10866,6 @@ var $author$project$Form$DatePicker$Model = function (a) {
 var $author$project$Form$Select$Model = function (a) {
 	return {$: 'Model', a: a};
 };
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
 var $author$project$Resettable$Initial = function (a) {
 	return {$: 'Initial', a: a};
 };
@@ -10315,13 +11236,20 @@ var $justinmimbs$timezone_data$TimeZone$Specification$rulesToOffsetChanges = F5(
 											case 'Day':
 												var day = _v2.a;
 												return A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, rule.month, day);
-											case 'First':
+											case 'Next':
 												var weekday = _v2.a;
-												var onOrAfterDay = _v2.b;
+												var after = _v2.b;
 												return A2(
 													$justinmimbs$timezone_data$RataDie$ceilingWeekday,
 													weekday,
-													A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, rule.month, onOrAfterDay));
+													A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, rule.month, after));
+											case 'Prev':
+												var weekday = _v2.a;
+												var before = _v2.b;
+												return A2(
+													$justinmimbs$timezone_data$RataDie$floorWeekday,
+													weekday,
+													A3($justinmimbs$timezone_data$RataDie$dayOfMonth, year, rule.month, before));
 											default:
 												var weekday = _v2.a;
 												return A2(
@@ -10723,16 +11651,16 @@ var $justinmimbs$timezone_data$TimeZone$africa__blantyre = $justinmimbs$timezone
 var $justinmimbs$timezone_data$TimeZone$africa__brazzaville = $justinmimbs$timezone_data$TimeZone$africa__lagos;
 var $justinmimbs$timezone_data$TimeZone$africa__bujumbura = $justinmimbs$timezone_data$TimeZone$africa__maputo;
 var $elm$time$Time$Aug = {$: 'Aug'};
-var $justinmimbs$timezone_data$TimeZone$Specification$First = F2(
-	function (a, b) {
-		return {$: 'First', a: a, b: b};
-	});
 var $elm$time$Time$Fri = {$: 'Fri'};
 var $elm$time$Time$Jul = {$: 'Jul'};
 var $elm$time$Time$Jun = {$: 'Jun'};
 var $justinmimbs$timezone_data$TimeZone$Specification$Last = function (a) {
 	return {$: 'Last', a: a};
 };
+var $justinmimbs$timezone_data$TimeZone$Specification$Next = F2(
+	function (a, b) {
+		return {$: 'Next', a: a, b: b};
+	});
 var $elm$time$Time$Thu = {$: 'Thu'};
 var $justinmimbs$timezone_data$TimeZone$rules_Egypt = _List_fromArray(
 	[
@@ -10831,7 +11759,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Egypt = _List_fromArray(
 		2007,
 		2007,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Thu, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Thu, 1),
 		1440,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -11628,7 +12556,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_EU = _List_fromArray(
 		1977,
 		1980,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -12260,7 +13188,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Namibia = _List_fromArray(
 		1994,
 		2017,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12269,7 +13197,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Namibia = _List_fromArray(
 		1995,
 		2017,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		-60)
@@ -12326,7 +13254,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_US = _List_fromArray(
 		1975,
 		1975,
 		$elm$time$Time$Feb,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(23),
+		$justinmimbs$timezone_data$TimeZone$Specification$Last($elm$time$Time$Sun),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12344,7 +13272,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_US = _List_fromArray(
 		1987,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12353,7 +13281,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_US = _List_fromArray(
 		2007,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12362,7 +13290,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_US = _List_fromArray(
 		2007,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -12578,7 +13506,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		1993,
 		1995,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 11),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 11),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12587,7 +13515,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		1994,
 		1995,
 		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12677,7 +13605,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2000,
 		2001,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12686,7 +13614,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2001,
 		2006,
 		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12749,7 +13677,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2007,
 		2007,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12758,7 +13686,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2008,
 		2017,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12767,7 +13695,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2008,
 		2011,
 		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12776,7 +13704,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2012,
 		2012,
 		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12785,7 +13713,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2013,
 		2014,
 		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12794,91 +13722,28 @@ var $justinmimbs$timezone_data$TimeZone$rules_Brazil = _List_fromArray(
 		2015,
 		2015,
 		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2016,
-		2022,
+		2019,
 		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2018,
-		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2018,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2023,
-		2023,
-		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2024,
-		2025,
-		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2026,
-		2026,
-		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2027,
-		2033,
-		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2034,
-		2034,
-		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2035,
-		2036,
-		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2037,
-		2037,
-		$elm$time$Time$Feb,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0)
+		60)
 	]);
 var $justinmimbs$timezone_data$TimeZone$america__araguaina = function (_v0) {
 	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
@@ -12929,7 +13794,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Arg = _List_fromArray(
 		1968,
 		1969,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12965,7 +13830,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Arg = _List_fromArray(
 		1989,
 		1993,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -12974,7 +13839,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Arg = _List_fromArray(
 		1989,
 		1992,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -12983,7 +13848,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Arg = _List_fromArray(
 		1999,
 		1999,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -13010,7 +13875,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Arg = _List_fromArray(
 		2008,
 		2009,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -13019,7 +13884,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Arg = _List_fromArray(
 		2008,
 		2008,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60)
@@ -13475,7 +14340,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_SanLuis = _List_fromArray(
 		2008,
 		2009,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -13484,7 +14349,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_SanLuis = _List_fromArray(
 		2007,
 		2008,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60)
@@ -13783,7 +14648,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		1996,
 		2001,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -13801,7 +14666,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		1998,
 		2001,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -13810,7 +14675,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		2002,
 		2004,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -13819,7 +14684,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		2002,
 		2003,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -13828,7 +14693,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		2004,
 		2009,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -13837,7 +14702,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		2005,
 		2009,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -13846,7 +14711,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		2010,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -13855,7 +14720,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		2010,
 		2012,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -13864,7 +14729,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Para = _List_fromArray(
 		2013,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -13940,7 +14805,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Mexico = _List_fromArray(
 		1996,
 		2000,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -13958,7 +14823,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Mexico = _List_fromArray(
 		2001,
 		2001,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -13976,7 +14841,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Mexico = _List_fromArray(
 		2002,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -14030,7 +14895,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Barb = _List_fromArray(
 		1977,
 		1978,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -14039,7 +14904,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Barb = _List_fromArray(
 		1978,
 		1980,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -14164,7 +15029,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Canada = _List_fromArray(
 		1987,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -14173,7 +15038,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Canada = _List_fromArray(
 		2007,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -14182,7 +15047,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Canada = _List_fromArray(
 		2007,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -14315,7 +15180,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NT_YK = _List_fromArray(
 		1987,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60)
@@ -14498,7 +15363,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_CR = _List_fromArray(
 		1979,
 		1980,
 		$elm$time$Time$Jun,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -14507,7 +15372,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_CR = _List_fromArray(
 		1991,
 		1992,
 		$elm$time$Time$Jan,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sat, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sat, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -14706,24 +15571,6 @@ var $justinmimbs$timezone_data$TimeZone$rules_Edm = _List_fromArray(
 	[
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1969,
-		1969,
-		$elm$time$Time$Apr,
-		$justinmimbs$timezone_data$TimeZone$Specification$Last($elm$time$Time$Sun),
-		120,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1969,
-		1969,
-		$elm$time$Time$Oct,
-		$justinmimbs$timezone_data$TimeZone$Specification$Last($elm$time$Time$Sun),
-		120,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		1972,
 		1986,
 		$elm$time$Time$Apr,
@@ -14808,7 +15655,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Salv = _List_fromArray(
 		1987,
 		1988,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -14986,7 +15833,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_StJohns = _List_fromArray(
 		1987,
 		1987,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		1,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -15004,7 +15851,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_StJohns = _List_fromArray(
 		1988,
 		1988,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		1,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		120),
@@ -15013,7 +15860,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_StJohns = _List_fromArray(
 		1989,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		1,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -15022,7 +15869,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_StJohns = _List_fromArray(
 		2007,
 		2011,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		1,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -15031,7 +15878,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_StJohns = _List_fromArray(
 		2007,
 		2010,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		1,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -15296,7 +16143,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		1978,
 		1990,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -15305,7 +16152,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		1979,
 		1980,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -15314,7 +16161,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		1981,
 		1985,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 5),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 5),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -15323,7 +16170,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		1986,
 		1989,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 14),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 14),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -15332,7 +16179,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		1990,
 		1997,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -15341,7 +16188,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		1991,
 		1995,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -15386,7 +16233,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		2000,
 		2003,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -15413,7 +16260,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		2007,
 		2007,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -15422,7 +16269,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		2008,
 		2008,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -15431,7 +16278,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		2009,
 		2010,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -15440,7 +16287,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		2011,
 		2011,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -15467,7 +16314,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		2012,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -15476,7 +16323,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cuba = _List_fromArray(
 		2013,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60)
@@ -16038,7 +16885,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Nic = _List_fromArray(
 		1979,
 		1980,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -16047,7 +16894,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Nic = _List_fromArray(
 		1979,
 		1980,
 		$elm$time$Time$Jun,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Mon, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Mon, 23),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -16065,7 +16912,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Nic = _List_fromArray(
 		2005,
 		2005,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -16083,7 +16930,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Nic = _List_fromArray(
 		2006,
 		2006,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -16310,7 +17157,7 @@ var $justinmimbs$timezone_data$TimeZone$america__metlakatla = function (_v0) {
 						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
 						-480,
 						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
-					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, $elm$time$Time$Mar, 10, 180, $justinmimbs$timezone_data$TimeZone$Specification$WallClock))
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, $elm$time$Time$Jan, 20, 120, $justinmimbs$timezone_data$TimeZone$Specification$WallClock))
 				]),
 			A2(
 				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
@@ -16390,7 +17237,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Moncton = _List_fromArray(
 		1993,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		1,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -16573,7 +17420,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Uruguay = _List_fromArray(
 		1978,
 		1979,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -16663,7 +17510,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Uruguay = _List_fromArray(
 		1990,
 		1991,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 21),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 21),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -16672,7 +17519,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Uruguay = _List_fromArray(
 		1991,
 		1992,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -16726,7 +17573,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Uruguay = _List_fromArray(
 		2006,
 		2015,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -16735,7 +17582,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Uruguay = _List_fromArray(
 		2006,
 		2014,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60)
@@ -17084,7 +17931,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Haiti = _List_fromArray(
 		1988,
 		1997,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -17102,7 +17949,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Haiti = _List_fromArray(
 		2005,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -17120,7 +17967,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Haiti = _List_fromArray(
 		2012,
 		2015,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -17129,7 +17976,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Haiti = _List_fromArray(
 		2012,
 		2015,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -17138,7 +17985,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Haiti = _List_fromArray(
 		2017,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -17147,7 +17994,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Haiti = _List_fromArray(
 		2017,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -17233,7 +18080,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1970,
 		1972,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17242,7 +18089,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1972,
 		1986,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17260,7 +18107,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1974,
 		1987,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17278,7 +18125,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1988,
 		1990,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17287,7 +18134,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1988,
 		1989,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17305,7 +18152,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1991,
 		1996,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17314,7 +18161,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1991,
 		1997,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17332,7 +18179,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1998,
 		1998,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17359,7 +18206,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		1999,
 		2010,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17368,7 +18215,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2000,
 		2007,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17386,7 +18233,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2009,
 		2009,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17395,7 +18242,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2010,
 		2010,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17404,7 +18251,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2011,
 		2011,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 2),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17413,7 +18260,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2011,
 		2011,
 		$elm$time$Time$Aug,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17422,7 +18269,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2012,
 		2014,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17431,7 +18278,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2012,
 		2014,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 2),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17440,7 +18287,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2016,
 		2018,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17449,7 +18296,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2016,
 		2018,
 		$elm$time$Time$Aug,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60),
@@ -17458,7 +18305,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2019,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 2),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -17467,7 +18314,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chile = _List_fromArray(
 		2019,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 2),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		60)
@@ -17762,7 +18609,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_C_Eur = _List_fromArray(
 		1977,
 		1980,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -17908,7 +18755,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Hond = _List_fromArray(
 		1987,
 		1988,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -17926,7 +18773,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Hond = _List_fromArray(
 		2006,
 		2006,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -17935,7 +18782,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Hond = _List_fromArray(
 		2006,
 		2006,
 		$elm$time$Time$Aug,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Mon, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Mon, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -17975,7 +18822,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Thule = _List_fromArray(
 		1993,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -17993,7 +18840,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Thule = _List_fromArray(
 		2007,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -18002,7 +18849,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Thule = _List_fromArray(
 		2007,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -18190,7 +19037,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Winn = _List_fromArray(
 		1987,
 		2005,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60)
@@ -18359,7 +19206,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		1969,
 		1971,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -18377,7 +19224,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		1973,
 		1981,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -18395,7 +19242,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		1984,
 		1986,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -18404,7 +19251,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		1986,
 		1986,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -18413,7 +19260,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		1987,
 		1990,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -18422,7 +19269,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		1987,
 		1987,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -18440,7 +19287,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		1991,
 		1999,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -18467,7 +19314,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		2001,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -18476,7 +19323,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		2006,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -18494,7 +19341,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AT = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0)
@@ -18542,7 +19389,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NZ = _List_fromArray(
 		1974,
 		1974,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -18569,7 +19416,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NZ = _List_fromArray(
 		1976,
 		1989,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -18578,7 +19425,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NZ = _List_fromArray(
 		1989,
 		1989,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -18587,7 +19434,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NZ = _List_fromArray(
 		1990,
 		2006,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -18596,7 +19443,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NZ = _List_fromArray(
 		1990,
 		2007,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -18614,7 +19461,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NZ = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0)
@@ -18927,7 +19774,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Jordan = _List_fromArray(
 		1986,
 		1988,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -18936,7 +19783,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Jordan = _List_fromArray(
 		1986,
 		1990,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -18990,7 +19837,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Jordan = _List_fromArray(
 		1992,
 		1993,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -18999,7 +19846,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Jordan = _List_fromArray(
 		1993,
 		1998,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -19008,7 +19855,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Jordan = _List_fromArray(
 		1994,
 		1994,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -19017,7 +19864,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Jordan = _List_fromArray(
 		1995,
 		1998,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -19792,7 +20639,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Kyrgyz = _List_fromArray(
 		1992,
 		1996,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 7),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 7),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -20282,7 +21129,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Syria = _List_fromArray(
 		2007,
 		2007,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -20291,7 +21138,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Syria = _List_fromArray(
 		2008,
 		2008,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -20318,7 +21165,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Syria = _List_fromArray(
 		2010,
 		2011,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -20491,7 +21338,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cyprus = _List_fromArray(
 		1977,
 		1980,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -20569,7 +21416,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		1999,
 		2005,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -20578,7 +21425,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		1999,
 		2003,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 15),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -20623,7 +21470,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		2007,
 		2007,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Thu, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Thu, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -20650,7 +21497,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		2009,
 		2009,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 1),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -20731,7 +21578,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		2013,
 		2013,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 21),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 21),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -20740,7 +21587,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		2014,
 		2015,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 21),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 21),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -20756,9 +21603,9 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2016,
-		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2018,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sat, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sat, 24),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -20770,8 +21617,21 @@ var $justinmimbs$timezone_data$TimeZone$rules_Palestine = _List_fromArray(
 		$justinmimbs$timezone_data$TimeZone$Specification$Last($elm$time$Time$Sat),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0)
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		$elm$time$Time$Mar,
+		$justinmimbs$timezone_data$TimeZone$Specification$Last($elm$time$Time$Fri),
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		60)
 	]);
+var $justinmimbs$timezone_data$TimeZone$Specification$Prev = F2(
+	function (a, b) {
+		return {$: 'Prev', a: a, b: b};
+	});
 var $justinmimbs$timezone_data$TimeZone$rules_Zion = _List_fromArray(
 	[
 		A7(
@@ -20808,6 +21668,42 @@ var $justinmimbs$timezone_data$TimeZone$rules_Zion = _List_fromArray(
 		$elm$time$Time$Aug,
 		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
 		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		$elm$time$Time$Aug,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1980,
+		1980,
+		$elm$time$Time$Sep,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
+		60,
+		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1984,
+		$elm$time$Time$May,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(5),
+		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		60),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		1984,
+		1984,
+		$elm$time$Time$Aug,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(25),
+		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
 		A7(
@@ -21173,9 +22069,9 @@ var $justinmimbs$timezone_data$TimeZone$rules_Zion = _List_fromArray(
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2005,
-		2005,
+		2012,
 		$elm$time$Time$Apr,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Prev, $elm$time$Time$Fri, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -21188,15 +22084,6 @@ var $justinmimbs$timezone_data$TimeZone$rules_Zion = _List_fromArray(
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2006,
-		2010,
-		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 26),
-		120,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2006,
@@ -21246,29 +22133,11 @@ var $justinmimbs$timezone_data$TimeZone$rules_Zion = _List_fromArray(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2011,
 		2011,
-		$elm$time$Time$Apr,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
-		120,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2011,
-		2011,
 		$elm$time$Time$Oct,
 		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		2012,
-		2012,
-		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 26),
-		120,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2012,
@@ -21283,7 +22152,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Zion = _List_fromArray(
 		2013,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Fri, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Fri, 23),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -21406,7 +22275,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_HK = _List_fromArray(
 		1965,
 		1976,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -21415,7 +22284,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_HK = _List_fromArray(
 		1965,
 		1976,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -21433,7 +22302,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_HK = _List_fromArray(
 		1979,
 		1979,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(13),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -21442,7 +22311,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_HK = _List_fromArray(
 		1979,
 		1979,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -21515,24 +22384,6 @@ var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
 	[
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1970,
-		1972,
-		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1970,
-		1972,
-		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		1973,
 		1973,
 		$elm$time$Time$Jun,
@@ -21543,10 +22394,10 @@ var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		1973,
-		1973,
-		$elm$time$Time$Nov,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(4),
-		180,
+		1976,
+		$elm$time$Time$Oct,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 31),
+		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
 		A7(
@@ -21560,38 +22411,20 @@ var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
 		60),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1974,
-		1974,
-		$elm$time$Time$Nov,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(3),
-		300,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		1975,
 		1975,
 		$elm$time$Time$Mar,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(30),
-		0,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(22),
+		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1975,
-		1976,
-		$elm$time$Time$Oct,
-		$justinmimbs$timezone_data$TimeZone$Specification$Last($elm$time$Time$Sun),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		1976,
 		1976,
-		$elm$time$Time$Jun,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(1),
-		0,
+		$elm$time$Time$Mar,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(21),
+		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
 		A7(
@@ -21599,53 +22432,35 @@ var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
 		1977,
 		1978,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
-		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
+		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		1977,
-		1977,
+		1978,
 		$elm$time$Time$Oct,
-		$justinmimbs$timezone_data$TimeZone$Specification$Day(16),
-		0,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
+		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1979,
-		1980,
-		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
-		180,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1979,
-		1982,
-		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Mon, 11),
+		1978,
+		1978,
+		$elm$time$Time$Jun,
+		$justinmimbs$timezone_data$TimeZone$Specification$Day(29),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
-		A7(
-		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
-		1981,
-		1982,
-		$elm$time$Time$Mar,
-		$justinmimbs$timezone_data$TimeZone$Specification$Last($elm$time$Time$Sun),
-		180,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		60),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		1983,
 		1983,
 		$elm$time$Time$Jul,
 		$justinmimbs$timezone_data$TimeZone$Specification$Day(31),
-		0,
+		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
 		A7(
@@ -21654,7 +22469,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
 		1983,
 		$elm$time$Time$Oct,
 		$justinmimbs$timezone_data$TimeZone$Specification$Day(2),
-		0,
+		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
 		A7(
@@ -21663,8 +22478,8 @@ var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
 		1985,
 		$elm$time$Time$Apr,
 		$justinmimbs$timezone_data$TimeZone$Specification$Day(20),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		60,
+		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
@@ -21672,8 +22487,8 @@ var $justinmimbs$timezone_data$TimeZone$rules_Turkey = _List_fromArray(
 		1985,
 		$elm$time$Time$Sep,
 		$justinmimbs$timezone_data$TimeZone$Specification$Day(28),
-		0,
-		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		60,
+		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
@@ -21732,13 +22547,13 @@ var $justinmimbs$timezone_data$TimeZone$europe__istanbul = function (_v0) {
 						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
 						120,
 						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Turkey)),
-					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1978, $elm$time$Time$Oct, 15, 0, $justinmimbs$timezone_data$TimeZone$Specification$WallClock)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1978, $elm$time$Time$Jun, 29, 0, $justinmimbs$timezone_data$TimeZone$Specification$WallClock)),
 					_Utils_Tuple2(
 					A2(
 						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
 						180,
 						$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_Turkey)),
-					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1985, $elm$time$Time$Apr, 20, 0, $justinmimbs$timezone_data$TimeZone$Specification$WallClock)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1984, $elm$time$Time$Nov, 1, 120, $justinmimbs$timezone_data$TimeZone$Specification$WallClock)),
 					_Utils_Tuple2(
 					A2(
 						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
@@ -21877,7 +22692,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Pakistan = _List_fromArray(
 		2002,
 		2002,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 2),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -21886,7 +22701,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Pakistan = _List_fromArray(
 		2002,
 		2002,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 2),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 2),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -22084,7 +22899,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Macau = _List_fromArray(
 		1965,
 		1973,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -22093,7 +22908,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Macau = _List_fromArray(
 		1967,
 		1976,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -22111,7 +22926,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Macau = _List_fromArray(
 		1975,
 		1976,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -22129,7 +22944,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Macau = _List_fromArray(
 		1979,
 		1979,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		210,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -22668,7 +23483,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_ROK = _List_fromArray(
 		1987,
 		1988,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -22677,7 +23492,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_ROK = _List_fromArray(
 		1987,
 		1988,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -22708,7 +23523,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_PRC = _List_fromArray(
 		1986,
 		1991,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 11),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 11),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -22717,7 +23532,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_PRC = _List_fromArray(
 		1987,
 		1991,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 11),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 11),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60)
@@ -23764,7 +24579,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Port = _List_fromArray(
 		1978,
 		1979,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -23821,7 +24636,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_W_Eur = _List_fromArray(
 		1977,
 		1980,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -24058,7 +24873,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Falk = _List_fromArray(
 		1985,
 		2000,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 9),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 9),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -24067,7 +24882,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Falk = _List_fromArray(
 		1986,
 		2000,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -24076,7 +24891,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Falk = _List_fromArray(
 		2001,
 		2010,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -24085,7 +24900,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Falk = _List_fromArray(
 		2001,
 		2010,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60)
@@ -24163,7 +24978,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AS = _List_fromArray(
 		1973,
 		1985,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24172,7 +24987,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AS = _List_fromArray(
 		1986,
 		1990,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24244,7 +25059,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AS = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24253,7 +25068,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AS = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60)
@@ -24310,7 +25125,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AQ = _List_fromArray(
 		1990,
 		1992,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0)
@@ -24358,7 +25173,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		1973,
 		1981,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24367,7 +25182,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		1982,
 		1982,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24376,7 +25191,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		1983,
 		1985,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24385,7 +25200,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		1986,
 		1989,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24412,7 +25227,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		1990,
 		1995,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24448,7 +25263,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		2006,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24466,7 +25281,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24475,7 +25290,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AN = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60)
@@ -24548,7 +25363,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AW = _List_fromArray(
 		1975,
 		1975,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24566,7 +25381,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AW = _List_fromArray(
 		1984,
 		1984,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24584,7 +25399,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AW = _List_fromArray(
 		1992,
 		1992,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24652,7 +25467,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Holiday = _List_fromArray(
 		1993,
 		1994,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0)
@@ -24697,7 +25512,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_LH = _List_fromArray(
 		1982,
 		1985,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -24715,7 +25530,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_LH = _List_fromArray(
 		1986,
 		1989,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -24742,7 +25557,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_LH = _List_fromArray(
 		1990,
 		1995,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -24778,7 +25593,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_LH = _List_fromArray(
 		2006,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -24796,7 +25611,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_LH = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -24805,7 +25620,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_LH = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		30)
@@ -24859,7 +25674,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
 		1973,
 		1985,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24868,7 +25683,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
 		1986,
 		1990,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24877,7 +25692,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
 		1986,
 		1987,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -24895,7 +25710,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
 		1991,
 		1994,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24931,7 +25746,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
 		2006,
 		2006,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24949,7 +25764,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -24958,7 +25773,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_AV = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60)
@@ -25136,7 +25951,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Greece = _List_fromArray(
 		1977,
 		1978,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -25293,7 +26108,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_E_Eur = _List_fromArray(
 		1977,
 		1980,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -25570,7 +26385,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Eire = _List_fromArray(
 		1972,
 		1980,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -25579,7 +26394,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Eire = _List_fromArray(
 		1972,
 		1980,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		-60),
@@ -25597,7 +26412,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Eire = _List_fromArray(
 		1981,
 		1989,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		-60),
@@ -25606,7 +26421,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Eire = _List_fromArray(
 		1990,
 		1995,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		-60),
@@ -25655,7 +26470,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_GB_Eire = _List_fromArray(
 		1972,
 		1980,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 16),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 16),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -25664,7 +26479,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_GB_Eire = _List_fromArray(
 		1972,
 		1980,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -25682,7 +26497,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_GB_Eire = _List_fromArray(
 		1981,
 		1989,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0),
@@ -25691,7 +26506,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_GB_Eire = _List_fromArray(
 		1990,
 		1995,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$Universal,
 		0)
@@ -25926,7 +26741,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Spain = _List_fromArray(
 		1974,
 		1975,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sat, 12),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sat, 12),
 		1380,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -25935,7 +26750,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Spain = _List_fromArray(
 		1974,
 		1975,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		60,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -26010,7 +26825,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Italy = _List_fromArray(
 		1967,
 		1969,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -26046,7 +26861,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Italy = _List_fromArray(
 		1971,
 		1972,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -26127,7 +26942,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Italy = _List_fromArray(
 		1977,
 		1979,
 		$elm$time$Time$May,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 22),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 22),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -26193,7 +27008,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Malta = _List_fromArray(
 		1975,
 		1979,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -26202,7 +27017,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Malta = _List_fromArray(
 		1975,
 		1980,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -26643,7 +27458,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Bulg = _List_fromArray(
 		1980,
 		1982,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sat, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sat, 1),
 		1380,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -27394,7 +28209,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_WS = _List_fromArray(
 		2011,
 		2011,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sat, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sat, 1),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -27412,7 +28227,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_WS = _List_fromArray(
 		2012,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		240,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -27469,7 +28284,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chatham = _List_fromArray(
 		1974,
 		1974,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		165,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -27496,7 +28311,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chatham = _List_fromArray(
 		1976,
 		1989,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		165,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -27505,7 +28320,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chatham = _List_fromArray(
 		1989,
 		1989,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 8),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
 		165,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -27514,7 +28329,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chatham = _List_fromArray(
 		1990,
 		2006,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		165,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		60),
@@ -27523,7 +28338,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chatham = _List_fromArray(
 		1990,
 		2007,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		165,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0),
@@ -27541,7 +28356,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Chatham = _List_fromArray(
 		2008,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Apr,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		165,
 		$justinmimbs$timezone_data$TimeZone$Specification$Standard,
 		0)
@@ -27600,7 +28415,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Vanuatu = _List_fromArray(
 		1984,
 		1991,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -27618,7 +28433,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Vanuatu = _List_fromArray(
 		1985,
 		1991,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -27627,7 +28442,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Vanuatu = _List_fromArray(
 		1992,
 		1993,
 		$elm$time$Time$Jan,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -27636,7 +28451,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Vanuatu = _List_fromArray(
 		1992,
 		1992,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 23),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 23),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60)
@@ -27700,7 +28515,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Fiji = _List_fromArray(
 		1998,
 		1999,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -27736,7 +28551,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Fiji = _List_fromArray(
 		2010,
 		2013,
 		$elm$time$Time$Oct,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 21),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 21),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -27745,7 +28560,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Fiji = _List_fromArray(
 		2011,
 		2011,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -27754,7 +28569,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Fiji = _List_fromArray(
 		2012,
 		2013,
 		$elm$time$Time$Jan,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 18),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 18),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -27763,16 +28578,16 @@ var $justinmimbs$timezone_data$TimeZone$rules_Fiji = _List_fromArray(
 		2014,
 		2014,
 		$elm$time$Time$Jan,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 18),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 18),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
 		A7(
 		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
 		2014,
-		$justinmimbs$timezone_data$TimeZone$maxYear,
+		2018,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -27781,10 +28596,19 @@ var $justinmimbs$timezone_data$TimeZone$rules_Fiji = _List_fromArray(
 		2015,
 		$justinmimbs$timezone_data$TimeZone$maxYear,
 		$elm$time$Time$Jan,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 13),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 12),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
-		0)
+		0),
+		A7(
+		$justinmimbs$timezone_data$TimeZone$Specification$Rule,
+		2019,
+		$justinmimbs$timezone_data$TimeZone$maxYear,
+		$elm$time$Time$Nov,
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 8),
+		120,
+		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
+		60)
 	]);
 var $justinmimbs$timezone_data$TimeZone$pacific__fiji = function (_v0) {
 	return $justinmimbs$timezone_data$TimeZone$fromSpecification(
@@ -27887,7 +28711,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Guam = _List_fromArray(
 		1970,
 		1971,
 		$elm$time$Time$Sep,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -28112,24 +28936,30 @@ var $justinmimbs$timezone_data$TimeZone$pacific__norfolk = function (_v0) {
 						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
 						690,
 						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
-					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, $elm$time$Time$Oct, 27, 120, $justinmimbs$timezone_data$TimeZone$Specification$WallClock)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1974, $elm$time$Time$Oct, 27, 120, $justinmimbs$timezone_data$TimeZone$Specification$Standard)),
 					_Utils_Tuple2(
 					A2(
 						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
 						690,
 						$justinmimbs$timezone_data$TimeZone$Specification$Save(60)),
-					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, $elm$time$Time$Mar, 2, 120, $justinmimbs$timezone_data$TimeZone$Specification$WallClock)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 1975, $elm$time$Time$Mar, 2, 120, $justinmimbs$timezone_data$TimeZone$Specification$Standard)),
 					_Utils_Tuple2(
 					A2(
 						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
 						690,
 						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
-					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, $elm$time$Time$Oct, 4, 120, $justinmimbs$timezone_data$TimeZone$Specification$WallClock))
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2015, $elm$time$Time$Oct, 4, 120, $justinmimbs$timezone_data$TimeZone$Specification$Standard)),
+					_Utils_Tuple2(
+					A2(
+						$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
+						660,
+						$justinmimbs$timezone_data$TimeZone$Specification$Save(0)),
+					A5($justinmimbs$timezone_data$TimeZone$Specification$DateTime, 2019, $elm$time$Time$Jul, 1, 0, $justinmimbs$timezone_data$TimeZone$Specification$WallClock))
 				]),
 			A2(
 				$justinmimbs$timezone_data$TimeZone$Specification$ZoneState,
 				660,
-				$justinmimbs$timezone_data$TimeZone$Specification$Save(0))));
+				$justinmimbs$timezone_data$TimeZone$Specification$Rules($justinmimbs$timezone_data$TimeZone$rules_AN))));
 };
 var $justinmimbs$timezone_data$TimeZone$rules_NC = _List_fromArray(
 	[
@@ -28138,7 +28968,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_NC = _List_fromArray(
 		1977,
 		1978,
 		$elm$time$Time$Dec,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -28244,7 +29074,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Cook = _List_fromArray(
 		1979,
 		1991,
 		$elm$time$Time$Mar,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		0,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0),
@@ -28322,7 +29152,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Tonga = _List_fromArray(
 		2000,
 		2001,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -28340,7 +29170,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Tonga = _List_fromArray(
 		2016,
 		2016,
 		$elm$time$Time$Nov,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 1),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 1),
 		120,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		60),
@@ -28349,7 +29179,7 @@ var $justinmimbs$timezone_data$TimeZone$rules_Tonga = _List_fromArray(
 		2017,
 		2017,
 		$elm$time$Time$Jan,
-		A2($justinmimbs$timezone_data$TimeZone$Specification$First, $elm$time$Time$Sun, 15),
+		A2($justinmimbs$timezone_data$TimeZone$Specification$Next, $elm$time$Time$Sun, 15),
 		180,
 		$justinmimbs$timezone_data$TimeZone$Specification$WallClock,
 		0)
@@ -29975,27 +30805,6 @@ var $elm$core$Maybe$andThen = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
-var $elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
 var $elm_community$list_extra$List$Extra$dropWhile = F2(
 	function (predicate, list) {
 		dropWhile:
@@ -30748,23 +31557,25 @@ var $author$project$Form$MultiSelect$update = F2(
 var $author$project$Form$SearchSelect$Internal$Response = function (a) {
 	return {$: 'Response', a: a};
 };
-var $elm$http$Http$Internal$EmptyBody = {$: 'EmptyBody'};
-var $elm$http$Http$emptyBody = $elm$http$Http$Internal$EmptyBody;
-var $elm$http$Http$BadPayload = F2(
+var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
-		return {$: 'BadPayload', a: a, b: b};
+		return {$: 'BadStatus_', a: a, b: b};
 	});
-var $elm$http$Http$BadStatus = function (a) {
-	return {$: 'BadStatus', a: a};
+var $elm$http$Http$BadUrl_ = function (a) {
+	return {$: 'BadUrl_', a: a};
 };
-var $elm$http$Http$BadUrl = function (a) {
-	return {$: 'BadUrl', a: a};
+var $elm$http$Http$GoodStatus_ = F2(
+	function (a, b) {
+		return {$: 'GoodStatus_', a: a, b: b};
+	});
+var $elm$http$Http$NetworkError_ = {$: 'NetworkError_'};
+var $elm$http$Http$Receiving = function (a) {
+	return {$: 'Receiving', a: a};
 };
-var $elm$http$Http$Internal$FormDataBody = function (a) {
-	return {$: 'FormDataBody', a: a};
+var $elm$http$Http$Sending = function (a) {
+	return {$: 'Sending', a: a};
 };
-var $elm$http$Http$NetworkError = {$: 'NetworkError'};
-var $elm$http$Http$Timeout = {$: 'Timeout'};
+var $elm$http$Http$Timeout_ = {$: 'Timeout_'};
 var $elm$core$Maybe$isJust = function (maybe) {
 	if (maybe.$ === 'Just') {
 		return true;
@@ -30772,79 +31583,241 @@ var $elm$core$Maybe$isJust = function (maybe) {
 		return false;
 	}
 };
-var $elm$http$Http$Internal$isStringBody = function (body) {
-	if (body.$ === 'StringBody') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$core$Result$map = F2(
-	function (func, ra) {
-		if (ra.$ === 'Ok') {
-			var a = ra.a;
-			return $elm$core$Result$Ok(
-				func(a));
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$http$Http$expectStringResponse = F2(
+	function (toMsg, toResult) {
+		return A3(
+			_Http_expect,
+			'',
+			$elm$core$Basics$identity,
+			A2($elm$core$Basics$composeR, toResult, toMsg));
+	});
+var $elm$core$Result$mapError = F2(
+	function (f, result) {
+		if (result.$ === 'Ok') {
+			var v = result.a;
+			return $elm$core$Result$Ok(v);
 		} else {
-			var e = ra.a;
-			return $elm$core$Result$Err(e);
+			var e = result.a;
+			return $elm$core$Result$Err(
+				f(e));
 		}
 	});
-var $elm$http$Http$expectStringResponse = _Http_expectStringResponse;
-var $elm$http$Http$expectJson = function (decoder) {
-	return $elm$http$Http$expectStringResponse(
-		function (response) {
-			var _v0 = A2($elm$json$Json$Decode$decodeString, decoder, response.body);
-			if (_v0.$ === 'Err') {
-				var decodeError = _v0.a;
-				return $elm$core$Result$Err(
-					$elm$json$Json$Decode$errorToString(decodeError));
-			} else {
-				var value = _v0.a;
-				return $elm$core$Result$Ok(value);
-			}
-		});
+var $elm$http$Http$BadBody = function (a) {
+	return {$: 'BadBody', a: a};
 };
-var $elm$http$Http$Internal$Request = function (a) {
+var $elm$http$Http$BadStatus = function (a) {
+	return {$: 'BadStatus', a: a};
+};
+var $elm$http$Http$BadUrl = function (a) {
+	return {$: 'BadUrl', a: a};
+};
+var $elm$http$Http$NetworkError = {$: 'NetworkError'};
+var $elm$http$Http$Timeout = {$: 'Timeout'};
+var $elm$http$Http$resolve = F2(
+	function (toResult, response) {
+		switch (response.$) {
+			case 'BadUrl_':
+				var url = response.a;
+				return $elm$core$Result$Err(
+					$elm$http$Http$BadUrl(url));
+			case 'Timeout_':
+				return $elm$core$Result$Err($elm$http$Http$Timeout);
+			case 'NetworkError_':
+				return $elm$core$Result$Err($elm$http$Http$NetworkError);
+			case 'BadStatus_':
+				var metadata = response.a;
+				return $elm$core$Result$Err(
+					$elm$http$Http$BadStatus(metadata.statusCode));
+			default:
+				var body = response.b;
+				return A2(
+					$elm$core$Result$mapError,
+					$elm$http$Http$BadBody,
+					toResult(body));
+		}
+	});
+var $elm$http$Http$expectJson = F2(
+	function (toMsg, decoder) {
+		return A2(
+			$elm$http$Http$expectStringResponse,
+			toMsg,
+			$elm$http$Http$resolve(
+				function (string) {
+					return A2(
+						$elm$core$Result$mapError,
+						$elm$json$Json$Decode$errorToString,
+						A2($elm$json$Json$Decode$decodeString, decoder, string));
+				}));
+	});
+var $elm$http$Http$emptyBody = _Http_emptyBody;
+var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
 };
-var $elm$http$Http$request = $elm$http$Http$Internal$Request;
-var $elm$http$Http$get = F2(
-	function (url, decoder) {
-		return $elm$http$Http$request(
-			{
-				body: $elm$http$Http$emptyBody,
-				expect: $elm$http$Http$expectJson(decoder),
-				headers: _List_Nil,
-				method: 'GET',
-				timeout: $elm$core$Maybe$Nothing,
-				url: url,
-				withCredentials: false
-			});
+var $elm$http$Http$State = F2(
+	function (reqs, subs) {
+		return {reqs: reqs, subs: subs};
 	});
+var $elm$http$Http$init = $elm$core$Task$succeed(
+	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
+var $elm$core$Process$kill = _Scheduler_kill;
+var $elm$core$Process$spawn = _Scheduler_spawn;
+var $elm$http$Http$updateReqs = F3(
+	function (router, cmds, reqs) {
+		updateReqs:
+		while (true) {
+			if (!cmds.b) {
+				return $elm$core$Task$succeed(reqs);
+			} else {
+				var cmd = cmds.a;
+				var otherCmds = cmds.b;
+				if (cmd.$ === 'Cancel') {
+					var tracker = cmd.a;
+					var _v2 = A2($elm$core$Dict$get, tracker, reqs);
+					if (_v2.$ === 'Nothing') {
+						var $temp$router = router,
+							$temp$cmds = otherCmds,
+							$temp$reqs = reqs;
+						router = $temp$router;
+						cmds = $temp$cmds;
+						reqs = $temp$reqs;
+						continue updateReqs;
+					} else {
+						var pid = _v2.a;
+						return A2(
+							$elm$core$Task$andThen,
+							function (_v3) {
+								return A3(
+									$elm$http$Http$updateReqs,
+									router,
+									otherCmds,
+									A2($elm$core$Dict$remove, tracker, reqs));
+							},
+							$elm$core$Process$kill(pid));
+					}
+				} else {
+					var req = cmd.a;
+					return A2(
+						$elm$core$Task$andThen,
+						function (pid) {
+							var _v4 = req.tracker;
+							if (_v4.$ === 'Nothing') {
+								return A3($elm$http$Http$updateReqs, router, otherCmds, reqs);
+							} else {
+								var tracker = _v4.a;
+								return A3(
+									$elm$http$Http$updateReqs,
+									router,
+									otherCmds,
+									A3($elm$core$Dict$insert, tracker, pid, reqs));
+							}
+						},
+						$elm$core$Process$spawn(
+							A3(
+								_Http_toTask,
+								router,
+								$elm$core$Platform$sendToApp(router),
+								req)));
+				}
+			}
+		}
+	});
+var $elm$http$Http$onEffects = F4(
+	function (router, cmds, subs, state) {
+		return A2(
+			$elm$core$Task$andThen,
+			function (reqs) {
+				return $elm$core$Task$succeed(
+					A2($elm$http$Http$State, reqs, subs));
+			},
+			A3($elm$http$Http$updateReqs, router, cmds, state.reqs));
+	});
+var $elm$http$Http$maybeSend = F4(
+	function (router, desiredTracker, progress, _v0) {
+		var actualTracker = _v0.a;
+		var toMsg = _v0.b;
+		return _Utils_eq(desiredTracker, actualTracker) ? $elm$core$Maybe$Just(
+			A2(
+				$elm$core$Platform$sendToApp,
+				router,
+				toMsg(progress))) : $elm$core$Maybe$Nothing;
+	});
+var $elm$http$Http$onSelfMsg = F3(
+	function (router, _v0, state) {
+		var tracker = _v0.a;
+		var progress = _v0.b;
+		return A2(
+			$elm$core$Task$andThen,
+			function (_v1) {
+				return $elm$core$Task$succeed(state);
+			},
+			$elm$core$Task$sequence(
+				A2(
+					$elm$core$List$filterMap,
+					A3($elm$http$Http$maybeSend, router, tracker, progress),
+					state.subs)));
+	});
+var $elm$http$Http$Cancel = function (a) {
+	return {$: 'Cancel', a: a};
+};
+var $elm$http$Http$cmdMap = F2(
+	function (func, cmd) {
+		if (cmd.$ === 'Cancel') {
+			var tracker = cmd.a;
+			return $elm$http$Http$Cancel(tracker);
+		} else {
+			var r = cmd.a;
+			return $elm$http$Http$Request(
+				{
+					allowCookiesFromOtherDomains: r.allowCookiesFromOtherDomains,
+					body: r.body,
+					expect: A2(_Http_mapExpect, func, r.expect),
+					headers: r.headers,
+					method: r.method,
+					timeout: r.timeout,
+					tracker: r.tracker,
+					url: r.url
+				});
+		}
+	});
+var $elm$http$Http$MySub = F2(
+	function (a, b) {
+		return {$: 'MySub', a: a, b: b};
+	});
+var $elm$http$Http$subMap = F2(
+	function (func, _v0) {
+		var tracker = _v0.a;
+		var toMsg = _v0.b;
+		return A2(
+			$elm$http$Http$MySub,
+			tracker,
+			A2($elm$core$Basics$composeR, toMsg, func));
+	});
+_Platform_effectManagers['Http'] = _Platform_createManager($elm$http$Http$init, $elm$http$Http$onEffects, $elm$http$Http$onSelfMsg, $elm$http$Http$cmdMap, $elm$http$Http$subMap);
+var $elm$http$Http$command = _Platform_leaf('Http');
+var $elm$http$Http$subscription = _Platform_leaf('Http');
+var $elm$http$Http$request = function (r) {
+	return $elm$http$Http$command(
+		$elm$http$Http$Request(
+			{allowCookiesFromOtherDomains: false, body: r.body, expect: r.expect, headers: r.headers, method: r.method, timeout: r.timeout, tracker: r.tracker, url: r.url}));
+};
+var $elm$http$Http$get = function (r) {
+	return $elm$http$Http$request(
+		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
+};
 var $author$project$Form$SearchSelect$Internal$searchResponseDecoder = function (optionDecoder) {
 	return $elm$json$Json$Decode$list(optionDecoder);
 };
-var $elm$http$Http$toTask = function (_v0) {
-	var request_ = _v0.a;
-	return A2(_Http_toTask, request_, $elm$core$Maybe$Nothing);
-};
-var $elm$http$Http$send = F2(
-	function (resultToMessage, request_) {
-		return A2(
-			$elm$core$Task$attempt,
-			resultToMessage,
-			$elm$http$Http$toTask(request_));
-	});
 var $author$project$Form$SearchSelect$Internal$searchRequest = F3(
 	function (searchUrl, input, optionDecoder) {
-		return A2(
-			$elm$http$Http$send,
-			$author$project$Form$SearchSelect$Internal$Response,
-			A2(
-				$elm$http$Http$get,
-				_Utils_ap(searchUrl, input),
-				$author$project$Form$SearchSelect$Internal$searchResponseDecoder(optionDecoder)));
+		return $elm$http$Http$get(
+			{
+				expect: A2(
+					$elm$http$Http$expectJson,
+					$author$project$Form$SearchSelect$Internal$Response,
+					$author$project$Form$SearchSelect$Internal$searchResponseDecoder(optionDecoder)),
+				url: _Utils_ap(searchUrl, input)
+			});
 	});
 var $author$project$Form$SearchSelect$Internal$shouldSearch = F2(
 	function (inputMinimum, input) {
@@ -31459,10 +32432,7 @@ var $elm$time$Time$addMySub = F2(
 				state);
 		}
 	});
-var $elm$core$Process$kill = _Scheduler_kill;
-var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var $elm$time$Time$setInterval = _Time_setInterval;
-var $elm$core$Process$spawn = _Scheduler_spawn;
 var $elm$time$Time$spawnHelp = F3(
 	function (router, intervals, processes) {
 		if (!intervals.b) {
@@ -32019,8 +32989,6 @@ var $author$project$ToolTip$bottom = function (_v0) {
 			viewState,
 			{placement: $author$project$ToolTip$Bottom}));
 };
-var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
@@ -32047,22 +33015,10 @@ var $feathericons$elm_feather$FeatherIcons$makeBuilder = F2(
 var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
 var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
 var $elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
-var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var $elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
-var $elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
-var $elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
-var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
 var $elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
 var $elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var $feathericons$elm_feather$FeatherIcons$xmlns = function (s) {
-	return A2(
-		$elm$virtual_dom$VirtualDom$property,
-		'xmlns',
-		$elm$json$Json$Encode$string(s));
-};
 var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
 var $elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
 var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
@@ -32072,65 +33028,47 @@ var $feathericons$elm_feather$FeatherIcons$calendar = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$rect,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-calendar')
+					$elm$svg$Svg$Attributes$x('3'),
+					$elm$svg$Svg$Attributes$y('4'),
+					$elm$svg$Svg$Attributes$width('18'),
+					$elm$svg$Svg$Attributes$height('18'),
+					$elm$svg$Svg$Attributes$rx('2'),
+					$elm$svg$Svg$Attributes$ry('2')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x('3'),
-							$elm$svg$Svg$Attributes$y('4'),
-							$elm$svg$Svg$Attributes$width('18'),
-							$elm$svg$Svg$Attributes$height('18'),
-							$elm$svg$Svg$Attributes$rx('2'),
-							$elm$svg$Svg$Attributes$ry('2')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('16'),
-							$elm$svg$Svg$Attributes$y1('2'),
-							$elm$svg$Svg$Attributes$x2('16'),
-							$elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('8'),
-							$elm$svg$Svg$Attributes$y1('2'),
-							$elm$svg$Svg$Attributes$x2('8'),
-							$elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('3'),
-							$elm$svg$Svg$Attributes$y1('10'),
-							$elm$svg$Svg$Attributes$x2('21'),
-							$elm$svg$Svg$Attributes$y2('10')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$x1('16'),
+					$elm$svg$Svg$Attributes$y1('2'),
+					$elm$svg$Svg$Attributes$x2('16'),
+					$elm$svg$Svg$Attributes$y2('6')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('8'),
+					$elm$svg$Svg$Attributes$y1('2'),
+					$elm$svg$Svg$Attributes$x2('8'),
+					$elm$svg$Svg$Attributes$y2('6')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('3'),
+					$elm$svg$Svg$Attributes$y1('10'),
+					$elm$svg$Svg$Attributes$x2('21'),
+					$elm$svg$Svg$Attributes$y2('10')
+				]),
+			_List_Nil)
 		]));
 var $author$project$Grid$Col = function (a) {
 	return {$: 'Col', a: a};
@@ -32161,39 +33099,21 @@ var $feathericons$elm_feather$FeatherIcons$compass = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$circle,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-compass')
+					$elm$svg$Svg$Attributes$cx('12'),
+					$elm$svg$Svg$Attributes$cy('12'),
+					$elm$svg$Svg$Attributes$r('10')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$polygon,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$circle,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$cx('12'),
-							$elm$svg$Svg$Attributes$cy('12'),
-							$elm$svg$Svg$Attributes$r('10')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$points('16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76')
+				]),
+			_List_Nil)
 		]));
 var $rtfeldman$elm_css$Css$Structure$Compatible = {$: 'Compatible'};
 var $rtfeldman$elm_css$Css$auto = {alignItemsOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible, cursor: $rtfeldman$elm_css$Css$Structure$Compatible, flexBasis: $rtfeldman$elm_css$Css$Structure$Compatible, intOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible, justifyContentOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible, lengthOrAuto: $rtfeldman$elm_css$Css$Structure$Compatible, lengthOrAutoOrCoverOrContain: $rtfeldman$elm_css$Css$Structure$Compatible, lengthOrNumberOrAutoOrNoneOrContent: $rtfeldman$elm_css$Css$Structure$Compatible, overflow: $rtfeldman$elm_css$Css$Structure$Compatible, pointerEvents: $rtfeldman$elm_css$Css$Structure$Compatible, tableLayout: $rtfeldman$elm_css$Css$Structure$Compatible, textRendering: $rtfeldman$elm_css$Css$Structure$Compatible, touchAction: $rtfeldman$elm_css$Css$Structure$Compatible, value: 'auto'};
@@ -32286,7 +33206,6 @@ var $rtfeldman$elm_css$Css$Media$minWidth = function (value) {
 	return A2($rtfeldman$elm_css$Css$Media$feature, 'min-width', value);
 };
 var $rtfeldman$elm_css$Css$PxUnits = {$: 'PxUnits'};
-var $elm$core$String$fromFloat = _String_fromNumber;
 var $rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
 	function (units, unitLabel, numericValue) {
 		return {
@@ -33154,108 +34073,74 @@ var $rtfeldman$elm_css$Css$Structure$concatMapLastStyleBlock = F2(
 			A2($rtfeldman$elm_css$Css$Structure$concatMapLastStyleBlock, update, rest));
 	});
 var $elm$core$String$cons = _String_cons;
-var $Skinney$murmur3$Murmur3$HashData = F4(
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$HashData = F4(
 	function (shift, seed, hash, charsProcessed) {
 		return {charsProcessed: charsProcessed, hash: hash, seed: seed, shift: shift};
 	});
-var $Skinney$murmur3$Murmur3$mur = F2(
-	function (c, h) {
-		return 4294967295 & (((h & 65535) * c) + ((65535 & ((h >>> 16) * c)) << 16));
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$c1 = 3432918353;
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$c2 = 461845907;
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy = F2(
+	function (b, a) {
+		return ((a & 65535) * b) + ((((a >>> 16) * b) & 65535) << 16);
 	});
 var $elm$core$Bitwise$or = _Bitwise_or;
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$rotlBy = F2(
+	function (b, a) {
+		return (a << b) | (a >>> (32 - b));
+	});
 var $elm$core$Bitwise$xor = _Bitwise_xor;
-var $Skinney$murmur3$Murmur3$mix = F2(
-	function (h1, h2) {
-		var k1 = A2($Skinney$murmur3$Murmur3$mur, 3432918353, h2);
-		return h1 ^ A2($Skinney$murmur3$Murmur3$mur, 461845907, (k1 >>> 17) | (k1 << 15));
-	});
-var $Skinney$murmur3$Murmur3$finalize = function (data) {
-	var acc = (!(!data.hash)) ? A2($Skinney$murmur3$Murmur3$mix, data.seed, data.hash) : data.seed;
-	var h1 = acc ^ data.charsProcessed;
-	var h2 = A2($Skinney$murmur3$Murmur3$mur, 2246822507, h1 ^ (h1 >>> 16));
-	var h3 = A2($Skinney$murmur3$Murmur3$mur, 3266489909, h2 ^ (h2 >>> 13));
-	return (h3 ^ (h3 >>> 16)) >>> 0;
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$finalize = function (data) {
+	var acc = (!(!data.hash)) ? (data.seed ^ A2(
+		$rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy,
+		$rtfeldman$elm_css$ElmCssVendor$Murmur3$c2,
+		A2(
+			$rtfeldman$elm_css$ElmCssVendor$Murmur3$rotlBy,
+			15,
+			A2($rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy, $rtfeldman$elm_css$ElmCssVendor$Murmur3$c1, data.hash)))) : data.seed;
+	var h0 = acc ^ data.charsProcessed;
+	var h1 = A2($rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy, 2246822507, h0 ^ (h0 >>> 16));
+	var h2 = A2($rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy, 3266489909, h1 ^ (h1 >>> 13));
+	return (h2 ^ (h2 >>> 16)) >>> 0;
 };
-var $Skinney$murmur3$UTF8$accumulate = F3(
-	function (add, _char, _v0) {
-		var acc = _v0.a;
-		var combine = _v0.b;
-		if (combine.$ === 'Nothing') {
-			return (_char < 128) ? _Utils_Tuple2(
-				A2(add, _char, acc),
-				$elm$core$Maybe$Nothing) : ((_char < 2048) ? _Utils_Tuple2(
-				A2(
-					add,
-					128 | (63 & _char),
-					A2(add, 192 | (_char >>> 6), acc)),
-				$elm$core$Maybe$Nothing) : (((_char < 55296) || (_char >= 57344)) ? _Utils_Tuple2(
-				A2(
-					add,
-					128 | (63 & _char),
-					A2(
-						add,
-						128 | (63 & (_char >>> 6)),
-						A2(add, 224 | (_char >>> 12), acc))),
-				$elm$core$Maybe$Nothing) : _Utils_Tuple2(
-				acc,
-				$elm$core$Maybe$Just(_char))));
-		} else {
-			var prev = combine.a;
-			var combined = ((1023 & _char) | ((1023 & prev) << 10)) + 65536;
-			return _Utils_Tuple2(
-				A2(
-					add,
-					128 | (63 & combined),
-					A2(
-						add,
-						128 | (63 & (combined >>> 6)),
-						A2(
-							add,
-							128 | (63 & (combined >>> 12)),
-							A2(add, 240 | (combined >>> 18), acc)))),
-				$elm$core$Maybe$Nothing);
-		}
-	});
 var $elm$core$String$foldl = _String_foldl;
-var $Skinney$murmur3$UTF8$foldl = F3(
-	function (op, acc, input) {
-		var helper = F2(
-			function (_char, res) {
-				return A3(
-					$Skinney$murmur3$UTF8$accumulate,
-					op,
-					$elm$core$Char$toCode(_char),
-					res);
-			});
-		return A3(
-			$elm$core$String$foldl,
-			helper,
-			_Utils_Tuple2(acc, $elm$core$Maybe$Nothing),
-			input).a;
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$mix = F2(
+	function (h1, k1) {
+		return A2(
+			$rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy,
+			5,
+			A2(
+				$rtfeldman$elm_css$ElmCssVendor$Murmur3$rotlBy,
+				13,
+				h1 ^ A2(
+					$rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy,
+					$rtfeldman$elm_css$ElmCssVendor$Murmur3$c2,
+					A2(
+						$rtfeldman$elm_css$ElmCssVendor$Murmur3$rotlBy,
+						15,
+						A2($rtfeldman$elm_css$ElmCssVendor$Murmur3$multiplyBy, $rtfeldman$elm_css$ElmCssVendor$Murmur3$c1, k1))))) + 3864292196;
 	});
-var $Skinney$murmur3$Murmur3$step = function (acc) {
-	var h1 = A2($Skinney$murmur3$Murmur3$mur, 5, (acc >>> 19) | (acc << 13));
-	return ((h1 & 65535) + 27492) + ((65535 & ((h1 >>> 16) + 58964)) << 16);
-};
-var $Skinney$murmur3$Murmur3$hashFold = F2(
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$hashFold = F2(
 	function (c, data) {
-		var res = data.hash | (c << data.shift);
+		var res = data.hash | ((255 & $elm$core$Char$toCode(c)) << data.shift);
 		var _v0 = data.shift;
 		if (_v0 === 24) {
-			var newHash = $Skinney$murmur3$Murmur3$step(
-				A2($Skinney$murmur3$Murmur3$mix, data.seed, res));
-			return {charsProcessed: data.charsProcessed + 1, hash: 0, seed: newHash, shift: 0};
+			return {
+				charsProcessed: data.charsProcessed + 1,
+				hash: 0,
+				seed: A2($rtfeldman$elm_css$ElmCssVendor$Murmur3$mix, data.seed, res),
+				shift: 0
+			};
 		} else {
 			return {charsProcessed: data.charsProcessed + 1, hash: res, seed: data.seed, shift: data.shift + 8};
 		}
 	});
-var $Skinney$murmur3$Murmur3$hashString = F2(
+var $rtfeldman$elm_css$ElmCssVendor$Murmur3$hashString = F2(
 	function (seed, str) {
-		return $Skinney$murmur3$Murmur3$finalize(
+		return $rtfeldman$elm_css$ElmCssVendor$Murmur3$finalize(
 			A3(
-				$Skinney$murmur3$UTF8$foldl,
-				$Skinney$murmur3$Murmur3$hashFold,
-				A4($Skinney$murmur3$Murmur3$HashData, 0, seed, 0, 0),
+				$elm$core$String$foldl,
+				$rtfeldman$elm_css$ElmCssVendor$Murmur3$hashFold,
+				A4($rtfeldman$elm_css$ElmCssVendor$Murmur3$HashData, 0, seed, 0, 0),
 				str));
 	});
 var $rtfeldman$elm_css$Hash$murmurSeed = 15739;
@@ -33337,7 +34222,7 @@ var $rtfeldman$elm_css$Hash$fromString = function (str) {
 		$elm$core$String$cons,
 		_Utils_chr('_'),
 		$rtfeldman$elm_hex$Hex$toString(
-			A2($Skinney$murmur3$Murmur3$hashString, $rtfeldman$elm_css$Hash$murmurSeed, str)));
+			A2($rtfeldman$elm_css$ElmCssVendor$Murmur3$hashString, $rtfeldman$elm_css$Hash$murmurSeed, str)));
 };
 var $rtfeldman$elm_css$Css$Preprocess$Resolve$last = function (list) {
 	last:
@@ -34036,7 +34921,7 @@ var $rtfeldman$elm_css$VirtualDom$Styled$getClassname = function (styles) {
 		_Utils_chr('_'),
 		$rtfeldman$elm_hex$Hex$toString(
 			A2(
-				$Skinney$murmur3$Murmur3$hashString,
+				$rtfeldman$elm_css$ElmCssVendor$Murmur3$hashString,
 				$rtfeldman$elm_css$VirtualDom$Styled$murmurSeed,
 				$rtfeldman$elm_css$Css$Preprocess$Resolve$compile(
 					$elm$core$List$singleton(
@@ -34114,37 +34999,19 @@ var $feathericons$elm_feather$FeatherIcons$edit = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$path,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-edit')
+					$elm$svg$Svg$Attributes$d('M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$path,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$path,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$d('M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$polygon,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('18 2 22 6 12 16 8 16 8 12 18 2')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$d('M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z')
+				]),
+			_List_Nil)
 		]));
 var $author$project$Card$footer = F2(
 	function (buttons, _v0) {
@@ -34254,63 +35121,45 @@ var $feathericons$elm_feather$FeatherIcons$grid = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$rect,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-grid')
+					$elm$svg$Svg$Attributes$x('3'),
+					$elm$svg$Svg$Attributes$y('3'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$rect,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x('3'),
-							$elm$svg$Svg$Attributes$y('3'),
-							$elm$svg$Svg$Attributes$width('7'),
-							$elm$svg$Svg$Attributes$height('7')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x('14'),
-							$elm$svg$Svg$Attributes$y('3'),
-							$elm$svg$Svg$Attributes$width('7'),
-							$elm$svg$Svg$Attributes$height('7')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x('14'),
-							$elm$svg$Svg$Attributes$y('14'),
-							$elm$svg$Svg$Attributes$width('7'),
-							$elm$svg$Svg$Attributes$height('7')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x('3'),
-							$elm$svg$Svg$Attributes$y('14'),
-							$elm$svg$Svg$Attributes$width('7'),
-							$elm$svg$Svg$Attributes$height('7')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$x('14'),
+					$elm$svg$Svg$Attributes$y('3'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x('14'),
+					$elm$svg$Svg$Attributes$y('14'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x('3'),
+					$elm$svg$Svg$Attributes$y('14'),
+					$elm$svg$Svg$Attributes$width('7'),
+					$elm$svg$Svg$Attributes$height('7')
+				]),
+			_List_Nil)
 		]));
 var $rtfeldman$elm_css$Html$Styled$h1 = $rtfeldman$elm_css$Html$Styled$node('h1');
 var $author$project$Card$header = F3(
@@ -34418,83 +35267,65 @@ var $feathericons$elm_feather$FeatherIcons$list = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$line,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-list')
+					$elm$svg$Svg$Attributes$x1('8'),
+					$elm$svg$Svg$Attributes$y1('6'),
+					$elm$svg$Svg$Attributes$x2('21'),
+					$elm$svg$Svg$Attributes$y2('6')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('8'),
-							$elm$svg$Svg$Attributes$y1('6'),
-							$elm$svg$Svg$Attributes$x2('21'),
-							$elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('8'),
-							$elm$svg$Svg$Attributes$y1('12'),
-							$elm$svg$Svg$Attributes$x2('21'),
-							$elm$svg$Svg$Attributes$y2('12')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('8'),
-							$elm$svg$Svg$Attributes$y1('18'),
-							$elm$svg$Svg$Attributes$x2('21'),
-							$elm$svg$Svg$Attributes$y2('18')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('3'),
-							$elm$svg$Svg$Attributes$y1('6'),
-							$elm$svg$Svg$Attributes$x2('3'),
-							$elm$svg$Svg$Attributes$y2('6')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('3'),
-							$elm$svg$Svg$Attributes$y1('12'),
-							$elm$svg$Svg$Attributes$x2('3'),
-							$elm$svg$Svg$Attributes$y2('12')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('3'),
-							$elm$svg$Svg$Attributes$y1('18'),
-							$elm$svg$Svg$Attributes$x2('3'),
-							$elm$svg$Svg$Attributes$y2('18')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$x1('8'),
+					$elm$svg$Svg$Attributes$y1('12'),
+					$elm$svg$Svg$Attributes$x2('21'),
+					$elm$svg$Svg$Attributes$y2('12')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('8'),
+					$elm$svg$Svg$Attributes$y1('18'),
+					$elm$svg$Svg$Attributes$x2('21'),
+					$elm$svg$Svg$Attributes$y2('18')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('3'),
+					$elm$svg$Svg$Attributes$y1('6'),
+					$elm$svg$Svg$Attributes$x2('3.01'),
+					$elm$svg$Svg$Attributes$y2('6')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('3'),
+					$elm$svg$Svg$Attributes$y1('12'),
+					$elm$svg$Svg$Attributes$x2('3.01'),
+					$elm$svg$Svg$Attributes$y2('12')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1('3'),
+					$elm$svg$Svg$Attributes$y1('18'),
+					$elm$svg$Svg$Attributes$x2('3.01'),
+					$elm$svg$Svg$Attributes$y2('18')
+				]),
+			_List_Nil)
 		]));
 var $author$project$Form$Label$Label = function (a) {
 	return {$: 'Label', a: a};
@@ -34868,6 +35699,7 @@ var $rtfeldman$elm_css$Css$num = function (val) {
 		lengthOrNumber: $rtfeldman$elm_css$Css$Structure$Compatible,
 		lengthOrNumberOrAutoOrNoneOrContent: $rtfeldman$elm_css$Css$Structure$Compatible,
 		number: $rtfeldman$elm_css$Css$Structure$Compatible,
+		numberOrInfinite: $rtfeldman$elm_css$Css$Structure$Compatible,
 		numericValue: val,
 		unitLabel: '',
 		units: $rtfeldman$elm_css$Css$UnitlessFloat,
@@ -34982,46 +35814,36 @@ var $feathericons$elm_feather$FeatherIcons$refreshCw = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$polyline,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-refresh-cw')
+					$elm$svg$Svg$Attributes$points('23 4 23 10 17 10')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$polyline,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$polyline,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('23 4 23 10 17 10')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$polyline,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('1 20 1 14 7 14')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$path,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$d('M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$points('1 20 1 14 7 14')
+				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$path,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$d('M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15')
+				]),
+			_List_Nil)
 		]));
+var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$map = $elm$virtual_dom$VirtualDom$map;
+var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var $elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
+var $elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
+var $elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
+var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $feathericons$elm_feather$FeatherIcons$toHtml = F2(
 	function (attributes, _v0) {
 		var src = _v0.a.src;
@@ -35459,15 +36281,15 @@ var $rtfeldman$elm_hex$Hex$fromStringHelp = F3(
 			}
 		}
 	});
-var $elm$core$Result$mapError = F2(
-	function (f, result) {
-		if (result.$ === 'Ok') {
-			var v = result.a;
-			return $elm$core$Result$Ok(v);
+var $elm$core$Result$map = F2(
+	function (func, ra) {
+		if (ra.$ === 'Ok') {
+			var a = ra.a;
+			return $elm$core$Result$Ok(
+				func(a));
 		} else {
-			var e = result.a;
-			return $elm$core$Result$Err(
-				f(e));
+			var e = ra.a;
+			return $elm$core$Result$Err(e);
 		}
 	});
 var $rtfeldman$elm_hex$Hex$fromString = function (str) {
@@ -35707,6 +36529,7 @@ var $rtfeldman$elm_css$Css$int = function (val) {
 		lengthOrNumber: $rtfeldman$elm_css$Css$Structure$Compatible,
 		lengthOrNumberOrAutoOrNoneOrContent: $rtfeldman$elm_css$Css$Structure$Compatible,
 		number: $rtfeldman$elm_css$Css$Structure$Compatible,
+		numberOrInfinite: $rtfeldman$elm_css$Css$Structure$Compatible,
 		numericValue: val,
 		unitLabel: '',
 		units: $rtfeldman$elm_css$Css$UnitlessInteger,
@@ -35958,10 +36781,6 @@ var $author$project$Form$DatePicker$Css$input = F2(
 		return $rtfeldman$elm_css$Html$Styled$Attributes$css(
 			A2($author$project$Form$Css$select, isError, isLocked));
 	});
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
 var $author$project$Form$Helpers$onElementFocus = function (msg) {
 	return A2(
 		$rtfeldman$elm_css$Html$Styled$Events$on,
@@ -35975,13 +36794,6 @@ var $author$project$Form$Helpers$onElementFocus = function (msg) {
 					['relatedTarget', 'id']),
 				$elm$json$Json$Decode$string)));
 };
-var $elm$virtual_dom$VirtualDom$attribute = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_attribute,
-			_VirtualDom_noOnOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
 var $rtfeldman$elm_css$VirtualDom$Styled$attribute = F2(
 	function (key, value) {
 		return A3(
@@ -36106,10 +36918,6 @@ var $rtfeldman$elm_css$VirtualDom$Styled$extractUnstyledAttribute = function (_v
 	var val = _v0.a;
 	return val;
 };
-var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
-	return _VirtualDom_keyedNode(
-		_VirtualDom_noScript(tag));
-};
 var $elm$virtual_dom$VirtualDom$keyedNodeNS = F2(
 	function (namespace, tag) {
 		return A2(
@@ -36117,10 +36925,6 @@ var $elm$virtual_dom$VirtualDom$keyedNodeNS = F2(
 			namespace,
 			_VirtualDom_noScript(tag));
 	});
-var $elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
-	return _VirtualDom_nodeNS(
-		_VirtualDom_noScript(tag));
-};
 var $rtfeldman$elm_css$VirtualDom$Styled$accumulateKeyedStyledHtml = F2(
 	function (_v6, _v7) {
 		var key = _v6.a;
@@ -37080,30 +37884,12 @@ var $feathericons$elm_feather$FeatherIcons$chevronRight = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$polyline,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-chevron-right')
+					$elm$svg$Svg$Attributes$points('9 18 15 12 9 6')
 				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$polyline,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('9 18 15 12 9 6')
-						]),
-					_List_Nil)
-				]))
+			_List_Nil)
 		]));
 var $author$project$Form$DatePicker$Helpers$isSameMonthAndYear = F3(
 	function (timeZone, posix1, mPosix2) {
@@ -37215,30 +38001,12 @@ var $feathericons$elm_feather$FeatherIcons$chevronLeft = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$polyline,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-chevron-left')
+					$elm$svg$Svg$Attributes$points('15 18 9 12 15 6')
 				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$polyline,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('15 18 9 12 15 6')
-						]),
-					_List_Nil)
-				]))
+			_List_Nil)
 		]));
 var $author$project$Form$DatePicker$Internal$previousMonthArrow = F3(
 	function (state, viewState, navigationPosix) {
@@ -37538,30 +38306,12 @@ var $feathericons$elm_feather$FeatherIcons$chevronDown = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$polyline,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-chevron-down')
+					$elm$svg$Svg$Attributes$points('6 9 12 15 18 9')
 				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$polyline,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('6 9 12 15 18 9')
-						]),
-					_List_Nil)
-				]))
+			_List_Nil)
 		]));
 var $author$project$Form$Select$Internal$Clear = {$: 'Clear'};
 var $author$project$Form$Css$clearIcon = $rtfeldman$elm_css$Html$Styled$Attributes$css(
@@ -37573,43 +38323,25 @@ var $feathericons$elm_feather$FeatherIcons$x = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$line,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-x')
+					$elm$svg$Svg$Attributes$x1('18'),
+					$elm$svg$Svg$Attributes$y1('6'),
+					$elm$svg$Svg$Attributes$x2('6'),
+					$elm$svg$Svg$Attributes$y2('18')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$line,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('18'),
-							$elm$svg$Svg$Attributes$y1('6'),
-							$elm$svg$Svg$Attributes$x2('6'),
-							$elm$svg$Svg$Attributes$y2('18')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$line,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x1('6'),
-							$elm$svg$Svg$Attributes$y1('6'),
-							$elm$svg$Svg$Attributes$x2('18'),
-							$elm$svg$Svg$Attributes$y2('18')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$x1('6'),
+					$elm$svg$Svg$Attributes$y1('6'),
+					$elm$svg$Svg$Attributes$x2('18'),
+					$elm$svg$Svg$Attributes$y2('18')
+				]),
+			_List_Nil)
 		]));
 var $author$project$Form$Select$Internal$clearButton = F2(
 	function (state, viewState) {
@@ -38506,9 +39238,6 @@ var $rtfeldman$elm_css$Html$Styled$Attributes$maxlength = function (n) {
 var $rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
 var $rtfeldman$elm_css$Html$Styled$Events$stopPropagationOn = F2(
 	function (event, decoder) {
 		return A2(
@@ -38871,37 +39600,19 @@ var $feathericons$elm_feather$FeatherIcons$checkSquare = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$polyline,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-check-square')
+					$elm$svg$Svg$Attributes$points('9 11 12 14 22 4')
 				]),
+			_List_Nil),
+			A2(
+			$elm$svg$Svg$path,
 			_List_fromArray(
 				[
-					A2(
-					$elm$svg$Svg$polyline,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$points('9 11 12 14 22 4')
-						]),
-					_List_Nil),
-					A2(
-					$elm$svg$Svg$path,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$d('M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')
-						]),
-					_List_Nil)
-				]))
+					$elm$svg$Svg$Attributes$d('M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11')
+				]),
+			_List_Nil)
 		]));
 var $feathericons$elm_feather$FeatherIcons$square = A2(
 	$feathericons$elm_feather$FeatherIcons$makeBuilder,
@@ -38909,35 +39620,17 @@ var $feathericons$elm_feather$FeatherIcons$square = A2(
 	_List_fromArray(
 		[
 			A2(
-			$elm$svg$Svg$svg,
+			$elm$svg$Svg$rect,
 			_List_fromArray(
 				[
-					$feathericons$elm_feather$FeatherIcons$xmlns('http://www.w3.org/2000/svg'),
-					$elm$svg$Svg$Attributes$width('24'),
-					$elm$svg$Svg$Attributes$height('24'),
-					$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
-					$elm$svg$Svg$Attributes$fill('none'),
-					$elm$svg$Svg$Attributes$stroke('currentColor'),
-					$elm$svg$Svg$Attributes$strokeWidth('2'),
-					$elm$svg$Svg$Attributes$strokeLinecap('round'),
-					$elm$svg$Svg$Attributes$strokeLinejoin('round'),
-					$elm$svg$Svg$Attributes$class('feather feather-square')
+					$elm$svg$Svg$Attributes$x('3'),
+					$elm$svg$Svg$Attributes$y('3'),
+					$elm$svg$Svg$Attributes$width('18'),
+					$elm$svg$Svg$Attributes$height('18'),
+					$elm$svg$Svg$Attributes$rx('2'),
+					$elm$svg$Svg$Attributes$ry('2')
 				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$rect,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$x('3'),
-							$elm$svg$Svg$Attributes$y('3'),
-							$elm$svg$Svg$Attributes$width('18'),
-							$elm$svg$Svg$Attributes$height('18'),
-							$elm$svg$Svg$Attributes$rx('2'),
-							$elm$svg$Svg$Attributes$ry('2')
-						]),
-					_List_Nil)
-				]))
+			_List_Nil)
 		]));
 var $author$project$Form$MultiSelect$Internal$optionItem = F3(
 	function (state, viewState, option) {
@@ -42660,4 +43353,4 @@ var $author$project$Main$main = $elm$browser$Browser$application(
 		view: $author$project$View$view
 	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"},"Http.Response":{"args":["body"],"type":"{ url : String.String, status : { code : Basics.Int, message : String.String }, headers : Dict.Dict String.String String.String, body : body }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"TextAreaWrapMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"SetGridButtonGreen":["Basics.Bool"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchText":["String.String"],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchText":["String.String"],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","option -> String.String","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Http.Response String.String"],"BadPayload":["String.String","Http.Response String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[],"Backspace":[],"AlphaNum":["String.String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Msg.Msg","aliases":{"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Records.Country.Country":{"args":[],"type":"{ name : String.String, altSpellings : List.List String.String, capital : String.String, region : String.String, population : Basics.Int }"},"Form.DatePicker.Msg":{"args":[],"type":"Form.DatePicker.Internal.Msg"},"Form.FloatInput.Msg":{"args":[],"type":"Form.FloatInput.Internal.Msg"},"Form.Input.Msg":{"args":[],"type":"Form.Input.Internal.Msg"},"Form.IntInput.Msg":{"args":[],"type":"Form.IntInput.Internal.Msg"},"Form.MultiSelect.Msg":{"args":["option"],"type":"Form.MultiSelect.Internal.Msg option"},"Form.SearchSelect.Msg":{"args":["option"],"type":"Form.SearchSelect.Internal.Msg option"},"Form.Select.Msg":{"args":["option"],"type":"Form.Select.Internal.Msg option"},"Form.TextArea.Msg":{"args":[],"type":"Form.TextArea.Internal.Msg"},"Form.DatePicker.Internal.IncludeTime":{"args":[],"type":"Basics.Bool"},"Form.DatePicker.Internal.MaxPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Form.DatePicker.Internal.MinPosix":{"args":[],"type":"Maybe.Maybe Time.Posix"},"Toasters.Internal.Toaster":{"args":[],"type":"{ color : Toasters.Color.Color, message : String.String, ticks : Basics.Int }"}},"unions":{"Msg.Msg":{"args":[],"tags":{"UrlChange":["Url.Url"],"Navigate":["Browser.UrlRequest"],"ToastersMsg":["Toasters.Msg"],"ToggleAdminMenu":[],"IndexMsg":["Index.Msg.Msg"],"AdminMsg":["Admin.Msg.Msg"],"TrainerMsg":["Trainer.Msg.Msg"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Admin.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Index.Msg.Msg":{"args":[],"tags":{"AddGreenToaster":[],"AddRedToaster":[],"InputMsg":["Form.Input.Msg"],"IntInputMsg":["Form.IntInput.Msg"],"FloatInputMsg":["Form.FloatInput.Msg"],"SelectMsg":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"MultiSelectMsg":["Form.MultiSelect.Msg Records.MusicGenre.MusicGenre"],"SearchSelectMsg":["Form.SearchSelect.Msg Records.Country.Country"],"DatePickerMsg":["Form.DatePicker.Msg"],"DatePicker2Msg":["Form.DatePicker.Msg"],"DatePicker3Msg":["Form.DatePicker.Msg"],"TextAreaMsg":["Form.TextArea.Msg"],"TextAreaWrapMsg":["Form.TextArea.Msg"],"ToolTip1Msg":["ToolTip.Msg"],"ToolTip2Msg":["ToolTip.Msg"],"ToolTip3Msg":["ToolTip.Msg"],"ToolTip4Msg":["ToolTip.Msg"],"UpdateName":["Form.Input.Msg"],"UpdateStartDate":["Form.DatePicker.Msg"],"UpdateEmail":["Form.Input.Msg"],"UpdatePreferredGenre":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"UpdateCountryOfBirth":["Form.SearchSelect.Msg Records.Country.Country"],"Toggle1":[],"Toggle2":[],"DisabledToggle":[],"ToggleSmModal":[],"ToggleLgModal":[],"ToggleResizeModal":[],"UpdateMaybeBLockSelect":["Form.Select.Msg Records.MusicGenre.MusicGenre"],"SetGridButtonGreen":["Basics.Bool"]}},"Toasters.Msg":{"args":[],"tags":{"InternalMsg":["Toasters.Internal.Msg"]}},"Trainer.Msg.Msg":{"args":[],"tags":{"NoOp":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"List.List":{"args":["a"],"tags":{}},"Form.DatePicker.Internal.Msg":{"args":[],"tags":{"Open":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Form.DatePicker.Internal.IncludeTime"],"Blur":[],"InitWithCurrentDate":["Form.DatePicker.Internal.MinPosix","Form.DatePicker.Internal.MaxPosix","Time.Posix"],"PreviousYear":["Form.DatePicker.Internal.MinPosix"],"PreviousMonth":[],"NextYear":["Form.DatePicker.Internal.MaxPosix"],"NextMonth":[],"SelectDay":["Time.Posix","Form.DatePicker.Internal.IncludeTime"],"OpenTimeSelect":["Form.DatePicker.Internal.TimeSelect"],"UpdateHours":["Form.Select.Msg Basics.Int"],"UpdateMinutes":["Form.Select.Msg Basics.Int"],"UpdateSeconds":["Form.Select.Msg Basics.Int"],"Apply":[],"Clear":[],"DomFocus":["Result.Result Browser.Dom.Error ()"],"NoOp":[]}},"Form.FloatInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.Input.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.IntInput.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Form.MultiSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchText":["String.String"],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.SearchSelect.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchInput":["Basics.Int","String.String"],"Response":["Result.Result Http.Error (List.List option)"],"Select":["option"],"Clear":[],"SelectKey":["Form.Helpers.SelectKey"]}},"Form.Select.Internal.Msg":{"args":["option"],"tags":{"Open":[],"Blur":[],"UpdateSearchText":["String.String"],"Select":["option"],"Clear":[],"SelectKey":["option -> Basics.Bool","option -> String.String","Form.Helpers.SelectKey"],"NoOp":[]}},"Form.TextArea.Internal.Msg":{"args":[],"tags":{"Input":["String.String"]}},"Toasters.Internal.Msg":{"args":[],"tags":{"Tick":[],"Close":["Toasters.Internal.Toaster"]}},"ToolTip.Msg":{"args":[],"tags":{"MouseEnter":[],"MouseLeave":[]}},"Records.MusicGenre.MusicGenre":{"args":[],"tags":{"Rock":[],"Metal":[],"Blues":[],"Jazz":[],"Pop":[],"BlackenedHeavyProgressiveAlternativeNewAgeRockabillyGlamCoreRetroFolkNeoSoulAcidFunkDooWopElectricalDreamPop":[]}},"Toasters.Color.Color":{"args":[],"tags":{"Green":[],"Red":[]}},"Browser.Dom.Error":{"args":[],"tags":{"NotFound":["String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Time.Posix":{"args":[],"tags":{"Posix":["Basics.Int"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Form.Helpers.SelectKey":{"args":[],"tags":{"Up":[],"Down":[],"Enter":[],"Space":[],"Backspace":[],"AlphaNum":["String.String"]}},"Form.DatePicker.Internal.TimeSelect":{"args":[],"tags":{"Hours":[],"Minutes":[],"Seconds":[]}}}}})}});}(this));

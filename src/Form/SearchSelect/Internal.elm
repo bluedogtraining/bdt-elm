@@ -178,9 +178,10 @@ update msg state =
 
 searchRequest : String -> String -> Decoder option -> Cmd (Msg option)
 searchRequest searchUrl input optionDecoder =
-    searchResponseDecoder optionDecoder
-        |> Http.get (searchUrl ++ input)
-        |> Http.send Response
+    Http.get
+        { url = searchUrl ++ input
+        , expect = Http.expectJson Response (searchResponseDecoder optionDecoder)
+        }
 
 
 searchResponseDecoder : Decoder option -> Decoder (List option)
